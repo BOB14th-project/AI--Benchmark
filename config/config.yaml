@@ -1,0 +1,90 @@
+# Quantum-Vulnerable Cryptography Detection Benchmark Configuration
+
+# LLM API Configuration
+llm_providers:
+  openai:
+    api_key: "your_openai_api_key_here"
+    model: "gpt-4"
+    base_url: "https://api.openai.com/v1"
+
+  google:
+    api_key: "AIzaSyALiHO-MRbsutKmL01JGMleNTszXAaFo3w"
+    model: "gemini-2.5-flash"
+    base_url: "https://generativelanguage.googleapis.com/v1beta"
+
+  anthropic:
+    api_key: "your_anthropic_api_key_here"
+    model: "claude-3-sonnet-20240229"
+    base_url: "https://api.anthropic.com"
+
+  xai:
+    api_key: "your_xai_api_key_here"
+    model: "grok-beta"
+    base_url: "https://api.x.ai/v1"
+
+# Analysis Agents Configuration for Quantum-Vulnerable Algorithm Detection
+agents:
+  source_code:
+    name: "Source Code Vulnerable Crypto Detection Agent"
+    description: "Analyzes source code to detect quantum-vulnerable cryptographic algorithms including Korean domestic algorithms"
+    prompt_template: "You are an expert in cryptography and quantum vulnerability assessment. Analyze the following source code and identify: {analysis_points}. Focus on detecting classical cryptographic algorithms that are vulnerable to quantum attacks, including RSA, ECC, DH, DSA, Korean algorithms like SEED, ARIA, HIGHT, LEA, and other algorithms vulnerable to Shor's and Grover's algorithms. Look for both obvious implementations and obfuscated/indirect usage patterns that simple pattern matching cannot detect."
+
+  assembly_binary:
+    name: "Assembly Binary Vulnerable Crypto Detection Agent"
+    description: "Analyzes compiled assembly/binary code to detect quantum-vulnerable cryptographic operations including Korean algorithms"
+    prompt_template: "You are an expert in cryptography and assembly analysis. Examine the following assembly/binary code and detect: {analysis_points}. Look for signatures of quantum-vulnerable crypto algorithms, including RSA operations, elliptic curve arithmetic, discrete logarithm computations, Korean cipher implementations (SEED, ARIA, HIGHT, LEA), and other quantum-vulnerable mathematical operations in compiled code that pattern matching might miss."
+
+  dynamic_analysis:
+    name: "Dynamic Analysis Vulnerable Crypto Detection Agent"
+    description: "Analyzes runtime behavior to identify quantum-vulnerable cryptography usage including Korean algorithms"
+    prompt_template: "You are an expert in cryptography and dynamic analysis. Analyze the following runtime data and identify: {analysis_points}. Focus on detecting quantum-vulnerable crypto algorithm usage through API calls, memory patterns, performance characteristics, and behavioral signatures that indicate vulnerable cryptographic operations, including Korean domestic algorithms and international standards."
+
+  logs_config:
+    name: "Configuration and Logs Vulnerable Crypto Analysis Agent"
+    description: "Analyzes configuration files and logs to detect quantum-vulnerable cryptography settings including Korean algorithms"
+    prompt_template: "You are an expert in cryptography configuration and logging. Examine the following logs/configuration data and determine: {analysis_points}. Look for quantum-vulnerable crypto algorithm references, vulnerable cipher suites, RSA/ECC certificates, Korean algorithm configurations, and indicators of quantum-vulnerable cryptographic setups that simple string matching cannot identify."
+
+# Benchmark Configuration
+benchmark:
+  timeout_seconds: 45
+  max_retries: 3
+  metrics:
+    - vulnerable_crypto_detection_accuracy
+    - algorithm_identification_precision
+    - false_positive_rate
+    - false_negative_rate
+    - response_time
+    - json_validity
+    - completeness
+
+  test_cases_per_agent: 20
+  output_format: "csv"
+
+  # Quantum-vulnerable algorithms categorized by attack type
+  vulnerable_algorithms:
+    shor_vulnerable:
+      public_key_crypto: ["RSA", "ECC", "ECDSA", "ECDH", "DSA", "DH", "ElGamal"]
+      korean_public_key: ["KCDSA", "EC-KCDSA"]
+
+    grover_vulnerable:
+      symmetric_ciphers: ["AES-128", "3DES", "DES", "RC4", "Blowfish", "Twofish"]
+      korean_symmetric: ["SEED", "ARIA-128", "HIGHT", "LEA-128"]
+      hash_functions: ["SHA-1", "SHA-256", "MD5", "MD4", "SHA-224"]
+      korean_hash: ["HAS-160", "LSH-256"]
+
+    other_vulnerable:
+      stream_ciphers: ["RC4", "A5/1", "A5/2", "E0"]
+      block_ciphers_weak: ["DES", "3DES", "RC5", "RC6"]
+      korean_legacy: ["SEED-128", "old-ARIA", "HIGHT-64"]
+      mac_algorithms: ["HMAC-MD5", "HMAC-SHA1"]
+
+    implementation_vulnerable:
+      padding_schemes: ["PKCS#1 v1.5", "OAEP-SHA1"]
+      random_generators: ["Linear Congruential", "Mersenne Twister"]
+      key_derivation: ["PBKDF1", "weak KDF"]
+
+# Paths
+paths:
+  test_cases: "data/test_cases"
+  ground_truth: "data/ground_truth"
+  results: "results"

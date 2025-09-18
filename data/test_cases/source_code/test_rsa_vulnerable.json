@@ -1,0 +1,14 @@
+{
+  "input_data": "import rsa\nfrom cryptography.hazmat.primitives.asymmetric import rsa as crypto_rsa, padding\nfrom cryptography.hazmat.primitives import hashes\n\nclass RSACrypto:\n    def __init__(self):\n        # Vulnerable RSA key size\n        self.key = crypto_rsa.generate_private_key(\n            public_exponent=65537,\n            key_size=1024,  # Quantum vulnerable\n        )\n        self.public_key = self.key.public_key()\n    \n    def encrypt(self, message):\n        return self.public_key.encrypt(\n            message.encode(),\n            padding.PKCS1v15()  # Vulnerable padding\n        )\n    \n    def sign(self, data):\n        return self.key.sign(\n            data.encode(),\n            padding.PSS(\n                mgf=padding.MGF1(hashes.SHA1()),  # Weak hash\n                salt_length=padding.PSS.MAX_LENGTH\n            ),\n            hashes.SHA1()  # Quantum vulnerable hash\n        )",
+  "description": "Python RSA implementation with vulnerable 1024-bit keys, PKCS#1 v1.5 padding, and SHA-1 hash",
+  "expected_analysis_points": [
+    "quantum-vulnerable RSA implementations and usage patterns",
+    "vulnerable padding schemes (PKCS#1 v1.5, weak OAEP)",
+    "weak hash functions (MD5, SHA-1, SHA-256 with reduced security)"
+  ],
+  "vulnerable_algorithms_present": ["RSA-1024", "PKCS#1 v1.5", "SHA-1"],
+  "algorithm_categories": ["shor_vulnerable", "grover_vulnerable"],
+  "korean_algorithms": [],
+  "difficulty": "medium",
+  "tags": ["rsa", "vulnerable-crypto", "padding", "hash"]
+}

@@ -1,0 +1,14 @@
+{
+  "input_data": "import hashlib\nimport hmac\nfrom Crypto.Cipher import DES, DES3\nfrom Crypto.Random import get_random_bytes\nfrom Crypto.Protocol.KDF import PBKDF1\n\nclass LegacySecuritySystem:\n    def __init__(self):\n        self.master_key = get_random_bytes(8)  # 64-bit key for DES\n        \n    def hash_password(self, password, salt):\n        # Multiple vulnerable hash functions\n        md5_hash = hashlib.md5(password.encode() + salt).hexdigest()\n        sha1_hash = hashlib.sha1(password.encode()).hexdigest()\n        return md5_hash + sha1_hash\n    \n    def derive_key(self, password, salt):\n        # PBKDF1 is deprecated and vulnerable\n        return PBKDF1(password, salt, 8, 1000, hashlib.sha1)\n    \n    def encrypt_sensitive_data(self, data):\n        # DES encryption - completely broken\n        cipher = DES.new(self.master_key, DES.MODE_ECB)\n        # ECB mode is also vulnerable to pattern analysis\n        return cipher.encrypt(data.ljust(8)[:8])\n    \n    def encrypt_with_3des(self, data, key_material):\n        # 3DES still vulnerable to quantum attacks\n        key = key_material[:24]  # 192-bit 3DES key\n        cipher = DES3.new(key, DES3.MODE_CBC)\n        iv = get_random_bytes(8)\n        return iv + cipher.encrypt(data)\n    \n    def create_mac(self, message, key):\n        # HMAC with MD5 - vulnerable\n        return hmac.new(key, message.encode(), hashlib.md5).hexdigest()\n    \n    def rc4_stream_cipher(self, data, key):\n        # RC4 implementation - completely broken\n        S = list(range(256))\n        j = 0\n        # RC4 key scheduling\n        for i in range(256):\n            j = (j + S[i] + key[i % len(key)]) % 256\n            S[i], S[j] = S[j], S[i]\n        \n        # RC4 stream generation\n        i = j = 0\n        result = []\n        for byte in data:\n            i = (i + 1) % 256\n            j = (j + S[i]) % 256\n            S[i], S[j] = S[j], S[i]\n            k = S[(S[i] + S[j]) % 256]\n            result.append(byte ^ k)\n        \n        return bytes(result)",
+  "description": "Legacy crypto system using multiple vulnerable algorithms: DES, 3DES, RC4, MD5, SHA-1, PBKDF1",
+  "expected_analysis_points": [
+    "symmetric ciphers vulnerable to Grover's algorithm (AES-128, 3DES, DES, RC4)",
+    "weak hash functions (MD5, SHA-1, SHA-256 with reduced security)",
+    "insecure random number generators and key derivation functions"
+  ],
+  "vulnerable_algorithms_present": ["DES", "3DES", "RC4", "MD5", "SHA-1", "PBKDF1", "ECB"],
+  "algorithm_categories": ["grover_vulnerable", "other_vulnerable"],
+  "korean_algorithms": [],
+  "difficulty": "easy",
+  "tags": ["legacy", "des", "3des", "rc4", "md5", "sha1"]
+}

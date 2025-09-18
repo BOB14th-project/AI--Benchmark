@@ -1,0 +1,271 @@
+{
+  "google": {
+    "agents": {
+      "source_code": {
+        "individual_results": [
+          {
+            "test_id": "test_ecc_vulnerable",
+            "success": false,
+            "error": "'Future' object has no attribute 'get'",
+            "accuracy_score": 0.0,
+            "response_time": 0.0,
+            "json_stability_score": 0.0,
+            "completeness_score": 0.0
+          },
+          {
+            "test_id": "test_legacy_crypto_mix",
+            "success": false,
+            "error": "'Future' object has no attribute 'get'",
+            "accuracy_score": 0.0,
+            "response_time": 0.0,
+            "json_stability_score": 0.0,
+            "completeness_score": 0.0
+          },
+          {
+            "test_id": "test_korean_seed",
+            "success": false,
+            "error": "'Future' object has no attribute 'get'",
+            "accuracy_score": 0.0,
+            "response_time": 0.0,
+            "json_stability_score": 0.0,
+            "completeness_score": 0.0
+          },
+          {
+            "test_id": "test_korean_aria",
+            "success": false,
+            "error": "'Future' object has no attribute 'get'",
+            "accuracy_score": 0.0,
+            "response_time": 0.0,
+            "json_stability_score": 0.0,
+            "completeness_score": 0.0
+          },
+          {
+            "test_id": "test_rsa_vulnerable",
+            "success": false,
+            "error": "'Future' object has no attribute 'get'",
+            "accuracy_score": 0.0,
+            "response_time": 0.0,
+            "json_stability_score": 0.0,
+            "completeness_score": 0.0
+          }
+        ],
+        "aggregate_metrics": {
+          "total_tests": 5,
+          "successful_tests": 0,
+          "success_rate": 0.0,
+          "average_vulnerable_crypto_detection_accuracy": 0.0,
+          "average_response_time": 0.0,
+          "average_json_stability": 0.0,
+          "average_completeness": 0.0,
+          "average_false_positive_rate": 0.0,
+          "average_false_negative_rate": 0.0,
+          "min_response_time": 0.0,
+          "max_response_time": 0.0,
+          "vulnerable_crypto_detection_precision": 1.0,
+          "vulnerable_crypto_detection_recall": 1.0,
+          "timestamp": "2025-09-18T12:34:24.620442"
+        },
+        "total_tests": 5
+      },
+      "assembly_binary": {
+        "individual_results": [
+          {
+            "test_id": "test_dsa_dh",
+            "success": false,
+            "error": "'Future' object has no attribute 'get'",
+            "accuracy_score": 0.0,
+            "response_time": 0.0,
+            "json_stability_score": 0.0,
+            "completeness_score": 0.0
+          },
+          {
+            "test_id": "test_rsa_modexp",
+            "success": false,
+            "error": "'Future' object has no attribute 'get'",
+            "accuracy_score": 0.0,
+            "response_time": 0.0,
+            "json_stability_score": 0.0,
+            "completeness_score": 0.0
+          },
+          {
+            "test_id": "test_ecc_point_mul",
+            "success": false,
+            "error": "'Future' object has no attribute 'get'",
+            "accuracy_score": 0.0,
+            "response_time": 0.0,
+            "json_stability_score": 0.0,
+            "completeness_score": 0.0
+          },
+          {
+            "test_id": "test_korean_seed",
+            "success": false,
+            "error": "'Future' object has no attribute 'get'",
+            "accuracy_score": 0.0,
+            "response_time": 0.0,
+            "json_stability_score": 0.0,
+            "completeness_score": 0.0
+          },
+          {
+            "test_id": "test_des_3des",
+            "success": false,
+            "error": "'Future' object has no attribute 'get'",
+            "accuracy_score": 0.0,
+            "response_time": 0.0,
+            "json_stability_score": 0.0,
+            "completeness_score": 0.0
+          }
+        ],
+        "aggregate_metrics": {
+          "total_tests": 5,
+          "successful_tests": 0,
+          "success_rate": 0.0,
+          "average_vulnerable_crypto_detection_accuracy": 0.0,
+          "average_response_time": 0.0,
+          "average_json_stability": 0.0,
+          "average_completeness": 0.0,
+          "average_false_positive_rate": 0.0,
+          "average_false_negative_rate": 0.0,
+          "min_response_time": 0.0,
+          "max_response_time": 0.0,
+          "vulnerable_crypto_detection_precision": 1.0,
+          "vulnerable_crypto_detection_recall": 1.0,
+          "timestamp": "2025-09-18T12:34:36.918140"
+        },
+        "total_tests": 5
+      },
+      "dynamic_analysis": {
+        "individual_results": [
+          {
+            "test_id": "test_ecc_key_exchange",
+            "success": false,
+            "error": "'Future' object has no attribute 'get'",
+            "accuracy_score": 0.0,
+            "response_time": 0.0,
+            "json_stability_score": 0.0,
+            "completeness_score": 0.0
+          },
+          {
+            "test_id": "test_legacy_hash_usage",
+            "success": false,
+            "error": "'Future' object has no attribute 'get'",
+            "accuracy_score": 0.0,
+            "response_time": 0.0,
+            "json_stability_score": 0.0,
+            "completeness_score": 0.0
+          },
+          {
+            "test_id": "test_rsa_api_calls",
+            "success": false,
+            "error": "'Future' object has no attribute 'get'",
+            "accuracy_score": 0.0,
+            "response_time": 0.0,
+            "json_stability_score": 0.0,
+            "completeness_score": 0.0
+          },
+          {
+            "test_id": "test_rc4_des_runtime",
+            "success": false,
+            "error": "'Future' object has no attribute 'get'",
+            "accuracy_score": 0.0,
+            "response_time": 0.0,
+            "json_stability_score": 0.0,
+            "completeness_score": 0.0
+          }
+        ],
+        "aggregate_metrics": {
+          "total_tests": 4,
+          "successful_tests": 0,
+          "success_rate": 0.0,
+          "average_vulnerable_crypto_detection_accuracy": 0.0,
+          "average_response_time": 0.0,
+          "average_json_stability": 0.0,
+          "average_completeness": 0.0,
+          "average_false_positive_rate": 0.0,
+          "average_false_negative_rate": 0.0,
+          "min_response_time": 0.0,
+          "max_response_time": 0.0,
+          "vulnerable_crypto_detection_precision": 1.0,
+          "vulnerable_crypto_detection_recall": 1.0,
+          "timestamp": "2025-09-18T12:34:37.341125"
+        },
+        "total_tests": 4
+      },
+      "logs_config": {
+        "individual_results": [
+          {
+            "test_id": "test_crypto_audit_logs",
+            "success": false,
+            "error": "'Future' object has no attribute 'get'",
+            "accuracy_score": 0.0,
+            "response_time": 0.0,
+            "json_stability_score": 0.0,
+            "completeness_score": 0.0
+          },
+          {
+            "test_id": "test_korean_crypto_config",
+            "success": false,
+            "error": "'Future' object has no attribute 'get'",
+            "accuracy_score": 0.0,
+            "response_time": 0.0,
+            "json_stability_score": 0.0,
+            "completeness_score": 0.0
+          },
+          {
+            "test_id": "test_nginx_tls_config",
+            "success": false,
+            "error": "'Future' object has no attribute 'get'",
+            "accuracy_score": 0.0,
+            "response_time": 0.0,
+            "json_stability_score": 0.0,
+            "completeness_score": 0.0
+          },
+          {
+            "test_id": "test_openssl_cipher_logs",
+            "success": false,
+            "error": "'Future' object has no attribute 'get'",
+            "accuracy_score": 0.0,
+            "response_time": 0.0,
+            "json_stability_score": 0.0,
+            "completeness_score": 0.0
+          },
+          {
+            "test_id": "test_ssl_config_vulnerable",
+            "success": false,
+            "error": "'Future' object has no attribute 'get'",
+            "accuracy_score": 0.0,
+            "response_time": 0.0,
+            "json_stability_score": 0.0,
+            "completeness_score": 0.0
+          }
+        ],
+        "aggregate_metrics": {
+          "total_tests": 5,
+          "successful_tests": 0,
+          "success_rate": 0.0,
+          "average_vulnerable_crypto_detection_accuracy": 0.0,
+          "average_response_time": 0.0,
+          "average_json_stability": 0.0,
+          "average_completeness": 0.0,
+          "average_false_positive_rate": 0.0,
+          "average_false_negative_rate": 0.0,
+          "min_response_time": 0.0,
+          "max_response_time": 0.0,
+          "vulnerable_crypto_detection_precision": 1.0,
+          "vulnerable_crypto_detection_recall": 1.0,
+          "timestamp": "2025-09-18T12:34:49.212810"
+        },
+        "total_tests": 5
+      }
+    },
+    "summary": {
+      "total_tests": 19,
+      "successful_tests": 0,
+      "overall_success_rate": 0.0,
+      "overall_accuracy": 0.0,
+      "overall_response_time": 0.0,
+      "overall_json_stability": 0.0,
+      "overall_completeness": 0.0,
+      "agent_count": 4
+    }
+  }
+}
