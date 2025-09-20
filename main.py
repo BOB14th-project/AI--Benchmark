@@ -27,6 +27,7 @@ def main():
     parser.add_argument('--csv-only', action='store_true', help='Generate only CSV reports')
     parser.add_argument('--vulnerable-algorithms', action='store_true', help='List vulnerable algorithms and exit')
     parser.add_argument('--korean-algorithms', action='store_true', help='List Korean algorithms and exit')
+    parser.add_argument('--migrate-to-file-based', action='store_true', help='Migrate legacy JSON test cases to file-based structure')
 
     args = parser.parse_args()
 
@@ -54,7 +55,8 @@ def main():
 
     test_manager = TestCaseManager(
         config.get_paths_config()['test_cases'],
-        config.get_paths_config()['ground_truth']
+        config.get_paths_config()['ground_truth'],
+        config.get_paths_config().get('test_files', str(Path(config.get_paths_config()['test_cases']).parent / 'test_files'))
     )
 
     if args.test_cases_stats:
@@ -63,6 +65,10 @@ def main():
 
     if args.generate_vulnerable_test_cases:
         generate_test_cases(test_manager, config)
+        return
+
+    if args.migrate_to_file_based:
+        migrate_to_file_based(test_manager)
         return
 
     run_benchmark(args, config, test_manager)
@@ -130,6 +136,24 @@ def show_test_stats(test_manager):
         print(f"    Test cases: {stat['test_cases']}")
         print(f"    Ground truths: {stat['ground_truths']}")
         print(f"    Coverage: {stat['coverage']:.1%}")
+
+def migrate_to_file_based(test_manager):
+    print("Migrating legacy JSON test cases to file-based structure...")
+    try:
+        success = test_manager.migrate_to_file_based()
+        if success:
+            print("Migration completed successfully!")
+            print("\nMigrated test cases:")
+            stats = test_manager.get_test_case_stats()
+            for agent_type, stat in stats.items():
+                print(f"  • {agent_type}: {stat['test_cases']} test cases")
+            print("\nNew structure:")
+            print("  • Test files: data/test_files/[agent_type]/")
+            print("  • Ground truth: data/ground_truth/[agent_type]/")
+        else:
+            print("Migration failed!")
+    except Exception as e:
+        print(f"Error during migration: {e}")
 
 def generate_test_cases(test_manager, config):
     print("Generating example vulnerable crypto detection test cases...")

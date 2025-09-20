@@ -1,0 +1,46 @@
+{
+  "file_type": "logs_config",
+  "difficulty": "extreme",
+  "crypto_elements": [
+    {
+      "type": "integer_factorization",
+      "algorithm": "RSA",
+      "key_size": 2048,
+      "location": "Certificate validation",
+      "severity": "critical",
+      "description": "RSA modulus factorization via Shor's algorithm"
+    },
+    {
+      "type": "elliptic_curve_discrete_log",
+      "algorithm": "ECDH",
+      "curve": "secp256r1",
+      "location": "Key exchange",
+      "severity": "critical",
+      "description": "ECDLP vulnerable to modified Shor's algorithm"
+    },
+    {
+      "type": "legacy_hash_function",
+      "algorithm": "SHA-1",
+      "location": "HMAC operations",
+      "severity": "high",
+      "description": "SHA-1 weakened by collision attacks and quantum speedup"
+    },
+    {
+      "type": "padding_oracle_vulnerable",
+      "algorithm": "PKCS#1 v1.5",
+      "location": "RSA encryption",
+      "severity": "medium",
+      "description": "Deterministic padding vulnerable to chosen ciphertext attacks"
+    },
+    {
+      "type": "quantum_period_finding",
+      "algorithm": "Diffie-Hellman",
+      "location": "Session key derivation",
+      "severity": "critical",
+      "description": "DH security relies on discrete logarithm problem"
+    }
+  ],
+  "quantum_vulnerable": true,
+  "vulnerability_count": 5,
+  "primary_weakness": "Complete cryptographic infrastructure vulnerable to quantum computing"
+}

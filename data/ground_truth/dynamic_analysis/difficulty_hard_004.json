@@ -1,0 +1,45 @@
+{
+  "description": "Dynamic analysis trace showing factorization-based cryptographic operations with obfuscated API calls and mathematical signatures",
+  "file_extension": ".json",
+  "format": "file_based",
+  "expected_findings": {
+    "analysis_points": [
+      "Large integer arithmetic operations indicating RSA-like factorization-based cryptography",
+      "Modular exponentiation patterns characteristic of public-key operations",
+      "Memory allocation patterns for 2048-bit mathematical operations",
+      "API calls suggesting PKCS#1 v1.5 padding implementation",
+      "Performance signatures indicating quantum-vulnerable mathematical operations"
+    ],
+    "vulnerable_algorithms_detected": ["RSA-2048", "PKCS#1 v1.5"],
+    "algorithm_categories": ["shor_vulnerable"],
+    "korean_algorithms_detected": [],
+    "quantum_threats": [
+      "Shor's algorithm applicable to factorization-based operations",
+      "Modular exponentiation vulnerable to quantum period finding",
+      "Large integer arithmetic indicates discrete logarithm or factorization problems"
+    ]
+  },
+  "difficulty": "hard",
+  "difficulty_factors": [
+    "Algorithm names replaced with mathematical descriptions",
+    "API function names obfuscated from standard crypto libraries",
+    "Requires understanding of mathematical operation patterns",
+    "Need to correlate memory allocations with cryptographic operations",
+    "Performance signatures require knowledge of quantum complexity theory"
+  ],
+  "tags": ["rsa", "dynamic-analysis", "factorization", "modular-arithmetic"],
+  "expected_confidence_range": [0.6, 0.85],
+  "key_metrics": {
+    "vulnerable_crypto_detection_accuracy": 0.70,
+    "algorithm_identification_precision": 0.65,
+    "false_positive_rate_max": 0.20,
+    "false_negative_rate_max": 0.25
+  },
+  "evaluation_criteria": [
+    "Recognition of factorization-based cryptography from API patterns",
+    "Understanding of memory allocation patterns for large integer operations",
+    "Correlation between computational complexity and quantum vulnerability",
+    "Analysis of performance signatures indicating mathematical hardness assumptions",
+    "Identification of padding schemes from obfuscated parameter names"
+  ]
+}

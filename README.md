@@ -32,27 +32,37 @@
 ## 📁 프로젝트 구조
 
 ```
-llm_analysis_benchmark/
+AI--Benchmark/
 ├── agents/                          # 분석 에이전트
 │   ├── source_code_agent.py        # 소스코드 분석
 │   ├── assembly_agent.py           # 어셈블리/바이너리 분석
 │   ├── dynamic_analysis_agent.py   # 동적 분석 데이터 처리
 │   └── logs_config_agent.py        # 로그/설정 파일 분석
+├── clients/                         # LLM API 클라이언트
+│   ├── openai_client.py            # OpenAI/ChatGPT
+│   ├── google_client.py            # Google Gemini
+│   ├── anthropic_client.py         # Anthropic Claude
+│   └── xai_client.py               # xAI Grok
 ├── config/
 │   └── config.yaml                 # 설정 파일 (LLM API, 알고리즘 목록)
 ├── data/
-│   └── test_cases/                 # 테스트 케이스
-│       ├── source_code/            # 소스코드 테스트 (5개)
-│       ├── assembly_binary/        # 어셈블리 테스트 (5개)
-│       ├── dynamic_analysis/       # 동적 분석 테스트 (5개)
-│       └── logs_config/            # 로그/설정 테스트 (5개)
+│   ├── test_files/                 # 실제 테스트 파일들 (새로운 구조!)
+│   │   ├── source_code/            # .py, .c, .cpp, .java 등
+│   │   ├── assembly_binary/        # .s, .asm, .bin 등
+│   │   ├── dynamic_analysis/       # .json, .log, .trace 등
+│   │   └── logs_config/            # .conf, .yaml, .log 등
+│   └── ground_truth/               # 테스트 메타데이터 및 정답
+│       ├── source_code/            # 소스코드 테스트 정답
+│       ├── assembly_binary/        # 어셈블리 테스트 정답
+│       ├── dynamic_analysis/       # 동적 분석 테스트 정답
+│       └── logs_config/            # 로그/설정 테스트 정답
 ├── utils/
-│   ├── llm_client.py              # LLM API 클라이언트
-│   ├── metrics_calculator.py      # 성능 지표 계산
-│   └── test_manager.py            # 테스트 케이스 관리
+│   ├── test_case_manager.py        # 테스트 케이스 관리 (파일 기반)
+│   └── metrics_calculator.py      # 성능 지표 계산
+├── reports/                        # 결과 보고서 생성
+│   └── csv_generator.py           # CSV 보고서
 ├── results/                        # 벤치마크 결과
-│   ├── raw_results/               # 원시 결과 데이터
-│   └── summary_reports/           # CSV 요약 보고서
+├── benchmark.py                    # 벤치마크 엔진
 ├── main.py                        # 메인 실행 스크립트
 └── README.md                      # 프로젝트 문서
 ```
@@ -97,37 +107,56 @@ export ANTHROPIC_API_KEY="your-anthropic-api-key"
 ### 기본 벤치마크 실행
 
 ```bash
-python main.py --benchmark
+python main.py
+```
+
+### 특정 LLM Provider만 테스트
+
+```bash
+# OpenAI만 테스트
+python main.py --providers openai
+
+# 여러 Provider 테스트
+python main.py --providers openai google anthropic
 ```
 
 ### 특정 에이전트만 테스트
 
 ```bash
 # 소스코드 에이전트만 테스트
-python main.py --benchmark --agents source_code
+python main.py --agents source_code
 
 # 여러 에이전트 테스트
-python main.py --benchmark --agents source_code,assembly_binary
+python main.py --agents source_code assembly_binary
 ```
 
-### 특정 LLM만 테스트
+### 테스트 케이스 관리
 
 ```bash
-# OpenAI 모델만 테스트
-python main.py --benchmark --llms openai
+# 취약한 암호화 테스트 케이스 생성
+python main.py --generate-vulnerable-test-cases
 
-# 여러 LLM 테스트
-python main.py --benchmark --llms openai,google
+# 레거시 JSON 테스트를 파일 기반으로 마이그레이션
+python main.py --migrate-to-file-based
+
+# 테스트 케이스 통계 확인
+python main.py --test-cases-stats
 ```
 
-### 테스트 케이스 생성
+### 정보 확인
 
 ```bash
-# 새로운 테스트 케이스 생성
-python main.py --generate-tests --count 10
+# 사용 가능한 LLM Provider 목록
+python main.py --list-providers
 
-# 특정 에이전트용 테스트 케이스 생성
-python main.py --generate-tests --agent-type source_code --count 5
+# 사용 가능한 분석 에이전트 목록
+python main.py --list-agents
+
+# 취약한 알고리즘 목록
+python main.py --vulnerable-algorithms
+
+# 한국 국산 알고리즘 목록
+python main.py --korean-algorithms
 ```
 
 ### 상세 옵션
@@ -138,14 +167,15 @@ python main.py --help
 
 #### 주요 옵션들:
 
-- `--benchmark`: 벤치마크 실행
-- `--agents AGENTS`: 테스트할 에이전트 선택 (기본값: 모든 에이전트)
-- `--llms LLMS`: 테스트할 LLM 선택 (기본값: 모든 LLM)
-- `--output-dir DIR`: 결과 저장 디렉토리
-- `--config CONFIG`: 설정 파일 경로
-- `--verbose`: 상세 로그 출력
-- `--generate-tests`: 테스트 케이스 생성
-- `--validate-config`: 설정 파일 검증
+- `--providers PROVIDERS`: 테스트할 LLM provider 선택
+- `--agents AGENTS`: 테스트할 에이전트 선택 (source_code, assembly_binary, dynamic_analysis, logs_config)
+- `--workers N`: 병렬 처리 워커 수 (기본값: 4)
+- `--output-dir DIR`: 결과 저장 디렉토리 (기본값: results)
+- `--config CONFIG`: 설정 파일 경로 (기본값: config/config.yaml)
+- `--csv-only`: CSV 보고서만 생성
+- `--generate-vulnerable-test-cases`: 취약한 암호화 테스트 케이스 생성
+- `--migrate-to-file-based`: 레거시 JSON을 파일 기반 구조로 마이그레이션
+- `--test-cases-stats`: 테스트 케이스 통계 출력
 
 ## 📊 결과 분석
 
@@ -174,39 +204,96 @@ openai,gpt-4,source_code,0.92,0.88,3.2,0.98,0.05,0.08
 google,gemini-pro,assembly_binary,0.85,0.82,2.8,0.95,0.08,0.15
 ```
 
-## 🧪 테스트 케이스
+## 🧪 테스트 케이스 (파일 기반 구조)
 
-각 에이전트별로 5개씩 총 20개의 테스트 케이스가 포함되어 있습니다:
+새로운 파일 기반 구조로 각 에이전트별 테스트 케이스를 관리합니다:
 
-### 소스코드 테스트
-- RSA 취약한 구현 (PKCS#1 v1.5 패딩)
-- 한국 SEED 암호 (난독화된 구현)
-- ECC 양자 취약 곡선 (secp256r1, secp256k1)
-- 한국 ARIA 암호 (위장된 S-box)
-- 레거시 암호 혼합 (DES, 3DES, RC4, MD5, SHA-1)
+### 📁 data/test_files/ 구조
 
-### 어셈블리/바이너리 테스트
-- RSA 모듈러 지수 연산
-- 타원곡선 점 곱셈 및 ECDSA
-- 한국 SEED 암호 어셈블리
-- DES/3DES Feistel 구조
-- DSA 서명 및 Diffie-Hellman
+#### source_code/ - 소스코드 테스트 파일
+- `test_rsa_vulnerable.py`: RSA 취약한 구현 (1024-bit, PKCS#1 v1.5 패딩, SHA-1)
+- `test_korean_seed.c`: 한국 SEED 암호 (난독화된 C 구현)
+- `test_ecc_vulnerable.cpp`: ECC 양자 취약 곡선 (secp256r1, secp256k1)
+- `test_korean_aria.py`: 한국 ARIA 암호 (위장된 S-box 구현)
+- `test_legacy_crypto_mix.java`: 레거시 암호 혼합 (DES, 3DES, RC4, MD5, SHA-1)
 
-### 동적 분석 테스트
-- RSA API 호출 추적
-- 한국 암호 라이브러리 사용
-- ECC 키 교환 패턴
-- 레거시 해시 함수 사용
-- RC4/DES 런타임 행동
+#### assembly_binary/ - 어셈블리/바이너리 테스트 파일
+- `test_rsa_modexp.s`: RSA 모듈러 지수 연산 어셈블리
+- `test_ecc_point_mul.bin`: 타원곡선 점 곱셈 및 ECDSA 바이너리
+- `test_korean_seed.s`: 한국 SEED 암호 어셈블리
+- `test_des_3des.asm`: DES/3DES Feistel 구조 어셈블리
+- `test_dsa_dh.bin`: DSA 서명 및 Diffie-Hellman 바이너리
 
-### 로그/설정 테스트
-- SSL 취약한 설정
-- 한국 암호 정책 설정
-- OpenSSL 암호 사용 로그
-- Nginx TLS 설정
-- 암호화 감사 로그
+#### dynamic_analysis/ - 동적 분석 테스트 파일
+- `test_rsa_api_calls.json`: RSA API 호출 추적 데이터
+- `test_korean_crypto_libs.log`: 한국 암호 라이브러리 사용 로그
+- `test_ecc_key_exchange.json`: ECC 키 교환 패턴 분석
+- `test_legacy_hash_usage.trace`: 레거시 해시 함수 사용 추적
+- `test_rc4_des_runtime.log`: RC4/DES 런타임 행동 분석
+
+#### logs_config/ - 로그/설정 테스트 파일
+- `test_ssl_config_vulnerable.conf`: Apache SSL 취약한 설정
+- `test_korean_crypto_config.yml`: 한국 암호 정책 설정
+- `test_openssl_cipher_logs.log`: OpenSSL 암호 사용 로그
+- `test_nginx_tls_config.conf`: Nginx TLS 설정
+- `test_crypto_audit_logs.log`: 암호화 감사 로그
+
+### 📁 data/ground_truth/ 구조
+
+각 테스트 파일에 대응하는 정답 파일이 JSON 형태로 저장:
+- 예상 탐지 알고리즘 목록
+- 알고리즘 카테고리 (shor_vulnerable, grover_vulnerable 등)
+- 한국 알고리즘 정보
+- 난이도 및 태그 정보
+- 평가 기준 및 성능 지표
+
+## ✨ 새로운 기능 (v2.0)
+
+### 🗂️ 파일 기반 테스트 구조
+- **실제 파일 형태**로 테스트 케이스 저장 (.py, .c, .conf, .log 등)
+- **자동 파일 타입 감지** 및 적절한 확장자 할당
+- **바이너리 파일 지원** (hex 형태로 저장/로드)
+- **레거시 JSON 호환성** 유지
+
+### 🔄 마이그레이션 도구
+```bash
+# 기존 JSON 테스트를 파일 기반으로 자동 변환
+python main.py --migrate-to-file-based
+```
+
+### 📊 향상된 테스트 관리
+```bash
+# 테스트 케이스 통계 및 커버리지 확인
+python main.py --test-cases-stats
+
+# 다양한 정보 확인 옵션들
+python main.py --list-providers
+python main.py --list-agents
+python main.py --vulnerable-algorithms
+python main.py --korean-algorithms
+```
 
 ## 🔧 커스터마이제이션
+
+### 새로운 테스트 파일 추가
+
+1. **테스트 파일 생성**: `data/test_files/[agent_type]/`에 실제 파일 저장
+2. **Ground Truth 생성**: `data/ground_truth/[agent_type]/`에 JSON 메타데이터 저장
+
+```json
+{
+  "description": "테스트 케이스 설명",
+  "file_extension": ".py",
+  "format": "file_based",
+  "expected_findings": {
+    "vulnerable_algorithms_detected": ["RSA-1024", "SHA-1"],
+    "algorithm_categories": ["shor_vulnerable", "grover_vulnerable"],
+    "korean_algorithms_detected": []
+  },
+  "difficulty": "medium",
+  "tags": ["rsa", "vulnerable-crypto"]
+}
+```
 
 ### 새로운 알고리즘 추가
 
@@ -220,9 +307,9 @@ vulnerable_algorithms:
     - "NEW_KOREAN_ALGORITHM"
 ```
 
-### 새로운 LLM 추가
+### 새로운 LLM Provider 추가
 
-`utils/llm_client.py`에서 새 LLM 클라이언트 구현 후 설정 파일에 추가:
+`clients/` 디렉토리에 새 클라이언트 구현 후 설정 파일에 추가:
 
 ```yaml
 llm_providers:
@@ -237,7 +324,7 @@ llm_providers:
 1. `agents/` 디렉토리에 새 에이전트 파일 생성
 2. `BaseAgent` 클래스 상속
 3. `analyze()` 메서드 구현
-4. `main.py`에서 에이전트 등록
+4. Factory 패턴으로 등록
 
 ## 📈 성능 최적화
 
@@ -246,23 +333,25 @@ llm_providers:
 기본적으로 여러 LLM 요청을 병렬로 처리합니다:
 
 ```bash
-python main.py --benchmark --parallel-requests 5
+# 워커 수 조정 (기본값: 4)
+python main.py --workers 8
 ```
 
-### 캐싱
-
-동일한 입력에 대한 LLM 응답을 캐싱하여 중복 요청을 방지:
+### 출력 최적화
 
 ```bash
-python main.py --benchmark --enable-cache
+# CSV 보고서만 생성 (JSON 생략으로 속도 향상)
+python main.py --csv-only
+
+# 특정 출력 디렉토리 지정
+python main.py --output-dir custom_results
 ```
 
-### 배치 처리
-
-큰 데이터셋에 대해 배치 단위로 처리:
+### 테스트 범위 제한
 
 ```bash
-python main.py --benchmark --batch-size 10
+# 특정 Provider와 Agent만 테스트하여 시간 단축
+python main.py --providers openai --agents source_code
 ```
 
 ## 🐛 문제 해결
@@ -271,17 +360,27 @@ python main.py --benchmark --batch-size 10
 
 1. **API 키 오류**: `config/config.yaml`에서 올바른 API 키 설정 확인
 2. **네트워크 오류**: 인터넷 연결 및 방화벽 설정 확인
-3. **메모리 부족**: `--batch-size` 옵션으로 배치 크기 조정
-4. **JSON 파싱 오류**: LLM 응답 형식 문제, `--retry-failed` 옵션 사용
+3. **테스트 케이스 오류**: `python main.py --test-cases-stats`로 상태 확인
+4. **파일 인코딩 문제**: UTF-8 인코딩 자동 처리, 바이너리 파일은 hex 변환
 
 ### 로그 확인
 
 ```bash
-# 상세 로그 출력
-python main.py --benchmark --verbose
+# 벤치마크 로그 확인
+tail -f benchmark.log
 
-# 로그 파일 확인
-tail -f logs/benchmark.log
+# Provider 상태 확인
+python main.py --list-providers
+```
+
+### 마이그레이션 문제
+
+```bash
+# 레거시 JSON에서 파일 기반으로 마이그레이션 재실행
+python main.py --migrate-to-file-based
+
+# 마이그레이션 후 통계 확인
+python main.py --test-cases-stats
 ```
 
 ## 🤝 기여하기

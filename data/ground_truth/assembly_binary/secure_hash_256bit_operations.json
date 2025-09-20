@@ -1,0 +1,35 @@
+{
+  "file_type": "assembly_binary",
+  "difficulty": "medium",
+  "crypto_elements": [
+    {
+      "type": "cryptographic_hash",
+      "algorithm": "SHA-256",
+      "hash_size": 256,
+      "implementation": "SHA-2 family hash function with 64 rounds",
+      "location": "sub_401000 main function",
+      "severity": "low",
+      "description": "SHA-256 hash function implementation"
+    },
+    {
+      "type": "hash_initialization",
+      "algorithm": "SHA-256 IV",
+      "implementation": "Standard SHA-256 initialization vectors",
+      "location": "Initial hash state setup",
+      "severity": "low",
+      "description": "Proper initialization with standard SHA-256 constants"
+    },
+    {
+      "type": "compression_function",
+      "algorithm": "SHA-256 compression",
+      "implementation": "Message block processing",
+      "location": "sub_401100 compression rounds",
+      "severity": "low",
+      "description": "SHA-256 message compression with round constants"
+    }
+  ],
+  "quantum_vulnerable": true,
+  "vulnerability_count": 1,
+  "primary_weakness": "Vulnerable to quantum attacks via Grover's algorithm, reducing effective security to 128 bits",
+  "additional_notes": "SHA-256 is currently considered secure against classical attacks but quantum computers could reduce security strength"
+}

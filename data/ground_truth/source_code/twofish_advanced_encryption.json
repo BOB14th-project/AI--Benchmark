@@ -1,0 +1,48 @@
+{
+  "description": "Twofish symmetric cipher implementation with key-dependent S-boxes, PHT, and Feistel structure for 128-bit block encryption",
+  "file_extension": ".c",
+  "format": "file_based",
+  "expected_findings": {
+    "analysis_points": [
+      "Twofish symmetric cipher with 16 rounds",
+      "Key-dependent S-box generation",
+      "Pseudo-Hadamard Transform (PHT) operations",
+      "Feistel network structure",
+      "Variable-length key support (128, 192, 256 bits)",
+      "Maximum Distance Separable (MDS) matrix",
+      "AES finalist cipher algorithm"
+    ],
+    "vulnerable_algorithms_detected": ["Twofish"],
+    "algorithm_categories": ["grover_vulnerable"],
+    "korean_algorithms_detected": [],
+    "quantum_threats": [
+      "Grover's algorithm reduces effective key strength by half",
+      "128-bit keys provide ~64-bit quantum security",
+      "256-bit keys provide ~128-bit quantum security",
+      "No specific quantum vulnerabilities beyond key reduction"
+    ]
+  },
+  "difficulty": "hard",
+  "difficulty_factors": [
+    "Complex key-dependent S-box generation",
+    "Pseudo-Hadamard Transform implementation",
+    "MDS matrix operations",
+    "Advanced Feistel structure",
+    "Multiple key schedules and transformations"
+  ],
+  "tags": ["twofish", "symmetric-encryption", "feistel", "key-dependent-sbox", "aes-finalist"],
+  "expected_confidence_range": [0.72, 0.85],
+  "key_metrics": {
+    "vulnerable_crypto_detection_accuracy": 0.79,
+    "algorithm_identification_precision": 0.76,
+    "false_positive_rate_max": 0.18,
+    "false_negative_rate_max": 0.21
+  },
+  "evaluation_criteria": [
+    "Recognition of Twofish key schedule complexity",
+    "Understanding of PHT and MDS operations",
+    "Identification of key-dependent S-box generation",
+    "Knowledge of AES competition history",
+    "Recognition of advanced Feistel design"
+  ]
+}

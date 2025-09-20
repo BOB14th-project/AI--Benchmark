@@ -1,0 +1,48 @@
+{
+  "description": "Whirlpool cryptographic hash function implementation with 512-bit output and AES-like structure for secure message digests",
+  "file_extension": ".c",
+  "format": "file_based",
+  "expected_findings": {
+    "analysis_points": [
+      "Whirlpool cryptographic hash function",
+      "512-bit (64-byte) hash output",
+      "AES-like transformation structure",
+      "S-box substitution operations",
+      "10 rounds of compression function",
+      "Miyaguchi-Preneel construction",
+      "ISO/IEC standardized hash algorithm"
+    ],
+    "vulnerable_algorithms_detected": ["Whirlpool"],
+    "algorithm_categories": ["grover_vulnerable"],
+    "korean_algorithms_detected": [],
+    "quantum_threats": [
+      "Grover's algorithm reduces collision resistance by half",
+      "512-bit output provides ~256-bit quantum collision resistance",
+      "Pre-image resistance reduced to ~256 bits against quantum attacks",
+      "Still provides strong security against quantum adversaries"
+    ]
+  },
+  "difficulty": "medium",
+  "difficulty_factors": [
+    "AES-like S-box and transformation patterns",
+    "Miyaguchi-Preneel construction recognition",
+    "512-bit output size characteristic",
+    "Round function structure",
+    "Hash function compression operations"
+  ],
+  "tags": ["whirlpool", "hash-function", "512-bit", "aes-like", "iso-standard"],
+  "expected_confidence_range": [0.80, 0.91],
+  "key_metrics": {
+    "vulnerable_crypto_detection_accuracy": 0.86,
+    "algorithm_identification_precision": 0.83,
+    "false_positive_rate_max": 0.12,
+    "false_negative_rate_max": 0.14
+  },
+  "evaluation_criteria": [
+    "Recognition of Whirlpool hash structure",
+    "Understanding of AES-like transformations",
+    "Identification of 512-bit output characteristic",
+    "Knowledge of hash function security properties",
+    "Recognition of standardized cryptographic algorithm"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "description": "Blowfish symmetric encryption implementation with Feistel network structure, P-array, and S-boxes for variable-length key encryption",
+  "file_extension": ".c",
+  "format": "file_based",
+  "expected_findings": {
+    "analysis_points": [
+      "Blowfish symmetric cipher with Feistel network design",
+      "Variable-length key support (32-448 bits)",
+      "P-array with 18 subkeys for encryption rounds",
+      "Four S-boxes with 256 entries each",
+      "F-function using S-box lookups and modular arithmetic",
+      "16 rounds of Feistel encryption",
+      "64-bit block size encryption"
+    ],
+    "vulnerable_algorithms_detected": ["Blowfish"],
+    "algorithm_categories": ["grover_vulnerable"],
+    "korean_algorithms_detected": [],
+    "quantum_threats": [
+      "Grover's algorithm reduces effective key strength by half",
+      "64-bit block size susceptible to birthday attacks",
+      "Sweet32 vulnerability in long-running connections"
+    ]
+  },
+  "difficulty": "medium",
+  "difficulty_factors": [
+    "Characteristic P-array constants visible",
+    "S-box structure and initialization patterns",
+    "Feistel F-function implementation",
+    "Key expansion algorithm",
+    "Standard Blowfish round count (16)"
+  ],
+  "tags": ["blowfish", "symmetric-encryption", "feistel-network", "variable-key"],
+  "expected_confidence_range": [0.80, 0.92],
+  "key_metrics": {
+    "vulnerable_crypto_detection_accuracy": 0.85,
+    "algorithm_identification_precision": 0.82,
+    "false_positive_rate_max": 0.12,
+    "false_negative_rate_max": 0.15
+  },
+  "evaluation_criteria": [
+    "Recognition of Blowfish P-array and S-box structure",
+    "Understanding of Feistel network operations",
+    "Identification of key expansion mechanism",
+    "Knowledge of small block size vulnerabilities",
+    "Recognition of quantum cryptanalysis impact"
+  ]
+}

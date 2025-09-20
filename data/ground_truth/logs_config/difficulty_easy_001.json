@@ -1,0 +1,31 @@
+{
+  "file_type": "logs_config",
+  "difficulty": "easy",
+  "crypto_elements": [
+    {
+      "type": "deprecated_cipher",
+      "algorithm": "RC4",
+      "location": "SSL configuration",
+      "severity": "high",
+      "description": "RC4 stream cipher is cryptographically broken"
+    },
+    {
+      "type": "weak_key_size",
+      "algorithm": "RSA",
+      "key_size": 1024,
+      "location": "SSL certificate",
+      "severity": "medium",
+      "description": "1024-bit RSA keys are considered weak"
+    },
+    {
+      "type": "legacy_protocol",
+      "protocol": "SSLv3",
+      "location": "Protocol configuration",
+      "severity": "high",
+      "description": "SSLv3 has known vulnerabilities"
+    }
+  ],
+  "quantum_vulnerable": true,
+  "vulnerability_count": 3,
+  "primary_weakness": "Use of cryptographically broken RC4 cipher"
+}

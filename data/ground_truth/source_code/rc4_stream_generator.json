@@ -1,0 +1,47 @@
+{
+  "description": "RC4 stream cipher implementation with key scheduling algorithm (KSA) and pseudo-random generation algorithm (PRGA)",
+  "file_extension": ".c",
+  "format": "file_based",
+  "expected_findings": {
+    "analysis_points": [
+      "RC4 stream cipher with 256-byte state array",
+      "Key Scheduling Algorithm (KSA) for initialization",
+      "Pseudo-Random Generation Algorithm (PRGA) for keystream",
+      "Variable-length key support (1-256 bytes)",
+      "State permutation and swapping operations",
+      "Vulnerable stream cipher with known weaknesses"
+    ],
+    "vulnerable_algorithms_detected": ["RC4"],
+    "algorithm_categories": ["broken", "grover_vulnerable"],
+    "korean_algorithms_detected": [],
+    "quantum_threats": [
+      "Grover's algorithm reduces effective key strength by half",
+      "RC4 already broken by classical cryptanalysis",
+      "Biases in keystream generation exploitable",
+      "No additional quantum resistance"
+    ]
+  },
+  "difficulty": "easy",
+  "difficulty_factors": [
+    "Characteristic 256-byte state array",
+    "Simple key scheduling algorithm",
+    "Recognizable RC4 swap operations",
+    "Well-known deprecated algorithm",
+    "Clear state permutation patterns"
+  ],
+  "tags": ["rc4", "stream-cipher", "deprecated", "vulnerable", "ksa", "prga"],
+  "expected_confidence_range": [0.90, 0.98],
+  "key_metrics": {
+    "vulnerable_crypto_detection_accuracy": 0.95,
+    "algorithm_identification_precision": 0.92,
+    "false_positive_rate_max": 0.05,
+    "false_negative_rate_max": 0.08
+  },
+  "evaluation_criteria": [
+    "Recognition of RC4 state array and initialization",
+    "Understanding of key scheduling algorithm",
+    "Identification of stream cipher operations",
+    "Knowledge of RC4 security vulnerabilities",
+    "Recognition of deprecated cryptographic status"
+  ]
+}

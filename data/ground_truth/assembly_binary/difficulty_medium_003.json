@@ -1,0 +1,40 @@
+{
+  "file_type": "assembly_binary",
+  "difficulty": "medium",
+  "crypto_elements": [
+    {
+      "type": "aria_block_cipher",
+      "algorithm": "ARIA",
+      "key_size": 128,
+      "implementation": "Korean standard block cipher with 12 rounds",
+      "location": "korean_cipher_encrypt function",
+      "severity": "low",
+      "description": "Symmetric cipher resistant to quantum attacks but may have implementation vulnerabilities"
+    },
+    {
+      "type": "seed_block_cipher",
+      "algorithm": "SEED",
+      "implementation": "Korean SEED cipher with F-function",
+      "location": "korean_seed_encrypt function",
+      "severity": "low",
+      "description": "128-bit block cipher with 16 rounds"
+    },
+    {
+      "type": "substitution_boxes",
+      "algorithm": "S-box operations",
+      "location": "aria_sbox1, aria_sbox2",
+      "severity": "low",
+      "description": "Cryptographic S-boxes for nonlinear operations"
+    },
+    {
+      "type": "key_schedule",
+      "algorithm": "ARIA key expansion",
+      "location": "aria_key_schedule function call",
+      "severity": "low",
+      "description": "Key schedule generation from master key"
+    }
+  ],
+  "quantum_vulnerable": false,
+  "vulnerability_count": 0,
+  "primary_weakness": "Implementation-level vulnerabilities possible but algorithms are quantum-resistant"
+}

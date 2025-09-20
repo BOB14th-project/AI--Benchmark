@@ -1,0 +1,33 @@
+{
+  "file_type": "assembly_binary",
+  "difficulty": "easy",
+  "crypto_elements": [
+    {
+      "type": "rsa_encryption",
+      "algorithm": "RSA",
+      "key_size": 1024,
+      "implementation": "Textbook RSA without padding",
+      "location": "rsa_encrypt function",
+      "severity": "high",
+      "description": "Vulnerable textbook RSA implementation"
+    },
+    {
+      "type": "broken_hash",
+      "algorithm": "MD5",
+      "implementation": "MD5 compression function",
+      "location": "md5_hash function",
+      "severity": "critical",
+      "description": "MD5 hash function with known collision vulnerabilities"
+    },
+    {
+      "type": "modular_exponentiation",
+      "algorithm": "Fast exponentiation",
+      "location": "modexp_loop",
+      "severity": "medium",
+      "description": "Side-channel vulnerable modular exponentiation"
+    }
+  ],
+  "quantum_vulnerable": true,
+  "vulnerability_count": 3,
+  "primary_weakness": "RSA vulnerable to Shor's algorithm and MD5 collision attacks"
+}

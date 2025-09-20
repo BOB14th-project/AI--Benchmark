@@ -1,0 +1,40 @@
+{
+  "file_type": "assembly_binary",
+  "difficulty": "easy",
+  "crypto_elements": [
+    {
+      "type": "ecdsa_signature",
+      "algorithm": "ECDSA",
+      "curve": "secp256r1",
+      "implementation": "Elliptic curve digital signature",
+      "location": "ecdsa_sign function",
+      "severity": "critical",
+      "description": "ECDSA vulnerable to quantum attacks via modified Shor's algorithm"
+    },
+    {
+      "type": "elliptic_curve_point_multiplication",
+      "algorithm": "ECC scalar multiplication",
+      "location": "ecc_point_multiply function call",
+      "severity": "high",
+      "description": "ECC operations vulnerable to quantum discrete logarithm algorithms"
+    },
+    {
+      "type": "legacy_hash",
+      "algorithm": "SHA-1",
+      "implementation": "SHA-1 compression with 80 rounds",
+      "location": "sha1_hash function",
+      "severity": "medium",
+      "description": "SHA-1 weakened by collision attacks"
+    },
+    {
+      "type": "modular_inverse",
+      "algorithm": "Extended Euclidean Algorithm",
+      "location": "mod_inverse function call",
+      "severity": "low",
+      "description": "Critical component for ECDSA signature generation"
+    }
+  ],
+  "quantum_vulnerable": true,
+  "vulnerability_count": 4,
+  "primary_weakness": "ECDSA completely broken by quantum computers"
+}

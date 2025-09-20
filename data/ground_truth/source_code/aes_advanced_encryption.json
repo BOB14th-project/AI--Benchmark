@@ -1,0 +1,48 @@
+{
+  "description": "Complete AES implementation with support for 128, 192, and 256-bit keys, including all standard AES transformations and both encryption and decryption operations",
+  "file_extension": ".java",
+  "format": "file_based",
+  "expected_findings": {
+    "analysis_points": [
+      "Advanced Encryption Standard (AES) symmetric cipher implementation",
+      "Support for multiple key sizes: 128, 192, and 256 bits",
+      "Standard AES transformations: SubBytes, ShiftRows, MixColumns, AddRoundKey",
+      "S-box and inverse S-box lookup tables for byte substitution",
+      "Key expansion algorithm with round constants (RCON)",
+      "Galois field multiplication for MixColumns operations",
+      "Block cipher mode with 16-byte (128-bit) block size",
+      "Complete encryption and decryption functionality"
+    ],
+    "vulnerable_algorithms_detected": ["AES"],
+    "algorithm_categories": ["grover_vulnerable"],
+    "korean_algorithms_detected": [],
+    "quantum_threats": [
+      "Grover's algorithm reduces effective key strength by half",
+      "AES-128 provides ~64-bit security against quantum attacks",
+      "AES-256 provides ~128-bit security against quantum attacks"
+    ]
+  },
+  "difficulty": "medium",
+  "difficulty_factors": [
+    "Standard AES S-box and inverse S-box clearly present",
+    "Key expansion with RCON constants visible",
+    "All four main AES transformations implemented",
+    "Galois field operations for MixColumns",
+    "Multiple key sizes and corresponding round counts"
+  ],
+  "tags": ["aes", "symmetric-encryption", "block-cipher", "rijndael", "galois-field"],
+  "expected_confidence_range": [0.85, 0.95],
+  "key_metrics": {
+    "vulnerable_crypto_detection_accuracy": 0.90,
+    "algorithm_identification_precision": 0.88,
+    "false_positive_rate_max": 0.08,
+    "false_negative_rate_max": 0.10
+  },
+  "evaluation_criteria": [
+    "Recognition of AES S-box and transformation patterns",
+    "Understanding of key expansion algorithm",
+    "Identification of standard AES operations and constants",
+    "Knowledge of quantum vulnerability (Grover's algorithm impact)",
+    "Recognition of different AES key sizes and security levels"
+  ]
+}

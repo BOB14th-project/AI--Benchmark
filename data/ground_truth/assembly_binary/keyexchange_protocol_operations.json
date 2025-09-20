@@ -1,0 +1,35 @@
+{
+  "file_type": "assembly_binary",
+  "difficulty": "medium",
+  "crypto_elements": [
+    {
+      "type": "key_exchange",
+      "algorithm": "Diffie-Hellman",
+      "key_size": 1024,
+      "implementation": "Classic DH key exchange with modular exponentiation",
+      "location": "sub_401000 main function",
+      "severity": "high",
+      "description": "Diffie-Hellman key exchange protocol"
+    },
+    {
+      "type": "modular_exponentiation",
+      "algorithm": "Square-and-multiply",
+      "implementation": "Binary exponentiation for DH computation",
+      "location": "loc_401040 computation loop",
+      "severity": "medium",
+      "description": "Modular exponentiation without side-channel protection"
+    },
+    {
+      "type": "discrete_logarithm",
+      "algorithm": "DLP in multiplicative group",
+      "implementation": "Security based on discrete logarithm problem",
+      "location": "Mathematical foundation",
+      "severity": "high",
+      "description": "Security relies on difficulty of discrete logarithm problem"
+    }
+  ],
+  "quantum_vulnerable": true,
+  "vulnerability_count": 2,
+  "primary_weakness": "Diffie-Hellman is completely broken by Shor's algorithm on quantum computers",
+  "additional_notes": "Classic DH without additional protections is vulnerable to man-in-the-middle attacks and lacks authentication"
+}

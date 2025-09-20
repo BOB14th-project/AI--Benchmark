@@ -1,0 +1,42 @@
+{
+  "file_type": "source_code",
+  "difficulty": "hard",
+  "crypto_elements": [
+    {
+      "type": "block_cipher",
+      "algorithm": "ARIA",
+      "key_size": 128,
+      "implementation": "Korean Financial Services Commission approved cipher",
+      "location": "KoreanFinancialProcessor class",
+      "severity": "low",
+      "description": "Korean domestic ARIA cipher with 12 rounds for financial data protection"
+    },
+    {
+      "type": "hash_function",
+      "algorithm": "SHA-256",
+      "implementation": "Korean government approved message digest system",
+      "location": "GovernmentApprovedHasher class",
+      "severity": "low",
+      "description": "256-bit hash function for government compliance with 64 rounds"
+    },
+    {
+      "type": "elliptic_curve_cryptography",
+      "algorithm": "ECDSA",
+      "curve": "secp256k1",
+      "implementation": "Korean standard elliptic curve digital signatures",
+      "location": "KoreanPublicKeyProcessor class",
+      "severity": "critical",
+      "description": "ECC implementation vulnerable to quantum attacks via Shor's algorithm"
+    },
+    {
+      "type": "digital_signature",
+      "algorithm": "ECDSA",
+      "location": "sign_message method",
+      "severity": "critical",
+      "description": "Digital signature scheme completely broken by quantum computers"
+    }
+  ],
+  "quantum_vulnerable": true,
+  "vulnerability_count": 2,
+  "primary_weakness": "ECC-based digital signatures vulnerable to quantum cryptanalysis"
+}

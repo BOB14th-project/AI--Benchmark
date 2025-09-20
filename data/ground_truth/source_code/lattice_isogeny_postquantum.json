@@ -1,0 +1,39 @@
+{
+  "file_type": "source_code",
+  "difficulty": "extreme",
+  "crypto_elements": [
+    {
+      "type": "post_quantum_cryptography",
+      "algorithm": "Lattice-based cryptography",
+      "implementation": "NTRU-like scheme with NTT polynomial multiplication",
+      "location": "QuantumResistantProcessor class",
+      "severity": "none",
+      "description": "Post-quantum lattice-based encryption resistant to quantum attacks"
+    },
+    {
+      "type": "isogeny_cryptography",
+      "algorithm": "SIDH/SIKE",
+      "implementation": "Supersingular isogeny key exchange",
+      "location": "IsogenyKeyExchange class",
+      "severity": "critical",
+      "description": "SIDH broken by classical Castryck-Decru attack (2022)"
+    },
+    {
+      "type": "number_theoretic_transform",
+      "algorithm": "NTT",
+      "location": "_number_theoretic_transform method",
+      "severity": "none",
+      "description": "Efficient polynomial multiplication for lattice-based schemes"
+    },
+    {
+      "type": "gaussian_sampling",
+      "algorithm": "Discrete Gaussian distribution",
+      "location": "_gaussian_sampling method",
+      "severity": "low",
+      "description": "Critical for lattice-based security, implementation quality affects security"
+    }
+  ],
+  "quantum_vulnerable": false,
+  "vulnerability_count": 1,
+  "primary_weakness": "SIDH vulnerable to classical cryptanalysis, lattice schemes remain secure"
+}

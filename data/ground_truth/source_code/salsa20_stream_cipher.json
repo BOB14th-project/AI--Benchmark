@@ -1,0 +1,48 @@
+{
+  "description": "Salsa20 stream cipher implementation with ARX operations and quarter-round function for high-performance encryption",
+  "file_extension": ".c",
+  "format": "file_based",
+  "expected_findings": {
+    "analysis_points": [
+      "Salsa20 stream cipher with 20 rounds",
+      "ARX (Add-Rotate-XOR) operations",
+      "Quarter-round function implementation",
+      "256-bit keys and 64-bit nonces",
+      "High-performance stream cipher design",
+      "Cryptographic constants and initialization",
+      "Fast software implementation optimized"
+    ],
+    "vulnerable_algorithms_detected": ["Salsa20"],
+    "algorithm_categories": ["grover_vulnerable"],
+    "korean_algorithms_detected": [],
+    "quantum_threats": [
+      "Grover's algorithm reduces effective key strength by half",
+      "256-bit keys provide ~128-bit quantum security",
+      "Stream cipher design provides good quantum resistance",
+      "No specific quantum vulnerabilities beyond key reduction"
+    ]
+  },
+  "difficulty": "medium",
+  "difficulty_factors": [
+    "Salsa20 quarter-round structure",
+    "ARX operation patterns",
+    "Characteristic constants and magic numbers",
+    "Stream cipher keystream generation",
+    "Modern cryptographic primitive design"
+  ],
+  "tags": ["salsa20", "stream-cipher", "arx", "quarter-round", "high-performance"],
+  "expected_confidence_range": [0.78, 0.89],
+  "key_metrics": {
+    "vulnerable_crypto_detection_accuracy": 0.84,
+    "algorithm_identification_precision": 0.81,
+    "false_positive_rate_max": 0.12,
+    "false_negative_rate_max": 0.16
+  },
+  "evaluation_criteria": [
+    "Recognition of Salsa20 quarter-round operations",
+    "Understanding of ARX construction principles",
+    "Identification of stream cipher characteristics",
+    "Knowledge of modern cipher design",
+    "Recognition of performance-oriented implementation"
+  ]
+}

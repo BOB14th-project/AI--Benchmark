@@ -1,0 +1,35 @@
+{
+  "file_type": "assembly_binary",
+  "difficulty": "easy",
+  "crypto_elements": [
+    {
+      "type": "stream_cipher",
+      "algorithm": "RC4",
+      "key_size": "variable",
+      "implementation": "Standard RC4 key scheduling and pseudorandom generation",
+      "location": "sub_401000 main function",
+      "severity": "critical",
+      "description": "RC4 stream cipher implementation"
+    },
+    {
+      "type": "key_scheduling",
+      "algorithm": "RC4 KSA",
+      "implementation": "Key Scheduling Algorithm with S-box initialization",
+      "location": "sub_401200",
+      "severity": "critical",
+      "description": "RC4 key scheduling with known weaknesses"
+    },
+    {
+      "type": "pseudorandom_generation",
+      "algorithm": "RC4 PRGA",
+      "implementation": "Pseudorandom Generation Algorithm",
+      "location": "loc_401030 generation loop",
+      "severity": "critical",
+      "description": "RC4 keystream generation with statistical biases"
+    }
+  ],
+  "quantum_vulnerable": false,
+  "vulnerability_count": 3,
+  "primary_weakness": "RC4 has multiple known vulnerabilities including key scheduling weaknesses, statistical biases, and related-key attacks",
+  "additional_notes": "RC4 is deprecated and should not be used in new applications due to numerous cryptanalytic attacks"
+}

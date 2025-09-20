@@ -1,0 +1,32 @@
+{
+  "file_type": "source_code",
+  "difficulty": "medium",
+  "crypto_elements": [
+    {
+      "type": "block_cipher",
+      "algorithm": "ARIA",
+      "key_size": 128,
+      "implementation": "Korean domestic block cipher with 12 rounds",
+      "location": "KoreanBlockProcessor class",
+      "severity": "low",
+      "description": "ARIA cipher implementation with dual S-boxes and diffusion layer"
+    },
+    {
+      "type": "substitution_permutation_network",
+      "algorithm": "SPN structure",
+      "location": "encrypt_block method",
+      "severity": "low",
+      "description": "Substitution-permutation network with alternating S-box types"
+    },
+    {
+      "type": "key_schedule",
+      "algorithm": "ARIA key expansion",
+      "location": "_expand_key method",
+      "severity": "low",
+      "description": "Key schedule using round constants and S-box transformations"
+    }
+  ],
+  "quantum_vulnerable": false,
+  "vulnerability_count": 0,
+  "primary_weakness": "Implementation may have side-channel vulnerabilities but algorithm is quantum-resistant"
+}

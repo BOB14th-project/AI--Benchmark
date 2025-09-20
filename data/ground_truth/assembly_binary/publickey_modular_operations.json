@@ -1,0 +1,35 @@
+{
+  "file_type": "assembly_binary",
+  "difficulty": "medium",
+  "crypto_elements": [
+    {
+      "type": "public_key_encryption",
+      "algorithm": "RSA",
+      "key_size": 1024,
+      "implementation": "RSA modular exponentiation",
+      "location": "sub_401000 main function",
+      "severity": "high",
+      "description": "RSA encryption using modular exponentiation"
+    },
+    {
+      "type": "modular_exponentiation",
+      "algorithm": "Square-and-multiply",
+      "implementation": "Binary exponentiation with modular reduction",
+      "location": "loc_401040 exponentiation loop",
+      "severity": "high",
+      "description": "Side-channel vulnerable modular exponentiation without blinding"
+    },
+    {
+      "type": "weak_key_size",
+      "algorithm": "RSA-1024",
+      "key_size": 1024,
+      "location": "Key material in data section",
+      "severity": "high",
+      "description": "1024-bit RSA keys are considered weak by modern standards"
+    }
+  ],
+  "quantum_vulnerable": true,
+  "vulnerability_count": 3,
+  "primary_weakness": "RSA is completely broken by Shor's algorithm on quantum computers, and 1024-bit keys are weak against classical attacks",
+  "additional_notes": "Implementation lacks timing attack protection and uses insufficient key size. Vulnerable to factorization attacks"
+}

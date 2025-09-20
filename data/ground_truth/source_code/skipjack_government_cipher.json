@@ -1,0 +1,48 @@
+{
+  "description": "Skipjack government cipher implementation with 80-bit key and Feistel-like structure for classified communications",
+  "file_extension": ".c",
+  "format": "file_based",
+  "expected_findings": {
+    "analysis_points": [
+      "Skipjack symmetric cipher",
+      "80-bit key length",
+      "32 rounds with Feistel-like structure",
+      "64-bit block size",
+      "G-function with S-box operations",
+      "NSA-designed algorithm",
+      "Clipper chip encryption system"
+    ],
+    "vulnerable_algorithms_detected": ["Skipjack"],
+    "algorithm_categories": ["broken", "grover_vulnerable"],
+    "korean_algorithms_detected": [],
+    "quantum_threats": [
+      "80-bit key already insufficient for classical security",
+      "Grover's algorithm reduces to ~40-bit effective security",
+      "Small block size vulnerable to birthday attacks",
+      "Government backdoor concerns in original design"
+    ]
+  },
+  "difficulty": "medium",
+  "difficulty_factors": [
+    "80-bit key characteristic",
+    "G-function implementation patterns",
+    "32-round Feistel-like structure",
+    "NSA algorithm recognition",
+    "Historical government cipher identification"
+  ],
+  "tags": ["skipjack", "government-cipher", "80-bit-key", "nsa", "clipper-chip"],
+  "expected_confidence_range": [0.78, 0.90],
+  "key_metrics": {
+    "vulnerable_crypto_detection_accuracy": 0.85,
+    "algorithm_identification_precision": 0.82,
+    "false_positive_rate_max": 0.12,
+    "false_negative_rate_max": 0.15
+  },
+  "evaluation_criteria": [
+    "Recognition of Skipjack G-function operations",
+    "Understanding of 80-bit key limitation",
+    "Identification of government cipher characteristics",
+    "Knowledge of Clipper chip history",
+    "Recognition of deprecated cryptographic status"
+  ]
+}

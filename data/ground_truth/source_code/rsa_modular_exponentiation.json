@@ -1,0 +1,41 @@
+{
+  "description": "Asymmetric cryptography implementation with 1024-bit keys, PKCS#1 v1.5 padding, and SHA-1 hashing - requires deep analysis to identify quantum vulnerabilities",
+  "file_extension": ".py",
+  "format": "file_based",
+  "expected_findings": {
+    "analysis_points": [
+      "Factorization-based public key cryptography with insufficient key length",
+      "Vulnerable padding scheme (PKCS#1 v1.5) susceptible to oracle attacks",
+      "Weak cryptographic hash function (SHA-1) with collision vulnerabilities",
+      "Mathematical operations indicating discrete logarithm or factorization problems"
+    ],
+    "vulnerable_algorithms_detected": ["RSA-1024", "PKCS#1 v1.5", "SHA-1"],
+    "algorithm_categories": ["shor_vulnerable", "grover_vulnerable"],
+    "korean_algorithms_detected": [],
+    "quantum_threats": [
+      "Shor's algorithm can break 1024-bit RSA in polynomial time",
+      "Grover's algorithm reduces SHA-1 effective security from 160 to 80 bits"
+    ]
+  },
+  "difficulty": "hard",
+  "difficulty_factors": [
+    "No explicit algorithm names in code",
+    "Uses standard cryptographic library calls",
+    "Requires understanding of key size implications",
+    "Need to recognize vulnerable padding schemes"
+  ],
+  "tags": ["factorization", "vulnerable-crypto", "padding-oracle", "weak-hash"],
+  "expected_confidence_range": [0.7, 0.9],
+  "key_metrics": {
+    "vulnerable_crypto_detection_accuracy": 0.75,
+    "algorithm_identification_precision": 0.70,
+    "false_positive_rate_max": 0.15,
+    "false_negative_rate_max": 0.20
+  },
+  "evaluation_criteria": [
+    "Recognition of insufficient key sizes for quantum resistance",
+    "Identification of vulnerable padding schemes without explicit naming",
+    "Understanding of hash function cryptographic weaknesses",
+    "Ability to correlate mathematical operations with quantum vulnerabilities"
+  ]
+}

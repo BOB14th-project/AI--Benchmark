@@ -1,0 +1,42 @@
+{
+  "file_type": "source_code",
+  "difficulty": "hard",
+  "crypto_elements": [
+    {
+      "type": "public_key_cryptography",
+      "algorithm": "ElGamal",
+      "implementation": "Korean government ElGamal for secure communications",
+      "location": "KoreanElGamalSystem class",
+      "severity": "critical",
+      "description": "ElGamal vulnerable to quantum attacks via discrete logarithm problem"
+    },
+    {
+      "type": "key_exchange",
+      "algorithm": "Diffie-Hellman",
+      "key_size": 2048,
+      "implementation": "Korean government approved DH key exchange",
+      "location": "KoreanDiffieHellman class",
+      "severity": "critical",
+      "description": "DH key exchange vulnerable to quantum period-finding algorithms"
+    },
+    {
+      "type": "prime_generation",
+      "algorithm": "Miller-Rabin primality test",
+      "implementation": "Safe prime generation for cryptographic parameters",
+      "location": "_miller_rabin_test method",
+      "severity": "medium",
+      "description": "Prime generation for DLP-based systems vulnerable to quantum factoring"
+    },
+    {
+      "type": "pki_infrastructure",
+      "algorithm": "Government PKI",
+      "implementation": "Complete PKI system with certificates and key management",
+      "location": "GovernmentPKI class",
+      "severity": "critical",
+      "description": "Entire PKI infrastructure vulnerable to quantum attacks"
+    }
+  ],
+  "quantum_vulnerable": true,
+  "vulnerability_count": 4,
+  "primary_weakness": "All public-key cryptography vulnerable to Shor's algorithm"
+}

@@ -1,0 +1,37 @@
+{
+  "file_type": "logs_config",
+  "difficulty": "hard",
+  "crypto_elements": [
+    {
+      "type": "broken_hash",
+      "algorithm": "MD5",
+      "location": "Password hashing",
+      "severity": "critical",
+      "description": "MD5 is cryptographically broken with collision attacks"
+    },
+    {
+      "type": "weak_random_source",
+      "algorithm": "Linear Congruential Generator",
+      "location": "Random number generation",
+      "severity": "high",
+      "description": "Predictable random number generation for cryptographic keys"
+    },
+    {
+      "type": "deprecated_key_exchange",
+      "algorithm": "RSA key transport",
+      "location": "TLS handshake",
+      "severity": "medium",
+      "description": "RSA key transport lacks forward secrecy"
+    },
+    {
+      "type": "timing_attack_vulnerable",
+      "algorithm": "RSA",
+      "location": "Signature verification",
+      "severity": "medium",
+      "description": "Implementation vulnerable to timing side-channel attacks"
+    }
+  ],
+  "quantum_vulnerable": true,
+  "vulnerability_count": 4,
+  "primary_weakness": "MD5 collision vulnerability and predictable random number generation"
+}

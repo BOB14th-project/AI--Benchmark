@@ -1,0 +1,48 @@
+{
+  "description": "IDEA (International Data Encryption Algorithm) implementation with mixed operations and 128-bit key for secure encryption",
+  "file_extension": ".java",
+  "format": "file_based",
+  "expected_findings": {
+    "analysis_points": [
+      "IDEA (International Data Encryption Algorithm) cipher",
+      "128-bit key with 8.5 rounds",
+      "Mixed operations: XOR, addition, multiplication",
+      "64-bit block size encryption",
+      "Lai-Massey structure",
+      "Modular arithmetic operations",
+      "PGP encryption algorithm"
+    ],
+    "vulnerable_algorithms_detected": ["IDEA"],
+    "algorithm_categories": ["grover_vulnerable"],
+    "korean_algorithms_detected": [],
+    "quantum_threats": [
+      "Grover's algorithm reduces 128-bit key to ~64-bit security",
+      "64-bit block size vulnerable to birthday attacks",
+      "No quantum-specific vulnerabilities beyond key reduction",
+      "Mixed operations provide some quantum resistance"
+    ]
+  },
+  "difficulty": "medium",
+  "difficulty_factors": [
+    "Mixed arithmetic operations (XOR, add, multiply)",
+    "Lai-Massey structure recognition",
+    "128-bit key scheduling",
+    "64-bit block processing",
+    "Modular arithmetic patterns"
+  ],
+  "tags": ["idea", "symmetric-encryption", "mixed-operations", "lai-massey", "pgp"],
+  "expected_confidence_range": [0.77, 0.88],
+  "key_metrics": {
+    "vulnerable_crypto_detection_accuracy": 0.83,
+    "algorithm_identification_precision": 0.80,
+    "false_positive_rate_max": 0.15,
+    "false_negative_rate_max": 0.17
+  },
+  "evaluation_criteria": [
+    "Recognition of IDEA mixed operations",
+    "Understanding of Lai-Massey structure",
+    "Identification of modular arithmetic usage",
+    "Knowledge of PGP cryptographic history",
+    "Recognition of small block size vulnerabilities"
+  ]
+}
