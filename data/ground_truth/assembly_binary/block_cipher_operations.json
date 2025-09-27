@@ -1,0 +1,43 @@
+{
+  "file_type": "assembly_binary",
+  "difficulty": "medium",
+  "crypto_elements": [
+    {
+      "type": "symmetric_encryption",
+      "algorithm": "AES-style block cipher",
+      "key_size": 128,
+      "implementation": "AES-style block cipher with 10 rounds",
+      "location": "sub_401000 advanced block transform",
+      "severity": "low",
+      "description": "AES-style block cipher implementation"
+    },
+    {
+      "type": "substitution_layer",
+      "algorithm": "S-box substitution",
+      "implementation": "Byte substitution using lookup table",
+      "location": "sub_401100 substitute bytes",
+      "severity": "low",
+      "description": "AES-style substitution layer with S-box"
+    },
+    {
+      "type": "linear_transformation",
+      "algorithm": "ShiftRows and MixColumns",
+      "implementation": "Row shifting and column mixing operations",
+      "location": "sub_401200 and sub_401300",
+      "severity": "low",
+      "description": "AES-style linear transformations"
+    },
+    {
+      "type": "key_addition",
+      "algorithm": "AddRoundKey",
+      "implementation": "Round key XOR operation",
+      "location": "sub_401400 add round material",
+      "severity": "low",
+      "description": "Round key addition operation"
+    }
+  ],
+  "quantum_vulnerable": false,
+  "vulnerability_count": 0,
+  "primary_weakness": "None - AES-style implementation is considered secure against classical attacks",
+  "additional_notes": "Implementation follows AES-like structure with standard operations. Quantum resistance depends on key size"
+}

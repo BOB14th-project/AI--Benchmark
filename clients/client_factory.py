@@ -4,13 +4,15 @@ from .openai_client import OpenAIClient
 from .google_client import GoogleClient
 from .anthropic_client import AnthropicClient
 from .xai_client import XAIClient
+from .ollama_client import OllamaClient
 
 class ClientFactory:
     _clients = {
         'openai': OpenAIClient,
         'google': GoogleClient,
         'anthropic': AnthropicClient,
-        'xai': XAIClient
+        'xai': XAIClient,
+        'ollama': OllamaClient
     }
 
     @classmethod

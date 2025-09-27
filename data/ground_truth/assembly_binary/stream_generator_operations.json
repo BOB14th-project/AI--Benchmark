@@ -1,0 +1,34 @@
+{
+  "file_type": "assembly_binary",
+  "difficulty": "hard",
+  "crypto_elements": [
+    {
+      "type": "stream_cipher",
+      "algorithm": "RC4-style stream cipher",
+      "implementation": "Keystream generator with state array initialization",
+      "location": "sub_401000 keystream generator",
+      "severity": "critical",
+      "description": "RC4-style stream cipher with key scheduling algorithm"
+    },
+    {
+      "type": "quarter_round_function",
+      "algorithm": "ChaCha20-style quarter round",
+      "implementation": "Quarter round function with ARX operations",
+      "location": "sub_401300 quarter round function",
+      "severity": "low",
+      "description": "ChaCha20-style quarter round with add-rotate-xor operations"
+    },
+    {
+      "type": "stream_processing",
+      "algorithm": "Stream cipher processing",
+      "implementation": "Stream cipher with 20 rounds of quarter round operations",
+      "location": "sub_401400 stream cipher process",
+      "severity": "medium",
+      "description": "Stream cipher processing with multiple round functions"
+    }
+  ],
+  "quantum_vulnerable": false,
+  "vulnerability_count": 1,
+  "primary_weakness": "Contains RC4-style implementation which has known statistical biases and key scheduling weaknesses",
+  "additional_notes": "RC4 component is vulnerable to statistical attacks, while ChaCha20-style component is considered secure"
+}

@@ -1,2 +1,0 @@
-Provider,Total Tests,Successful Tests,Success Rate (%),Avg Accuracy,Avg Response Time (s),Avg JSON Stability,Avg Completeness,Agent Count
-google,19,0,0.0,0.000,0.000,0.000,0.000,4

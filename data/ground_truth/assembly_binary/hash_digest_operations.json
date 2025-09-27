@@ -1,0 +1,36 @@
+{
+  "file_type": "assembly_binary",
+  "difficulty": "medium",
+  "crypto_elements": [
+    {
+      "type": "cryptographic_hash",
+      "algorithm": "MD4/MD5-style hash",
+      "hash_size": 128,
+      "implementation": "MD-style hash function with compression rounds",
+      "location": "sub_401000 digest computation",
+      "severity": "high",
+      "description": "MD4/MD5 style hash function implementation"
+    },
+    {
+      "type": "secure_hash_algorithm",
+      "algorithm": "SHA-1 style hash",
+      "hash_size": 160,
+      "implementation": "SHA-1 style hash with 80 rounds",
+      "location": "sub_401300 secure hash algorithm",
+      "severity": "critical",
+      "description": "SHA-1 style hash function with known vulnerabilities"
+    },
+    {
+      "type": "compression_function",
+      "algorithm": "Hash compression",
+      "implementation": "Message block compression with round constants",
+      "location": "sub_401100 and sub_401390",
+      "severity": "medium",
+      "description": "Hash compression functions with merkle-damgard construction"
+    }
+  ],
+  "quantum_vulnerable": true,
+  "vulnerability_count": 2,
+  "primary_weakness": "Contains SHA-1 style hash which is cryptographically broken and MD5-style hash with collision vulnerabilities",
+  "additional_notes": "Both hash algorithms implemented have known cryptanalytic attacks and should not be used for security purposes"
+}

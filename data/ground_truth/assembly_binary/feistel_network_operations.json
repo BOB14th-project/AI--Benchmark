@@ -1,0 +1,34 @@
+{
+  "file_type": "assembly_binary",
+  "difficulty": "medium",
+  "crypto_elements": [
+    {
+      "type": "feistel_network",
+      "algorithm": "Feistel structure cipher",
+      "implementation": "16-round Feistel network with F-function",
+      "location": "sub_401000 main function",
+      "severity": "medium",
+      "description": "Feistel network implementation with substitution boxes"
+    },
+    {
+      "type": "substitution_permutation_network",
+      "algorithm": "SPN structure",
+      "implementation": "Substitution-permutation network with 32 rounds",
+      "location": "sub_401200 permutation network",
+      "severity": "medium",
+      "description": "SPN structure with substitution and permutation layers"
+    },
+    {
+      "type": "s_box_operations",
+      "algorithm": "Substitution boxes",
+      "implementation": "S-box lookups for nonlinear transformation",
+      "location": "sub_401260 substitution layer",
+      "severity": "low",
+      "description": "S-box based substitution operations"
+    }
+  ],
+  "quantum_vulnerable": false,
+  "vulnerability_count": 0,
+  "primary_weakness": "Implementation dependent - security depends on specific cipher design and key schedule",
+  "additional_notes": "Feistel networks are structural frameworks used in many block ciphers. Security depends on the specific implementation details"
+}

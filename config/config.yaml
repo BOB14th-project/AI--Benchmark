@@ -4,7 +4,7 @@
 llm_providers:
   openai:
     api_key: "your_openai_api_key_here"
-    model: "gpt-4"
+    model: "gpt-4.1"
     base_url: "https://api.openai.com/v1"
 
   google:
@@ -19,8 +19,13 @@ llm_providers:
 
   xai:
     api_key: "your_xai_api_key_here"
-    model: "grok-beta"
+    model: "grok-3-mini"
     base_url: "https://api.x.ai/v1"
+
+  ollama:
+    api_key: "not_required"
+    model: "llama3:8b"
+    base_url: "http://localhost:11434"
 
 # Analysis Agents Configuration for Quantum-Vulnerable Algorithm Detection
 agents:
@@ -86,5 +91,6 @@ benchmark:
 # Paths
 paths:
   test_cases: "data/test_cases"
+  test_files: "data/test_files"
   ground_truth: "data/ground_truth"
   results: "results"
