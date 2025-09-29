@@ -1,48 +1,8 @@
 {
-  "description": "Complete elliptic curve cryptography implementation with NIST P-256 curve parameters, ECDH key exchange, and ECDSA signatures using legacy hash functions",
-  "file_extension": ".py",
-  "format": "file_based",
   "expected_findings": {
-    "analysis_points": [
-      "Elliptic curve cryptography over NIST P-256 curve (secp256r1)",
-      "Elliptic curve Diffie-Hellman key exchange implementation",
-      "Elliptic curve digital signature algorithm (ECDSA) implementation",
-      "Legacy MD5 digest algorithm used in key derivation",
-      "Legacy SHA-1 digest algorithm used in digital signatures",
-      "Point multiplication using double-and-add method",
-      "Vulnerable to quantum attacks via Shor's algorithm"
-    ],
-    "vulnerable_algorithms_detected": ["ECDH", "ECDSA", "NIST P-256", "MD5", "SHA-1"],
+    "vulnerable_algorithms_detected": ["ECDH", "ECDSA", "MD5", "SHA-1"],
     "algorithm_categories": ["shor_vulnerable", "grover_vulnerable"],
-    "korean_algorithms_detected": [],
-    "quantum_threats": [
-      "Shor's algorithm breaks elliptic curve discrete logarithm problem",
-      "ECDH shared secrets can be computed by quantum adversary",
-      "ECDSA signatures can be forged using quantum attacks",
-      "MD5 and SHA-1 provide reduced security against quantum attacks"
-    ]
+    "korean_algorithms_detected": []
   },
-  "difficulty": "medium",
-  "difficulty_factors": [
-    "NIST curve parameters clearly embedded in code",
-    "Standard elliptic curve operations implemented",
-    "Magic constants for MD5 and SHA-1 present",
-    "Requires understanding of elliptic curve mathematics",
-    "Point operations and scalar multiplication visible"
-  ],
-  "tags": ["ecc", "ecdh", "ecdsa", "nist-p256", "elliptic-curve", "md5", "sha1"],
-  "expected_confidence_range": [0.75, 0.90],
-  "key_metrics": {
-    "vulnerable_crypto_detection_accuracy": 0.82,
-    "algorithm_identification_precision": 0.78,
-    "false_positive_rate_max": 0.12,
-    "false_negative_rate_max": 0.15
-  },
-  "evaluation_criteria": [
-    "Recognition of NIST P-256 curve parameters",
-    "Understanding of elliptic curve point operations",
-    "Identification of ECDH and ECDSA algorithms from mathematical operations",
-    "Recognition of legacy hash function implementations",
-    "Knowledge of quantum vulnerabilities in elliptic curve cryptography"
-  ]
+  "expected_confidence_range": [0.8, 0.95]
 }

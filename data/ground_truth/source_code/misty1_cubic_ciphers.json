@@ -1,39 +1,15 @@
 {
-  "file_type": "source_code",
-  "difficulty": "medium",
-  "crypto_elements": [
-    {
-      "type": "block_cipher",
-      "algorithm": "MISTY1",
-      "implementation": "Japanese MISTY1-like Feistel cipher",
-      "location": "JapaneseDataProcessor class",
-      "severity": "low",
-      "description": "64-bit block cipher with 16-round Feistel structure"
-    },
-    {
-      "type": "stream_cipher",
-      "algorithm": "CUBE attack vulnerable cipher",
-      "implementation": "Cubic boolean function stream cipher",
-      "location": "CubicProcessor class",
-      "severity": "high",
-      "description": "Stream cipher potentially vulnerable to cube attacks"
-    },
-    {
-      "type": "feistel_network",
-      "algorithm": "Modified Feistel",
-      "location": "_encrypt_block method",
-      "severity": "low",
-      "description": "16-round Feistel with substitution-permutation F-function"
-    },
-    {
-      "type": "algebraic_attacks",
-      "algorithm": "Cubic boolean functions",
-      "location": "_cubic_update method",
-      "severity": "medium",
-      "description": "High-degree boolean functions vulnerable to algebraic cryptanalysis"
-    }
-  ],
-  "quantum_vulnerable": false,
-  "vulnerability_count": 2,
-  "primary_weakness": "Cubic functions vulnerable to algebraic attacks and cube attacks"
+  "expected_findings": {
+    "vulnerable_algorithms_detected": [
+      "MISTY1"
+    ],
+    "algorithm_categories": [
+      "grover_vulnerable"
+    ],
+    "korean_algorithms_detected": []
+  },
+  "expected_confidence_range": [
+    0.8,
+    0.95
+  ]
 }

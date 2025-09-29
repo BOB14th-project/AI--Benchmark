@@ -1,39 +1,16 @@
 {
-  "file_type": "source_code",
-  "difficulty": "extreme",
-  "crypto_elements": [
-    {
-      "type": "hash_function",
-      "algorithm": "SM3",
-      "implementation": "Chinese national standard hash function",
-      "location": "ChinaBlockProcessor class",
-      "severity": "low",
-      "description": "256-bit hash with 64 rounds and message expansion"
-    },
-    {
-      "type": "hash_function",
-      "algorithm": "GOST R 34.11-94",
-      "implementation": "Russian GOST hash function",
-      "location": "RussianHashProcessor class",
-      "severity": "medium",
-      "description": "256-bit hash with 8 S-boxes and compression function"
-    },
-    {
-      "type": "compression_function",
-      "algorithm": "SM3 compression",
-      "location": "_process_message_block method",
-      "severity": "low",
-      "description": "64-round compression with boolean functions FF and GG"
-    },
-    {
-      "type": "substitution_boxes",
-      "algorithm": "GOST S-boxes",
-      "location": "s_boxes array in RussianHashProcessor",
-      "severity": "low",
-      "description": "8 substitution boxes for nonlinear transformation"
-    }
-  ],
-  "quantum_vulnerable": false,
-  "vulnerability_count": 0,
-  "primary_weakness": "Hash functions generally resistant to quantum attacks, GOST may have weaker collision resistance"
+  "expected_findings": {
+    "vulnerable_algorithms_detected": [
+      "SM3",
+      "GOST"
+    ],
+    "algorithm_categories": [
+      "grover_vulnerable"
+    ],
+    "korean_algorithms_detected": []
+  },
+  "expected_confidence_range": [
+    0.8,
+    0.95
+  ]
 }

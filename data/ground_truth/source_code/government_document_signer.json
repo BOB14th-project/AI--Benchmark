@@ -1,0 +1,8 @@
+{
+  "expected_findings": {
+    "vulnerable_algorithms_detected": ["ECDSA", "HAS-160"],
+    "algorithm_categories": ["shor_vulnerable", "grover_vulnerable"],
+    "korean_algorithms_detected": ["HAS-160"]
+  },
+  "expected_confidence_range": [0.8, 0.95]
+}

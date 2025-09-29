@@ -1,0 +1,125 @@
+{
+  "process_name": "performance_test_suite",
+  "pid": 32156,
+  "execution_time": "2024-09-20T16:45:18Z",
+  "memory_allocations": [
+    {
+      "address": "0x7f2a80001000",
+      "size": 2048,
+      "type": "block_cipher_state",
+      "pattern": "substitution_box_operations",
+      "algorithm_hint": "advanced_encryption_standard"
+    },
+    {
+      "address": "0x7f2a80002000",
+      "size": 1024,
+      "type": "key_expansion_buffer",
+      "pattern": "round_key_derivation",
+      "key_schedule_type": "rijndael_key_expansion"
+    },
+    {
+      "address": "0x7f2a80003000",
+      "size": 512,
+      "type": "lightweight_cipher_context",
+      "pattern": "feistel_network",
+      "design_origin": "korean_cryptographic_standard"
+    },
+    {
+      "address": "0x7f2a80004000",
+      "size": 256,
+      "type": "stream_cipher_state",
+      "pattern": "linear_feedback_shift_register",
+      "period_length": "vulnerable_short_period"
+    }
+  ],
+  "api_calls": [
+    {
+      "timestamp": "2024-09-20T16:45:18.234Z",
+      "function": "aes_256_gcm_encrypt",
+      "library": "libcrypto.so.3.0",
+      "parameters": {
+        "key_size": 256,
+        "block_size": 128,
+        "mode": "galois_counter_mode",
+        "quantum_security": "grover_algorithm_reduces_strength"
+      },
+      "return_value": 4096,
+      "performance_notes": "hardware_aes_ni_acceleration"
+    },
+    {
+      "timestamp": "2024-09-20T16:45:18.567Z",
+      "function": "seed_cbc_encrypt",
+      "library": "libkcrypto.so.2.1",
+      "parameters": {
+        "key_size": 128,
+        "rounds": 16,
+        "cipher_family": "korean_government_approved",
+        "substitution_design": "domestic_s_box_construction"
+      },
+      "return_value": 2048,
+      "compliance_status": "kisa_validated"
+    },
+    {
+      "timestamp": "2024-09-20T16:45:18.890Z",
+      "function": "a5_stream_generate",
+      "library": "libgsmsec.so.1.0",
+      "parameters": {
+        "register_length": "[19, 22, 23]",
+        "clocking_pattern": "majority_function",
+        "keystream_period": "computationally_small",
+        "attack_complexity": "real_time_feasible"
+      },
+      "return_value": 114,
+      "security_assessment": "academically_broken"
+    }
+  ],
+  "performance_signatures": [
+    {
+      "operation": "aes_block_encryption",
+      "cpu_cycles": 156,
+      "algorithm_type": "substitution_permutation_network",
+      "quantum_impact": "halved_security_strength",
+      "nist_standardization": "fips_197_approved"
+    },
+    {
+      "operation": "korean_block_cipher",
+      "cpu_cycles": 234,
+      "design_philosophy": "national_security_requirements",
+      "international_analysis": "limited_public_cryptanalysis",
+      "quantum_vulnerability": "symmetric_key_search_vulnerable"
+    },
+    {
+      "operation": "legacy_stream_cipher",
+      "cpu_cycles": 45,
+      "design_era": "1980s_telecommunications",
+      "cryptanalysis_status": "multiple_practical_attacks",
+      "usage_context": "gsm_voice_encryption"
+    }
+  ],
+  "network_traffic": [
+    {
+      "direction": "outbound",
+      "protocol": "ipsec_tunnel",
+      "cipher_suite": "AES_256_GCM_SEED_128_CBC_MIXED",
+      "key_management": "ike_v2_negotiated",
+      "quantum_readiness": "hybrid_post_quantum_recommended"
+    }
+  ],
+  "file_operations": [
+    {
+      "operation": "encrypt",
+      "file_path": "/tmp/confidential_data.enc",
+      "file_size": 1048576,
+      "encryption_mode": "authenticated_encryption",
+      "algorithm_combination": "aes_gcm_with_seed_fallback"
+    }
+  ],
+  "entropy_operations": [
+    {
+      "source": "intel_rdrand",
+      "bytes_requested": 32,
+      "purpose": "symmetric_key_generation",
+      "entropy_assessment": "sufficient_for_cryptographic_use"
+    }
+  ]
+}

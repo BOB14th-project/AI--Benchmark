@@ -1,0 +1,8 @@
+{
+  "expected_findings": {
+    "vulnerable_algorithms_detected": ["ChaCha20", "Poly1305"],
+    "algorithm_categories": ["grover_vulnerable"],
+    "korean_algorithms_detected": []
+  },
+  "expected_confidence_range": [0.7, 0.9]
+}

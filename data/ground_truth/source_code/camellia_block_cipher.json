@@ -1,48 +1,15 @@
 {
-  "description": "Camellia block cipher implementation with Feistel structure and FL/FLINV functions for 128-bit block encryption",
-  "file_extension": ".c",
-  "format": "file_based",
   "expected_findings": {
-    "analysis_points": [
-      "Camellia symmetric block cipher",
-      "Feistel network with FL/FLINV functions",
-      "128-bit block size with variable key lengths",
-      "18 or 24 rounds depending on key size",
-      "S-box substitution operations",
-      "Japanese cryptographic standard",
-      "AES alternative with similar security"
+    "vulnerable_algorithms_detected": [
+      "Camellia"
     ],
-    "vulnerable_algorithms_detected": ["Camellia"],
-    "algorithm_categories": ["grover_vulnerable"],
-    "korean_algorithms_detected": [],
-    "quantum_threats": [
-      "Grover's algorithm reduces effective key strength by half",
-      "128-bit keys provide ~64-bit quantum security",
-      "256-bit keys provide ~128-bit quantum security",
-      "No specific quantum vulnerabilities beyond key reduction"
-    ]
+    "algorithm_categories": [
+      "grover_vulnerable"
+    ],
+    "korean_algorithms_detected": []
   },
-  "difficulty": "medium",
-  "difficulty_factors": [
-    "Feistel structure with FL/FLINV functions",
-    "S-box and linear transformation patterns",
-    "Key schedule complexity",
-    "Round function implementation",
-    "Japanese cryptographic algorithm recognition"
-  ],
-  "tags": ["camellia", "block-cipher", "feistel", "japanese-standard", "fl-function"],
-  "expected_confidence_range": [0.75, 0.87],
-  "key_metrics": {
-    "vulnerable_crypto_detection_accuracy": 0.82,
-    "algorithm_identification_precision": 0.79,
-    "false_positive_rate_max": 0.15,
-    "false_negative_rate_max": 0.18
-  },
-  "evaluation_criteria": [
-    "Recognition of Camellia Feistel structure",
-    "Understanding of FL/FLINV function operations",
-    "Identification of Japanese cryptographic design",
-    "Knowledge of AES alternative algorithms",
-    "Recognition of block cipher transformation patterns"
+  "expected_confidence_range": [
+    0.8,
+    0.95
   ]
 }

@@ -1,48 +1,11 @@
 {
-  "description": "NTRU lattice-based encryption implementation providing post-quantum cryptographic security using polynomial rings",
-  "file_extension": ".java",
-  "format": "file_based",
   "expected_findings": {
-    "analysis_points": [
-      "NTRU lattice-based cryptosystem",
-      "Post-quantum cryptographic algorithm",
-      "Polynomial ring operations",
-      "Convolution and modular reduction",
-      "Lattice-based mathematical structures",
-      "Quantum-resistant encryption scheme",
-      "Alternative to RSA/ECC for post-quantum era"
-    ],
-    "vulnerable_algorithms_detected": ["NTRU"],
-    "algorithm_categories": ["post_quantum_candidate"],
-    "korean_algorithms_detected": [],
-    "quantum_threats": [
-      "Designed to resist quantum computer attacks",
-      "Based on lattice problems believed to be quantum-hard",
-      "Shortest Vector Problem (SVP) and Closest Vector Problem (CVP) resistance",
-      "No known efficient quantum algorithms for underlying problems"
-    ]
+    "vulnerable_algorithms_detected": [],
+    "algorithm_categories": [],
+    "korean_algorithms_detected": []
   },
-  "difficulty": "extreme",
-  "difficulty_factors": [
-    "Complex polynomial ring mathematics",
-    "Lattice-based cryptographic concepts",
-    "Advanced mathematical operations",
-    "Post-quantum cryptography knowledge required",
-    "Novel algorithmic structure compared to classical crypto"
-  ],
-  "tags": ["ntru", "lattice-based", "post-quantum", "polynomial-rings", "quantum-resistant"],
-  "expected_confidence_range": [0.60, 0.78],
-  "key_metrics": {
-    "vulnerable_crypto_detection_accuracy": 0.70,
-    "algorithm_identification_precision": 0.65,
-    "false_positive_rate_max": 0.25,
-    "false_negative_rate_max": 0.30
-  },
-  "evaluation_criteria": [
-    "Recognition of lattice-based cryptographic patterns",
-    "Understanding of polynomial ring operations",
-    "Identification of post-quantum cryptographic design",
-    "Knowledge of quantum resistance properties",
-    "Recognition of advanced mathematical structures"
+  "expected_confidence_range": [
+    0.6,
+    0.8
   ]
 }

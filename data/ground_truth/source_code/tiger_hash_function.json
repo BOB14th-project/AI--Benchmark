@@ -1,48 +1,15 @@
 {
-  "description": "Tiger hash function implementation with 192-bit output and optimized for 64-bit platforms with strong avalanche properties",
-  "file_extension": ".c",
-  "format": "file_based",
   "expected_findings": {
-    "analysis_points": [
-      "Tiger cryptographic hash function",
-      "192-bit (24-byte) hash output",
-      "24 rounds of compression function",
-      "Optimized for 64-bit processors",
-      "S-box based transformation",
-      "Strong avalanche effect design",
-      "Alternative to MD5/SHA-1 family"
+    "vulnerable_algorithms_detected": [
+      "Tiger"
     ],
-    "vulnerable_algorithms_detected": ["Tiger"],
-    "algorithm_categories": ["grover_vulnerable"],
-    "korean_algorithms_detected": [],
-    "quantum_threats": [
-      "Grover's algorithm reduces collision resistance by half",
-      "192-bit output provides ~96-bit quantum collision resistance",
-      "Pre-image resistance reduced to ~96 bits against quantum attacks",
-      "Still provides reasonable security against quantum adversaries"
-    ]
+    "algorithm_categories": [
+      "grover_vulnerable"
+    ],
+    "korean_algorithms_detected": []
   },
-  "difficulty": "medium",
-  "difficulty_factors": [
-    "192-bit output size characteristic",
-    "24-round compression structure",
-    "S-box transformation patterns",
-    "64-bit optimization indicators",
-    "Hash function compression operations"
-  ],
-  "tags": ["tiger", "hash-function", "192-bit", "64-bit-optimized", "s-box"],
-  "expected_confidence_range": [0.76, 0.88],
-  "key_metrics": {
-    "vulnerable_crypto_detection_accuracy": 0.82,
-    "algorithm_identification_precision": 0.79,
-    "false_positive_rate_max": 0.15,
-    "false_negative_rate_max": 0.18
-  },
-  "evaluation_criteria": [
-    "Recognition of Tiger hash structure",
-    "Understanding of 192-bit output characteristic",
-    "Identification of 64-bit optimization patterns",
-    "Knowledge of hash function security properties",
-    "Recognition of alternative hash algorithm design"
+  "expected_confidence_range": [
+    0.8,
+    0.95
   ]
 }

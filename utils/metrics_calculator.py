@@ -15,13 +15,13 @@ class MetricsCalculator:
         expected_findings = ground_truth.get('expected_findings', {})
         actual_findings = actual_response.get('analysis_results', {})
 
-        # Vulnerable Algorithm Detection Accuracy (50% weight)
+        # Vulnerable Algorithm Detection Accuracy (70% weight)
         if expected_findings.get('vulnerable_algorithms_detected'):
             vuln_accuracy = MetricsCalculator._calculate_vulnerable_algorithm_accuracy(
                 actual_findings, expected_findings['vulnerable_algorithms_detected']
             )
-            accuracy_score += vuln_accuracy * 0.5
-            total_weight += 0.5
+            accuracy_score += vuln_accuracy * 0.7
+            total_weight += 0.7
 
         # Algorithm Category Detection (20% weight)
         if expected_findings.get('algorithm_categories'):
@@ -29,14 +29,6 @@ class MetricsCalculator:
                 actual_findings, expected_findings['algorithm_categories']
             )
             accuracy_score += category_accuracy * 0.2
-            total_weight += 0.2
-
-        # Korean Algorithm Detection (20% weight)
-        if expected_findings.get('korean_algorithms_detected'):
-            korean_accuracy = MetricsCalculator._calculate_korean_algorithm_accuracy(
-                actual_findings, expected_findings['korean_algorithms_detected']
-            )
-            accuracy_score += korean_accuracy * 0.2
             total_weight += 0.2
 
         # Confidence Score Validation (10% weight)
@@ -54,6 +46,15 @@ class MetricsCalculator:
 
         accuracy_score += confidence_validity * 0.1
         total_weight += 0.1
+
+        # Korean Algorithm Bonus (최대 5% 추가 점수)
+        if expected_findings.get('korean_algorithms_detected'):
+            korean_accuracy = MetricsCalculator._calculate_korean_algorithm_accuracy(
+                actual_findings, expected_findings['korean_algorithms_detected']
+            )
+            korean_bonus = korean_accuracy * 0.05  # 5% 보너스
+            accuracy_score += korean_bonus
+            # total_weight는 증가시키지 않음 (보너스이므로)
 
         return accuracy_score / total_weight if total_weight > 0 else 0.0
 
@@ -99,6 +100,30 @@ class MetricsCalculator:
                 algorithm_variations = ['md5', 'message digest', 'hash function']
             elif 'sha1' in algorithm_lower or 'sha-1' in algorithm_lower:
                 algorithm_variations = ['sha1', 'sha-1', 'secure hash']
+            elif 'a5' in algorithm_lower or 'a5/1' in algorithm_lower:
+                algorithm_variations = ['a5', 'a5/1', 'a5-1', 'gsm', 'stream cipher', 'lfsr']
+            elif 'trivium' in algorithm_lower:
+                algorithm_variations = ['trivium', 'stream cipher', 'estream', 'lightweight']
+            elif 'misty1' in algorithm_lower or 'misty' in algorithm_lower:
+                algorithm_variations = ['misty1', 'misty', 'cubic cipher', 'feistel']
+            elif 'tea' in algorithm_lower:
+                algorithm_variations = ['tea', 'tiny encryption algorithm', 'feistel', 'challenge-response']
+            elif 'crc32' in algorithm_lower or 'crc' in algorithm_lower:
+                algorithm_variations = ['crc32', 'crc', 'cyclic redundancy', 'checksum', 'integrity check']
+            elif 'salsa20' in algorithm_lower or 'salsa' in algorithm_lower:
+                algorithm_variations = ['salsa20', 'salsa', 'stream cipher', 'chacha', 'quarter round']
+            elif 'sha256' in algorithm_lower or 'sha-256' in algorithm_lower:
+                algorithm_variations = ['sha256', 'sha-256', 'secure hash', 'hash function', 'digest']
+            elif 'hmac' in algorithm_lower:
+                algorithm_variations = ['hmac', 'hash-based message authentication', 'authentication code', 'message authentication']
+            elif '3des' in algorithm_lower or 'triple des' in algorithm_lower:
+                algorithm_variations = ['3des', 'triple des', 'triple-des', 'tdes', 'ede mode', 'encrypt-decrypt-encrypt']
+            elif 'chacha20' in algorithm_lower or 'chacha' in algorithm_lower:
+                algorithm_variations = ['chacha20', 'chacha', 'stream cipher', 'salsa', 'quarter round']
+            elif 'poly1305' in algorithm_lower:
+                algorithm_variations = ['poly1305', 'authenticator', 'mac', 'message authentication', 'aead']
+            elif 'aes' in algorithm_lower:
+                algorithm_variations = ['aes', 'advanced encryption standard', 'rijndael', 'block cipher', 'gcm', 'cbc']
 
             for variation in algorithm_variations:
                 if variation in actual_text:
@@ -116,11 +141,12 @@ class MetricsCalculator:
         found_count = 0
 
         category_keywords = {
-            'shor_vulnerable': ['shor', 'factoring', 'discrete log', 'rsa', 'ecc', 'dh', 'dsa'],
-            'grover_vulnerable': ['grover', 'symmetric', 'hash', 'aes', 'des', 'md5', 'sha'],
-            'public_key': ['public key', 'asymmetric', 'rsa', 'ecc', 'dh', 'dsa'],
-            'symmetric': ['symmetric', 'block cipher', 'stream cipher', 'aes', 'des'],
-            'hash_functions': ['hash', 'digest', 'md5', 'sha', 'checksum'],
+            'shor_vulnerable': ['shor', 'factoring', 'discrete log', 'rsa', 'ecc', 'dh', 'dsa', 'ecdsa'],
+            'grover_vulnerable': ['grover', 'symmetric', 'hash', 'aes', 'des', 'md5', 'sha', 'sha256', 'sha-256', '3des', 'triple des', 'tea', 'salsa20', 'chacha20', 'poly1305', 'hmac', 'crc32', 'seed', 'aria', 'hight'],
+            'classical_vulnerable': ['classical', 'vulnerable', 'weak', 'deprecated', 'insecure', 'a5', 'trivium', 'stream cipher', 'rc4', 'crc32'],
+            'public_key': ['public key', 'asymmetric', 'rsa', 'ecc', 'dh', 'dsa', 'ecdsa'],
+            'symmetric': ['symmetric', 'block cipher', 'stream cipher', 'aes', 'des', '3des', 'tea', 'salsa20', 'chacha20', 'seed', 'aria', 'hight'],
+            'hash_functions': ['hash', 'digest', 'md5', 'sha', 'sha256', 'sha-256', 'hmac', 'crc32', 'checksum', 'has-160'],
             'korean_algorithms': ['korean', 'seed', 'aria', 'hight', 'lea', 'kcdsa', 'has-160']
         }
 
@@ -250,7 +276,8 @@ class MetricsCalculator:
         if not expected_algorithms:
             actual_text = json.dumps(actual_findings).lower()
             vulnerable_keywords = ['rsa', 'ecc', 'ecdsa', 'dsa', 'diffie-hellman', 'des', '3des',
-                                 'rc4', 'md5', 'sha1', 'seed', 'aria', 'hight', 'lea', 'vulnerable']
+                                 'rc4', 'md5', 'sha1', 'sha256', 'tea', 'salsa20', 'chacha20', 'poly1305',
+                                 'hmac', 'crc32', 'seed', 'aria', 'hight', 'lea', 'trivium', 'vulnerable']
 
             false_positives = sum(1 for keyword in vulnerable_keywords if keyword in actual_text)
             return min(1.0, false_positives / len(vulnerable_keywords))
@@ -280,10 +307,22 @@ class MetricsCalculator:
                 variations = []
                 if 'rsa' in algorithm_lower:
                     variations = ['rsa', 'rivest']
-                elif 'ecc' in algorithm_lower:
-                    variations = ['ecc', 'elliptic']
+                elif 'ecc' in algorithm_lower or 'ecdsa' in algorithm_lower:
+                    variations = ['ecc', 'ecdsa', 'elliptic']
                 elif 'seed' in algorithm_lower:
                     variations = ['seed', 'korean']
+                elif 'tea' in algorithm_lower:
+                    variations = ['tea', 'tiny encryption']
+                elif 'salsa20' in algorithm_lower:
+                    variations = ['salsa20', 'salsa', 'stream']
+                elif 'chacha20' in algorithm_lower:
+                    variations = ['chacha20', 'chacha', 'stream']
+                elif '3des' in algorithm_lower:
+                    variations = ['3des', 'triple des', 'des']
+                elif 'sha256' in algorithm_lower:
+                    variations = ['sha256', 'sha-256', 'hash']
+                elif 'aes' in algorithm_lower:
+                    variations = ['aes', 'advanced encryption', 'rijndael']
 
                 found_variation = any(var in actual_text for var in variations)
                 if not found_variation:

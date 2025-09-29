@@ -1,47 +1,8 @@
 {
-  "description": "Diffie-Hellman key exchange protocol implementation with modular exponentiation for secure key agreement",
-  "file_extension": ".java",
-  "format": "file_based",
   "expected_findings": {
-    "analysis_points": [
-      "Diffie-Hellman key exchange protocol",
-      "Modular exponentiation operations",
-      "Public key derivation from private keys",
-      "Shared secret computation",
-      "Large prime number generation and validation",
-      "Discrete logarithm problem basis"
-    ],
-    "vulnerable_algorithms_detected": ["Diffie-Hellman", "DH"],
+    "vulnerable_algorithms_detected": ["DH"],
     "algorithm_categories": ["shor_vulnerable"],
-    "korean_algorithms_detected": [],
-    "quantum_threats": [
-      "Shor's algorithm solves discrete logarithm problem efficiently",
-      "All Diffie-Hellman exchanges breakable by quantum computers",
-      "Shared secrets can be computed by quantum adversary",
-      "Protocol provides no post-quantum security"
-    ]
+    "korean_algorithms_detected": []
   },
-  "difficulty": "medium",
-  "difficulty_factors": [
-    "Modular exponentiation patterns",
-    "Large prime number usage",
-    "Public/private key relationships",
-    "Shared secret computation logic",
-    "Mathematical operations characteristic of DH"
-  ],
-  "tags": ["diffie-hellman", "key-exchange", "modular-exponentiation", "discrete-log"],
-  "expected_confidence_range": [0.82, 0.93],
-  "key_metrics": {
-    "vulnerable_crypto_detection_accuracy": 0.88,
-    "algorithm_identification_precision": 0.85,
-    "false_positive_rate_max": 0.10,
-    "false_negative_rate_max": 0.12
-  },
-  "evaluation_criteria": [
-    "Recognition of Diffie-Hellman key exchange pattern",
-    "Understanding of modular arithmetic operations",
-    "Identification of discrete logarithm problem",
-    "Knowledge of Shor's algorithm vulnerability",
-    "Recognition of key agreement protocol structure"
-  ]
+  "expected_confidence_range": [0.8, 0.95]
 }

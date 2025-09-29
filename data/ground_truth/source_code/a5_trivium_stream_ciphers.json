@@ -1,39 +1,8 @@
 {
-  "file_type": "source_code",
-  "difficulty": "easy",
-  "crypto_elements": [
-    {
-      "type": "stream_cipher",
-      "algorithm": "A5/1",
-      "implementation": "GSM A5/1-like cascading register system",
-      "location": "SimpleCascadingProcessor class",
-      "severity": "critical",
-      "description": "A5/1 cipher vulnerable to known plaintext attacks"
-    },
-    {
-      "type": "stream_cipher",
-      "algorithm": "Trivium",
-      "implementation": "Trivium-inspired three-register system",
-      "location": "TriviumLikeProcessor class",
-      "severity": "low",
-      "description": "Trivium-based stream cipher with 288-bit state"
-    },
-    {
-      "type": "linear_feedback_shift_register",
-      "algorithm": "LFSR",
-      "location": "_update_state method",
-      "severity": "medium",
-      "description": "Linear feedback shift register with irregular clocking"
-    },
-    {
-      "type": "irregular_clocking",
-      "algorithm": "Stop-and-go clocking",
-      "location": "_clock_state method",
-      "severity": "high",
-      "description": "Majority-function based irregular clocking mechanism"
-    }
-  ],
-  "quantum_vulnerable": false,
-  "vulnerability_count": 2,
-  "primary_weakness": "A5/1 cipher completely broken by classical cryptanalysis"
+  "expected_findings": {
+    "vulnerable_algorithms_detected": ["A5/1", "Trivium"],
+    "algorithm_categories": ["classical_vulnerable"],
+    "korean_algorithms_detected": []
+  },
+  "expected_confidence_range": [0.8, 0.95]
 }

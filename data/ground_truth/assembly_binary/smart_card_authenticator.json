@@ -1,0 +1,8 @@
+{
+  "expected_findings": {
+    "vulnerable_algorithms_detected": ["ARIA"],
+    "algorithm_categories": ["grover_vulnerable"],
+    "korean_algorithms_detected": ["ARIA"]
+  },
+  "expected_confidence_range": [0.6, 0.8]
+}

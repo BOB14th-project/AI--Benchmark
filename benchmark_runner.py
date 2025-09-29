@@ -37,7 +37,7 @@ class BenchmarkRunner:
             'google': ['gemini-2.0-flash-exp'],
             'openai': ['gpt-4.1'],
             'xai': ['grok-3-mini'],
-            'ollama': ['llama3:8b', 'gemma3:12b', 'codellama:7b']
+            'ollama': ['llama3:8b', 'qwen3:8b', 'codellama:7b']
         }
 
         # Ollama 모델 가용성 확인
@@ -70,6 +70,7 @@ class BenchmarkRunner:
                        test_case: Dict[str, Any]) -> Dict[str, Any]:
         """단일 테스트 실행"""
         try:
+            print(f"    🔧 Debug: {provider}/{model} 테스트 시작")
             # 클라이언트 생성
             if provider == 'ollama':
                 client = ClientFactory.create_client(provider, {
@@ -83,7 +84,9 @@ class BenchmarkRunner:
                 client = ClientFactory.create_client(provider, llm_config)
 
             # 에이전트 생성
+            print(f"    🔧 Debug: 에이전트 생성 중...")
             agent = AgentFactory.create_agent(agent_type)
+            print(f"    🔧 Debug: 에이전트 생성 완료")
 
             # 입력 데이터 준비
             input_data = test_case.get('input_data', '')
@@ -95,6 +98,7 @@ class BenchmarkRunner:
 
             # 컨텍스트 길이 제한 (모델별로 다르게 설정 가능)
             max_length = 4000 if provider == 'ollama' else 6000
+            
             if len(input_data) > max_length:
                 input_data = input_data[:max_length] + "\n... (truncated for length)"
 
@@ -109,10 +113,15 @@ class BenchmarkRunner:
             prompt = agent.create_prompt(input_data)
 
             # API 호출
+            print(f"    🔧 Debug: API 호출 시작...")
             max_tokens = 1500 if provider == 'ollama' else 2000
+            if 'qwen3' in model:
+                max_tokens = 1000  # Qwen3은 더 짧은 토큰으로 설정
             response = client.benchmark_request(prompt, max_tokens)
+            print(f"    🔧 Debug: API 호출 완료, success={response.get('success', 'unknown')}")
 
             if not response['success']:
+                print(f"    ⚠️  API 호출 실패 ({provider}/{model}): {response['error']}")
                 return {
                     'error': response['error'],
                     'test_id': test_case.get('test_id', 'unknown'),
@@ -120,42 +129,130 @@ class BenchmarkRunner:
                 }
 
             # 결과 파싱
+            print(f"    🔧 Debug: 결과 파싱 시작...")
             findings = agent.extract_key_findings(response['content'])
+            print(f"    🔧 Debug: 파싱 완료, valid_json={findings.get('valid_json', 'unknown')}")
+            if not findings.get('valid_json', False) and 'qwen3' in model:
+                print(f"    🔧 Debug Qwen3 응답: {response['content'][:500]}...")
 
-            # 취약점 수 계산
-            detected_vulnerabilities = 0
+            # 실제 취약한 알고리즘 수 계산
+            print(f"    🔧 Debug: 알고리즘 추출 시작...")
+            detected_vulnerable_algorithms = []
             if findings['valid_json']:
-                detected_vulnerabilities = len([
-                    k for k, v in findings['analysis_results'].items()
-                    if v and v.lower() not in ['none', 'not detected', 'no', '', 'not present', 'no implementations']
-                ])
+                analysis_results = findings['analysis_results']
 
-            return {
+                # 각 분석 결과에서 실제 취약한 알고리즘 추출
+                for category, result in analysis_results.items():
+                    if result and result.lower() not in ['none', 'not detected', 'no', '', 'not present', 'no implementations']:
+                        # 알고리즘 이름 추출 (새로운 형식에 맞게)
+                        import re
+                        result_lower = result.lower()
+
+                        # "DETECTED:" 형식으로 응답하는 경우만 처리
+                        if result_lower.startswith('detected:'):
+                            # "DETECTED: RSA" → "RSA" 추출
+                            detected_algo = result.split(':', 1)[1].strip()
+                            detected_vulnerable_algorithms.append(detected_algo.upper())
+                        else:
+                            # 기존 방식도 유지 (하위 호환성)
+                            # 부정적 표현 체크
+                            negative_indicators = ['does not contain', 'not contain', 'no implementation', 'not found', 'absent', 'missing', 'not present', 'free from', 'not detected']
+                            has_negative_indicator = any(indicator in result_lower for indicator in negative_indicators)
+
+                            if has_negative_indicator:
+                                continue  # 부정적 응답은 건너뛰기
+
+                            # 주요 취약한 알고리즘들 체크 (우선순위 순으로 정렬)
+                            vulnerable_algos = [
+                                # 길이가 긴 것부터 체크하여 중복 방지
+                                ('diffie-hellman', 'DH'), ('ecdsa', 'ECDSA'), ('ecdh', 'ECDH'),
+                                ('aes-128', 'AES-128'), ('3des', '3DES'), ('sha-1', 'SHA-1'),
+                                ('has-160', 'HAS-160'), ('kcdsa', 'KCDSA'), ('a5/1', 'A5/1'),
+                                ('misty1', 'MISTY1'), ('twofish', 'Twofish'), ('blowfish', 'Blowfish'),
+                                ('skipjack', 'Skipjack'), ('elgamal', 'ElGamal'), ('trivium', 'Trivium'),
+                                ('whirlpool', 'Whirlpool'), ('tiger', 'Tiger'), ('cast', 'CAST'),
+                                ('idea', 'IDEA'), ('rsa', 'RSA'), ('ecc', 'ECC'), ('dsa', 'DSA'),
+                                ('dh', 'DH'), ('aes', 'AES'), ('des', 'DES'), ('rc4', 'RC4'),
+                                ('md5', 'MD5'), ('sha1', 'SHA-1'), ('seed', 'SEED'), ('aria', 'ARIA'),
+                                ('hight', 'HIGHT'), ('lea', 'LEA'), ('lsh', 'LSH'), ('a5', 'A5')
+                            ]
+
+                            # 명확한 탐지 표현이 있는 경우만 카운팅
+                            positive_indicators = ['detected', 'found', 'implementation', 'algorithm', 'cipher', 'present', 'identified', 'system', 'used', 'exists', 'contains']
+                            has_positive_indicator = any(indicator in result_lower for indicator in positive_indicators)
+
+                            if has_positive_indicator:
+                                for algo_pattern, display_name in vulnerable_algos:
+                                    # 정확한 단어 매칭 (경계 포함)
+                                    if re.search(r'\b' + re.escape(algo_pattern) + r'\b', result_lower):
+                                        if display_name not in detected_vulnerable_algorithms:
+                                            detected_vulnerable_algorithms.append(display_name)
+                                            break  # 첫 번째 매치만 사용
+
+            detected_vulnerabilities = len(detected_vulnerable_algorithms)
+
+            # Success 평가: Ground truth와 비교하여 정확도 계산
+            success = False
+            accuracy_score = 0.0
+
+            if findings['valid_json']:
+                # Ground truth 로드
+                ground_truth = self._load_ground_truth(test_case, agent_type)
+                if ground_truth:
+                    try:
+                        from utils.metrics_calculator import MetricsCalculator
+                        accuracy_score = MetricsCalculator.calculate_accuracy(findings, ground_truth)
+                        print(f"    🔧 Debug: 정확도 계산 완료: {accuracy_score:.3f}")
+                        # 60% 이상 정확도면 성공으로 간주
+                        success = accuracy_score >= 0.6
+                    except Exception as metric_error:
+                        print(f"    ❌ 정확도 계산 실패: {metric_error}")
+                        accuracy_score = 0.0
+                        success = False
+                else:
+                    # Ground truth가 없으면 실패로 처리 (정답을 알 수 없으므로)
+                    print(f"    ⚠️  Ground truth가 없어서 성공 여부를 판단할 수 없습니다.")
+                    success = False
+            else:
+                success = False
+
+            print(f"    🔧 Debug: 결과 구성 시작...")
+            result = {
                 'test_id': test_case.get('test_id', 'unknown'),
                 'provider': provider,
                 'model': model,
                 'agent_type': agent_type,
-                'success': True,
-                'valid_json': findings['valid_json'],
-                'confidence_score': findings['confidence_score'],
+                'success': success,
+                'accuracy_score': accuracy_score,
+                'valid_json': findings.get('valid_json', False),
+                'confidence_score': findings.get('confidence_score', 0.0),
                 'detected_vulnerabilities': detected_vulnerabilities,
-                'response_time': response['response_time'],
-                'json_valid': response['json_valid'],
-                'summary': findings['summary'],
-                'analysis_results': findings['analysis_results'],
+                'detected_algorithms': detected_vulnerable_algorithms,
+                'response_time': response.get('response_time', 0.0),
+                'json_valid': response.get('json_valid', False),
+                'summary': findings.get('summary', ''),
+                'analysis_results': findings.get('analysis_results', {}),
                 'usage': response.get('usage', {}),
                 'file_path': test_case.get('file_path', ''),
+                'raw_response': findings.get('raw_response', response.get('content', '')),
                 'timestamp': time.time()
             }
+            print(f"    🔧 Debug: 결과 구성 완료")
+            return result
 
         except Exception as e:
+            import traceback
+            error_details = f"{str(e)} | Traceback: {traceback.format_exc()}"
+            print(f"    ⚠️  예외 발생 ({provider}/{model}): {error_details}")
+
             return {
                 'test_id': test_case.get('test_id', 'unknown'),
                 'provider': provider,
                 'model': model,
                 'agent_type': agent_type,
                 'success': False,
-                'error': str(e),
+                'error': str(e),  # 사용자에게는 간단한 에러만 표시
+                'error_details': error_details,  # 상세 정보는 별도 필드
                 'response_time': 0,
                 'timestamp': time.time()
             }
@@ -231,9 +328,24 @@ class BenchmarkRunner:
                 print(f"    ✅ 완료 ({result['response_time']:.2f}초)")
                 if result['valid_json']:
                     print(f"    🎯 신뢰도: {result['confidence_score']:.3f}")
-                    print(f"    🔍 취약점: {result['detected_vulnerabilities']}개")
+                    vuln_count = result['detected_vulnerabilities']
+                    if vuln_count > 0:
+                        # 탐지된 알고리즘 이름들 표시
+                        detected_algos = result.get('detected_algorithms', [])
+                        if detected_algos:
+                            algos_str = ', '.join(detected_algos[:3])  # 최대 3개만 표시
+                            if len(detected_algos) > 3:
+                                algos_str += f" 외 {len(detected_algos)-3}개"
+                            print(f"    🔍 탐지된 취약 알고리즘: {algos_str}")
+                        else:
+                            print(f"    🔍 취약 알고리즘: {vuln_count}개")
+                    else:
+                        print(f"    🔍 취약 알고리즘: 없음")
             else:
-                print(f"    ❌ 실패: {result.get('error', 'Unknown error')}")
+                if 'accuracy_score' in result:
+                    print(f"    ❌ 실패: 정확도 {result['accuracy_score']:.1%} < 60% 임계값")
+                else:
+                    print(f"    ❌ 실패: {result.get('error', 'Unknown error')}")
 
             # API 제한 방지를 위한 딜레이
             if provider != 'ollama' and i < len(test_combinations):
@@ -295,9 +407,6 @@ class BenchmarkRunner:
 
         # 프로바이더별 통계
         for result in results:
-            if not result.get('success'):
-                continue
-
             provider = result.get('provider', 'unknown')
             agent = result.get('agent_type', 'unknown')
             model = result.get('model', 'unknown')
@@ -357,12 +466,12 @@ class BenchmarkRunner:
         results_dir.mkdir(exist_ok=True)
 
         # JSON 저장
-        json_filepath = results_dir / json_filename
+        json_filepath = Path(json_filename)
         with open(json_filepath, 'w', encoding='utf-8') as f:
             json.dump(self.results, f, indent=2, ensure_ascii=False)
 
         # CSV 저장
-        csv_filepath = results_dir / csv_filename
+        csv_filepath = Path(csv_filename)
         self._save_csv_results(csv_filepath)
 
         print(f"💾 결과가 저장되었습니다:")
@@ -439,9 +548,9 @@ class BenchmarkRunner:
         print(f"성공: {summary['successful_tests']}")
         print(f"성공률: {summary['success_rate']:.1%}")
 
-        print(f"\n🏆 프로바이더별 성능:")
-        for provider, stats in summary['by_provider'].items():
-            print(f"  {provider}:")
+        print(f"\n🏆 모델별 성능:")
+        for model, stats in summary['by_model'].items():
+            print(f"  {model}:")
             print(f"    성공률: {stats.get('success_rate', 0):.1%}")
             print(f"    평균 응답시간: {stats.get('avg_response_time', 0):.2f}초")
             print(f"    평균 신뢰도: {stats.get('avg_confidence', 0):.3f}")
@@ -451,6 +560,31 @@ class BenchmarkRunner:
         for agent, stats in summary['by_agent'].items():
             success_rate = stats['successful'] / stats['total'] if stats['total'] > 0 else 0
             print(f"  {agent}: {success_rate:.1%} ({stats['successful']}/{stats['total']})")
+
+    def _load_ground_truth(self, test_case: Dict[str, Any], agent_type: str = None) -> Dict[str, Any]:
+        """테스트 케이스에 대한 ground truth 로드"""
+        try:
+            test_id = test_case.get('test_id', '')
+            # agent_type 매개변수가 전달되면 사용, 아니면 test_case에서 추출
+            if agent_type is None:
+                agent_type = test_case.get('type', 'source_code')
+
+            # Ground truth 파일 경로 생성
+            ground_truth_path = f"data/ground_truth/{agent_type}/{test_id}.json"
+
+            print(f"    🔧 Debug: Ground truth 경로 시도: {ground_truth_path}")
+
+            if os.path.exists(ground_truth_path):
+                with open(ground_truth_path, 'r', encoding='utf-8') as f:
+                    ground_truth = json.load(f)
+                    print(f"    🔧 Debug: Ground truth 로드 성공: {ground_truth}")
+                    return ground_truth
+            else:
+                print(f"    ⚠️  Ground truth 파일 없음: {ground_truth_path}")
+        except Exception as e:
+            print(f"    ❌ Ground truth 로드 실패: {e}")
+
+        return None
 
 def main():
     parser = argparse.ArgumentParser(description='AI 벤치마크 실행')

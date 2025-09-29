@@ -1,48 +1,15 @@
 {
-  "description": "CAST feistel cipher implementation with key-dependent S-boxes and rotation operations for symmetric encryption",
-  "file_extension": ".c",
-  "format": "file_based",
   "expected_findings": {
-    "analysis_points": [
-      "CAST symmetric cipher family",
-      "Feistel network structure",
-      "Key-dependent S-box generation",
-      "Rotation and masking operations",
-      "Variable-length key support",
-      "Canadian cryptographic design",
-      "64-bit or 128-bit block sizes"
+    "vulnerable_algorithms_detected": [
+      "CAST"
     ],
-    "vulnerable_algorithms_detected": ["CAST"],
-    "algorithm_categories": ["grover_vulnerable"],
-    "korean_algorithms_detected": [],
-    "quantum_threats": [
-      "Grover's algorithm reduces effective key strength by half",
-      "Small block sizes vulnerable to birthday attacks",
-      "No specific quantum vulnerabilities beyond key reduction",
-      "Rotation operations provide some quantum resistance"
-    ]
+    "algorithm_categories": [
+      "grover_vulnerable"
+    ],
+    "korean_algorithms_detected": []
   },
-  "difficulty": "medium",
-  "difficulty_factors": [
-    "CAST-specific S-box generation",
-    "Feistel structure with rotations",
-    "Key-dependent operations",
-    "Variable key length handling",
-    "Canadian cryptographic algorithm recognition"
-  ],
-  "tags": ["cast", "feistel-cipher", "key-dependent-sbox", "rotation", "canadian-design"],
-  "expected_confidence_range": [0.73, 0.86],
-  "key_metrics": {
-    "vulnerable_crypto_detection_accuracy": 0.80,
-    "algorithm_identification_precision": 0.77,
-    "false_positive_rate_max": 0.17,
-    "false_negative_rate_max": 0.20
-  },
-  "evaluation_criteria": [
-    "Recognition of CAST cipher characteristics",
-    "Understanding of key-dependent S-box operations",
-    "Identification of Feistel with rotation patterns",
-    "Knowledge of Canadian cryptographic contributions",
-    "Recognition of symmetric cipher design principles"
+  "expected_confidence_range": [
+    0.8,
+    0.95
   ]
 }

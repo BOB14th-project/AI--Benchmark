@@ -1,48 +1,8 @@
 {
-  "description": "RSA public key cryptosystem implementation with key generation, encryption, decryption, and digital signatures",
-  "file_extension": ".java",
-  "format": "file_based",
   "expected_findings": {
-    "analysis_points": [
-      "RSA public key cryptosystem",
-      "Modular exponentiation for encryption/decryption",
-      "Prime number generation and validation",
-      "Public and private key generation",
-      "RSA key pair operations",
-      "Digital signature generation and verification",
-      "Large integer arithmetic operations"
-    ],
     "vulnerable_algorithms_detected": ["RSA"],
     "algorithm_categories": ["shor_vulnerable"],
-    "korean_algorithms_detected": [],
-    "quantum_threats": [
-      "Shor's algorithm factors large integers efficiently",
-      "All RSA encryption and signatures breakable by quantum computers",
-      "Private keys recoverable from public keys using quantum factoring",
-      "No quantum resistance regardless of key size"
-    ]
+    "korean_algorithms_detected": []
   },
-  "difficulty": "medium",
-  "difficulty_factors": [
-    "RSA modular exponentiation patterns",
-    "Prime number generation algorithms",
-    "Public/private key relationships",
-    "Signature verification operations",
-    "Large integer mathematical operations"
-  ],
-  "tags": ["rsa", "public-key", "modular-exponentiation", "digital-signatures", "factoring"],
-  "expected_confidence_range": [0.85, 0.94],
-  "key_metrics": {
-    "vulnerable_crypto_detection_accuracy": 0.90,
-    "algorithm_identification_precision": 0.87,
-    "false_positive_rate_max": 0.08,
-    "false_negative_rate_max": 0.10
-  },
-  "evaluation_criteria": [
-    "Recognition of RSA mathematical operations",
-    "Understanding of modular exponentiation usage",
-    "Identification of public key cryptography patterns",
-    "Knowledge of Shor's algorithm vulnerability",
-    "Recognition of digital signature functionality"
-  ]
+  "expected_confidence_range": [0.8, 0.95]
 }

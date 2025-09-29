@@ -1,41 +1,8 @@
 {
-  "file_type": "source_code",
-  "difficulty": "easy",
-  "crypto_elements": [
-    {
-      "type": "hash_function",
-      "algorithm": "SHA-1",
-      "implementation": "Korean domestic hash function for government documents",
-      "location": "SimpleKoreanHash class",
-      "severity": "medium",
-      "description": "SHA-1 hash function vulnerable to collision attacks"
-    },
-    {
-      "type": "digital_signature",
-      "algorithm": "RSA",
-      "key_size": 1024,
-      "implementation": "Simple RSA signatures for document signing",
-      "location": "DocumentSignatureSystem class",
-      "severity": "critical",
-      "description": "Small key size RSA vulnerable to factoring attacks"
-    },
-    {
-      "type": "stream_cipher",
-      "algorithm": "Linear Congruential Generator",
-      "implementation": "Legacy stream cipher using LCG",
-      "location": "LegacyCompatibilityLayer class",
-      "severity": "critical",
-      "description": "Cryptographically insecure pseudorandom generator"
-    },
-    {
-      "type": "legacy_hash",
-      "algorithm": "Custom 64-bit hash",
-      "location": "_legacy_hash_function method",
-      "severity": "high",
-      "description": "Custom hash function with insufficient output size"
-    }
-  ],
-  "quantum_vulnerable": true,
-  "vulnerability_count": 4,
-  "primary_weakness": "Multiple vulnerabilities including weak RSA keys and insecure RNG"
+  "expected_findings": {
+    "vulnerable_algorithms_detected": ["RSA", "SHA-1"],
+    "algorithm_categories": ["shor_vulnerable", "grover_vulnerable"],
+    "korean_algorithms_detected": []
+  },
+  "expected_confidence_range": [0.8, 0.95]
 }

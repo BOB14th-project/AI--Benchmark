@@ -1,48 +1,15 @@
 {
-  "description": "Serpent cipher implementation with substitution-permutation network and 32 rounds for high-security block encryption",
-  "file_extension": ".c",
-  "format": "file_based",
   "expected_findings": {
-    "analysis_points": [
-      "Serpent symmetric cipher with 32 rounds",
-      "Substitution-Permutation Network (SPN) structure",
-      "8 different S-boxes used in rotation",
-      "128-bit block size with 128, 192, or 256-bit keys",
-      "Linear transformation and bit permutation",
-      "AES finalist with conservative design",
-      "High security margin implementation"
+    "vulnerable_algorithms_detected": [
+      "Serpent"
     ],
-    "vulnerable_algorithms_detected": ["Serpent"],
-    "algorithm_categories": ["grover_vulnerable"],
-    "korean_algorithms_detected": [],
-    "quantum_threats": [
-      "Grover's algorithm reduces effective key strength by half",
-      "32 rounds provide excellent quantum resistance structure",
-      "Conservative design maintains security against quantum attacks",
-      "256-bit keys provide ~128-bit quantum security"
-    ]
+    "algorithm_categories": [
+      "grover_vulnerable"
+    ],
+    "korean_algorithms_detected": []
   },
-  "difficulty": "hard",
-  "difficulty_factors": [
-    "32-round structure recognition",
-    "Multiple S-box rotation pattern",
-    "SPN network complexity",
-    "Linear transformation implementation",
-    "AES finalist algorithm identification"
-  ],
-  "tags": ["serpent", "spn", "32-rounds", "aes-finalist", "conservative-design"],
-  "expected_confidence_range": [0.70, 0.83],
-  "key_metrics": {
-    "vulnerable_crypto_detection_accuracy": 0.77,
-    "algorithm_identification_precision": 0.74,
-    "false_positive_rate_max": 0.20,
-    "false_negative_rate_max": 0.23
-  },
-  "evaluation_criteria": [
-    "Recognition of Serpent 32-round structure",
-    "Understanding of SPN network operations",
-    "Identification of multiple S-box usage",
-    "Knowledge of AES competition algorithms",
-    "Recognition of conservative cryptographic design"
+  "expected_confidence_range": [
+    0.8,
+    0.95
   ]
 }

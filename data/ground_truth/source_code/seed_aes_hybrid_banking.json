@@ -1,40 +1,8 @@
 {
-  "file_type": "source_code",
-  "difficulty": "medium",
-  "crypto_elements": [
-    {
-      "type": "block_cipher",
-      "algorithm": "SEED",
-      "implementation": "Korean banking sector approved Feistel cipher",
-      "location": "KoreanBankingCipher class",
-      "severity": "low",
-      "description": "128-bit Korean SEED cipher with 16 rounds for banking transactions"
-    },
-    {
-      "type": "block_cipher",
-      "algorithm": "AES",
-      "implementation": "International standard AES-compatible processor",
-      "location": "InternationalStandardProcessor class",
-      "severity": "low",
-      "description": "AES implementation for global interoperability"
-    },
-    {
-      "type": "hybrid_cryptosystem",
-      "algorithm": "SEED + AES",
-      "implementation": "Dual-layer encryption system",
-      "location": "HybridCryptoSystem class",
-      "severity": "low",
-      "description": "Combined Korean domestic and international standards"
-    },
-    {
-      "type": "key_derivation",
-      "algorithm": "SHA-256 based KDF",
-      "location": "generate_session_keys method",
-      "severity": "low",
-      "description": "Session key derivation using hash-based method"
-    }
-  ],
-  "quantum_vulnerable": false,
-  "vulnerability_count": 0,
-  "primary_weakness": "Symmetric ciphers resistant to quantum attacks but implementation vulnerabilities possible"
+  "expected_findings": {
+    "vulnerable_algorithms_detected": ["AES"],
+    "algorithm_categories": ["grover_vulnerable"],
+    "korean_algorithms_detected": ["SEED"]
+  },
+  "expected_confidence_range": [0.7, 0.9]
 }

@@ -1,42 +1,8 @@
 {
-  "description": "Password management system implementing legacy digest algorithms - MD5 and SHA-1 implementations without naming the algorithms",
-  "file_extension": ".py",
-  "format": "file_based",
   "expected_findings": {
-    "analysis_points": [
-      "Legacy 128-bit digest algorithm implementation (MD5 constants and structure)",
-      "Legacy 160-bit digest algorithm implementation (SHA-1 constants and structure)",
-      "Weak password storage using collision-vulnerable digest functions",
-      "Session token generation using cryptographically broken algorithms"
-    ],
     "vulnerable_algorithms_detected": ["MD5", "SHA-1"],
     "algorithm_categories": ["grover_vulnerable"],
-    "korean_algorithms_detected": [],
-    "quantum_threats": [
-      "Grover's algorithm reduces MD5 security from 128 to 64 bits",
-      "Grover's algorithm reduces SHA-1 security from 160 to 80 bits",
-      "Collision attacks possible on both digest algorithms"
-    ]
+    "korean_algorithms_detected": []
   },
-  "difficulty": "easy",
-  "difficulty_factors": [
-    "Magic constants clearly indicate MD5 and SHA-1",
-    "Algorithm structure follows standard specifications exactly",
-    "Function names hint at digest computation",
-    "Bit lengths (128, 160) are characteristic identifiers"
-  ],
-  "tags": ["md5", "sha1", "password-storage", "legacy-digest", "collision-vulnerable"],
-  "expected_confidence_range": [0.85, 0.95],
-  "key_metrics": {
-    "vulnerable_crypto_detection_accuracy": 0.90,
-    "algorithm_identification_precision": 0.88,
-    "false_positive_rate_max": 0.05,
-    "false_negative_rate_max": 0.10
-  },
-  "evaluation_criteria": [
-    "Recognition of MD5 magic constants (0x67452301, 0xefcdab89, etc.)",
-    "Identification of SHA-1 magic constants (0x67452301, 0xEFCDAB89, etc.)",
-    "Understanding of algorithm structure and round functions",
-    "Knowledge of collision vulnerabilities in legacy hash functions"
-  ]
+  "expected_confidence_range": [0.85, 0.95]
 }

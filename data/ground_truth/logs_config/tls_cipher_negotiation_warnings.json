@@ -1,0 +1,8 @@
+{
+  "expected_findings": {
+    "vulnerable_algorithms_detected": ["AES", "RC4"],
+    "algorithm_categories": ["grover_vulnerable", "classical_vulnerable"],
+    "korean_algorithms_detected": []
+  },
+  "expected_confidence_range": [0.7, 0.9]
+}

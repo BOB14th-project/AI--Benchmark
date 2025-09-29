@@ -30,7 +30,7 @@
 | 모델 | 크기 | 특징 |
 |------|------|------|
 | **LLaMA 3** | `llama3:8b` | 범용 성능, 로컬 실행 |
-| **Gemma 3** | `gemma3:12b` | 코드 이해 특화 |
+| **Qwen 3** | `qwen3:8b` | 멀티모달 특화 |
 | **Code Llama** | `codellama:7b` | 코드 분석 최적화 |
 
 ## 📊 분석 에이전트
@@ -72,7 +72,7 @@ brew install ollama
 
 # Ollama 모델 다운로드
 ollama pull llama3:8b
-ollama pull gemma3:12b
+ollama pull qwen3:8b
 ollama pull codellama:7b
 
 # Ollama 서버 실행
@@ -112,7 +112,7 @@ python test_benchmark_system.py
 #   ✅ 설정 로더 정상 작동
 # 🤖 Ollama 연결 테스트...
 #   ✅ Ollama 서버 연결됨
-#   📋 사용 가능한 모델: ['llama3:8b', 'codellama:7b', 'gemma3:12b']
+#   📋 사용 가능한 모델: ['llama3:8b', 'codellama:7b', 'qwen3:8b']
 ```
 
 ## 📋 사용법
@@ -171,7 +171,7 @@ python test_single_file.py
 | gpt-4.1 | 0.80-0.85 | 8-12초 | 균형잡힌 성능 |
 | grok-3-mini | 0.75-0.80 | 5-8초 | 빠른 응답 |
 | llama3:8b | 0.70-0.75 | 3-5초 | 로컬 실행, 빠름 |
-| gemma3:12b | 0.65-0.70 | 4-6초 | 코드 특화 |
+| qwen3:8b | 0.65-0.70 | 4-6초 | 멀티모달 특화 |
 | codellama:7b | 0.60-0.65 | 2-4초 | 코드 분석 최적화 |
 
 ## 📁 프로젝트 구조

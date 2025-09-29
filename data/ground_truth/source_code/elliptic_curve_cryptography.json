@@ -1,48 +1,8 @@
 {
-  "description": "Elliptic curve cryptography implementation using secp256k1 curve with point operations, key generation, and digital signatures",
-  "file_extension": ".java",
-  "format": "file_based",
   "expected_findings": {
-    "analysis_points": [
-      "secp256k1 elliptic curve (Bitcoin curve) implementation",
-      "Elliptic curve point arithmetic and operations",
-      "ECDSA digital signature algorithm",
-      "Elliptic curve Diffie-Hellman key exchange",
-      "Point multiplication using double-and-add method",
-      "Modular arithmetic over finite fields",
-      "Cryptographic random number generation"
-    ],
-    "vulnerable_algorithms_detected": ["ECDSA", "ECDH", "secp256k1"],
+    "vulnerable_algorithms_detected": ["ECDSA", "ECDH"],
     "algorithm_categories": ["shor_vulnerable"],
-    "korean_algorithms_detected": [],
-    "quantum_threats": [
-      "Shor's algorithm breaks elliptic curve discrete logarithm problem",
-      "All elliptic curve cryptography vulnerable to quantum attacks",
-      "Private keys can be recovered from public keys using quantum computers",
-      "Bitcoin and other cryptocurrency systems at risk"
-    ]
+    "korean_algorithms_detected": []
   },
-  "difficulty": "hard",
-  "difficulty_factors": [
-    "secp256k1 curve parameters and constants",
-    "Complex elliptic curve point operations",
-    "Modular arithmetic implementation",
-    "ECDSA signature generation and verification",
-    "Understanding of elliptic curve mathematics required"
-  ],
-  "tags": ["ecc", "secp256k1", "ecdsa", "ecdh", "bitcoin-curve", "elliptic-curve"],
-  "expected_confidence_range": [0.78, 0.90],
-  "key_metrics": {
-    "vulnerable_crypto_detection_accuracy": 0.85,
-    "algorithm_identification_precision": 0.82,
-    "false_positive_rate_max": 0.12,
-    "false_negative_rate_max": 0.15
-  },
-  "evaluation_criteria": [
-    "Recognition of secp256k1 curve parameters",
-    "Understanding of elliptic curve point operations",
-    "Identification of ECDSA signature algorithm",
-    "Knowledge of Shor's algorithm vulnerability",
-    "Recognition of Bitcoin/cryptocurrency connection"
-  ]
+  "expected_confidence_range": [0.8, 0.95]
 }
