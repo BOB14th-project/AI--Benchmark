@@ -1,0 +1,69 @@
+{
+  "file_name": "aria_encryption_engine",
+  "file_type": "assembly_binary",
+  "quantum_vulnerable_algorithms": [
+    {
+      "algorithm": "ARIA",
+      "type": "block_cipher",
+      "quantum_vulnerability": "grover_algorithm",
+      "security_impact": "halved_key_length",
+      "locations": [
+        {
+          "line_range": "14-76",
+          "context": "aria_encrypt_block main function with round-based encryption",
+          "confidence": "high"
+        },
+        {
+          "line_range": "81-140",
+          "context": "aria_substitution_s1 function with S-box operations",
+          "confidence": "high"
+        },
+        {
+          "line_range": "145-187",
+          "context": "aria_substitution_s2 function with alternative S-box",
+          "confidence": "high"
+        },
+        {
+          "line_range": "192-273",
+          "context": "aria_diffusion_layer_a function with linear transformation",
+          "confidence": "high"
+        }
+      ],
+      "key_indicators": [
+        "aria_encryption",
+        "korean_standard",
+        "ks_x_1213_1",
+        "block_cipher",
+        "substitution_layer",
+        "diffusion_layer"
+      ]
+    }
+  ],
+  "cryptographic_patterns": [
+    {
+      "pattern": "substitution_permutation_network",
+      "lines": ["32-76", "81-273"],
+      "description": "ARIA SPN structure with substitution and diffusion layers"
+    },
+    {
+      "pattern": "korean_cryptographic_standard",
+      "lines": ["394-398"],
+      "description": "Korean Standard KS X 1213-1 block cipher implementation"
+    },
+    {
+      "pattern": "key_schedule",
+      "lines": ["292-357"],
+      "description": "ARIA key expansion for 128/192/256-bit keys"
+    }
+  ],
+  "quantum_resistance": "partial",
+  "migration_priority": "medium",
+  "algorithm_details": {
+    "block_size": "128-bit",
+    "key_sizes": ["128-bit", "192-bit", "256-bit"],
+    "rounds": ["12", "14", "16"],
+    "security_level": "128/192/256-bit (classical), 64/96/128-bit (quantum)",
+    "standard_reference": "KS X 1213-1 Korean Standard",
+    "usage_context": "Korean standard block cipher"
+  }
+}

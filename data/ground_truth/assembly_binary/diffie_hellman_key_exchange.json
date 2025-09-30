@@ -1,0 +1,68 @@
+{
+  "file_name": "diffie_hellman_key_exchange.s",
+  "file_type": "assembly_binary",
+  "quantum_vulnerable_algorithms": [
+    {
+      "algorithm": "Diffie-Hellman",
+      "type": "key_exchange",
+      "quantum_vulnerability": "shor_algorithm",
+      "security_impact": "complete_break",
+      "locations": [
+        {
+          "line_range": "17-39",
+          "context": "initialize_dh_parameters function with RFC 3526 Group 14 parameters",
+          "confidence": "high"
+        },
+        {
+          "line_range": "41-64",
+          "context": "generate_private_keys function for DH private key generation",
+          "confidence": "high"
+        },
+        {
+          "line_range": "82-100",
+          "context": "compute_public_keys function with modular exponentiation",
+          "confidence": "high"
+        },
+        {
+          "line_range": "215-247",
+          "context": "derive_shared_secret function implementing DH key agreement",
+          "confidence": "high"
+        }
+      ],
+      "key_indicators": [
+        "diffie_hellman",
+        "modular_exponentiation",
+        "discrete_logarithm",
+        "key_exchange",
+        "shared_secret",
+        "rfc_3526"
+      ]
+    }
+  ],
+  "cryptographic_patterns": [
+    {
+      "pattern": "discrete_logarithm_problem",
+      "lines": ["82-151", "215-247"],
+      "description": "Modular exponentiation operations fundamental to DH security"
+    },
+    {
+      "pattern": "key_agreement_protocol",
+      "lines": ["153-167", "215-252"],
+      "description": "Diffie-Hellman key exchange protocol implementation"
+    },
+    {
+      "pattern": "domain_parameters",
+      "lines": ["319-337"],
+      "description": "RFC 3526 Group 14 2048-bit MODP group parameters"
+    }
+  ],
+  "quantum_resistance": "none",
+  "migration_priority": "high",
+  "algorithm_details": {
+    "group": "RFC 3526 Group 14",
+    "prime_size": "2048-bit",
+    "security_level": "112-bit (classical), 0-bit (quantum)",
+    "standard_reference": "RFC 3526, FIPS 186-4",
+    "usage_context": "key agreement protocol"
+  }
+}

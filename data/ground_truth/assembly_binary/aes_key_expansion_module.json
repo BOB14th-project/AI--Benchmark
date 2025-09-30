@@ -1,0 +1,68 @@
+{
+  "file_name": "aes_key_expansion_module.s",
+  "file_type": "assembly_binary",
+  "quantum_vulnerable_algorithms": [
+    {
+      "algorithm": "AES",
+      "type": "block_cipher",
+      "quantum_vulnerability": "grover_algorithm",
+      "security_impact": "halved_key_length",
+      "locations": [
+        {
+          "line_range": "17-61",
+          "context": "setup_aes_parameters and key expansion initialization",
+          "confidence": "high"
+        },
+        {
+          "line_range": "63-149",
+          "context": "expand_encryption_keys function with AES key schedule",
+          "confidence": "high"
+        },
+        {
+          "line_range": "151-180",
+          "context": "apply_sbox_transformation function with AES S-box",
+          "confidence": "high"
+        },
+        {
+          "line_range": "182-194",
+          "context": "update_round_constant function for key expansion",
+          "confidence": "high"
+        }
+      ],
+      "key_indicators": [
+        "aes_key_expansion",
+        "advanced_encryption_standard",
+        "fips_197",
+        "rijndael",
+        "s_box",
+        "round_constant"
+      ]
+    }
+  ],
+  "cryptographic_patterns": [
+    {
+      "pattern": "key_schedule_algorithm",
+      "lines": ["63-149", "182-194"],
+      "description": "AES key expansion with SubBytes, RotWord, and round constants"
+    },
+    {
+      "pattern": "substitution_box",
+      "lines": ["151-180", "265-282"],
+      "description": "AES S-box transformation for key schedule"
+    },
+    {
+      "pattern": "inverse_operations",
+      "lines": ["196-259"],
+      "description": "Decryption key derivation with InvMixColumns"
+    }
+  ],
+  "quantum_resistance": "partial",
+  "migration_priority": "medium",
+  "algorithm_details": {
+    "key_sizes": ["128-bit", "192-bit", "256-bit"],
+    "rounds": ["10", "12", "14"],
+    "security_level": "128/192/256-bit (classical), 64/96/128-bit (quantum)",
+    "standard_reference": "NIST FIPS 197",
+    "usage_context": "key expansion module"
+  }
+}

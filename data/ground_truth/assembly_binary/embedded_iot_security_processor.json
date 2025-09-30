@@ -1,0 +1,8 @@
+{
+  "expected_findings": {
+    "vulnerable_algorithms_detected": ["ECC", "AES", "HIGHT", "ARIA"],
+    "algorithm_categories": ["shor_vulnerable", "grover_vulnerable", "public_key", "symmetric", "korean_algorithms"],
+    "korean_algorithms_detected": ["HIGHT", "ARIA"]
+  },
+  "expected_confidence_range": [0.75, 0.9]
+}

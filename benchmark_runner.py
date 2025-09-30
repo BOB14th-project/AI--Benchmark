@@ -135,13 +135,13 @@ class BenchmarkRunner:
             if not findings.get('valid_json', False) and 'qwen3' in model:
                 print(f"    🔧 Debug Qwen3 응답: {response['content'][:500]}...")
 
-            # 실제 취약한 알고리즘 수 계산
-            print(f"    🔧 Debug: 알고리즘 추출 시작...")
-            detected_vulnerable_algorithms = []
+            # 실제 양자 취약 알고리즘 수 계산
+            print(f"    🔧 Debug: 양자 취약 알고리즘 추출 시작...")
+            detected_quantum_vulnerable_algorithms = []
             if findings['valid_json']:
                 analysis_results = findings['analysis_results']
 
-                # 각 분석 결과에서 실제 취약한 알고리즘 추출
+                # 각 분석 결과에서 실제 양자 취약 알고리즘 추출
                 for category, result in analysis_results.items():
                     if result and result.lower() not in ['none', 'not detected', 'no', '', 'not present', 'no implementations']:
                         # 알고리즘 이름 추출 (새로운 형식에 맞게)
@@ -152,7 +152,7 @@ class BenchmarkRunner:
                         if result_lower.startswith('detected:'):
                             # "DETECTED: RSA" → "RSA" 추출
                             detected_algo = result.split(':', 1)[1].strip()
-                            detected_vulnerable_algorithms.append(detected_algo.upper())
+                            detected_quantum_vulnerable_algorithms.append(detected_algo.upper())
                         else:
                             # 기존 방식도 유지 (하위 호환성)
                             # 부정적 표현 체크
@@ -162,8 +162,8 @@ class BenchmarkRunner:
                             if has_negative_indicator:
                                 continue  # 부정적 응답은 건너뛰기
 
-                            # 주요 취약한 알고리즘들 체크 (우선순위 순으로 정렬)
-                            vulnerable_algos = [
+                            # 주요 양자 취약 알고리즘들 체크 (우선순위 순으로 정렬)
+                            quantum_vulnerable_algos = [
                                 # 길이가 긴 것부터 체크하여 중복 방지
                                 ('diffie-hellman', 'DH'), ('ecdsa', 'ECDSA'), ('ecdh', 'ECDH'),
                                 ('aes-128', 'AES-128'), ('3des', '3DES'), ('sha-1', 'SHA-1'),
@@ -182,14 +182,14 @@ class BenchmarkRunner:
                             has_positive_indicator = any(indicator in result_lower for indicator in positive_indicators)
 
                             if has_positive_indicator:
-                                for algo_pattern, display_name in vulnerable_algos:
+                                for algo_pattern, display_name in quantum_vulnerable_algos:
                                     # 정확한 단어 매칭 (경계 포함)
                                     if re.search(r'\b' + re.escape(algo_pattern) + r'\b', result_lower):
-                                        if display_name not in detected_vulnerable_algorithms:
-                                            detected_vulnerable_algorithms.append(display_name)
+                                        if display_name not in detected_quantum_vulnerable_algorithms:
+                                            detected_quantum_vulnerable_algorithms.append(display_name)
                                             break  # 첫 번째 매치만 사용
 
-            detected_vulnerabilities = len(detected_vulnerable_algorithms)
+            detected_quantum_vulnerable_count = len(detected_quantum_vulnerable_algorithms)
 
             # Success 평가: Ground truth와 비교하여 정확도 계산
             success = False
@@ -226,8 +226,8 @@ class BenchmarkRunner:
                 'accuracy_score': accuracy_score,
                 'valid_json': findings.get('valid_json', False),
                 'confidence_score': findings.get('confidence_score', 0.0),
-                'detected_vulnerabilities': detected_vulnerabilities,
-                'detected_algorithms': detected_vulnerable_algorithms,
+                'detected_quantum_vulnerable_count': detected_quantum_vulnerable_count,
+                'detected_algorithms': detected_quantum_vulnerable_algorithms,
                 'response_time': response.get('response_time', 0.0),
                 'json_valid': response.get('json_valid', False),
                 'summary': findings.get('summary', ''),
@@ -328,7 +328,7 @@ class BenchmarkRunner:
                 print(f"    ✅ 완료 ({result['response_time']:.2f}초)")
                 if result['valid_json']:
                     print(f"    🎯 신뢰도: {result['confidence_score']:.3f}")
-                    vuln_count = result['detected_vulnerabilities']
+                    vuln_count = result['detected_quantum_vulnerable_count']
                     if vuln_count > 0:
                         # 탐지된 알고리즘 이름들 표시
                         detected_algos = result.get('detected_algorithms', [])
@@ -336,11 +336,11 @@ class BenchmarkRunner:
                             algos_str = ', '.join(detected_algos[:3])  # 최대 3개만 표시
                             if len(detected_algos) > 3:
                                 algos_str += f" 외 {len(detected_algos)-3}개"
-                            print(f"    🔍 탐지된 취약 알고리즘: {algos_str}")
+                            print(f"    🔍 탐지된 양자 취약 알고리즘: {algos_str}")
                         else:
-                            print(f"    🔍 취약 알고리즘: {vuln_count}개")
+                            print(f"    🔍 양자 취약 알고리즘: {vuln_count}개")
                     else:
-                        print(f"    🔍 취약 알고리즘: 없음")
+                        print(f"    🔍 양자 취약 알고리즘: 없음")
             else:
                 if 'accuracy_score' in result:
                     print(f"    ❌ 실패: 정확도 {result['accuracy_score']:.1%} < 60% 임계값")
@@ -415,7 +415,7 @@ class BenchmarkRunner:
             if provider not in summary['by_provider']:
                 summary['by_provider'][provider] = {
                     'total': 0, 'successful': 0, 'avg_response_time': 0,
-                    'avg_confidence': 0, 'avg_vulnerabilities': 0
+                    'avg_confidence': 0, 'avg_quantum_vulnerable': 0
                 }
 
             p_stats = summary['by_provider'][provider]
@@ -424,7 +424,7 @@ class BenchmarkRunner:
                 p_stats['successful'] += 1
                 p_stats['avg_response_time'] += result.get('response_time', 0)
                 p_stats['avg_confidence'] += result.get('confidence_score', 0)
-                p_stats['avg_vulnerabilities'] += result.get('detected_vulnerabilities', 0)
+                p_stats['avg_quantum_vulnerable'] += result.get('detected_quantum_vulnerable_count', 0)
 
             # 에이전트별
             if agent not in summary['by_agent']:
@@ -446,7 +446,7 @@ class BenchmarkRunner:
             if stats['successful'] > 0:
                 stats['avg_response_time'] /= stats['successful']
                 stats['avg_confidence'] /= stats['successful']
-                stats['avg_vulnerabilities'] /= stats['successful']
+                stats['avg_quantum_vulnerable'] /= stats['successful']
                 stats['success_rate'] = stats['successful'] / stats['total']
 
         return summary
@@ -490,7 +490,7 @@ class BenchmarkRunner:
         # CSV 헤더 정의
         fieldnames = [
             'test_id', 'provider', 'model', 'agent_type', 'success',
-            'valid_json', 'confidence_score', 'detected_vulnerabilities',
+            'valid_json', 'confidence_score', 'detected_quantum_vulnerable_count',
             'response_time', 'json_valid', 'summary', 'file_path',
             'total_tokens', 'prompt_tokens', 'completion_tokens',
             'timestamp', 'error'
@@ -510,7 +510,7 @@ class BenchmarkRunner:
                     'success': result.get('success', False),
                     'valid_json': result.get('valid_json', False),
                     'confidence_score': result.get('confidence_score', 0),
-                    'detected_vulnerabilities': result.get('detected_vulnerabilities', 0),
+                    'detected_quantum_vulnerable_count': result.get('detected_quantum_vulnerable_count', 0),
                     'response_time': result.get('response_time', 0),
                     'json_valid': result.get('json_valid', False),
                     'summary': result.get('summary', '').replace('\n', ' ').replace('\r', ' '),
@@ -554,7 +554,7 @@ class BenchmarkRunner:
             print(f"    성공률: {stats.get('success_rate', 0):.1%}")
             print(f"    평균 응답시간: {stats.get('avg_response_time', 0):.2f}초")
             print(f"    평균 신뢰도: {stats.get('avg_confidence', 0):.3f}")
-            print(f"    평균 취약점 탐지: {stats.get('avg_vulnerabilities', 0):.1f}개")
+            print(f"    평균 양자 취약 알고리즘 탐지: {stats.get('avg_quantum_vulnerable', 0):.1f}개")
 
         print(f"\n🎯 에이전트별 성공률:")
         for agent, stats in summary['by_agent'].items():

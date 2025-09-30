@@ -1,0 +1,68 @@
+{
+  "file_name": "kcdsa_signature_generator",
+  "file_type": "assembly_binary",
+  "quantum_vulnerable_algorithms": [
+    {
+      "algorithm": "KCDSA",
+      "type": "digital_signature",
+      "quantum_vulnerability": "shor_algorithm",
+      "security_impact": "complete_break",
+      "locations": [
+        {
+          "line_range": "14-55",
+          "context": "kcdsa_generate_signature main function",
+          "confidence": "high"
+        },
+        {
+          "line_range": "111-146",
+          "context": "generate_ephemeral_key function for KCDSA signature",
+          "confidence": "high"
+        },
+        {
+          "line_range": "148-186",
+          "context": "compute_signature_r_component function",
+          "confidence": "high"
+        },
+        {
+          "line_range": "188-237",
+          "context": "compute_signature_s_component function with Korean certificate binding",
+          "confidence": "high"
+        }
+      ],
+      "key_indicators": [
+        "kcdsa_signature",
+        "korean_certificate_digital_signature",
+        "ttas_ko_12_0015",
+        "certificate_binding",
+        "discrete_logarithm",
+        "korean_standard"
+      ]
+    }
+  ],
+  "cryptographic_patterns": [
+    {
+      "pattern": "korean_digital_signature",
+      "lines": ["14-260", "325-334"],
+      "description": "Korean Certificate-based Digital Signature Algorithm implementation"
+    },
+    {
+      "pattern": "certificate_integration",
+      "lines": ["239-268", "188-237"],
+      "description": "Certificate data binding in signature computation"
+    },
+    {
+      "pattern": "discrete_logarithm_operations",
+      "lines": ["270-300", "302-324"],
+      "description": "Modular exponentiation and inverse for KCDSA operations"
+    }
+  ],
+  "quantum_resistance": "none",
+  "migration_priority": "high",
+  "algorithm_details": {
+    "key_size": "1024/2048-bit",
+    "security_level": "80/112-bit (classical), 0-bit (quantum)",
+    "standard_reference": "TTAS.KO-12.0015/R1",
+    "usage_context": "Korean certificate-based digital signature",
+    "unique_features": ["certificate_binding", "korean_standard"]
+  }
+}

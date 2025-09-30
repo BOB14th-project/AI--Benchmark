@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-벤치마크 결과 분석 도구
+양자 취약 알고리즘 탐지 벤치마크 결과 분석 도구
 다양한 관점에서 결과를 분석하고 시각화합니다.
 """
 
@@ -46,6 +46,11 @@ class ResultAnalyzer:
                 axis=1
             )
 
+            # 취약점 관련 컬럼명 변경
+            if 'detected_vulnerabilities' in df.columns:
+                df['detected_quantum_vulnerable_count'] = df['detected_vulnerabilities']
+                df = df.drop(columns=['detected_vulnerabilities'])
+
         return df
 
     def compare_models(self) -> None:
@@ -83,7 +88,7 @@ class ResultAnalyzer:
             print(f"  테스트 수: {int(stats['count_confidence_score'])}")
             print(f"  평균 신뢰도: {stats['mean_confidence_score']:.3f} (±{stats['std_confidence_score']:.3f})")
             print(f"  평균 응답시간: {stats['mean_response_time']:.2f}초 (±{stats['std_response_time']:.2f})")
-            print(f"  평균 취약점 탐지: {stats['mean_detected_vulnerabilities']:.1f}개")
+            print(f"  평균 양자 취약 알고리즘 탐지: {stats['mean_detected_quantum_vulnerable_count']:.1f}개")
             print(f"  JSON 유효성: {stats['mean_valid_json']:.1%}")
             print(f"  평균 토큰 사용: {stats['mean_total_tokens']:.0f}")
             print(f"  효율성: {stats['mean_efficiency']:.3f}")
@@ -119,13 +124,13 @@ class ResultAnalyzer:
             print(f"  테스트 수: {int(stats['count_confidence_score'])}")
             print(f"  평균 신뢰도: {stats['mean_confidence_score']:.3f} (±{stats['std_confidence_score']:.3f})")
             print(f"  평균 응답시간: {stats['mean_response_time']:.2f}초")
-            print(f"  평균 취약점 탐지: {stats['mean_detected_vulnerabilities']:.1f}개")
+            print(f"  평균 양자 취약 알고리즘 탐지: {stats['mean_detected_quantum_vulnerable_count']:.1f}개")
             print(f"  JSON 유효성: {stats['mean_valid_json']:.1%}")
 
-    def analyze_vulnerabilities(self) -> None:
-        """취약점 탐지 분석"""
+    def analyze_quantum_vulnerable_algorithms(self) -> None:
+        """양자 취약 알고리즘 탐지 분석"""
         print("\n" + "=" * 60)
-        print("🔍 취약점 탐지 분석")
+        print("🔍 양자 취약 알고리즘 탐지 분석")
         print("=" * 60)
 
         if self.df.empty:
@@ -133,27 +138,27 @@ class ResultAnalyzer:
 
         # 전체 통계
         total_tests = len(self.df)
-        avg_vulnerabilities = self.df['detected_vulnerabilities'].mean()
-        max_vulnerabilities = self.df['detected_vulnerabilities'].max()
+        avg_vulnerabilities = self.df['detected_quantum_vulnerable_count'].mean()
+        max_vulnerabilities = self.df['detected_quantum_vulnerable_count'].max()
 
         print(f"📊 전체 통계:")
         print(f"  총 테스트: {total_tests}")
-        print(f"  평균 취약점 탐지: {avg_vulnerabilities:.1f}개")
-        print(f"  최대 취약점 탐지: {int(max_vulnerabilities)}개")
+        print(f"  평균 양자 취약 알고리즘 탐지: {avg_vulnerabilities:.1f}개")
+        print(f"  최대 양자 취약 알고리즘 탐지: {int(max_vulnerabilities)}개")
 
-        # 모델별 취약점 탐지 능력
-        vuln_by_model = self.df.groupby('provider_model')['detected_vulnerabilities'].agg(['mean', 'max', 'count'])
+        # 모델별 양자 취약 알고리즘 탐지 능력
+        vuln_by_model = self.df.groupby('provider_model')['detected_quantum_vulnerable_count'].agg(['mean', 'max', 'count'])
         vuln_by_model = vuln_by_model.sort_values('mean', ascending=False)
 
-        print(f"\n🎯 모델별 취약점 탐지 능력:")
+        print(f"\n🎯 모델별 양자 취약 알고리즘 탐지 능력:")
         for model, stats in vuln_by_model.iterrows():
             print(f"  {model}: 평균 {stats['mean']:.1f}개, 최대 {int(stats['max'])}개 ({int(stats['count'])}개 테스트)")
 
-        # 에이전트별 취약점 탐지
-        vuln_by_agent = self.df.groupby('agent_type')['detected_vulnerabilities'].agg(['mean', 'max'])
+        # 에이전트별 양자 취약 알고리즘 탐지
+        vuln_by_agent = self.df.groupby('agent_type')['detected_quantum_vulnerable_count'].agg(['mean', 'max'])
         vuln_by_agent = vuln_by_agent.sort_values('mean', ascending=False)
 
-        print(f"\n🔍 에이전트별 취약점 탐지:")
+        print(f"\n🔍 에이전트별 양자 취약 알고리즘 탐지:")
         for agent, stats in vuln_by_agent.iterrows():
             print(f"  {agent}: 평균 {stats['mean']:.1f}개, 최대 {int(stats['max'])}개")
 
@@ -211,9 +216,9 @@ class ResultAnalyzer:
 
         # 주요 상관관계 해석
         print("\n🔍 주요 발견사항:")
-        if 'confidence_score' in available_cols and 'detected_vulnerabilities' in available_cols:
-            corr_conf_vuln = correlation_matrix.loc['confidence_score', 'detected_vulnerabilities']
-            print(f"  신뢰도 vs 취약점 탐지: {corr_conf_vuln:.3f}")
+        if 'confidence_score' in available_cols and 'detected_quantum_vulnerable_count' in available_cols:
+            corr_conf_vuln = correlation_matrix.loc['confidence_score', 'detected_quantum_vulnerable_count']
+            print(f"  신뢰도 vs 양자 취약 알고리즘 탐지: {corr_conf_vuln:.3f}")
 
         if 'response_time' in available_cols and 'confidence_score' in available_cols:
             corr_time_conf = correlation_matrix.loc['response_time', 'confidence_score']
@@ -280,12 +285,12 @@ class ResultAnalyzer:
         axes[1, 0].set_ylabel('평균 신뢰도 점수')
         axes[1, 0].set_title('에이전트별 성능')
 
-        # 4. 취약점 탐지 vs 신뢰도
-        if 'detected_vulnerabilities' in self.df.columns:
-            axes[1, 1].scatter(self.df['detected_vulnerabilities'], self.df['confidence_score'], alpha=0.6)
-            axes[1, 1].set_xlabel('탐지된 취약점 수')
+        # 4. 양자 취약 알고리즘 탐지 vs 신뢰도
+        if 'detected_quantum_vulnerable_count' in self.df.columns:
+            axes[1, 1].scatter(self.df['detected_quantum_vulnerable_count'], self.df['confidence_score'], alpha=0.6)
+            axes[1, 1].set_xlabel('탐지된 양자 취약 알고리즘 수')
             axes[1, 1].set_ylabel('신뢰도 점수')
-            axes[1, 1].set_title('취약점 탐지 vs 신뢰도')
+            axes[1, 1].set_title('양자 취약 알고리즘 탐지 vs 신뢰도')
 
         plt.tight_layout()
         plt.savefig('benchmark_analysis.png', dpi=300, bbox_inches='tight')
@@ -296,7 +301,7 @@ def main():
     parser.add_argument('results_file', help='분석할 결과 파일')
     parser.add_argument('--compare-models', action='store_true', help='모델별 성능 비교')
     parser.add_argument('--compare-agents', action='store_true', help='에이전트별 성능 비교')
-    parser.add_argument('--vulnerability-analysis', action='store_true', help='취약점 탐지 분석')
+    parser.add_argument('--quantum-vulnerable-analysis', action='store_true', help='양자 취약 알고리즘 탐지 분석')
     parser.add_argument('--performance-analysis', action='store_true', help='성능 분석')
     parser.add_argument('--correlation', action='store_true', help='상관관계 분석')
     parser.add_argument('--visualize', action='store_true', help='시각화 생성')
@@ -317,8 +322,8 @@ def main():
     if args.all or args.compare_agents:
         analyzer.compare_agents()
 
-    if args.all or args.vulnerability_analysis:
-        analyzer.analyze_vulnerabilities()
+    if args.all or args.quantum_vulnerable_analysis:
+        analyzer.analyze_quantum_vulnerable_algorithms()
 
     if args.all or args.performance_analysis:
         analyzer.performance_analysis()

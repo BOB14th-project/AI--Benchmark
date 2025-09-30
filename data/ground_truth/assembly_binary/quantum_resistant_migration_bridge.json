@@ -1,0 +1,8 @@
+{
+  "expected_findings": {
+    "vulnerable_algorithms_detected": ["ECDH", "RSA", "AES"],
+    "algorithm_categories": ["shor_vulnerable", "grover_vulnerable", "public_key", "symmetric", "post_quantum"],
+    "korean_algorithms_detected": []
+  },
+  "expected_confidence_range": [0.7, 0.9]
+}

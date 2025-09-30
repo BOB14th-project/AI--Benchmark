@@ -1,0 +1,70 @@
+{
+  "file_name": "lea_block_cipher_engine",
+  "file_type": "assembly_binary",
+  "quantum_vulnerable_algorithms": [
+    {
+      "algorithm": "LEA",
+      "type": "block_cipher",
+      "quantum_vulnerability": "grover_algorithm",
+      "security_impact": "halved_key_length",
+      "locations": [
+        {
+          "line_range": "14-77",
+          "context": "lea_encrypt_block main function with multi-key support",
+          "confidence": "high"
+        },
+        {
+          "line_range": "82-128",
+          "context": "lea_round_transformation function with ARX operations",
+          "confidence": "high"
+        },
+        {
+          "line_range": "133-189",
+          "context": "lea_key_schedule function for round key generation",
+          "confidence": "high"
+        },
+        {
+          "line_range": "194-254",
+          "context": "lea_generate_round_keys_128 function with key expansion",
+          "confidence": "high"
+        }
+      ],
+      "key_indicators": [
+        "lea_encryption",
+        "lightweight_encryption_algorithm",
+        "k_kcmvp",
+        "korean_cryptographic_module",
+        "arx_operations",
+        "software_optimized"
+      ]
+    }
+  ],
+  "cryptographic_patterns": [
+    {
+      "pattern": "arx_cipher_design",
+      "lines": ["82-128"],
+      "description": "Addition-Rotation-XOR operations characteristic of LEA"
+    },
+    {
+      "pattern": "korean_cipher_standard",
+      "lines": ["271-276"],
+      "description": "K-KCMVP Korean Cryptographic Module Validation Program"
+    },
+    {
+      "pattern": "software_optimization",
+      "lines": ["14-77", "271-276"],
+      "description": "Optimized for 32-bit and 64-bit software platforms"
+    }
+  ],
+  "quantum_resistance": "partial",
+  "migration_priority": "medium",
+  "algorithm_details": {
+    "block_size": "128-bit",
+    "key_sizes": ["128-bit", "192-bit", "256-bit"],
+    "rounds": ["24", "28", "32"],
+    "security_level": "128/192/256-bit (classical), 64/96/128-bit (quantum)",
+    "standard_reference": "K-KCMVP Korean Standard",
+    "usage_context": "software-optimized encryption",
+    "design_goal": "high_performance_software"
+  }
+}

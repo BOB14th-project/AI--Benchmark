@@ -4,7 +4,24 @@
 
 ## 🎯 목표
 
-포스트 양자 암호(Post-Quantum Cryptography) 전환을 위한 기존 시스템의 취약점 식별 능력을 LLM 모델별로 비교 평가합니다.
+포스트 양자 암호(Post-Quantum Cryptography) 전환을 위한 기존 시스템의 **양자 취약 암호 알고리즘** 식별 능력을 LLM 모델별로 비교 평가합니다.
+
+### 🔍 탐지 대상: 양자 취약 알고리즘
+
+**Shor's Algorithm에 취약한 공개키 암호**:
+- RSA (모든 키 길이)
+- 타원곡선 암호 (ECC, ECDSA, ECDH)
+- 이산대수 기반 암호 (DSA, DH, ElGamal)
+- 한국 공개키 알고리즘 (KCDSA, EC-KCDSA)
+
+**Grover's Algorithm에 취약한 대칭키 암호** (보안강도 절반 감소):
+- AES-128 → 64비트 보안강도
+- 3DES, DES, RC4
+- MD5, SHA-1, SHA-256 (해시 함수)
+
+**한국 표준 암호** (양자 내성 평가 필요):
+- SEED, ARIA, HIGHT, LEA (대칭키)
+- HAS-160, LSH (해시 함수)
 
 ## 🧪 테스트 모델
 
@@ -24,25 +41,25 @@
 - **목적**: 소스 코드에서 양자 취약 암호 알고리즘 탐지
 - **파일 위치**: `data/test_files/source_code/`
 - **지원 언어**: Python, Java, C/C++, JavaScript
-- **탐지 대상**: RSA, ECC, DH, DSA, 한국 알고리즘(SEED, ARIA, HIGHT, LEA, KCDSA)
+- **탐지 대상**: 양자 취약 공개키 암호 (RSA, ECC, DH, DSA), 한국 알고리즘(SEED, ARIA, HIGHT, LEA, KCDSA)
 
 ### 2. Assembly Binary Agent (`assembly_binary`)
 - **목적**: 어셈블리/바이너리 코드에서 암호 연산 탐지
 - **파일 위치**: `data/test_files/assembly_binary/`
 - **지원 형식**: 어셈블리, 바이너리 덤프, 디스어셈블리
-- **탐지 대상**: 큰 정수 연산, 타원곡선 연산, 모듈러 지수
+- **탐지 대상**: 양자 취약 암호 연산 (큰 정수 연산, 타원곡선 연산, 모듈러 지수)
 
 ### 3. Dynamic Analysis Agent (`dynamic_analysis`)
 - **목적**: 런타임 동작에서 암호 API 사용 탐지
 - **파일 위치**: `data/test_files/dynamic_analysis/`
 - **지원 형식**: JSON, 로그, 트레이스 파일
-- **탐지 대상**: API 호출, 메모리 패턴, 성능 특성
+- **탐지 대상**: 양자 취약 암호 API 호출, 메모리 패턴, 성능 특성
 
 ### 4. Logs Config Agent (`logs_config`)
 - **목적**: 설정 파일과 로그에서 암호 설정 탐지
 - **파일 위치**: `data/test_files/logs_config/`
 - **지원 형식**: 설정 파일, 시스템 로그, 애플리케이션 로그
-- **탐지 대상**: SSL/TLS 설정, 인증서 구성, 암호 라이브러리 설정
+- **탐지 대상**: 양자 취약 SSL/TLS 설정, 인증서 구성, 암호 라이브러리 설정
 
 ## 🔧 설정
 
@@ -133,16 +150,16 @@ python test_single_file.py --file data/test_files/source_code/rsa_public_key_sys
 
 ## 📈 평가 지표
 
-### 1. 탐지 정확도 (Detection Accuracy)
-- **정의**: 실제 취약점 대비 정확히 탐지된 비율
-- **계산**: (정확히 탐지된 취약점 수) / (전체 취약점 수)
+### 1. 양자 취약 알고리즘 탐지 정확도 (Quantum-Vulnerable Algorithm Detection Accuracy)
+- **정의**: 실제 양자 취약 알고리즘 대비 정확히 탐지된 비율
+- **계산**: (정확히 탐지된 양자 취약 알고리즘 수) / (전체 양자 취약 알고리즘 수)
 
 ### 2. 정밀도 (Precision)
-- **정의**: 탐지된 것 중 실제 취약점인 비율
+- **정의**: 탐지된 것 중 실제 양자 취약 알고리즘인 비율
 - **계산**: (참 양성) / (참 양성 + 거짓 양성)
 
 ### 3. 재현율 (Recall)
-- **정의**: 실제 취약점 중 탐지된 비율
+- **정의**: 실제 양자 취약 알고리즘 중 탐지된 비율
 - **계산**: (참 양성) / (참 양성 + 거짓 음성)
 
 ### 4. F1 점수
@@ -170,8 +187,8 @@ python test_single_file.py --file data/test_files/source_code/rsa_public_key_sys
 python analyze_results.py --compare-models
 
 # 출력 예시:
-# Model Performance Comparison
-# ============================
+# Model Performance Comparison - Quantum-Vulnerable Algorithm Detection
+# =====================================================================
 # 1. gemini-2.0-flash-exp    F1: 0.89  Time: 12.3s  Tokens: 1,850
 # 2. gpt-4.1                 F1: 0.87  Time: 8.7s   Tokens: 2,100
 # 3. llama3:8b               F1: 0.82  Time: 3.2s   Tokens: 1,200
@@ -184,23 +201,23 @@ python analyze_results.py --compare-models
 python analyze_results.py --compare-agents
 
 # 출력 예시:
-# Agent Performance Analysis
-# ==========================
-# Source Code:      Easy to detect, high accuracy
-# Assembly Binary:  Medium difficulty, variable performance
-# Dynamic Analysis: Complex patterns, lower accuracy
-# Logs Config:      High false positive rate
+# Agent Performance Analysis - Quantum-Vulnerable Algorithm Detection
+# ===================================================================
+# Source Code:      양자 취약 알고리즘 탐지 용이, 높은 정확도
+# Assembly Binary:  중간 난이도, 모델별 성능 차이
+# Dynamic Analysis: 복잡한 패턴, 상대적으로 낮은 정확도
+# Logs Config:      설정 기반 탐지, 높은 거짓양성율
 ```
 
-### 3. 취약점 유형별 분석
+### 3. 양자 취약 알고리즘 유형별 분석
 
 ```python
-# 취약점 유형별 분석
-python analyze_results.py --vulnerability-analysis
+# 양자 취약 알고리즘 유형별 분석
+python analyze_results.py --quantum-vulnerable-analysis
 
 # 출력 예시:
-# Vulnerability Detection Rates
-# =============================
+# Quantum-Vulnerable Algorithm Detection Rates
+# ============================================
 # RSA:              95% detection rate
 # ECC:              88% detection rate
 # Korean Algorithms: 76% detection rate
@@ -301,8 +318,8 @@ export PARALLEL_REQUESTS=true
 
 1. **모델 선택 가이드**: 용도별 최적 모델 추천
 2. **성능 벤치마크**: 객관적 성능 비교 데이터
-3. **취약점 탐지 도구**: 실무에서 활용 가능한 도구
-4. **연구 기여**: 암호 분석 AI 연구 발전
+3. **양자 취약 알고리즘 탐지 도구**: 실무에서 활용 가능한 도구
+4. **연구 기여**: 양자 취약 암호 분석 AI 연구 발전
 
 ## 🔄 업데이트 계획
 
@@ -465,4 +482,4 @@ python test_metrics_algorithms.py
 
 ---
 
-이 벤치마크를 통해 양자 컴퓨팅 시대에 대비한 암호 시스템의 취약점을 효과적으로 탐지할 수 있는 AI 모델을 식별하고 개선할 수 있습니다.
+이 벤치마크를 통해 양자 컴퓨팅 시대에 대비한 암호 시스템의 **양자 취약 알고리즘**을 효과적으로 탐지할 수 있는 AI 모델을 식별하고 개선할 수 있습니다.

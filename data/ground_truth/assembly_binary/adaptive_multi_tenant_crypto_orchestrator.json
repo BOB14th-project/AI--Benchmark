@@ -1,0 +1,8 @@
+{
+  "expected_findings": {
+    "vulnerable_algorithms_detected": ["RSA", "ECC", "AES", "ARIA", "SEED", "HIGHT", "PSS", "GHASH", "Blake2"],
+    "algorithm_categories": ["shor_vulnerable", "grover_vulnerable", "public_key", "symmetric", "hash_functions", "korean_algorithms"],
+    "korean_algorithms_detected": ["ARIA", "SEED", "HIGHT"]
+  },
+  "expected_confidence_range": [0.9, 0.98]
+}

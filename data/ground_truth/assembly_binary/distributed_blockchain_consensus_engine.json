@@ -1,0 +1,8 @@
+{
+  "expected_findings": {
+    "vulnerable_algorithms_detected": ["BLS", "ECDSA", "RSA", "VDF", "SHA256"],
+    "algorithm_categories": ["shor_vulnerable", "grover_vulnerable", "public_key", "hash_functions", "pairing_based", "verification_functions"],
+    "korean_algorithms_detected": []
+  },
+  "expected_confidence_range": [0.8, 0.95]
+}
