@@ -1,31 +1,32 @@
 # Quantum-Vulnerable Cryptography Detection Benchmark Configuration
 
 # LLM API Configuration
+# API keys are loaded from environment variables (.env file)
 llm_providers:
   openai:
-    api_key: "your_openai_api_key_here"
-    model: "gpt-4.1"
-    base_url: "https://api.openai.com/v1"
+    api_key_env: "OPENAI_API_KEY"
+    model_env: "OPENAI_MODEL"
+    base_url_env: "OPENAI_BASE_URL"
 
   google:
-    api_key: "AIzaSyALiHO-MRbsutKmL01JGMleNTszXAaFo3w"
-    model: "gemini-2.5-flash"
-    base_url: "https://generativelanguage.googleapis.com/v1beta"
+    api_key_env: "GOOGLE_API_KEY"
+    model_env: "GOOGLE_MODEL"
+    base_url_env: "GOOGLE_BASE_URL"
 
   anthropic:
-    api_key: "your_anthropic_api_key_here"
-    model: "claude-3-sonnet-20240229"
-    base_url: "https://api.anthropic.com"
+    api_key_env: "ANTHROPIC_API_KEY"
+    model_env: "ANTHROPIC_MODEL"
+    base_url_env: "ANTHROPIC_BASE_URL"
 
   xai:
-    api_key: "your_xai_api_key_here"
-    model: "grok-3-mini"
-    base_url: "https://api.x.ai/v1"
+    api_key_env: "XAI_API_KEY"
+    model_env: "XAI_MODEL"
+    base_url_env: "XAI_BASE_URL"
 
   ollama:
     api_key: "not_required"
-    model: "llama3:8b"
-    base_url: "http://localhost:11434"
+    model_env: "OLLAMA_MODEL"
+    base_url_env: "OLLAMA_BASE_URL"
 
 # Analysis Agents Configuration for Quantum-Vulnerable Algorithm Detection
 agents:

@@ -1,9 +1,13 @@
 import yaml
 import os
 from typing import Dict, Any
+from dotenv import load_dotenv
 
 class ConfigLoader:
     def __init__(self, config_path: str = "config/config.yaml"):
+        # Load environment variables from .env file
+        load_dotenv()
+
         self.config_path = config_path
         self.config = self._load_config()
 
@@ -30,7 +34,21 @@ class ConfigLoader:
         return config
 
     def get_llm_config(self, provider: str) -> Dict[str, Any]:
-        return self.config.get("llm_providers", {}).get(provider, {})
+        """Get LLM configuration, resolving environment variable references"""
+        provider_config = self.config.get("llm_providers", {}).get(provider, {})
+
+        # Resolve environment variable references
+        resolved_config = {}
+        for key, value in provider_config.items():
+            if key.endswith('_env'):
+                # This is an environment variable reference
+                env_var_name = value
+                actual_key = key[:-4]  # Remove '_env' suffix
+                resolved_config[actual_key] = os.getenv(env_var_name, f"MISSING_{env_var_name}")
+            else:
+                resolved_config[key] = value
+
+        return resolved_config
 
     def get_agent_config(self, agent_name: str) -> Dict[str, Any]:
         return self.config.get("agents", {}).get(agent_name, {})
