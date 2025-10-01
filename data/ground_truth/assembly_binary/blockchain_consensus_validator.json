@@ -1,0 +1,8 @@
+{
+  "expected_findings": {
+    "vulnerable_algorithms_detected": ["ECC", "ECDSA", "SHA256"],
+    "algorithm_categories": ["shor_vulnerable", "grover_vulnerable", "hash_functions"],
+    "korean_algorithms_detected": []
+  },
+  "expected_confidence_range": [0.76, 0.89]
+}

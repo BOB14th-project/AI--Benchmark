@@ -1,0 +1,8 @@
+{
+  "expected_findings": {
+    "vulnerable_algorithms_detected": ["RSA", "SEED", "MD5"],
+    "algorithm_categories": ["shor_vulnerable", "grover_vulnerable", "korean_algorithms", "weak_hash"],
+    "korean_algorithms_detected": ["SEED"]
+  },
+  "expected_confidence_range": [0.78, 0.90]
+}

@@ -74,72 +74,78 @@ class MetricsCalculator:
                 found_count += 1
                 continue
 
-            # Check for algorithm variations and synonyms
+            # Check for exact algorithm names only (strict matching)
             algorithm_variations = []
             if 'rsa' in algorithm_lower:
-                algorithm_variations = ['rsa', 'rivest', 'shamir', 'adleman', 'modular exponentiation']
+                algorithm_variations = ['rsa']
             elif 'ecc' in algorithm_lower or 'ecdsa' in algorithm_lower:
-                algorithm_variations = ['ecc', 'ecdsa', 'ecdh', 'elliptic curve', 'elliptic-curve']
+                algorithm_variations = ['ecc', 'ecdsa', 'ecdh']
             elif 'dsa' in algorithm_lower:
-                algorithm_variations = ['dsa', 'digital signature algorithm', 'discrete logarithm']
+                algorithm_variations = ['dsa']
             elif 'dh' in algorithm_lower or 'diffie' in algorithm_lower:
-                algorithm_variations = ['diffie-hellman', 'dh', 'key exchange']
+                algorithm_variations = ['diffie-hellman', 'dh']
             elif 'seed' in algorithm_lower:
-                algorithm_variations = ['seed', 'korean cipher', 'kisa']
+                algorithm_variations = ['seed']
             elif 'aria' in algorithm_lower:
-                algorithm_variations = ['aria', 'korean aes', 'kisa', 'ks x 1213', 'korean standard']
+                algorithm_variations = ['aria']
             elif 'hight' in algorithm_lower:
-                algorithm_variations = ['hight', 'lightweight', 'ks x 1262', 'korean standard', 'iot', 'embedded']
+                algorithm_variations = ['hight']
             elif 'lea' in algorithm_lower:
-                algorithm_variations = ['lea', 'lightweight encryption', 'lightweight encryption algorithm', 'k-kcmvp', 'korean cryptographic']
+                algorithm_variations = ['lea']
             elif 'kcdsa' in algorithm_lower:
-                algorithm_variations = ['kcdsa', 'korean certificate', 'korean digital signature', 'certificate-based', 'ttas.ko']
+                algorithm_variations = ['kcdsa', 'ec-kcdsa']
             elif 'des' in algorithm_lower:
-                algorithm_variations = ['des', 'data encryption standard', '3des', 'triple des']
+                algorithm_variations = ['des', '3des', 'triple des']
             elif 'rc4' in algorithm_lower:
-                algorithm_variations = ['rc4', 'rivest cipher', 'stream cipher']
+                algorithm_variations = ['rc4']
             elif 'md5' in algorithm_lower:
-                algorithm_variations = ['md5', 'message digest', 'hash function']
+                algorithm_variations = ['md5']
             elif 'sha1' in algorithm_lower or 'sha-1' in algorithm_lower:
-                algorithm_variations = ['sha1', 'sha-1', 'secure hash']
+                algorithm_variations = ['sha1', 'sha-1']
             elif 'a5' in algorithm_lower or 'a5/1' in algorithm_lower:
-                algorithm_variations = ['a5', 'a5/1', 'a5-1', 'gsm', 'stream cipher', 'lfsr']
+                algorithm_variations = ['a5', 'a5/1', 'a5-1']
             elif 'trivium' in algorithm_lower:
-                algorithm_variations = ['trivium', 'stream cipher', 'estream', 'lightweight']
+                algorithm_variations = ['trivium']
             elif 'misty1' in algorithm_lower or 'misty' in algorithm_lower:
-                algorithm_variations = ['misty1', 'misty', 'cubic cipher', 'feistel']
+                algorithm_variations = ['misty1', 'misty']
             elif 'tea' in algorithm_lower:
-                algorithm_variations = ['tea', 'tiny encryption algorithm', 'feistel', 'challenge-response']
+                algorithm_variations = ['tea']
             elif 'crc32' in algorithm_lower or 'crc' in algorithm_lower:
-                algorithm_variations = ['crc32', 'crc', 'cyclic redundancy', 'checksum', 'integrity check']
+                algorithm_variations = ['crc32', 'crc']
             elif 'salsa20' in algorithm_lower or 'salsa' in algorithm_lower:
-                algorithm_variations = ['salsa20', 'salsa', 'stream cipher', 'chacha', 'quarter round']
+                algorithm_variations = ['salsa20', 'salsa']
             elif 'sha256' in algorithm_lower or 'sha-256' in algorithm_lower:
-                algorithm_variations = ['sha256', 'sha-256', 'secure hash', 'hash function', 'digest']
+                algorithm_variations = ['sha256', 'sha-256']
             elif 'hmac' in algorithm_lower:
-                algorithm_variations = ['hmac', 'hash-based message authentication', 'authentication code', 'message authentication']
+                algorithm_variations = ['hmac']
             elif '3des' in algorithm_lower or 'triple des' in algorithm_lower:
-                algorithm_variations = ['3des', 'triple des', 'triple-des', 'tdes', 'ede mode', 'encrypt-decrypt-encrypt']
+                algorithm_variations = ['3des', 'triple des', 'triple-des', 'tdes']
             elif 'chacha20' in algorithm_lower or 'chacha' in algorithm_lower:
-                algorithm_variations = ['chacha20', 'chacha', 'stream cipher', 'salsa', 'quarter round']
+                algorithm_variations = ['chacha20', 'chacha']
             elif 'poly1305' in algorithm_lower:
-                algorithm_variations = ['poly1305', 'authenticator', 'mac', 'message authentication', 'aead']
+                algorithm_variations = ['poly1305']
             elif 'aes' in algorithm_lower:
-                algorithm_variations = ['aes', 'advanced encryption standard', 'rijndael', 'block cipher', 'gcm', 'cbc']
+                algorithm_variations = ['aes', 'rijndael']
             elif 'bls' in algorithm_lower:
-                algorithm_variations = ['bls', 'boneh-lynn-shacham', 'signature aggregation', 'pairing-based', 'bilinear pairing']
+                algorithm_variations = ['bls']
             elif 'kyber' in algorithm_lower:
-                algorithm_variations = ['kyber', 'kem', 'key encapsulation', 'lattice-based', 'post-quantum']
+                algorithm_variations = ['kyber']
             elif 'vdf' in algorithm_lower:
-                algorithm_variations = ['vdf', 'verifiable delay function', 'time-lock', 'sequential computation']
+                algorithm_variations = ['vdf']
             elif 'ghash' in algorithm_lower:
-                algorithm_variations = ['ghash', 'galois hash', 'authentication tag', 'gcm mode']
+                algorithm_variations = ['ghash']
             elif 'pss' in algorithm_lower:
-                algorithm_variations = ['pss', 'probabilistic signature scheme', 'rsa-pss', 'padding']
+                algorithm_variations = ['pss', 'rsa-pss']
             elif 'blake2' in algorithm_lower or 'blake' in algorithm_lower:
-                algorithm_variations = ['blake2', 'blake2b', 'blake', 'hash function', 'secure hash']
+                algorithm_variations = ['blake2', 'blake2b', 'blake']
             elif 'montgomery' in algorithm_lower:
-                algorithm_variations = ['montgomery', 'montgomery multiplication', 'modular arithmetic', 'montgomery ladder']
+                algorithm_variations = ['montgomery']
+            elif 'has-160' in algorithm_lower or 'has160' in algorithm_lower:
+                algorithm_variations = ['has-160', 'has160']
+            elif 'lsh' in algorithm_lower:
+                algorithm_variations = ['lsh']
+            elif 'ecdh' in algorithm_lower:
+                algorithm_variations = ['ecdh']
 
             for variation in algorithm_variations:
                 if variation in actual_text:
@@ -157,16 +163,17 @@ class MetricsCalculator:
         found_count = 0
 
         category_keywords = {
-            'shor_vulnerable': ['shor', 'factoring', 'discrete log', 'rsa', 'ecc', 'dh', 'dsa', 'ecdsa', 'kcdsa', 'elliptic curve', 'bls', 'boneh-lynn-shacham'],
-            'grover_vulnerable': ['grover', 'symmetric', 'hash', 'aes', 'des', 'md5', 'sha', 'sha256', 'sha-256', '3des', 'triple des', 'tea', 'salsa20', 'chacha20', 'poly1305', 'hmac', 'crc32', 'seed', 'aria', 'hight', 'lea', 'blake2', 'ghash'],
-            'classical_vulnerable': ['classical', 'vulnerable', 'weak', 'deprecated', 'insecure', 'a5', 'trivium', 'stream cipher', 'rc4', 'crc32', 'md5', 'sha1'],
-            'public_key': ['public key', 'asymmetric', 'rsa', 'ecc', 'dh', 'dsa', 'ecdsa', 'kcdsa', 'digital signature', 'bls', 'boneh-lynn-shacham', 'pss'],
-            'symmetric': ['symmetric', 'block cipher', 'stream cipher', 'aes', 'des', '3des', 'tea', 'salsa20', 'chacha20', 'seed', 'aria', 'hight', 'lea'],
-            'hash_functions': ['hash', 'digest', 'md5', 'sha', 'sha256', 'sha-256', 'sha1', 'hmac', 'crc32', 'checksum', 'has-160', 'blake2', 'blake2b', 'ghash'],
-            'korean_algorithms': ['korean', 'seed', 'aria', 'hight', 'lea', 'kcdsa', 'has-160', 'korean standard', 'k-kcmvp'],
-            'post_quantum': ['post-quantum', 'quantum-resistant', 'kyber', 'kem', 'lattice-based', 'quantum-safe'],
-            'pairing_based': ['pairing', 'bilinear', 'bls', 'boneh-lynn-shacham', 'signature aggregation'],
-            'verification_functions': ['vdf', 'verifiable delay function', 'time-lock', 'sequential computation']
+            'shor_vulnerable': ['rsa', 'ecc', 'dh', 'dsa', 'ecdsa', 'kcdsa', 'bls'],
+            'grover_vulnerable': ['aes', 'des', 'md5', 'sha', 'sha256', 'sha-256', '3des', 'tea', 'salsa20', 'chacha20', 'poly1305', 'hmac', 'crc32', 'seed', 'aria', 'hight', 'lea', 'blake2', 'ghash'],
+            'classical_vulnerable': ['a5', 'trivium', 'rc4', 'crc32', 'md5', 'sha1'],
+            'public_key': ['rsa', 'ecc', 'dh', 'dsa', 'ecdsa', 'kcdsa', 'bls', 'pss'],
+            'symmetric': ['aes', 'des', '3des', 'tea', 'salsa20', 'chacha20', 'seed', 'aria', 'hight', 'lea'],
+            'hash_functions': ['md5', 'sha', 'sha256', 'sha-256', 'sha1', 'hmac', 'crc32', 'has-160', 'blake2', 'blake2b', 'ghash'],
+            'korean_algorithms': ['seed', 'aria', 'hight', 'lea', 'kcdsa', 'has-160', 'lsh', 'ec-kcdsa', 'ecdh'],
+            'post_quantum': ['kyber'],
+            'pairing_based': ['bls'],
+            'verification_functions': ['vdf'],
+            'weak_hash': ['md5', 'sha1', 'crc32']
         }
 
         for category in expected_categories:
@@ -189,13 +196,15 @@ class MetricsCalculator:
         found_count = 0
 
         korean_variations = {
-            'seed': ['seed', 'kisa seed', 'korean encryption'],
-            'aria': ['aria', 'korean aes', 'kisa aria'],
-            'hight': ['hight', 'high security', 'lightweight block'],
-            'lea': ['lea', 'lightweight encryption algorithm'],
-            'kcdsa': ['kcdsa', 'korean certificate dsa', 'korean dsa'],
-            'has-160': ['has-160', 'hash algorithm standard', 'korean hash'],
-            'lsh': ['lsh', 'lightweight secure hash', 'korean sha']
+            'seed': ['seed'],
+            'aria': ['aria'],
+            'hight': ['hight'],
+            'lea': ['lea'],
+            'kcdsa': ['kcdsa', 'ec-kcdsa'],
+            'has-160': ['has-160', 'has160'],
+            'lsh': ['lsh'],
+            'ec-kcdsa': ['ec-kcdsa', 'eckcdsa'],
+            'ecdh': ['ecdh']
         }
 
         for korean_alg in expected_korean_algs:
@@ -294,10 +303,11 @@ class MetricsCalculator:
         expected_algorithms = expected_findings.get('vulnerable_algorithms_detected', [])
         if not expected_algorithms:
             actual_text = json.dumps(actual_findings).lower()
-            vulnerable_keywords = ['rsa', 'ecc', 'ecdsa', 'dsa', 'diffie-hellman', 'des', '3des',
+            vulnerable_keywords = ['rsa', 'ecc', 'ecdsa', 'dsa', 'diffie-hellman', 'dh', 'des', '3des',
                                  'rc4', 'md5', 'sha1', 'sha256', 'tea', 'salsa20', 'chacha20', 'poly1305',
-                                 'hmac', 'crc32', 'seed', 'aria', 'hight', 'lea', 'trivium', 'vulnerable',
-                                 'bls', 'boneh-lynn-shacham', 'blake2', 'ghash', 'pss', 'montgomery']
+                                 'hmac', 'crc32', 'seed', 'aria', 'hight', 'lea', 'trivium', 'a5',
+                                 'bls', 'blake2', 'ghash', 'pss', 'montgomery', 'rijndael', 'aes',
+                                 'has-160', 'lsh', 'kcdsa', 'ecdh', 'ec-kcdsa', 'kyber', 'vdf', 'misty']
 
             false_positives = sum(1 for keyword in vulnerable_keywords if keyword in actual_text)
             return min(1.0, false_positives / len(vulnerable_keywords))
@@ -323,40 +333,52 @@ class MetricsCalculator:
         for algorithm in expected_algorithms:
             algorithm_lower = algorithm.lower()
             if algorithm_lower not in actual_text:
-                # Check common variations
+                # Check exact algorithm names only
                 variations = []
                 if 'rsa' in algorithm_lower:
-                    variations = ['rsa', 'rivest']
+                    variations = ['rsa']
                 elif 'ecc' in algorithm_lower or 'ecdsa' in algorithm_lower:
-                    variations = ['ecc', 'ecdsa', 'elliptic']
+                    variations = ['ecc', 'ecdsa']
                 elif 'seed' in algorithm_lower:
-                    variations = ['seed', 'korean']
+                    variations = ['seed']
+                elif 'aria' in algorithm_lower:
+                    variations = ['aria']
+                elif 'hight' in algorithm_lower:
+                    variations = ['hight']
+                elif 'lea' in algorithm_lower:
+                    variations = ['lea']
                 elif 'tea' in algorithm_lower:
-                    variations = ['tea', 'tiny encryption']
+                    variations = ['tea']
                 elif 'salsa20' in algorithm_lower:
-                    variations = ['salsa20', 'salsa', 'stream']
+                    variations = ['salsa20', 'salsa']
                 elif 'chacha20' in algorithm_lower:
-                    variations = ['chacha20', 'chacha', 'stream']
+                    variations = ['chacha20', 'chacha']
                 elif '3des' in algorithm_lower:
-                    variations = ['3des', 'triple des', 'des']
+                    variations = ['3des', 'triple des']
                 elif 'sha256' in algorithm_lower:
-                    variations = ['sha256', 'sha-256', 'hash']
+                    variations = ['sha256', 'sha-256']
                 elif 'aes' in algorithm_lower:
-                    variations = ['aes', 'advanced encryption', 'rijndael']
+                    variations = ['aes', 'rijndael']
                 elif 'bls' in algorithm_lower:
-                    variations = ['bls', 'boneh-lynn-shacham', 'signature aggregation']
+                    variations = ['bls']
                 elif 'blake2' in algorithm_lower or 'blake' in algorithm_lower:
-                    variations = ['blake2', 'blake', 'hash function']
+                    variations = ['blake2', 'blake']
                 elif 'kyber' in algorithm_lower:
-                    variations = ['kyber', 'kem', 'lattice-based']
+                    variations = ['kyber']
                 elif 'vdf' in algorithm_lower:
-                    variations = ['vdf', 'verifiable delay', 'time-lock']
+                    variations = ['vdf']
                 elif 'ghash' in algorithm_lower:
-                    variations = ['ghash', 'galois hash', 'gcm']
+                    variations = ['ghash']
                 elif 'pss' in algorithm_lower:
-                    variations = ['pss', 'probabilistic signature']
+                    variations = ['pss', 'rsa-pss']
                 elif 'montgomery' in algorithm_lower:
-                    variations = ['montgomery', 'modular arithmetic']
+                    variations = ['montgomery']
+                elif 'has-160' in algorithm_lower or 'has160' in algorithm_lower:
+                    variations = ['has-160', 'has160']
+                elif 'lsh' in algorithm_lower:
+                    variations = ['lsh']
+                elif 'ecdh' in algorithm_lower:
+                    variations = ['ecdh']
 
                 found_variation = any(var in actual_text for var in variations)
                 if not found_variation:
