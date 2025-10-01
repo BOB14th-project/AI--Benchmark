@@ -1,7 +1,7 @@
 # LEA (Lightweight Encryption Algorithm) Block Cipher
-# Korean Standard K-KCMVP - 128-bit block cipher
+# Domestic standard
 # Optimized for software implementation on 32-bit and 64-bit platforms
-# Quantum-vulnerable to Grover's algorithm
+# Post_Classical-vulnerable to Grover's algorithm
 
 .file   "lea_cipher.c"
 .text
@@ -316,7 +316,7 @@ lea_constants:
 
 # Algorithm identification
 algorithm_name:     .ascii "LEA-LIGHTWEIGHT-ENCRYPTION-ALGORITHM"
-korean_standard:    .ascii "K-KCMVP-KOREAN-CRYPTOGRAPHIC-MODULE"
+domesticn_standard:    .ascii "K-KCMVP-DOMESTICN-CRYPTOGRAPHIC-MODULE"
 key_sizes:          .ascii "128-192-256-BIT-KEYS-SUPPORTED"
-quantum_status:     .ascii "GROVER_ALGORITHM_HALVES_SECURITY"
+post_classical_status:     .ascii "GROVER_ALGORITHM_HALVES_SECURITY"
 optimization:       .ascii "SOFTWARE_OPTIMIZED_32_64_BIT"

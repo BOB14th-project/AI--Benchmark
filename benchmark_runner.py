@@ -333,7 +333,7 @@ class BenchmarkRunner:
                         # 탐지된 알고리즘 이름들 표시
                         detected_algos = result.get('detected_algorithms', [])
                         if detected_algos:
-                            algos_str = ', '.join(detected_algos[:3])  # 최대 3개만 표시
+                            algos_str = ', '.join(detected_algos[:4])  # 최대 3개만 표시
                             if len(detected_algos) > 3:
                                 algos_str += f" 외 {len(detected_algos)-3}개"
                             print(f"    🔍 탐지된 양자 취약 알고리즘: {algos_str}")

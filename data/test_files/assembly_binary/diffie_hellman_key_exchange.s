@@ -1,6 +1,6 @@
 # Diffie-Hellman Key Exchange Implementation
 # Discrete logarithm based key agreement protocol
-# Quantum-vulnerable due to Shor's algorithm
+# Post_Classical-vulnerable due to Shor's algorithm
 
 .section .text
 .global _start
@@ -11,12 +11,12 @@ _start:
     call generate_private_keys
     call compute_public_keys
     call perform_key_exchange
-    call derive_shared_secret
+    call derive_digest_algred_secret
     jmp exit_program
 
 initialize_dh_parameters:
     # Setup standardized DH parameters
-    # Using 2048-bit prime for strong security (pre-quantum)
+    # Using 2048-bit prime for strong security (pre-post_classical)
 
     # Load well-known 2048-bit safe prime p
     # RFC 3526 Group 14 parameters
@@ -212,8 +212,8 @@ invalid_key:
     movq %rax, keys_valid(%rip)
     ret
 
-derive_shared_secret:
-    # Both parties compute the shared secret
+derive_digest_algred_secret:
+    # Both parties compute the digest_algred secret
     # Alice computes: s = B^a mod p
     # Bob computes: s = A^b mod p
     # Both should yield the same result
@@ -223,22 +223,22 @@ derive_shared_secret:
     movq alice_private_key(%rip), %rsi  # Alice's private key a
     movq current_prime(%rip), %rdx      # modulus p
     call fast_modular_exponentiation
-    movq %rax, alice_shared_secret(%rip)
+    movq %rax, alice_digest_algred_secret(%rip)
 
     # Bob's computation: s = A^b mod p
     movq alice_public_key(%rip), %rdi   # Alice's public key A
     movq bob_private_key(%rip), %rsi    # Bob's private key b
     movq current_prime(%rip), %rdx      # modulus p
     call fast_modular_exponentiation
-    movq %rax, bob_shared_secret(%rip)
+    movq %rax, bob_digest_algred_secret(%rip)
 
     # Verify both parties computed the same secret
-    movq alice_shared_secret(%rip), %rbx
-    cmpq bob_shared_secret(%rip), %rbx
+    movq alice_digest_algred_secret(%rip), %rbx
+    cmpq bob_digest_algred_secret(%rip), %rbx
     jne key_exchange_failed
 
-    # Derive session key from shared secret using KDF
-    movq alice_shared_secret(%rip), %rdi
+    # Derive session key from digest_algred secret using KDF
+    movq alice_digest_algred_secret(%rip), %rdi
     call key_derivation_function
     movq %rax, session_key(%rip)
 
@@ -253,14 +253,14 @@ key_exchange_failed:
 
 key_derivation_function:
     # Simple key derivation function (KDF)
-    # In practice, would use SHA-256 or similar
-    # Input: %rdi = shared secret
+    # Digest calculation implementation
+    # Input: %rdi = digest_algred secret
     # Output: %rax = derived key
 
     movq %rdi, %rax
 
     # Simple hash-like transformation
-    movq $0x6a09e667f3bcc908, %rbx  # SHA-256 constant
+    movq $0x6a09e667f3bcc908, %rbx  # Digest calculation implementation
     xorq %rbx, %rax
     rolq $13, %rax
     xorq $0x85ebca6b, %rax
@@ -275,8 +275,8 @@ exit_program:
     movq $0, %rax
     movq %rax, alice_private_key(%rip)
     movq %rax, bob_private_key(%rip)
-    movq %rax, alice_shared_secret(%rip)
-    movq %rax, bob_shared_secret(%rip)
+    movq %rax, alice_digest_algred_secret(%rip)
+    movq %rax, bob_digest_algred_secret(%rip)
 
     # Exit
     movq $60, %rax                  # sys_exit
@@ -302,8 +302,8 @@ exit_program:
     bob_received_key:       .quad 0
 
     # Shared secrets
-    alice_shared_secret:    .quad 0
-    bob_shared_secret:      .quad 0
+    alice_digest_algred_secret:    .quad 0
+    bob_digest_algred_secret:      .quad 0
 
     # Session key
     session_key:            .quad 0
@@ -336,4 +336,4 @@ exit_program:
         .quad 0x8A04BC35BEB21F5C, 0xD62905E57A1D4FAD
 
     algorithm_name:         .ascii "DIFFIE_HELLMAN_2048"
-    protocol_version:       .ascii "DH-GROUP14-SHA256"
+    protocol_version:       .ascii "DH-GROUP14-DIGEST_ALG256"

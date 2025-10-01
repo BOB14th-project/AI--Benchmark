@@ -15,7 +15,7 @@ Disassembly of section .text:
   40102c:	48 8d 7d e0          	lea    -0x20(%rbp),%rdi
   401030:	48 8d 75 d0          	lea    -0x30(%rbp),%rsi
   401034:	ba 08 00 00 00       	mov    $0x8,%edx
-  401039:	e8 e2 00 00 00       	callq  401120 <korean_medical_cipher>
+  401039:	e8 e2 00 00 00       	callq  401120 <domesticn_medical_cipher>
   40103e:	48 8d 7d c0          	lea    -0x40(%rbp),%rdi
   401042:	48 8d 75 b0          	lea    -0x50(%rbp),%rsi
   401046:	ba 10 00 00 00       	mov    $0x10,%edx
@@ -38,7 +38,7 @@ Disassembly of section .text:
   401115:	c9                   	leaveq
   401116:	c3                   	retq
 
-0000000000401120 <korean_medical_cipher>:
+0000000000401120 <domesticn_medical_cipher>:
   401120:	55                   	push   %rbp
   401121:	48 89 e5             	mov    %rsp,%rbp
   401124:	48 83 ec 30          	sub    $0x30,%rsp
@@ -48,7 +48,7 @@ Disassembly of section .text:
   401133:	c7 45 fc 84 94 62 d2 	movl   $0xd2629484,-0x4(%rbp)
   40113a:	c7 45 f8 ca 37 a8 93 	movl   $0x93a837ca,-0x8(%rbp)
   401141:	c7 45 f4 00 00 00 00 	movl   $0x0,-0xc(%rbp)
-  401148:	eb 28                	jmp    401172 <korean_medical_cipher+0x52>
+  401148:	eb 28                	jmp    401172 <domesticn_medical_cipher+0x52>
   40114a:	8b 45 f4             	mov    -0xc(%rbp),%eax
   40114d:	48 63 d0             	movslq %eax,%rdx
   401150:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
@@ -65,7 +65,7 @@ Disassembly of section .text:
   401171:	83 45 f4 01          	addl   $0x1,-0xc(%rbp)
   401175:	8b 45 f4             	mov    -0xc(%rbp),%eax
   401178:	3b 45 dc             	cmp    -0x24(%rbp),%eax
-  40117b:	7c cd                	jl     40114a <korean_medical_cipher+0x2a>
+  40117b:	7c cd                	jl     40114a <domesticn_medical_cipher+0x2a>
   40117d:	90                   	nop
   40117e:	c9                   	leaveq
   40117f:	c3                   	retq

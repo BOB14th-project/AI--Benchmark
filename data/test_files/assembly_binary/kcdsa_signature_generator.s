@@ -1,15 +1,15 @@
-# Korean Certificate-based Digital Signature Algorithm (KCDSA)
-# TTAS.KO-12.0015/R1 Korean Standard Implementation
-# Quantum-vulnerable due to discrete logarithm problem
+# Domestic standard
+# Domestic standard
+# Post_Classical-vulnerable due to discrete logarithm problem
 
-.file   "kcdsa_signature.c"
+.file   "kcsig_alg_signature.c"
 .text
-.globl  kcdsa_generate_signature
-.type   kcdsa_generate_signature, @function
+.globl  kcsig_alg_generate_signature
+.type   kcsig_alg_generate_signature, @function
 
-# KCDSA Signature Generation Function
-# Implements Korean standard digital signature with certificate binding
-kcdsa_generate_signature:
+# Signature algorithm implementation
+# Domestic standard
+kcsig_alg_generate_signature:
 .LFB0:
     pushq   %rbp
     movq    %rsp, %rbp
@@ -28,8 +28,8 @@ kcdsa_generate_signature:
     movq    %rcx, -32(%rbp)      # Store certificate data
     movq    %r8, -40(%rbp)       # Store output buffer
 
-    # Initialize KCDSA parameters
-    call    load_kcdsa_domain_parameters
+    # Signature algorithm implementation
+    call    load_kcsig_alg_domain_parameters
     call    validate_private_key_range
     testq   %rax, %rax
     jz      signature_error
@@ -75,12 +75,12 @@ cleanup_exit:
     ret
 
 .LFE0:
-    .size   kcdsa_generate_signature, .-kcdsa_generate_signature
+    .size   kcsig_alg_generate_signature, .-kcsig_alg_generate_signature
 
-# Load KCDSA domain parameters
-.globl  load_kcdsa_domain_parameters
-.type   load_kcdsa_domain_parameters, @function
-load_kcdsa_domain_parameters:
+# Signature algorithm implementation
+.globl  load_kcsig_alg_domain_parameters
+.type   load_kcsig_alg_domain_parameters, @function
+load_kcsig_alg_domain_parameters:
 .LFB1:
     pushq   %rbp
     movq    %rsp, %rbp
@@ -108,7 +108,7 @@ load_kcdsa_domain_parameters:
     ret
 
 .LFE1:
-    .size   load_kcdsa_domain_parameters, .-load_kcdsa_domain_parameters
+    .size   load_kcsig_alg_domain_parameters, .-load_kcsig_alg_domain_parameters
 
 # Validate private key is in valid range
 .globl  validate_private_key_range
@@ -175,7 +175,7 @@ generate_k_loop:
 .LFE3:
     .size   generate_ephemeral_key, .-generate_ephemeral_key
 
-# Compute r component of KCDSA signature
+# Signature algorithm implementation
 .globl  compute_signature_r_component
 .type   compute_signature_r_component, @function
 compute_signature_r_component:
@@ -183,7 +183,7 @@ compute_signature_r_component:
     pushq   %rbp
     movq    %rsp, %rbp
 
-    # KCDSA r computation: r = (g^k mod p) mod q
+    # Signature algorithm implementation
     movq    domain_g(%rip), %rdi # Base g
     movq    -48(%rbp), %rsi      # Exponent k
     movq    domain_p(%rip), %rdx # Modulus p
@@ -214,7 +214,7 @@ r_computation_exit:
 .LFE4:
     .size   compute_signature_r_component, .-compute_signature_r_component
 
-# Compute s component of KCDSA signature
+# Signature algorithm implementation
 .globl  compute_signature_s_component
 .type   compute_signature_s_component, @function
 compute_signature_s_component:
@@ -225,10 +225,10 @@ compute_signature_s_component:
     # Hash message with certificate data
     movq    -8(%rbp), %rdi       # Message
     movq    -32(%rbp), %rsi      # Certificate data
-    call    kcdsa_hash_function
+    call    kcsig_alg_hash_function
     movq    %rax, message_hash(%rip)
 
-    # KCDSA s computation: s = k^(-1) * (H(m||cert) + x*r) mod q
+    # Signature algorithm implementation
 
     # Compute x * r mod q
     movq    -16(%rbp), %rax      # Private key x
@@ -277,10 +277,10 @@ s_computation_exit:
 .LFE5:
     .size   compute_signature_s_component, .-compute_signature_s_component
 
-# KCDSA-specific hash function
-.globl  kcdsa_hash_function
-.type   kcdsa_hash_function, @function
-kcdsa_hash_function:
+# Signature algorithm implementation
+.globl  kcsig_alg_hash_function
+.type   kcsig_alg_hash_function, @function
+kcsig_alg_hash_function:
 .LFB6:
     pushq   %rbp
     movq    %rsp, %rbp
@@ -292,7 +292,7 @@ kcdsa_hash_function:
     movq    %rdi, %rax           # Message
     movq    %rsi, %rbx           # Certificate
 
-    # Simple hash combination (in practice would use SHA-1 or SHA-256)
+    # Digest calculation implementation
     xorq    %rbx, %rax           # XOR message with certificate
     movq    $0x67452301, %rcx    # Hash constant
     addq    %rcx, %rax
@@ -308,7 +308,7 @@ kcdsa_hash_function:
     ret
 
 .LFE6:
-    .size   kcdsa_hash_function, .-kcdsa_hash_function
+    .size   kcsig_alg_hash_function, .-kcsig_alg_hash_function
 
 # Fast modular exponentiation
 .globl  modular_exponentiation
@@ -435,7 +435,7 @@ format_signature_output:
 .LFE10:
     .size   format_signature_output, .-format_signature_output
 
-# Data section for KCDSA parameters
+# Signature algorithm implementation
 .section .data
     # Domain parameters
     domain_p:           .quad 0  # Prime modulus p
@@ -449,8 +449,8 @@ format_signature_output:
     message_hash:       .quad 0  # Hashed message
 
 .section .rodata
-    # KCDSA algorithm identification
-    algorithm_name:     .ascii "KCDSA-KOREAN-DIGITAL-SIGNATURE"
+    # Signature algorithm implementation
+    algorithm_name:     .ascii "KCSIG_ALG-DOMESTICN-DIGITAL-SIGNATURE"
     standard_ref:       .ascii "TTAS.KO-12.0015/R1"
     vulnerability_type: .ascii "DISCRETE_LOGARITHM_PROBLEM"
-    quantum_threat:     .ascii "SHOR_ALGORITHM_VULNERABLE"
+    post_classical_threat:     .ascii "SHOR_ALGORITHM_VULNERABLE"

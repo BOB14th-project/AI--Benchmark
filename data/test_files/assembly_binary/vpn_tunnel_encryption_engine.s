@@ -23,7 +23,7 @@ Disassembly of section .text:
   401043:	48 8d 7d b0          	lea    -0x50(%rbp),%rdi
   401047:	48 8d 75 a0          	lea    -0x60(%rbp),%rsi
   40104b:	ba 10 00 00 00       	mov    $0x10,%edx
-  401050:	e8 0b 02 00 00       	callq  401260 <korean_vpn_cipher>
+  401050:	e8 0b 02 00 00       	callq  401260 <domesticn_vpn_cipher>
   401055:	48 8d 7d 90          	lea    -0x70(%rbp),%rdi
   401059:	be 30 00 00 00       	mov    $0x30,%esi
   40105e:	e8 3d 02 00 00       	callq  4012a0 <tunnel_authentication>
@@ -85,7 +85,7 @@ Disassembly of section .text:
   401281:	c9                   	leaveq
   401282:	c3                   	retq
 
-0000000000401260 <korean_vpn_cipher>:
+0000000000401260 <domesticn_vpn_cipher>:
   401260:	55                   	push   %rbp
   401261:	48 89 e5             	mov    %rsp,%rbp
   401264:	48 83 ec 30          	sub    $0x30,%rsp
@@ -97,7 +97,7 @@ Disassembly of section .text:
   401281:	c7 45 f4 01 23 45 67 	movl   $0x67452301,-0xc(%rbp)
   401288:	c7 45 f0 89 ab cd ef 	movl   $0xefcdab89,-0x10(%rbp)
   40128f:	c7 45 ec 00 00 00 00 	movl   $0x0,-0x14(%rbp)
-  401296:	eb 38                	jmp    4012d0 <korean_vpn_cipher+0x70>
+  401296:	eb 38                	jmp    4012d0 <domesticn_vpn_cipher+0x70>
   401298:	8b 45 ec             	mov    -0x14(%rbp),%eax
   40129b:	48 63 d0             	movslq %eax,%rdx
   40129e:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
@@ -121,7 +121,7 @@ Disassembly of section .text:
   4012d2:	83 45 ec 01          	addl   $0x1,-0x14(%rbp)
   4012d6:	8b 45 ec             	mov    -0x14(%rbp),%eax
   4012d9:	3b 45 dc             	cmp    -0x24(%rbp),%eax
-  4012dc:	7c ba                	jl     401298 <korean_vpn_cipher+0x38>
+  4012dc:	7c ba                	jl     401298 <domesticn_vpn_cipher+0x38>
   4012de:	90                   	nop
   4012df:	c9                   	leaveq
   4012e0:	c3                   	retq

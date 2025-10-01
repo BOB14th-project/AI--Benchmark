@@ -15,7 +15,7 @@ Disassembly of section .text:
   40102c:	48 8d 7d e0          	lea    -0x20(%rbp),%rdi
   401030:	48 8d 75 d0          	lea    -0x30(%rbp),%rsi
   401034:	ba 08 00 00 00       	mov    $0x8,%edx
-  401039:	e8 e2 00 00 00       	callq  401120 <korean_automotive_cipher>
+  401039:	e8 e2 00 00 00       	callq  401120 <domesticn_automotive_cipher>
   40103e:	48 8d 7d c0          	lea    -0x40(%rbp),%rdi
   401042:	48 8d 75 b0          	lea    -0x50(%rbp),%rsi
   401046:	ba 16 00 00 00       	mov    $0x16,%edx
@@ -38,7 +38,7 @@ Disassembly of section .text:
   401116:	c9                   	leaveq
   401117:	c3                   	retq
 
-0000000000401120 <korean_automotive_cipher>:
+0000000000401120 <domesticn_automotive_cipher>:
   401120:	55                   	push   %rbp
   401121:	48 89 e5             	mov    %rsp,%rbp
   401124:	48 83 ec 30          	sub    $0x30,%rsp
@@ -49,7 +49,7 @@ Disassembly of section .text:
   40113a:	c7 45 f8 ca 37 a8 93 	movl   $0x93a837ca,-0x8(%rbp)
   401141:	c7 45 f4 5b 9d 11 96 	movl   $0x96119d5b,-0xc(%rbp)
   401148:	c7 45 f0 00 00 00 00 	movl   $0x0,-0x10(%rbp)
-  40114f:	eb 32                	jmp    401183 <korean_automotive_cipher+0x63>
+  40114f:	eb 32                	jmp    401183 <domesticn_automotive_cipher+0x63>
   401151:	8b 45 f0             	mov    -0x10(%rbp),%eax
   401154:	48 63 d0             	movslq %eax,%rdx
   401157:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
@@ -70,7 +70,7 @@ Disassembly of section .text:
   401184:	83 45 f0 01          	addl   $0x1,-0x10(%rbp)
   401188:	8b 45 f0             	mov    -0x10(%rbp),%eax
   40118b:	3b 45 dc             	cmp    -0x24(%rbp),%eax
-  40118e:	7c c1                	jl     401151 <korean_automotive_cipher+0x31>
+  40118e:	7c c1                	jl     401151 <domesticn_automotive_cipher+0x31>
   401190:	90                   	nop
   401191:	c9                   	leaveq
   401192:	c3                   	retq

@@ -27,7 +27,7 @@ Disassembly of section .text:
   401054:	48 8d 7d a0          	lea    -0x60(%rbp),%rdi
   401058:	48 8d 75 90          	lea    -0x70(%rbp),%rsi
   40105c:	ba 21 00 00 00       	mov    $0x21,%edx
-  401061:	e8 1a 03 00 00       	callq  401380 <korean_curve_operations>
+  401061:	e8 1a 03 00 00       	callq  401380 <domesticn_curve_operations>
   401066:	48 8d 7d 80          	lea    -0x80(%rbp),%rdi
   40106a:	be 40 00 00 00       	mov    $0x40,%esi
   40106f:	e8 4c 03 00 00       	callq  4013c0 <signature_generation_engine>
@@ -123,7 +123,7 @@ Disassembly of section .text:
   40137c:	c9                   	leaveq
   40137d:	c3                   	retq
 
-0000000000401380 <korean_curve_operations>:
+0000000000401380 <domesticn_curve_operations>:
   401380:	55                   	push   %rbp
   401381:	48 89 e5             	mov    %rsp,%rbp
   401384:	48 83 ec 30          	sub    $0x30,%rsp
@@ -135,7 +135,7 @@ Disassembly of section .text:
   40139b:	48 c7 45 f0 3d 1c f5 	movq   $0xe4f51c3d,-0x10(%rbp)
   4013a2:	e4
   4013a3:	c7 45 fc 00 00 00 00 	movl   $0x0,-0x4(%rbp)
-  4013aa:	eb 3c                	jmp    4013e8 <korean_curve_operations+0x68>
+  4013aa:	eb 3c                	jmp    4013e8 <domesticn_curve_operations+0x68>
   4013ac:	8b 45 fc             	mov    -0x4(%rbp),%eax
   4013af:	48 63 d0             	movslq %eax,%rdx
   4013b2:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
@@ -156,7 +156,7 @@ Disassembly of section .text:
   4013df:	83 45 fc 01          	addl   $0x1,-0x4(%rbp)
   4013e3:	8b 45 fc             	mov    -0x4(%rbp),%eax
   4013e6:	3b 45 dc             	cmp    -0x24(%rbp),%eax
-  4013e9:	7c c1                	jl     4013ac <korean_curve_operations+0x2c>
+  4013e9:	7c c1                	jl     4013ac <domesticn_curve_operations+0x2c>
   4013eb:	90                   	nop
   4013ec:	c9                   	leaveq
   4013ed:	c3                   	retq

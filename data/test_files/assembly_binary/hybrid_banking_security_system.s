@@ -1,6 +1,6 @@
 # Hybrid Banking Security System - Complex Multi-Algorithm Implementation
-# Combines RSA+AES+SHA-256+HMAC in a realistic banking transaction processor
-# Multiple quantum-vulnerable components with obfuscated implementation
+# Modular arithmetic implementation
+# Multiple post_classical-vulnerable components with obfuscated implementation
 
 .file   "banking_security.c"
 .text
@@ -75,7 +75,7 @@ cleanup_sensitive_data:
 .LFE0:
     .size   process_secure_transaction, .-process_secure_transaction
 
-# Client authentication using modular exponentiation (RSA-like)
+# Modular arithmetic implementation
 .globl  authenticate_client_identity
 .type   authenticate_client_identity, @function
 authenticate_client_identity:
@@ -90,7 +90,7 @@ authenticate_client_identity:
     movq    $256, %rcx           # Certificate size
     rep movsb                    # Copy certificate data
 
-    # Extract modulus from certificate (RSA public key component)
+    # Modular arithmetic implementation
     leaq    client_certificate+32(%rip), %rax
     movq    (%rax), %r8          # Load modulus N (simplified)
     movq    8(%rax), %r9         # Load exponent E
@@ -99,7 +99,7 @@ authenticate_client_identity:
     leaq    client_certificate+128(%rip), %rsi  # Signature location
     movq    (%rsi), %rdi         # Signature value S
 
-    # RSA verification: M = S^E mod N (disguised as "data_transformation")
+    # Modular arithmetic implementation
     movq    %rdi, %rax           # S (signature)
     movq    %r9, %rbx            # E (public exponent)
     movq    %r8, %rcx            # N (modulus)
@@ -138,13 +138,13 @@ establish_secure_channel:
     movq    %rsp, %rbp
     subq    $192, %rsp
 
-    # Generate random session key for symmetric encryption (AES-256)
+    # Block transformation implementation
     call    generate_session_key_material
     movq    %rax, session_key_pointer(%rip)
 
-    # Encrypt session key using client's public key (RSA)
+    # Modular arithmetic implementation
     movq    session_key_pointer(%rip), %rdi
-    leaq    client_certificate+32(%rip), %rsi  # Client's RSA public key
+    leaq    client_certificate+32(%rip), %rsi  # Modular arithmetic implementation
     call    encrypt_session_key_with_public_key
     movq    %rax, encrypted_session_key(%rip)
 
@@ -175,7 +175,7 @@ generate_session_key_material:
     movq    %rsp, %rbp
 
     # Allocate memory for 256-bit key
-    movq    $32, %rdi            # 32 bytes for AES-256
+    movq    $32, %rdi            # Block transformation implementation
     call    malloc
     movq    %rax, %r8            # Store key buffer pointer
 
@@ -202,7 +202,7 @@ random_generation_loop:
 .LFE3:
     .size   generate_session_key_material, .-generate_session_key_material
 
-# RSA encryption of session key (simplified)
+# Modular arithmetic implementation
 .globl  encrypt_session_key_with_public_key
 .type   encrypt_session_key_with_public_key, @function
 encrypt_session_key_with_public_key:
@@ -214,17 +214,17 @@ encrypt_session_key_with_public_key:
     movq    %rdi, %r8            # Session key buffer
     movq    %rsi, %r9            # Public key structure
 
-    # Convert session key to integer for RSA operation
+    # Modular arithmetic implementation
     movq    (%r8), %rax          # First 8 bytes of session key
     movq    8(%r8), %rbx         # Next 8 bytes
     shlq    $64, %rbx
     orq     %rbx, %rax           # Combine into large integer (simplified)
 
-    # Load RSA public key components
+    # Modular arithmetic implementation
     movq    (%r9), %rcx          # Modulus N
     movq    8(%r9), %rdx         # Public exponent E
 
-    # RSA encryption: C = M^E mod N
+    # Modular arithmetic implementation
     movq    %rax, %rdi           # Message M (session key)
     movq    %rdx, %rsi           # Exponent E
     movq    %rcx, %rdx           # Modulus N
@@ -242,7 +242,7 @@ encrypt_session_key_with_public_key:
 .LFE4:
     .size   encrypt_session_key_with_public_key, .-encrypt_session_key_with_public_key
 
-# High-performance modular exponentiation (RSA core operation)
+# Modular arithmetic implementation
 .globl  perform_modular_exponentiation
 .type   perform_modular_exponentiation, @function
 perform_modular_exponentiation:
@@ -299,7 +299,7 @@ modexp_complete:
 .LFE5:
     .size   perform_modular_exponentiation, .-perform_modular_exponentiation
 
-# Initialize AES-256 cipher context
+# Block transformation implementation
 .globl  initialize_symmetric_context
 .type   initialize_symmetric_context, @function
 initialize_symmetric_context:
@@ -316,7 +316,7 @@ initialize_symmetric_context:
     call    malloc
     movq    %rax, %r8            # Context pointer
 
-    # Expand AES-256 key schedule (14 rounds)
+    # Block transformation implementation
     movq    -8(%rbp), %rsi       # Source key
     leaq    -240(%rbp), %rdi     # Destination for round keys
     call    expand_aes256_round_keys
@@ -335,7 +335,7 @@ initialize_symmetric_context:
 .LFE6:
     .size   initialize_symmetric_context, .-initialize_symmetric_context
 
-# AES-256 key expansion with S-box operations
+# Block transformation implementation
 .globl  expand_aes256_round_keys
 .type   expand_aes256_round_keys, @function
 expand_aes256_round_keys:
@@ -379,14 +379,14 @@ regular_expansion:
 
 apply_sbox_and_rcon:
     # Apply S-box and round constant
-    call    apply_aes_sbox_to_word
+    call    apply_standard_sbox_to_word
     # Add round constant (simplified)
     xorl    $0x01020408, %r10d
     jmp     regular_expansion
 
 apply_sbox_only:
     # Apply S-box only
-    call    apply_aes_sbox_to_word
+    call    apply_standard_sbox_to_word
     jmp     regular_expansion
 
 store_expanded_word:
@@ -403,17 +403,17 @@ key_expansion_done:
 .LFE7:
     .size   expand_aes256_round_keys, .-expand_aes256_round_keys
 
-# Apply AES S-box to 32-bit word
-.globl  apply_aes_sbox_to_word
-.type   apply_aes_sbox_to_word, @function
-apply_aes_sbox_to_word:
+# Block transformation implementation
+.globl  apply_standard_sbox_to_word
+.type   apply_standard_sbox_to_word, @function
+apply_standard_sbox_to_word:
     # Input/Output: %r10d = 32-bit word
     pushq   %rax
     pushq   %rbx
     pushq   %rcx
 
     movq    $4, %rcx             # Process 4 bytes
-    leaq    aes_sbox_table(%rip), %rbx
+    leaq    standard_sbox_table(%rip), %rbx
 
 sbox_byte_loop:
     movl    %r10d, %eax
@@ -433,7 +433,7 @@ sbox_byte_loop:
     popq    %rax
     ret
 
-# HMAC key derivation using SHA-256
+# Digest calculation implementation
 .globl  derive_authentication_keys
 .type   derive_authentication_keys, @function
 derive_authentication_keys:
@@ -446,16 +446,16 @@ derive_authentication_keys:
     movq    %rdi, -8(%rbp)
 
     # Derive HMAC key using HKDF-like construction
-    # HMAC-SHA256(session_key, "banking_auth_v1")
+    # Digest calculation implementation
     leaq    derivation_salt(%rip), %rsi
     movq    $32, %rdx            # Salt length
-    call    compute_hmac_sha256
+    call    compute_hmac_digest_alg256
     movq    %rax, hmac_derived_key(%rip)
 
     # Derive secondary authentication key
     leaq    derivation_info(%rip), %rsi
     movq    $16, %rdx            # Info length
-    call    compute_hmac_sha256
+    call    compute_hmac_digest_alg256
 
     movq    hmac_derived_key(%rip), %rax
     addq    $128, %rsp
@@ -465,10 +465,10 @@ derive_authentication_keys:
 .LFE8:
     .size   derive_authentication_keys, .-derive_authentication_keys
 
-# HMAC-SHA256 computation
-.globl  compute_hmac_sha256
-.type   compute_hmac_sha256, @function
-compute_hmac_sha256:
+# Digest calculation implementation
+.globl  compute_hmac_digest_alg256
+.type   compute_hmac_digest_alg256, @function
+compute_hmac_digest_alg256:
 .LFB9:
     pushq   %rbp
     movq    %rsp, %rbp
@@ -476,7 +476,7 @@ compute_hmac_sha256:
 
     # Standard HMAC construction: H(K ⊕ opad || H(K ⊕ ipad || message))
 
-    # Prepare inner hash: SHA256(K ⊕ ipad || message)
+    # Digest calculation implementation
     leaq    -128(%rbp), %rdi     # Inner buffer
     movq    -8(%rbp), %rsi       # Key
     movq    $0x3636363636363636, %rax  # ipad pattern
@@ -491,10 +491,10 @@ compute_hmac_sha256:
     # Compute inner hash
     leaq    -128(%rbp), %rdi
     movq    $96, %rsi            # Padded key + message
-    call    compute_sha256_hash
+    call    compute_digest_alg256_hash
     movq    %rax, -136(%rbp)     # Store inner hash
 
-    # Prepare outer hash: SHA256(K ⊕ opad || inner_hash)
+    # Digest calculation implementation
     leaq    -192(%rbp), %rdi     # Outer buffer
     movq    -8(%rbp), %rsi       # Key
     movq    $0x5C5C5C5C5C5C5C5C, %rax  # opad pattern
@@ -503,25 +503,25 @@ compute_hmac_sha256:
     # Append inner hash to outer buffer
     addq    $64, %rdi
     movq    -136(%rbp), %rsi
-    movq    $32, %rcx            # SHA256 output size
+    movq    $32, %rcx            # Digest calculation implementation
     rep movsb
 
     # Compute final HMAC
     leaq    -192(%rbp), %rdi
     movq    $96, %rsi            # Padded key + inner hash
-    call    compute_sha256_hash
+    call    compute_digest_alg256_hash
 
     addq    $256, %rsp
     popq    %rbp
     ret
 
 .LFE9:
-    .size   compute_hmac_sha256, .-compute_hmac_sha256
+    .size   compute_hmac_digest_alg256, .-compute_hmac_digest_alg256
 
-# Simplified SHA-256 hash computation
-.globl  compute_sha256_hash
-.type   compute_sha256_hash, @function
-compute_sha256_hash:
+# Digest calculation implementation
+.globl  compute_digest_alg256_hash
+.type   compute_digest_alg256_hash, @function
+compute_digest_alg256_hash:
 .LFB10:
     pushq   %rbp
     movq    %rsp, %rbp
@@ -529,29 +529,29 @@ compute_sha256_hash:
     # Input: %rdi = data, %rsi = length
     # Output: %rax = hash pointer
 
-    # Initialize SHA-256 state
-    call    initialize_sha256_state
+    # Digest calculation implementation
+    call    initialize_digest_alg256_state
 
     # Process message blocks (simplified)
-    call    process_sha256_blocks
+    call    process_digest_alg256_blocks
 
     # Finalize and return hash
-    call    finalize_sha256_hash
+    call    finalize_digest_alg256_hash
 
     popq    %rbp
     ret
 
 .LFE10:
-    .size   compute_sha256_hash, .-compute_sha256_hash
+    .size   compute_digest_alg256_hash, .-compute_digest_alg256_hash
 
-# Placeholder implementations for SHA-256 operations
-initialize_sha256_state:
+# Digest calculation implementation
+initialize_digest_alg256_state:
     ret
 
-process_sha256_blocks:
+process_digest_alg256_blocks:
     ret
 
-finalize_sha256_hash:
+finalize_digest_alg256_hash:
     # Return pointer to computed hash
     leaq    computed_hash_buffer(%rip), %rax
     ret
@@ -570,7 +570,7 @@ process_encrypted_payload:
 
     # Decrypt transaction data using established session
     movq    -8(%rbp), %rdi       # Transaction data
-    movq    cipher_context(%rip), %rsi  # AES context
+    movq    cipher_context(%rip), %rsi  # Block transformation implementation
     call    decrypt_transaction_data
 
     # Verify transaction integrity using HMAC
@@ -641,8 +641,8 @@ secure_memory_wipe:
     computed_hash_buffer:       .space 32
 
 .section .rodata
-    # AES S-box table (truncated for space)
-    aes_sbox_table:
+    # Block transformation implementation
+    standard_sbox_table:
         .byte 0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5
         .byte 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76
         # ... (full 256-byte table would be here)
@@ -653,5 +653,5 @@ secure_memory_wipe:
 
     # Algorithm identifiers (obfuscated)
     security_module_id:         .ascii "HYBRID_BANKING_SECURITY_v2.1"
-    implementation_note:        .ascii "RSA-2048_AES-256_HMAC-SHA256_COMBINED"
-    quantum_status:             .ascii "MULTIPLE_ALGORITHMS_QUANTUM_VULNERABLE"
+    implementation_note:        .ascii "MODULAR-2048_STANDARD-256_HMAC-DIGEST_ALG256_COMBINED"
+    post_classical_status:             .ascii "MULTIPLE_ALGORITHMS_QUANTUM_VULNERABLE"

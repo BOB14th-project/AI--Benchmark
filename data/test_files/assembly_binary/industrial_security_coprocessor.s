@@ -26,7 +26,7 @@ Disassembly of section .text:
   401050:	e8 0b 02 00 00       	callq  401260 <scada_authentication_module>
   401055:	48 8d 7d 90          	lea    -0x70(%rbp),%rdi
   401059:	be 08 00 00 00       	mov    $0x8,%esi
-  40105e:	e8 3d 02 00 00       	callq  4012a0 <korean_industrial_cipher>
+  40105e:	e8 3d 02 00 00       	callq  4012a0 <domesticn_industrial_cipher>
   401063:	48 8d 7d 80          	lea    -0x80(%rbp),%rdi
   401067:	be 20 00 00 00       	mov    $0x20,%esi
   40106c:	e8 6f 02 00 00       	callq  4012e0 <control_system_digest>
@@ -112,7 +112,7 @@ Disassembly of section .text:
   4012a3:	c9                   	leaveq
   4012a4:	c3                   	retq
 
-00000000004012a0 <korean_industrial_cipher>:
+00000000004012a0 <domesticn_industrial_cipher>:
   4012a0:	55                   	push   %rbp
   4012a1:	48 89 e5             	mov    %rsp,%rbp
   4012a4:	48 83 ec 30          	sub    $0x30,%rsp
@@ -125,7 +125,7 @@ Disassembly of section .text:
   4012bf:	48 c7 45 e8 8c 4e 01 	movq   $0x23014e8c,-0x18(%rbp)
   4012c6:	23
   4012c7:	c7 45 fc 00 00 00 00 	movl   $0x0,-0x4(%rbp)
-  4012ce:	eb 29                	jmp    4012f9 <korean_industrial_cipher+0x59>
+  4012ce:	eb 29                	jmp    4012f9 <domesticn_industrial_cipher+0x59>
   4012d0:	8b 45 fc             	mov    -0x4(%rbp),%eax
   4012d3:	25 07 00 00 00       	and    $0x7,%eax
   4012d8:	48 8d 14 85 00 00 00 	lea    0x0(,%rax,4),%rdx
@@ -140,7 +140,7 @@ Disassembly of section .text:
   4012f9:	83 45 fc 01          	addl   $0x1,-0x4(%rbp)
   4012fd:	8b 45 fc             	mov    -0x4(%rbp),%eax
   401300:	3b 45 dc             	cmp    -0x24(%rbp),%eax
-  401303:	7c cb                	jl     4012d0 <korean_industrial_cipher+0x30>
+  401303:	7c cb                	jl     4012d0 <domesticn_industrial_cipher+0x30>
   401305:	90                   	nop
   401306:	c9                   	leaveq
   401307:	c3                   	retq

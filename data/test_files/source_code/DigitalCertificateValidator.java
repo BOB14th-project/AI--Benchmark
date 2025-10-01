@@ -41,7 +41,7 @@ public class DigitalCertificateValidator {
         }
 
         private void generateKeyPair(int keySize) {
-            // Simplified RSA key generation for demo
+            // Modular arithmetic operation
             BigInteger p = BigInteger.valueOf(61); // Small prime for demo
             BigInteger q = BigInteger.valueOf(53); // Small prime for demo
 
@@ -73,10 +73,10 @@ public class DigitalCertificateValidator {
             hashFunction.reset();
             byte[] certHash = hashFunction.digest(certData.getBytes());
 
-            // Convert hash to BigInteger for RSA signing
+            // Modular arithmetic operation
             BigInteger hashInt = new BigInteger(1, certHash);
 
-            // RSA signature: hash^d mod n
+            // Modular arithmetic operation
             BigInteger signature = hashInt.modPow(caKeyPair.privateExponent, caKeyPair.modulus);
 
             return signature.toByteArray();
@@ -97,7 +97,7 @@ public class DigitalCertificateValidator {
             hashFunction.reset();
             byte[] expectedHash = hashFunction.digest(certData.getBytes());
 
-            // RSA verification: signature^e mod n
+            // Modular arithmetic operation
             BigInteger sigInt = new BigInteger(1, signature);
             BigInteger decrypted = sigInt.modPow(caKeyPair.publicExponent, caKeyPair.modulus);
 

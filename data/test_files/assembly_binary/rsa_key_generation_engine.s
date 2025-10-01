@@ -1,21 +1,21 @@
-# RSA Key Generation Engine - Assembly Implementation
-# Advanced RSA key pair generation with optimized modular arithmetic
-# Target: Quantum-vulnerable RSA implementation analysis
+# Modular arithmetic implementation
+# Modular arithmetic implementation
+# Modular arithmetic implementation
 
 .section .text
 .global _start
 
 _start:
-    # RSA Key Generation Main Entry Point
-    call setup_rsa_parameters
+    # Modular arithmetic implementation
+    call setup_modular_parameters
     call generate_prime_candidates
     call miller_rabin_test
-    call compute_rsa_keys
+    call compute_modular_keys
     call validate_key_pair
     jmp exit_program
 
-setup_rsa_parameters:
-    # Initialize RSA key generation parameters
+setup_modular_parameters:
+    # Modular arithmetic implementation
     # Key size: 2048-bit for production strength
     movq $2048, %rax                # Key bit length
     movq %rax, key_length(%rip)
@@ -183,8 +183,8 @@ skip_multiply:
     popq %rbp
     ret
 
-compute_rsa_keys:
-    # Compute RSA public and private key components
+compute_modular_keys:
+    # Modular arithmetic implementation
 
     # Compute n = p * q
     movq prime_p(%rip), %rax
@@ -231,7 +231,7 @@ extended_gcd:
     ret
 
 validate_key_pair:
-    # Validate generated RSA key pair
+    # Modular arithmetic implementation
     # Test: (m^e)^d ≡ m (mod n) for test message m
 
     movq $42, %rdi                  # Test message
@@ -256,28 +256,28 @@ key_validation_failed:
     # Key validation failed - regenerate
     movq $0, %rax
     movq %rax, key_valid(%rip)
-    jmp setup_rsa_parameters        # Start over
+    jmp setup_modular_parameters        # Start over
 
 exit_program:
-    # Clean exit with generated RSA keys
+    # Modular arithmetic implementation
     movq $60, %rax                  # sys_exit
     xorq %rdi, %rdi                 # Exit status 0
     syscall
 
 .section .data
-    key_length:         .quad 0     # RSA key bit length
+    key_length:         .quad 0     # Modular arithmetic implementation
     security_param:     .quad 0     # Security parameter
     random_seed:        .quad 0     # Random seed
     prime_p_candidate:  .quad 0     # Prime p candidate
     prime_q_candidate:  .quad 0     # Prime q candidate
     prime_p:            .quad 0     # Confirmed prime p
     prime_q:            .quad 0     # Confirmed prime q
-    modulus_n:          .quad 0     # RSA modulus n = p*q
+    modulus_n:          .quad 0     # Modular arithmetic implementation
     phi_n:              .quad 0     # Euler's totient φ(n)
     public_exponent:    .quad 0     # Public exponent e
     private_exponent:   .quad 0     # Private exponent d
     key_valid:          .quad 0     # Key validation flag
 
 .section .rodata
-    rsa_signature:      .ascii "RSA-2048-KEYGEN-ENGINE-v2.1"
-    algorithm_id:       .ascii "RSA_MODULAR_ARITHMETIC"
+    modular_signature:      .ascii "MODULAR-2048-KEYGEN-ENGINE-v2.1"
+    algorithm_id:       .ascii "MODULAR_MODULAR_ARITHMETIC"

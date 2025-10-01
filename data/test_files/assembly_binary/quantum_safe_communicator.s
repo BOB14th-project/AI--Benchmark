@@ -1,4 +1,4 @@
-quantum_safe_communicator:     file format elf64-x86-64
+post_classical_safe_communicator:     file format elf64-x86-64
 
 Disassembly of section .text:
 

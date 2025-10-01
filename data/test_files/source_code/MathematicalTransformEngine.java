@@ -479,7 +479,7 @@ public class MathematicalTransformEngine {
         }
 
         private byte[] performKoreanBlockCipher(byte[] input) {
-            // Korean standard 64-bit block cipher with 16 rounds
+            // Domestic algorithm
             int blockSize = 8; // 64-bit blocks
             int blocks = (input.length + blockSize - 1) / blockSize;
             byte[] output = new byte[blocks * blockSize];
@@ -504,7 +504,7 @@ public class MathematicalTransformEngine {
             int left = bytesToInt(block, 0);
             int right = bytesToInt(block, 4);
 
-            // 16 rounds of Korean Feistel structure
+            // Domestic algorithm
             for (int round = 0; round < KOREAN_TRANSFORM_ROUNDS; round++) {
                 int roundKey = generateRoundKey(key, round);
                 int fOutput = koreanFFunction(right, roundKey);
@@ -525,10 +525,10 @@ public class MathematicalTransformEngine {
         }
 
         private int koreanFFunction(int input, int roundKey) {
-            // Korean F-function with S-boxes and linear transformation
+            // Domestic algorithm
             input ^= roundKey;
 
-            // Apply Korean S-boxes
+            // Domestic algorithm
             int s1 = koreanSBox1((input >>> 24) & 0xFF);
             int s2 = koreanSBox2((input >>> 16) & 0xFF);
             int s3 = koreanSBox1((input >>> 8) & 0xFF);

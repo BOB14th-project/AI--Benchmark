@@ -19,7 +19,7 @@ Disassembly of section .text:
   401030:	48 8d 7d d0          	lea    -0x30(%rbp),%rdi
   401034:	48 8d 75 c0          	lea    -0x40(%rbp),%rsi
   401038:	ba 08 00 00 00       	mov    $0x8,%edx
-  40103d:	e8 9e 00 00 00       	callq  4010e0 <korean_secure_boot_cipher>
+  40103d:	e8 9e 00 00 00       	callq  4010e0 <domesticn_secure_boot_cipher>
   401042:	b8 3c 00 00 00       	mov    $0x3c,%eax
   401047:	bf 00 00 00 00       	mov    $0x0,%edi
   40104c:	0f 05                	syscall
@@ -42,7 +42,7 @@ Disassembly of section .text:
   4010e5:	c9                   	leaveq
   4010e6:	c3                   	retq
 
-00000000004010e0 <korean_secure_boot_cipher>:
+00000000004010e0 <domesticn_secure_boot_cipher>:
   4010e0:	55                   	push   %rbp
   4010e1:	48 89 e5             	mov    %rsp,%rbp
   4010e4:	48 83 ec 30          	sub    $0x30,%rsp
@@ -52,7 +52,7 @@ Disassembly of section .text:
   4010f3:	c7 45 fc 84 94 62 d2 	movl   $0xd2629484,-0x4(%rbp)
   4010fa:	c7 45 f8 ca 37 a8 93 	movl   $0x93a837ca,-0x8(%rbp)
   401101:	c7 45 f4 00 00 00 00 	movl   $0x0,-0xc(%rbp)
-  401108:	eb 28                	jmp    401132 <korean_secure_boot_cipher+0x52>
+  401108:	eb 28                	jmp    401132 <domesticn_secure_boot_cipher+0x52>
   40110a:	8b 45 f4             	mov    -0xc(%rbp),%eax
   40110d:	48 63 d0             	movslq %eax,%rdx
   401110:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
@@ -69,7 +69,7 @@ Disassembly of section .text:
   401131:	83 45 f4 01          	addl   $0x1,-0xc(%rbp)
   401135:	8b 45 f4             	mov    -0xc(%rbp),%eax
   401138:	3b 45 dc             	cmp    -0x24(%rbp),%eax
-  40113b:	7c cd                	jl     40110a <korean_secure_boot_cipher+0x2a>
+  40113b:	7c cd                	jl     40110a <domesticn_secure_boot_cipher+0x2a>
   40113d:	90                   	nop
   40113e:	c9                   	leaveq
   40113f:	c3                   	retq

@@ -22,7 +22,7 @@ public class SecureChatApplication {
         this.messageCounter = 0;
     }
 
-    // ChaCha20-like quarter round operation
+    // Stream cipher quarter round operation
     private void quarterRound(int[] state, int a, int b, int c, int d) {
         state[a] += state[b]; state[d] ^= state[a]; state[d] = Integer.rotateLeft(state[d], 16);
         state[c] += state[d]; state[b] ^= state[c]; state[b] = Integer.rotateLeft(state[b], 12);
@@ -30,7 +30,7 @@ public class SecureChatApplication {
         state[c] += state[d]; state[b] ^= state[c]; state[b] = Integer.rotateLeft(state[b], 7);
     }
 
-    // Initialize ChaCha20-like state
+    // Stream cipher operation
     private int[] initializeStreamState() {
         int[] state = new int[16];
 

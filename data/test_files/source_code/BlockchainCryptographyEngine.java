@@ -12,7 +12,7 @@ public class BlockchainCryptographyEngine {
     private static final int SIGNATURE_KEY_SIZE = 256;
     private static final int HASH_DIGEST_LENGTH = 32;
 
-    // Elliptic curve parameters (secp256k1-like)
+    // Mathematical curve parameters
     private static final BigInteger CURVE_P = new BigInteger(
         "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F", 16);
     private static final BigInteger CURVE_A = BigInteger.ZERO;
@@ -62,7 +62,7 @@ public class BlockchainCryptographyEngine {
         publicKey = scalarMultiply(privateKey, generator);
     }
 
-    // Elliptic curve point addition
+    // Mathematical curve operation
     private ECPoint pointAdd(ECPoint p1, ECPoint p2) {
         if (p1.isInfinity()) return p2;
         if (p2.isInfinity()) return p1;
@@ -82,7 +82,7 @@ public class BlockchainCryptographyEngine {
         return new ECPoint(x3, y3);
     }
 
-    // Elliptic curve point doubling
+    // Mathematical curve operation
     private ECPoint pointDouble(ECPoint p) {
         if (p.isInfinity()) return p;
 

@@ -103,30 +103,7 @@ Analyze the following assembly/binary code and identify: {analysis_points}
 - 성능 메트릭
 - 메모리/네트워크 사용 패턴
 
-**출력 형식**:
-```json
-{
-    "agent_type": "Dynamic Analysis Vulnerable Crypto Detection Agent",
-    "analysis_results": {
-        "rsa_key_generation_and_modular_exponentiation_api_calls_and_performance_signatures": "<분석 결과>",
-        "elliptic_curve_cryptography_operations_and_point_multiplication_behaviors": "<분석 결과>",
-        "discrete_logarithm_algorithm_usage_patterns_(dsa,_dh,_elgamal)": "<분석 결과>",
-        "korean_algorithm_runtime_signatures_(seed,_aria,_hight,_lea,_kcdsa_operations)": "<분석 결과>",
-        "symmetric_cipher_usage_vulnerable_to_quantum_attacks_(des,_3des,_rc4,_aes_128)": "<분석 결과>",
-        "cryptographic_hash_function_calls_and_timing_patterns_(md5,_sha_1,_sha_256)": "<분석 결과>",
-        "vulnerable_random_number_generation_and_entropy_collection_patterns": "<분석 결과>",
-        "cryptographic_library_loading_and_initialization_behaviors": "<분석 결과>",
-        "memory_allocation_patterns_for_large_cryptographic_keys_and_operations": "<분석 결과>",
-        "network_protocol_usage_with_quantum_vulnerable_cipher_suites": "<분석 결과>",
-        "certificate_validation_and_pki_operations_with_vulnerable_algorithms": "<분석 결과>",
-        "performance_characteristics_indicating_quantum_vulnerable_crypto_computations": "<분석 결과>",
-        "korean_cryptographic_library_usage_and_domestic_algorithm_api_calls": "<분석 결과>",
-        "side_channel_information_leakage_in_vulnerable_crypto_implementations": "<분석 결과>"
-    },
-    "confidence_score": 0.92,
-    "summary": "요약"
-}
-```
+
 
 **특화된 프롬프트**:
 ```

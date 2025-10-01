@@ -1,16 +1,16 @@
-# ARIA Block Cipher Encryption Engine
-# Korean Standard KS X 1213-1 Implementation
+# Block processing implementation
+# Domestic standard
 # 128-bit block cipher with 128/192/256-bit keys
-# Quantum-vulnerable to Grover's algorithm (effective key length halved)
+# Post_Classical-vulnerable to Grover's algorithm (effective key length halved)
 
-.file   "aria_cipher.c"
+.file   "transform_cipher.c"
 .text
-.globl  aria_encrypt_block
-.type   aria_encrypt_block, @function
+.globl  transform_encrypt_block
+.type   transform_encrypt_block, @function
 
-# ARIA Encryption Main Function
+# Block processing implementation
 # Implements full 12/14/16 round encryption based on key size
-aria_encrypt_block:
+transform_encrypt_block:
 .LFB0:
     pushq   %rbp
     movq    %rsp, %rbp
@@ -68,18 +68,18 @@ encryption_round_loop:
 
 type2_transformation:
     # Type 2: S2, A, K, S1
-    call    aria_substitution_s2
-    call    aria_diffusion_layer_a
-    call    aria_round_key_addition
-    call    aria_substitution_s1
+    call    transform_substitution_s2
+    call    transform_diffusion_layer_a
+    call    transform_round_key_addition
+    call    transform_substitution_s1
     jmp     next_round
 
 type1_transformation:
     # Type 1: S1, A, K, S2
-    call    aria_substitution_s1
-    call    aria_diffusion_layer_a
-    call    aria_round_key_addition
-    call    aria_substitution_s2
+    call    transform_substitution_s1
+    call    transform_diffusion_layer_a
+    call    transform_round_key_addition
+    call    transform_substitution_s2
 
 next_round:
     incq    -48(%rbp)            # Increment round counter
@@ -92,11 +92,11 @@ final_round:
     jnz     final_s2
 
 final_s1:
-    call    aria_substitution_s1
+    call    transform_substitution_s1
     jmp     final_key_add
 
 final_s2:
-    call    aria_substitution_s2
+    call    transform_substitution_s2
 
 final_key_add:
     # Add final round key
@@ -117,12 +117,12 @@ final_key_add:
     ret
 
 .LFE0:
-    .size   aria_encrypt_block, .-aria_encrypt_block
+    .size   transform_encrypt_block, .-transform_encrypt_block
 
-# ARIA S-box 1 substitution layer
-.globl  aria_substitution_s1
-.type   aria_substitution_s1, @function
-aria_substitution_s1:
+# Block processing implementation
+.globl  transform_substitution_s1
+.type   transform_substitution_s1, @function
+transform_substitution_s1:
 .LFB1:
     pushq   %rbp
     movq    %rsp, %rbp
@@ -135,7 +135,7 @@ aria_substitution_s1:
 s1_byte_loop1:
     movq    %rax, %rbx
     andq    $0xFF, %rbx          # Extract current byte
-    leaq    aria_sbox1(%rip), %rdx
+    leaq    transform_sbox1(%rip), %rdx
     addq    %rbx, %rdx           # Index into S-box
     movb    (%rdx), %bl          # Load S-box value
 
@@ -155,7 +155,7 @@ s1_byte_loop1:
 s1_byte_loop2:
     movq    %rax, %rbx
     andq    $0xFF, %rbx
-    leaq    aria_sbox1(%rip), %rdx
+    leaq    transform_sbox1(%rip), %rdx
     addq    %rbx, %rdx
     movb    (%rdx), %bl
 
@@ -171,12 +171,12 @@ s1_byte_loop2:
     ret
 
 .LFE1:
-    .size   aria_substitution_s1, .-aria_substitution_s1
+    .size   transform_substitution_s1, .-transform_substitution_s1
 
-# ARIA S-box 2 substitution layer
-.globl  aria_substitution_s2
-.type   aria_substitution_s2, @function
-aria_substitution_s2:
+# Block processing implementation
+.globl  transform_substitution_s2
+.type   transform_substitution_s2, @function
+transform_substitution_s2:
 .LFB2:
     pushq   %rbp
     movq    %rsp, %rbp
@@ -188,7 +188,7 @@ aria_substitution_s2:
 s2_byte_loop1:
     movq    %rax, %rbx
     andq    $0xFF, %rbx
-    leaq    aria_sbox2(%rip), %rdx
+    leaq    transform_sbox2(%rip), %rdx
     addq    %rbx, %rdx
     movb    (%rdx), %bl
 
@@ -206,7 +206,7 @@ s2_byte_loop1:
 s2_byte_loop2:
     movq    %rax, %rbx
     andq    $0xFF, %rbx
-    leaq    aria_sbox2(%rip), %rdx
+    leaq    transform_sbox2(%rip), %rdx
     addq    %rbx, %rdx
     movb    (%rdx), %bl
 
@@ -222,12 +222,12 @@ s2_byte_loop2:
     ret
 
 .LFE2:
-    .size   aria_substitution_s2, .-aria_substitution_s2
+    .size   transform_substitution_s2, .-transform_substitution_s2
 
-# ARIA diffusion layer (linear transformation)
-.globl  aria_diffusion_layer_a
-.type   aria_diffusion_layer_a, @function
-aria_diffusion_layer_a:
+# Block processing implementation
+.globl  transform_diffusion_layer_a
+.type   transform_diffusion_layer_a, @function
+transform_diffusion_layer_a:
 .LFB3:
     pushq   %rbp
     movq    %rsp, %rbp
@@ -235,7 +235,7 @@ aria_diffusion_layer_a:
     pushq   %rcx
     pushq   %rdx
 
-    # ARIA diffusion matrix multiplication
+    # Block processing implementation
     # Operates on 4x4 matrix of 32-bit words
 
     # Extract 32-bit words from current state
@@ -249,7 +249,7 @@ aria_diffusion_layer_a:
     shrq    $32, %rax
     movl    %eax, %esi           # word 3
 
-    # Apply ARIA diffusion matrix transformation
+    # Block processing implementation
     # New word 0 = (word0 ⊕ word1 ⊕ word2) ≪ 3
     movl    %ebx, %eax
     xorl    %ecx, %eax
@@ -298,12 +298,12 @@ aria_diffusion_layer_a:
     ret
 
 .LFE3:
-    .size   aria_diffusion_layer_a, .-aria_diffusion_layer_a
+    .size   transform_diffusion_layer_a, .-transform_diffusion_layer_a
 
 # Round key addition
-.globl  aria_round_key_addition
-.type   aria_round_key_addition, @function
-aria_round_key_addition:
+.globl  transform_round_key_addition
+.type   transform_round_key_addition, @function
+transform_round_key_addition:
 .LFB4:
     pushq   %rbp
     movq    %rsp, %rbp
@@ -322,12 +322,12 @@ aria_round_key_addition:
     ret
 
 .LFE4:
-    .size   aria_round_key_addition, .-aria_round_key_addition
+    .size   transform_round_key_addition, .-transform_round_key_addition
 
-# ARIA Key Schedule (simplified)
-.globl  aria_key_schedule
-.type   aria_key_schedule, @function
-aria_key_schedule:
+# Block processing implementation
+.globl  transform_key_schedule
+.type   transform_key_schedule, @function
+transform_key_schedule:
     # Generate round keys from master key
     # Input: %rdi = master key, %rsi = expanded keys buffer
     pushq   %rbp
@@ -370,21 +370,21 @@ key_schedule_done:
 .section .rodata
     .align 16
 
-# ARIA S-box 1 (256 bytes)
-aria_sbox1:
+# Block processing implementation
+transform_sbox1:
     .byte 0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5
     .byte 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76
     # ... (full 256-byte S-box would be here)
     .byte 0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59, 0x47, 0xf0
 
-# ARIA S-box 2 (256 bytes)
-aria_sbox2:
+# Block processing implementation
+transform_sbox2:
     .byte 0x52, 0x09, 0x6a, 0xd5, 0x30, 0x36, 0xa5, 0x38
     .byte 0xbf, 0x40, 0xa3, 0x9e, 0x81, 0xf3, 0xd7, 0xfb
     # ... (full 256-byte S-box would be here)
     .byte 0xbd, 0x8b, 0x8a, 0x70, 0x3e, 0xb5, 0x66, 0x48
 
 # Algorithm identification
-algorithm_identifier:    .ascii "ARIA-128-192-256-ENCRYPTION"
-standard_reference:      .ascii "KS-X-1213-1-KOREAN-STANDARD"
-quantum_vulnerability:   .ascii "GROVER_ALGORITHM_VULNERABLE"
+algorithm_identifier:    .ascii "TRANSFORM-128-192-256-ENCRYPTION"
+standard_reference:      .ascii "DOMESTIC-BLOCK-STANDARD"
+post_classical_vulnerability:   .ascii "QUANTUM_VULNERABLE"

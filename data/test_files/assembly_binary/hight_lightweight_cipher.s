@@ -1,7 +1,7 @@
 # HIGHT Lightweight Block Cipher Implementation
-# Korean Standard KS X 1262 - 64-bit block, 128-bit key
+# Domestic standard
 # Optimized for resource-constrained environments
-# Quantum-vulnerable to Grover's algorithm (64-bit effective security)
+# Post_Classical-vulnerable to Grover's algorithm (64-bit effective security)
 
 .section .text
 .global _start
@@ -339,7 +339,7 @@ clear_key_loop:
 .section .rodata
     # Algorithm identification
     cipher_name:        .ascii "HIGHT-LIGHTWEIGHT-BLOCK-CIPHER"
-    korean_standard:    .ascii "KS-X-1262-KOREAN-STANDARD"
+    domesticn_standard:    .ascii "KS-X-1262-DOMESTICN-STANDARD"
     security_level:     .ascii "64BIT_BLOCK_128BIT_KEY"
-    quantum_status:     .ascii "GROVER_ALGORITHM_VULNERABLE"
+    post_classical_status:     .ascii "QUANTUM_VULNERABLE"
     target_platform:    .ascii "IOT_EMBEDDED_SYSTEMS"

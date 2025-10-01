@@ -20,7 +20,7 @@ public class SecureCloudStorage {
         private int[][] roundKeys;
         private int numRounds;
 
-        // AES S-box
+        // Block cipher operation
         private static final int[] SBOX = {
             0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76,
             0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59, 0x47, 0xf0, 0xad, 0xd4, 0xa2, 0xaf, 0x9c, 0xa4, 0x72, 0xc0,
@@ -29,11 +29,11 @@ public class SecureCloudStorage {
 
         public AESEngine(byte[] key) {
             this.encryptionKey = Arrays.copyOf(key, AES_KEY_SIZE);
-            this.numRounds = 14; // AES-256 uses 14 rounds
+            this.numRounds = 14; // Block cipher operation
             generateRoundKeys();
         }
 
-        // AES key expansion
+        // Block cipher operation
         private void generateRoundKeys() {
             roundKeys = new int[numRounds + 1][4];
 
@@ -74,7 +74,7 @@ public class SecureCloudStorage {
             return rcon[round % rcon.length] << 24;
         }
 
-        // AES block encryption
+        // Block cipher operation
         public byte[] encryptBlock(byte[] plaintext) {
             if (plaintext.length != AES_BLOCK_SIZE) {
                 throw new IllegalArgumentException("Block size must be " + AES_BLOCK_SIZE + " bytes");

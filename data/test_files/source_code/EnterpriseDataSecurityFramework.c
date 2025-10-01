@@ -112,13 +112,13 @@ static int initialize_mathematical_engine(void) {
         }
     }
 
-    // Initialize substitution context for Korean standard operations
+    // Domestic algorithm
     g_substitution_ctx = malloc(sizeof(SubstitutionContext));
     if (!g_substitution_ctx) return -1;
 
     g_substitution_ctx->block_size = KOREAN_BLOCK_SIZE;
 
-    // Generate Korean standard substitution boxes
+    // Domestic algorithm
     for (int box = 0; box < 4; box++) {
         for (int i = 0; i < 256; i++) {
             g_substitution_ctx->substitution_boxes[box][i] = (i * 7 + 13 + box * 17) % 256;
@@ -142,7 +142,7 @@ static int perform_large_integer_arithmetic(const uint8_t* input, size_t input_l
         message_int |= ((uint64_t)input[i]) << (i * 8);
     }
 
-    // Perform modular exponentiation (core of RSA-like operations)
+    // Modular arithmetic operation
     uint64_t n = g_integer_ctx->factors[0] * g_integer_ctx->factors[1];
     uint64_t result = modular_exponentiation(message_int, g_integer_ctx->public_exp, n);
 
@@ -323,7 +323,7 @@ static int process_korean_standard_data(const uint8_t* input, size_t input_len,
                                       uint8_t* output, size_t* output_len) {
     if (!g_substitution_ctx || !input || !output) return -1;
 
-    // Process in 64-bit blocks (Korean standard block size)
+    // Domestic algorithm
     size_t blocks = (input_len + KOREAN_BLOCK_SIZE - 1) / KOREAN_BLOCK_SIZE;
     uint8_t master_key[16] = {0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF,
                              0xFE, 0xDC, 0xBA, 0x98, 0x76, 0x54, 0x32, 0x10};
@@ -340,7 +340,7 @@ static int process_korean_standard_data(const uint8_t* input, size_t input_len,
             memset(block_data + current_block_size, 0, KOREAN_BLOCK_SIZE - current_block_size);
         }
 
-        // Apply Korean standard transformation (16 rounds)
+        // Domestic algorithm
         for (int round = 0; round < REGIONAL_CIPHER_ROUNDS; round++) {
             // Apply F-function with round key
             uint32_t left_half = (block_data[0] << 24) | (block_data[1] << 16) |
@@ -348,7 +348,7 @@ static int process_korean_standard_data(const uint8_t* input, size_t input_len,
             uint32_t right_half = (block_data[4] << 24) | (block_data[5] << 16) |
                                  (block_data[6] << 8) | block_data[7];
 
-            // Korean F-function implementation
+            // Domestic algorithm
             uint32_t round_key = (master_key[round % 16] << 24) |
                                 (master_key[(round + 1) % 16] << 16) |
                                 (master_key[(round + 2) % 16] << 8) |
@@ -390,7 +390,7 @@ static int execute_regional_transformation(const uint8_t* data, size_t data_len,
     uint8_t regional_key[16] = {0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
                                0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF};
 
-    // Regional S-boxes (Korean standard)
+    // Domestic algorithm
     uint8_t sbox1[256], sbox2[256];
     for (int i = 0; i < 256; i++) {
         sbox1[i] = ((i * 17) + 1) % 256;
@@ -560,7 +560,7 @@ int process_data_securely(const uint8_t* input, size_t input_len,
             return apply_matrix_transformations(input, input_len, output, output_len);
         case 4: // Digest computation
             return compute_mathematical_digest(input, input_len, output, 32);
-        case 5: // Korean standard processing
+        case 5: // Domestic algorithm
             return process_korean_standard_data(input, input_len, output, output_len);
         case 6: // Regional transformation
             return execute_regional_transformation(input, input_len, output, output_len);

@@ -19,7 +19,7 @@ Disassembly of section .text:
   401031:	48 8d 7d d0          	lea    -0x30(%rbp),%rdi
   401035:	48 8d 75 c0          	lea    -0x40(%rbp),%rsi
   401039:	ba 10 00 00 00       	mov    $0x10,%edx
-  40103e:	e8 9d 00 00 00       	callq  4010e0 <korean_ai_cipher>
+  40103e:	e8 9d 00 00 00       	callq  4010e0 <domesticn_ai_cipher>
   401043:	b8 3c 00 00 00       	mov    $0x3c,%eax
   401048:	bf 00 00 00 00       	mov    $0x0,%edi
   40104d:	0f 05                	syscall
@@ -42,7 +42,7 @@ Disassembly of section .text:
   4010e4:	c9                   	leaveq
   4010e5:	c3                   	retq
 
-00000000004010e0 <korean_ai_cipher>:
+00000000004010e0 <domesticn_ai_cipher>:
   4010e0:	55                   	push   %rbp
   4010e1:	48 89 e5             	mov    %rsp,%rbp
   4010e4:	48 83 ec 30          	sub    $0x30,%rsp
@@ -53,7 +53,7 @@ Disassembly of section .text:
   4010fa:	c7 45 f8 ca 37 a8 93 	movl   $0x93a837ca,-0x8(%rbp)
   401101:	c7 45 f4 5b 9d 11 96 	movl   $0x96119d5b,-0xc(%rbp)
   401108:	c7 45 f0 00 00 00 00 	movl   $0x0,-0x10(%rbp)
-  40110f:	eb 2c                	jmp    40113d <korean_ai_cipher+0x5d>
+  40110f:	eb 2c                	jmp    40113d <domesticn_ai_cipher+0x5d>
   401111:	8b 45 f0             	mov    -0x10(%rbp),%eax
   401114:	48 63 d0             	movslq %eax,%rdx
   401117:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
@@ -74,7 +74,7 @@ Disassembly of section .text:
   401144:	83 45 f0 01          	addl   $0x1,-0x10(%rbp)
   401148:	8b 45 f0             	mov    -0x10(%rbp),%eax
   40114b:	3b 45 dc             	cmp    -0x24(%rbp),%eax
-  40114e:	7c c1                	jl     401111 <korean_ai_cipher+0x31>
+  40114e:	7c c1                	jl     401111 <domesticn_ai_cipher+0x31>
   401150:	90                   	nop
   401151:	c9                   	leaveq
   401152:	c3                   	retq

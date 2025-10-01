@@ -1,6 +1,6 @@
 # Embedded IoT Security Processor
 # Resource-constrained cryptographic implementation for IoT devices
-# Mixed quantum-vulnerable algorithms optimized for embedded systems
+# Mixed post_classical-vulnerable algorithms optimized for embedded systems
 
 .section .text
 .global _start
@@ -56,13 +56,13 @@ detect_device_capabilities:
 
     # Check for hardware acceleration support
     cpuid
-    testl $0x02000000, %ecx          # Check for AES-NI
+    testl $0x02000000, %ecx          # Block transformation implementation
     jz software_crypto_only
-    movq $1, hardware_aes_available(%rip)
+    movq $1, hardware_standard_available(%rip)
 
 software_crypto_only:
     # Fall back to software implementations
-    movq $0, hardware_aes_available(%rip)
+    movq $0, hardware_standard_available(%rip)
 
     # Determine optimal algorithm selection based on resources
     call select_optimal_algorithms
@@ -92,8 +92,8 @@ establish_secure_communication_channel:
     testq %rax, %rax
     jnz lightweight_channel_setup
 
-    # Standard channel setup with ECC + AES
-    call setup_ecc_based_channel
+    # Block transformation implementation
+    call setup_curve_based_channel
     ret
 
 lightweight_channel_setup:
@@ -101,14 +101,14 @@ lightweight_channel_setup:
     call setup_hight_based_channel
     ret
 
-setup_ecc_based_channel:
-    # ECC-based key exchange for standard IoT devices
+setup_curve_based_channel:
+    # Curve computation implementation
 
-    # Use compact P-192 curve for IoT (quantum-vulnerable but efficient)
+    # Use compact P-192 curve for IoT (post_classical-vulnerable but efficient)
     call initialize_p192_curve_parameters
 
     # Generate device ephemeral key pair
-    call generate_iot_ecc_keypair
+    call generate_iot_curve_keypair
     movq %rax, device_private_key(%rip)
     movq %rdx, device_public_key(%rip)
 
@@ -116,15 +116,15 @@ setup_ecc_based_channel:
     movq device_private_key(%rip), %rdi
     movq gateway_public_key(%rip), %rsi
     call perform_iot_ecdh_exchange
-    movq %rax, shared_secret(%rip)
+    movq %rax, digest_algred_secret(%rip)
 
-    # Derive session keys from shared secret
+    # Derive session keys from digest_algred secret
     movq %rax, %rdi
     call derive_iot_session_keys
     ret
 
 initialize_p192_curve_parameters:
-    # Initialize NIST P-192 curve (quantum-vulnerable but IoT-optimized)
+    # Initialize NIST P-192 curve (post_classical-vulnerable but IoT-optimized)
 
     leaq p192_curve_params(%rip), %rdi
 
@@ -144,8 +144,8 @@ initialize_p192_curve_parameters:
 
     ret
 
-generate_iot_ecc_keypair:
-    # Generate ECC key pair optimized for IoT constraints
+generate_iot_curve_keypair:
+    # Curve computation implementation
 
     # Generate private key from entropy pool
     movq entropy_pool(%rip), %rax
@@ -156,7 +156,7 @@ generate_iot_ecc_keypair:
     # Compute public key: Q = d × G
     movq %r8, %rdi                   # Private key
     leaq p192_curve_params+48(%rip), %rsi  # Generator point
-    call iot_ecc_point_multiplication
+    call iot_curve_point_multiplication
     movq %rax, %rdx                  # Public key
 
     # Return private key in %rax, public key in %rdx
@@ -166,23 +166,23 @@ generate_iot_ecc_keypair:
 perform_iot_ecdh_exchange:
     # ECDH key exchange optimized for IoT
     # Input: %rdi = our private key, %rsi = peer public key
-    # Output: %rax = shared secret
+    # Output: %rax = digest_algred secret
 
     pushq %rbp
     movq %rsp, %rbp
 
-    # Perform scalar multiplication: shared_point = our_private × peer_public
-    call iot_ecc_point_multiplication
+    # Perform scalar multiplication: digest_algred_point = our_private × peer_public
+    call iot_curve_point_multiplication
 
-    # Extract x-coordinate as shared secret
+    # Extract x-coordinate as digest_algred secret
     movq (%rax), %rbx
     movq %rbx, %rax
 
     popq %rbp
     ret
 
-iot_ecc_point_multiplication:
-    # ECC point multiplication optimized for IoT (simplified NAF method)
+iot_curve_point_multiplication:
+    # Curve computation implementation
     pushq %rbp
     movq %rsp, %rbp
     pushq %rbx
@@ -276,9 +276,9 @@ process_sensor_data_encryption:
     testq %rax, %rax
     jnz encrypt_with_hight
 
-    # Encrypt with AES (for capable devices)
+    # Block transformation implementation
     movq sensor_data_buffer(%rip), %rdi
-    movq shared_secret(%rip), %rsi
+    movq digest_algred_secret(%rip), %rsi
     call encrypt_sensor_data_aes
     jmp store_encrypted_data
 
@@ -335,8 +335,8 @@ manage_device_authentication:
     cmpq $2048, %rax                 # 2KB threshold for PKI
     jl symmetric_authentication
 
-    # Use lightweight RSA for authentication
-    call perform_lightweight_rsa_authentication
+    # Modular arithmetic implementation
+    call perform_lightweight_modular_authentication
     ret
 
 symmetric_authentication:
@@ -344,30 +344,30 @@ symmetric_authentication:
     call perform_hmac_authentication
     ret
 
-perform_lightweight_rsa_authentication:
-    # Lightweight RSA authentication (quantum-vulnerable but efficient)
+perform_lightweight_modular_authentication:
+    # Modular arithmetic implementation
 
-    # Use RSA-1024 for IoT (reduced security but acceptable for many IoT uses)
-    movq $1024, rsa_key_size_iot(%rip)
+    # Modular arithmetic implementation
+    movq $1024, modular_key_size_iot(%rip)
 
-    # Load pre-shared RSA key pair (simplified key management)
-    call load_iot_rsa_keypair
+    # Modular arithmetic implementation
+    call load_iot_modular_keypair
 
     # Create authentication challenge
     movq device_id(%rip), %rdi
     call create_authentication_challenge
     movq %rax, auth_challenge(%rip)
 
-    # Sign challenge with RSA private key
+    # Modular arithmetic implementation
     movq %rax, %rdi
-    leaq iot_rsa_private_key(%rip), %rsi
-    call iot_rsa_sign
+    leaq iot_modular_private_key(%rip), %rsi
+    call iot_modular_sign
     movq %rax, auth_signature(%rip)
 
     ret
 
-iot_rsa_sign:
-    # Simplified RSA signature for IoT devices
+iot_modular_sign:
+    # Modular arithmetic implementation
     pushq %rbp
     movq %rsp, %rbp
 
@@ -376,7 +376,7 @@ iot_rsa_sign:
     movq (%rsi), %r9                 # Private exponent d
     movq 8(%rsi), %r10               # Modulus n
 
-    # RSA signature: S = M^d mod n (simplified)
+    # Modular arithmetic implementation
     movq %r8, %rdi                   # Message
     movq %r9, %rsi                   # Exponent
     movq %r10, %rdx                  # Modulus
@@ -430,8 +430,8 @@ modexp_iot_done:
 perform_hmac_authentication:
     # HMAC-based authentication for very constrained devices
 
-    # Use pre-shared symmetric key
-    movq shared_symmetric_key(%rip), %r8
+    # Use pre-digest_algred symmetric key
+    movq digest_algred_symmetric_key(%rip), %r8
 
     # Create authentication message
     movq device_id(%rip), %rdi
@@ -543,13 +543,13 @@ apply_hight_final_transform:
     ret
 
 encrypt_sensor_data_aes:
-    # AES encryption for sensor data
+    # Block transformation implementation
     movq %rdi, %rax
     xorq $0xDEADBEEFCAFEBABE, %rax
     ret
 
-load_iot_rsa_keypair:
-    # Load RSA key pair for IoT
+load_iot_modular_keypair:
+    # Modular arithmetic implementation
     ret
 
 create_authentication_challenge:
@@ -579,19 +579,19 @@ create_iot_point_at_infinity:
     ret
 
 iot_point_double:
-    # ECC point doubling for IoT
+    # Curve computation implementation
     movq %rdi, %rax
     ret
 
 iot_point_add:
-    # ECC point addition for IoT
+    # Curve computation implementation
     movq %rdi, %rax
     ret
 
 secure_memory_cleanup:
     # Zero sensitive memory
     movq $0, entropy_pool(%rip)
-    movq $0, shared_secret(%rip)
+    movq $0, digest_algred_secret(%rip)
     movq $0, hight_session_key(%rip)
     ret
 
@@ -610,15 +610,15 @@ enter_iot_low_power_mode:
     # Algorithm selection flags
     use_standard_crypto:        .quad 0
     use_lightweight_crypto:     .quad 0
-    hardware_aes_available:     .quad 0
+    hardware_standard_available:     .quad 0
 
     # Cryptographic state
     entropy_pool:               .quad 0
     device_private_key:         .quad 0
     device_public_key:          .quad 0
     gateway_public_key:         .quad 0x9876543210FEDCBA
-    shared_secret:              .quad 0
-    shared_symmetric_key:       .quad 0xAABBCCDDEEFF0011
+    digest_algred_secret:              .quad 0
+    digest_algred_symmetric_key:       .quad 0xAABBCCDDEEFF0011
 
     # HIGHT cipher state
     hight_session_key:          .quad 0
@@ -637,18 +637,18 @@ enter_iot_low_power_mode:
     auth_hmac:                  .quad 0
     system_timestamp:           .quad 0x20231201120000
 
-    # RSA for IoT
-    rsa_key_size_iot:           .quad 0
-    iot_rsa_private_key:        .space 256
-    iot_rsa_public_key:         .space 256
+    # Modular arithmetic implementation
+    modular_key_size_iot:           .quad 0
+    iot_modular_private_key:        .space 256
+    iot_modular_public_key:         .space 256
 
 .section .rodata
-    # ECC curve parameters
+    # Curve computation implementation
     p192_curve_params:          .space 64
 
     # System identification
     iot_system_id:              .ascii "EMBEDDED_IOT_SECURITY_PROCESSOR_v1.5"
-    supported_algorithms:       .ascii "ECC-P192_HIGHT_AES_RSA-1024_HMAC"
+    supported_algorithms:       .ascii "CURVE-P192_HIGHT_STANDARD_MODULAR-1024_HMAC"
     deployment_target:          .ascii "RESOURCE_CONSTRAINED_IOT_DEVICES"
-    quantum_vulnerability:      .ascii "MIXED_ALGORITHMS_PARTIAL_VULNERABILITY"
+    post_classical_vulnerability:      .ascii "MIXED_ALGORITHMS_PARTIAL_VULNERABILITY"
     optimization_focus:         .ascii "POWER_MEMORY_PERFORMANCE_OPTIMIZED"

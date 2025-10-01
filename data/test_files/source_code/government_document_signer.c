@@ -33,7 +33,7 @@ typedef struct {
     uint32_t s_component[CURVE_PARAM_SIZE];
 } GovernmentSignature;
 
-// Korean government standard curve parameters
+// Domestic algorithm
 void init_korean_curve(EllipticCurveDomain *domain) {
     // Curve parameters (simplified for demo)
     uint32_t p_param[8] = {
@@ -92,7 +92,7 @@ void mod_add(uint32_t *result, const uint32_t *a, const uint32_t *b,
     }
 }
 
-// Elliptic curve point doubling
+// Mathematical curve operation
 void ec_point_double(uint32_t *rx, uint32_t *ry, const uint32_t *px,
                      const uint32_t *py, const EllipticCurveDomain *domain) {
     // Simplified point doubling (production code would be more complex)
@@ -133,9 +133,9 @@ void generate_signature_keypair(DigitalSignatureKey *key) {
     }
 }
 
-// Hash document using Korean standard
+// Domestic algorithm
 void hash_document(const char *document, uint32_t *digest) {
-    // Simplified Korean hash standard implementation
+    // Domestic algorithm
     uint32_t state[5] = {0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0};
 
     int len = strlen(document);
@@ -164,7 +164,7 @@ void hash_document(const char *document, uint32_t *digest) {
     }
 }
 
-// Sign document with Korean government standard
+// Domestic algorithm
 void sign_government_document(const char *document, DigitalSignatureKey *key,
                              GovernmentSignature *signature) {
     uint32_t document_hash[CURVE_PARAM_SIZE];

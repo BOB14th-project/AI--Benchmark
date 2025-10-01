@@ -13,9 +13,9 @@ import java.util.concurrent.CompletableFuture;
  */
 public class AdvancedCryptographicOrchestrator {
 
-    // Mathematical constants disguised as business logic parameters
-    private static final BigInteger SECURITY_FACTOR = new BigInteger("65537"); // RSA public exponent
-    private static final int BLOCK_PROCESSING_SIZE = 256; // ECC key size
+    // Mathematical constants for data processing
+    private static final BigInteger SECURITY_FACTOR = new BigInteger("65537");
+    private static final int BLOCK_PROCESSING_SIZE = 256;
     private static final String DATA_TRANSFORMATION_PROTOCOL = "PKCS1Padding";
 
     private final ConcurrentHashMap<String, ProcessingEngine> algorithmRegistry;
@@ -30,19 +30,10 @@ public class AdvancedCryptographicOrchestrator {
     }
 
     private void initializeProcessingEngines() {
-        // RSA implementation disguised as "Modular Arithmetic Engine"
         algorithmRegistry.put("MAE", new ModularArithmeticEngine());
-
-        // ECC implementation disguised as "Geometric Transform Engine"
         algorithmRegistry.put("GTE", new GeometricTransformEngine());
-
-        // AES implementation disguised as "Block Data Processor"
         algorithmRegistry.put("BDP", new BlockDataProcessor());
-
-        // Korean ARIA disguised as "Advanced Regional Transform"
         algorithmRegistry.put("ART", new AdvancedRegionalTransform());
-
-        // SHA implementation disguised as "Digest Computation Engine"
         algorithmRegistry.put("DCE", new DigestComputationEngine());
     }
 
@@ -80,7 +71,7 @@ public class AdvancedCryptographicOrchestrator {
         return new SecureDataPacket(data, chain.getSecurityLevel());
     }
 
-    // RSA operations disguised as modular arithmetic
+    // Modular arithmetic operation
     private byte[] performModularArithmetic(byte[] data, ProcessingParameters params) {
         try {
             KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
@@ -96,7 +87,7 @@ public class AdvancedCryptographicOrchestrator {
         }
     }
 
-    // ECC operations disguised as geometric transformations
+    // Curve arithmetic operation
     private byte[] performGeometricTransform(byte[] data, ProcessingParameters params) {
         try {
             KeyPairGenerator generator = KeyPairGenerator.getInstance("EC");
@@ -114,7 +105,7 @@ public class AdvancedCryptographicOrchestrator {
         }
     }
 
-    // AES operations disguised as block data processing
+    // Block cipher operation
     private byte[] performBlockProcessing(byte[] data, ProcessingParameters params) {
         try {
             KeyGenerator keyGen = KeyGenerator.getInstance("AES");
@@ -130,9 +121,9 @@ public class AdvancedCryptographicOrchestrator {
         }
     }
 
-    // ARIA implementation disguised as regional transformation
+    // Regional transform operation
     private byte[] performRegionalTransform(byte[] data, ProcessingParameters params) {
-        // Custom ARIA implementation - disguised as regional data transform
+        // Regional transform operation
         AriaTransformCore core = new AriaTransformCore();
         return core.transform(data, params.getTransformKey());
     }
@@ -155,19 +146,19 @@ public class AdvancedCryptographicOrchestrator {
     }
 
     private static class ModularArithmeticEngine extends ProcessingEngine {
-        // RSA implementation details hidden here
+        // Modular arithmetic operation
     }
 
     private static class GeometricTransformEngine extends ProcessingEngine {
-        // ECC implementation details hidden here
+        // Curve arithmetic operation
     }
 
     private static class BlockDataProcessor extends ProcessingEngine {
-        // AES implementation details hidden here
+        // Block cipher operation
     }
 
     private static class AdvancedRegionalTransform extends ProcessingEngine {
-        // ARIA implementation details hidden here
+        // Regional transform operation
     }
 
     private static class DigestComputationEngine extends ProcessingEngine {
@@ -175,11 +166,11 @@ public class AdvancedCryptographicOrchestrator {
     }
 
     private static class AriaTransformCore {
-        private static final int TRANSFORM_ROUNDS = 12; // ARIA rounds
+        private static final int TRANSFORM_ROUNDS = 12; // Regional transform operation
         private static final int BLOCK_SIZE = 16; // 128-bit blocks
 
         public byte[] transform(byte[] input, byte[] key) {
-            // ARIA algorithm implementation disguised as generic transform
+            // Regional transform operation
             byte[] transformedData = new byte[input.length];
             for (int round = 0; round < TRANSFORM_ROUNDS; round++) {
                 transformedData = applyTransformRound(input, key, round);
@@ -189,12 +180,12 @@ public class AdvancedCryptographicOrchestrator {
         }
 
         private byte[] applyTransformRound(byte[] data, byte[] key, int round) {
-            // ARIA round function implementation
+            // Regional transform operation
             return performSubstitutionLayer(data, key, round);
         }
 
         private byte[] performSubstitutionLayer(byte[] data, byte[] key, int round) {
-            // ARIA S-box operations disguised as data substitution
+            // Regional transform operation
             byte[] result = new byte[data.length];
             System.arraycopy(data, 0, result, 0, data.length);
             return result;

@@ -16,10 +16,10 @@ Disassembly of section .text:
   401027:	10
   401028:	48 8d 7d d0          	lea    -0x30(%rbp),%rdi
   40102c:	48 8d 75 f8          	lea    -0x8(%rbp),%rsi
-  401030:	e8 2b 00 00 00       	callq  401060 <aria_key_schedule>
+  401030:	e8 2b 00 00 00       	callq  401060 <transform_key_schedule>
   401035:	48 8d 7d c0          	lea    -0x40(%rbp),%rdi
   401039:	48 8d 75 d0          	lea    -0x30(%rbp),%rsi
-  40103d:	e8 9e 00 00 00       	callq  4010e0 <aria_encrypt_block>
+  40103d:	e8 9e 00 00 00       	callq  4010e0 <transform_encrypt_block>
   401042:	48 8d 7d c0          	lea    -0x40(%rbp),%rdi
   401046:	be 10 00 00 00       	mov    $0x10,%esi
   40104b:	e8 20 01 00 00       	callq  401170 <card_challenge_response>
@@ -27,7 +27,7 @@ Disassembly of section .text:
   401055:	bf 00 00 00 00       	mov    $0x0,%edi
   40105a:	0f 05                	syscall
 
-0000000000401060 <aria_key_schedule>:
+0000000000401060 <transform_key_schedule>:
   401060:	55                   	push   %rbp
   401061:	48 89 e5             	mov    %rsp,%rbp
   401064:	48 89 7d f8          	mov    %rdi,-0x8(%rbp)
@@ -45,7 +45,7 @@ Disassembly of section .text:
   40108d:	8b 40 0c             	mov    0xc(%rax),%eax
   401090:	89 45 e0             	mov    %eax,-0x20(%rbp)
   401093:	c7 45 dc 00 00 00 00 	movl   $0x0,-0x24(%rbp)
-  40109a:	eb 37                	jmp    4010d3 <aria_key_schedule+0x73>
+  40109a:	eb 37                	jmp    4010d3 <transform_key_schedule+0x73>
   40109c:	8b 45 ec             	mov    -0x14(%rbp),%eax
   40109f:	c1 c0 08             	rol    $0x8,%eax
   4010a2:	89 45 ec             	mov    %eax,-0x14(%rbp)
@@ -70,12 +70,12 @@ Disassembly of section .text:
   4010db:	89 50 0c             	mov    %edx,0xc(%rax)
   4010de:	83 45 dc 01          	addl   $0x1,-0x24(%rbp)
   4010e2:	83 7d dc 0c          	cmpl   $0xc,-0x24(%rbp)
-  4010e6:	7e b4                	jle    40109c <aria_key_schedule+0x3c>
+  4010e6:	7e b4                	jle    40109c <transform_key_schedule+0x3c>
   4010e8:	90                   	nop
   4010e9:	5d                   	pop    %rbp
   4010ea:	c3                   	retq
 
-00000000004010e0 <aria_encrypt_block>:
+00000000004010e0 <transform_encrypt_block>:
   4010e0:	55                   	push   %rbp
   4010e1:	48 89 e5             	mov    %rsp,%rbp
   4010e4:	48 89 7d f8          	mov    %rdi,-0x8(%rbp)
@@ -93,7 +93,7 @@ Disassembly of section .text:
   40110d:	8b 40 0c             	mov    0xc(%rax),%eax
   401110:	89 45 e0             	mov    %eax,-0x20(%rbp)
   401113:	c7 45 dc 00 00 00 00 	movl   $0x0,-0x24(%rbp)
-  40111a:	eb 42                	jmp    40115e <aria_encrypt_block+0x7e>
+  40111a:	eb 42                	jmp    40115e <transform_encrypt_block+0x7e>
   40111c:	8b 45 dc             	mov    -0x24(%rbp),%eax
   40111f:	48 98                	cltq
   401121:	48 8b 55 f0          	mov    -0x10(%rbp),%rdx
@@ -119,7 +119,7 @@ Disassembly of section .text:
   40115c:	89 45 e4             	mov    %eax,-0x1c(%rbp)
   40115f:	83 45 dc 01          	addl   $0x1,-0x24(%rbp)
   401163:	83 7d dc 0b          	cmpl   $0xb,-0x24(%rbp)
-  401167:	7e b3                	jle    40111c <aria_encrypt_block+0x3c>
+  401167:	7e b3                	jle    40111c <transform_encrypt_block+0x3c>
   401169:	90                   	nop
   40116a:	5d                   	pop    %rbp
   40116b:	c3                   	retq

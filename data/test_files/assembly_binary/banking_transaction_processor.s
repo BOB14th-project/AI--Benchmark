@@ -14,14 +14,14 @@ Disassembly of section .text:
   40101f:	88
   401020:	48 c7 45 e0 09 cf 4f 	movq   $0x3c4fcf09,-0x20(%rbp)
   401027:	3c
-  401028:	e8 23 01 00 00       	callq  401150 <seed_key_schedule>
+  401028:	e8 23 01 00 00       	callq  401150 <block_key_schedule>
   40102d:	48 8d 7d d0          	lea    -0x30(%rbp),%rdi
   401031:	48 c7 06 41 43 43 54 	movq   $0x54434341,(%rsi)
   401038:	48 c7 46 08 3a 31 32 	movq   $0x3433323a,0x8(%rsi)
   40103f:	33
   401040:	48 c7 46 10 35 36 37 	movq   $0x3a373635,0x10(%rsi)
   401047:	3a
-  401048:	e8 33 01 00 00       	callq  401180 <seed_encrypt_block>
+  401048:	e8 33 01 00 00       	callq  401180 <block_encrypt_block>
   40104d:	48 8d 7d c0          	lea    -0x40(%rbp),%rdi
   401051:	be 10 00 00 00       	mov    $0x10,%esi
   401056:	e8 45 01 00 00       	callq  4011a0 <banking_hmac>
@@ -67,7 +67,7 @@ Disassembly of section .text:
   4010e2:	5d                   	pop    %rbp
   4010e3:	c3                   	retq
 
-0000000000401150 <seed_key_schedule>:
+0000000000401150 <block_key_schedule>:
   401150:	55                   	push   %rbp
   401151:	48 89 e5             	mov    %rsp,%rbp
   401154:	48 89 7d f8          	mov    %rdi,-0x8(%rbp)
@@ -78,7 +78,7 @@ Disassembly of section .text:
   401165:	8b 40 04             	mov    0x4(%rax),%eax
   401168:	89 45 f0             	mov    %eax,-0x10(%rbp)
   40116b:	c7 45 ec 00 00 00 00 	movl   $0x0,-0x14(%rbp)
-  401172:	eb 2a                	jmp    40119e <seed_key_schedule+0x4e>
+  401172:	eb 2a                	jmp    40119e <block_key_schedule+0x4e>
   401174:	8b 45 f4             	mov    -0xc(%rbp),%eax
   401177:	8b 55 ec             	mov    -0x14(%rbp),%edx
   40117a:	89 d6                	mov    %edx,%esi
@@ -92,14 +92,14 @@ Disassembly of section .text:
   401192:	8b 45 e8             	mov    -0x18(%rbp),%eax
   401195:	89 45 f4             	mov    %eax,-0xc(%rbp)
   401198:	83 45 ec 01          	addl   $0x1,-0x14(%rbp)
-  40119c:	eb 00                	jmp    40119e <seed_key_schedule+0x4e>
+  40119c:	eb 00                	jmp    40119e <block_key_schedule+0x4e>
   40119e:	83 7d ec 0f          	cmpl   $0xf,-0x14(%rbp)
-  4011a2:	7e d0                	jle    401174 <seed_key_schedule+0x24>
+  4011a2:	7e d0                	jle    401174 <block_key_schedule+0x24>
   4011a4:	90                   	nop
   4011a5:	5d                   	pop    %rbp
   4011a6:	c3                   	retq
 
-0000000000401180 <seed_encrypt_block>:
+0000000000401180 <block_encrypt_block>:
   401180:	55                   	push   %rbp
   401181:	48 89 e5             	mov    %rsp,%rbp
   401184:	48 83 ec 20          	sub    $0x20,%rsp
@@ -111,7 +111,7 @@ Disassembly of section .text:
   401199:	8b 40 04             	mov    0x4(%rax),%eax
   40119c:	89 45 f0             	mov    %eax,-0x10(%rbp)
   40119f:	c7 45 ec 00 00 00 00 	movl   $0x0,-0x14(%rbp)
-  4011a6:	eb 28                	jmp    4011d0 <seed_encrypt_block+0x50>
+  4011a6:	eb 28                	jmp    4011d0 <block_encrypt_block+0x50>
   4011a8:	8b 45 f4             	mov    -0xc(%rbp),%eax
   4011ab:	8b 55 ec             	mov    -0x14(%rbp),%edx
   4011ae:	89 d6                	mov    %edx,%esi
@@ -126,7 +126,7 @@ Disassembly of section .text:
   4011c9:	89 45 f4             	mov    %eax,-0xc(%rbp)
   4011cc:	83 45 ec 01          	addl   $0x1,-0x14(%rbp)
   4011d0:	83 7d ec 0f          	cmpl   $0xf,-0x14(%rbp)
-  4011d4:	7e d2                	jle    4011a8 <seed_encrypt_block+0x28>
+  4011d4:	7e d2                	jle    4011a8 <block_encrypt_block+0x28>
   4011d6:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
   4011da:	8b 55 f0             	mov    -0x10(%rbp),%edx
   4011dd:	89 10                	mov    %edx,(%rax)
@@ -166,10 +166,10 @@ Disassembly of section .text:
   4011fe:	7e d6                	jle    4011d6 <banking_hmac+0x36>
   401200:	48 8b 45 d8          	mov    -0x28(%rbp),%rax
   401204:	48 89 c7             	mov    %rax,%rdi
-  401207:	e8 74 ff ff ff       	callq  401180 <seed_encrypt_block>
+  401207:	e8 74 ff ff ff       	callq  401180 <block_encrypt_block>
   40120c:	48 8b 45 d0          	mov    -0x30(%rbp),%rax
   401210:	48 89 c7             	mov    %rax,%rdi
-  401213:	e8 68 ff ff ff       	callq  401180 <seed_encrypt_block>
+  401213:	e8 68 ff ff ff       	callq  401180 <block_encrypt_block>
   401218:	90                   	nop
   401219:	c9                   	leaveq
   40121a:	c3                   	retq

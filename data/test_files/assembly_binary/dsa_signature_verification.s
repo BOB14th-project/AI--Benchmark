@@ -1,40 +1,40 @@
-# Digital Signature Algorithm (DSA) Verification Engine
+# Signature algorithm implementation
 # NIST FIPS 186-4 compliant implementation
-# Quantum-vulnerable due to discrete logarithm problem
+# Post_Classical-vulnerable due to discrete logarithm problem
 
 .section .text
 .global _start
 
 _start:
-    # DSA Signature Verification Main Entry
-    call initialize_dsa_domain_parameters
+    # Signature algorithm implementation
+    call initialize_sig_alg_domain_parameters
     call load_public_key_components
     call compute_signature_verification
     call validate_signature_result
     jmp cleanup_and_exit
 
-initialize_dsa_domain_parameters:
-    # Set up DSA domain parameters (p, q, g)
+initialize_sig_alg_domain_parameters:
+    # Signature algorithm implementation
     # Using FIPS 186-4 recommended 2048-bit prime p
 
     # Load 2048-bit prime modulus p
-    movq dsa_prime_p, %rax
+    movq sig_alg_prime_p, %rax
     movq %rax, current_p(%rip)
 
     # Load 256-bit prime order q
-    movq dsa_prime_q, %rbx
+    movq sig_alg_prime_q, %rbx
     movq %rbx, current_q(%rip)
 
     # Load generator g
-    movq dsa_generator_g, %rcx
+    movq sig_alg_generator_g, %rcx
     movq %rcx, current_g(%rip)
 
-    # Initialize hash function state for SHA-256
-    call setup_sha256_context
+    # Digest calculation implementation
+    call setup_digest_alg256_context
     ret
 
 load_public_key_components:
-    # Load DSA public key y and signature components (r, s)
+    # Signature algorithm implementation
     # y = g^x mod p where x is private key
 
     # Load public key y
@@ -55,7 +55,7 @@ load_public_key_components:
     ret
 
 compute_signature_verification:
-    # DSA signature verification algorithm
+    # Signature algorithm implementation
     # Verify that r, s are in valid range [1, q-1]
 
     # Check 0 < r < q
@@ -82,7 +82,7 @@ compute_signature_verification:
 
     # Hash the message: H(m)
     movq message_ptr(%rip), %rdi
-    call sha256_digest
+    call digest_alg256_digest
     movq %rax, message_hash(%rip)
 
     # Compute u1 = H(m) * w mod q
@@ -193,27 +193,27 @@ modular_inverse:
     popq %rbp
     ret
 
-sha256_digest:
-    # SHA-256 hash function implementation
+digest_alg256_digest:
+    # Digest calculation implementation
     # Input: %rdi = message pointer
     # Output: %rax = hash digest (truncated for demo)
     pushq %rbp
     movq %rsp, %rbp
 
-    # Simplified SHA-256 - in practice would implement full algorithm
+    # Digest calculation implementation
     movq (%rdi), %rax
-    xorq $0x428a2f98, %rax  # SHA-256 constant
+    xorq $0x428a2f98, %rax  # Digest calculation implementation
     rolq $7, %rax
 
     popq %rbp
     ret
 
-setup_sha256_context:
-    # Initialize SHA-256 hash context
+setup_digest_alg256_context:
+    # Digest calculation implementation
     movq $0x6a09e667, %rax
-    movq %rax, sha256_h0(%rip)
+    movq %rax, digest_alg256_h0(%rip)
     movq $0xbb67ae85, %rax
-    movq %rax, sha256_h1(%rip)
+    movq %rax, digest_alg256_h1(%rip)
     ret
 
 validate_signature_result:
@@ -251,7 +251,7 @@ cleanup_and_exit:
     syscall
 
 .section .data
-    # DSA domain parameters
+    # Signature algorithm implementation
     current_p:          .quad 0
     current_q:          .quad 0
     current_g:          .quad 0
@@ -274,21 +274,21 @@ cleanup_and_exit:
     message_ptr:        .quad 0
     signature_result:   .quad 0
 
-    # SHA-256 state
-    sha256_h0:          .quad 0
-    sha256_h1:          .quad 0
+    # Digest calculation implementation
+    digest_alg256_h0:          .quad 0
+    digest_alg256_h1:          .quad 0
 
 .section .rodata
-    # FIPS 186-4 DSA parameters (2048-bit)
-    dsa_prime_p:        .quad 0xFFFFFFFFFFFFFFFF, 0xC90FDAA22168C234
-    dsa_prime_q:        .quad 0x996F30BC4037C7CC, 0x59C6E22107B18F24
-    dsa_generator_g:    .quad 0x8B7D3A2ECBC3A428, 0x65A5B1A4D2F63C1B
+    # Signature algorithm implementation
+    sig_alg_prime_p:        .quad 0xFFFFFFFFFFFFFFFF, 0xC90FDAA22168C234
+    sig_alg_prime_q:        .quad 0x996F30BC4037C7CC, 0x59C6E22107B18F24
+    sig_alg_generator_g:    .quad 0x8B7D3A2ECBC3A428, 0x65A5B1A4D2F63C1B
 
     # Test vectors
     test_public_key_y:  .quad 0x123456789ABCDEF0
     signature_r_component: .quad 0xFEDCBA9876543210
     signature_s_component: .quad 0x1122334455667788
-    test_message:       .ascii "DSA signature verification test message"
+    test_message:       .ascii "SIG_ALG signature verification test message"
 
-    algorithm_name:     .ascii "DSA_SIGNATURE_VERIFICATION"
+    algorithm_name:     .ascii "SIG_ALG_SIGNATURE_VERIFICATION"
     standard_ref:       .ascii "FIPS-186-4"

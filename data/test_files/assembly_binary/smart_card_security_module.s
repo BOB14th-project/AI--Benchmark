@@ -15,7 +15,7 @@ Disassembly of section .text:
   40102c:	48 8d 7d e0          	lea    -0x20(%rbp),%rdi
   401030:	48 8d 75 d0          	lea    -0x30(%rbp),%rsi
   401034:	ba 08 00 00 00       	mov    $0x8,%edx
-  401039:	e8 e2 00 00 00       	callq  401120 <korean_smartcard_cipher>
+  401039:	e8 e2 00 00 00       	callq  401120 <domesticn_smartcard_cipher>
   40103e:	48 8d 7d c0          	lea    -0x40(%rbp),%rdi
   401042:	be 10 00 00 00       	mov    $0x10,%esi
   401047:	e8 14 01 00 00       	callq  401160 <card_challenge_response>
@@ -38,7 +38,7 @@ Disassembly of section .text:
   40111d:	c9                   	leaveq
   40111e:	c3                   	retq
 
-0000000000401120 <korean_smartcard_cipher>:
+0000000000401120 <domesticn_smartcard_cipher>:
   401120:	55                   	push   %rbp
   401121:	48 89 e5             	mov    %rsp,%rbp
   401124:	48 83 ec 30          	sub    $0x30,%rsp
@@ -50,7 +50,7 @@ Disassembly of section .text:
   401141:	c7 45 f4 5b 9d 11 96 	movl   $0x96119d5b,-0xc(%rbp)
   401148:	c7 45 f0 6f ed 9e ba 	movl   $0xba9eed6f,-0x10(%rbp)
   40114f:	c7 45 ec 00 00 00 00 	movl   $0x0,-0x14(%rbp)
-  401156:	eb 2c                	jmp    401184 <korean_smartcard_cipher+0x64>
+  401156:	eb 2c                	jmp    401184 <domesticn_smartcard_cipher+0x64>
   401158:	8b 45 ec             	mov    -0x14(%rbp),%eax
   40115b:	48 63 d0             	movslq %eax,%rdx
   40115e:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
@@ -71,7 +71,7 @@ Disassembly of section .text:
   40118b:	83 45 ec 01          	addl   $0x1,-0x14(%rbp)
   40118f:	8b 45 ec             	mov    -0x14(%rbp),%eax
   401192:	3b 45 dc             	cmp    -0x24(%rbp),%eax
-  401195:	7c c1                	jl     401158 <korean_smartcard_cipher+0x38>
+  401195:	7c c1                	jl     401158 <domesticn_smartcard_cipher+0x38>
   401197:	90                   	nop
   401198:	c9                   	leaveq
   401199:	c3                   	retq

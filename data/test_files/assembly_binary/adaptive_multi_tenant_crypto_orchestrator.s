@@ -10,38 +10,38 @@
 tenant_configs:
     # Tenant A: Banking sector (high security)
     .quad 0x4000000000000001    # tenant_id
-    .quad rsa_4096_handler      # primary_algorithm
-    .quad aes_256_gcm_handler   # symmetric_algorithm
-    .quad sha3_384_handler      # hash_algorithm
+    .quad modular_4096_handler      # primary_algorithm
+    .quad standard_256_gcm_handler   # symmetric_algorithm
+    .quad digest_alg3_384_handler      # hash_algorithm
     .quad 0x10                  # security_level
 
     # Tenant B: IoT devices (performance optimized)
     .quad 0x4000000000000002    # tenant_id
-    .quad ecc_p256_handler      # primary_algorithm
-    .quad chacha20_handler      # symmetric_algorithm
+    .quad curve_p256_handler      # primary_algorithm
+    .quad stream_alg20_handler      # symmetric_algorithm
     .quad blake2b_handler       # hash_algorithm
     .quad 0x08                  # security_level
 
     # Tenant C: Legacy systems (compatibility mode)
     .quad 0x4000000000000003    # tenant_id
-    .quad rsa_2048_handler      # primary_algorithm
-    .quad aes_128_cbc_handler   # symmetric_algorithm
-    .quad sha256_handler        # hash_algorithm
+    .quad modular_2048_handler      # primary_algorithm
+    .quad standard_128_cbc_handler   # symmetric_algorithm
+    .quad digest_alg256_handler        # hash_algorithm
     .quad 0x06                  # security_level
 
 # Algorithm capability matrix
 algorithm_matrix:
     .ascii "MATRIX_INIT_SEQUENCE"
-    .quad 0x12345678ABCDEF01    # RSA capabilities mask
-    .quad 0x87654321FEDCBA10    # ECC capabilities mask
+    .quad 0x12345678ABCDEF01    # Modular arithmetic implementation
+    .quad 0x87654321FEDCBA10    # Curve computation implementation
     .quad 0xAAAABBBBCCCCDDDD    # Symmetric capabilities mask
     .quad 0x1111222233334444    # Hash capabilities mask
 
 # Performance monitoring counters
 performance_metrics:
     .quad 0                     # total_operations
-    .quad 0                     # rsa_operations
-    .quad 0                     # ecc_operations
+    .quad 0                     # modular_operations
+    .quad 0                     # curve_operations
     .quad 0                     # symmetric_operations
     .quad 0                     # hash_operations
     .quad 0                     # average_latency
@@ -73,14 +73,14 @@ system_initialization:
     # Detect available cryptographic hardware
     movq $0x01, %rax            # CPUID function 1
     cpuid
-    testq $0x02000000, %rcx     # Check for AES-NI
-    jnz aes_hardware_available
+    testq $0x02000000, %rcx     # Block transformation implementation
+    jnz standard_hardware_available
 
     # Fallback to software implementation
     movq $software_crypto_handlers, %r15
     jmp capability_detection_done
 
-aes_hardware_available:
+standard_hardware_available:
     movq $hardware_crypto_handlers, %r15
 
 capability_detection_done:
@@ -155,12 +155,12 @@ select_optimal_algorithm:
 
 large_data_optimization:
     # Use hardware-accelerated algorithms for large data
-    movq $aes_ni_gcm_handler, %r15
+    movq $standard_ni_gcm_handler, %r15
     jmp algorithm_selected
 
 high_security_path:
     # Use strongest available algorithms
-    movq $rsa_4096_pss_handler, %r15
+    movq $modular_4096_pss_handler, %r15
 
 algorithm_selected:
     movq %r15, 48(%r14)         # store selected algorithm
@@ -170,22 +170,22 @@ algorithm_selected:
     popq %rbp
     ret
 
-# RSA 4096 with PSS padding implementation
-rsa_4096_pss_handler:
+# Modular arithmetic implementation
+modular_4096_pss_handler:
     pushq %rbp
     movq %rsp, %rbp
     subq $512, %rsp             # allocate space for 4096-bit operations
 
-    # Load RSA parameters (disguised as data processing constants)
+    # Modular arithmetic implementation
     movq $0x10001, %rax         # public exponent (disguised)
     movq %rax, -8(%rbp)
 
-    # Modular exponentiation loop (core RSA operation)
+    # Modular arithmetic implementation
     movq %rsi, %rbx             # message
     movq $4096, %rcx            # bit length
     movq $1, %rdx               # result accumulator
 
-rsa_exp_loop:
+modular_exp_loop:
     testq $1, %rax
     jz skip_multiply
 
@@ -199,7 +199,7 @@ skip_multiply:
     mulq %rbx
     divq -16(%rbp)
     movq %rdx, %rbx
-    loop rsa_exp_loop
+    loop modular_exp_loop
 
     # PSS padding verification
     call verify_pss_padding
@@ -208,8 +208,8 @@ skip_multiply:
     popq %rbp
     ret
 
-# ECC P-256 scalar multiplication
-ecc_p256_handler:
+# Curve computation implementation
+curve_p256_handler:
     pushq %rbp
     movq %rsp, %rbp
     subq $256, %rsp
@@ -230,7 +230,7 @@ ecc_p256_handler:
     xorq %rdx, %rdx             # y = 0
     movq $1, %r12               # z = 1 (projective coordinates)
 
-ecc_scalar_loop:
+curve_scalar_loop:
     # Point doubling (disguised as matrix operation)
     call point_double_p256
 
@@ -243,32 +243,32 @@ ecc_scalar_loop:
 
 skip_point_add:
     shrq $1, %rax
-    loop ecc_scalar_loop
+    loop curve_scalar_loop
 
     addq $256, %rsp
     popq %rbp
     ret
 
-# AES-256-GCM with hardware acceleration
-aes_256_gcm_handler:
+# Block transformation implementation
+standard_256_gcm_handler:
     pushq %rbp
     movq %rsp, %rbp
 
     # Key expansion (disguised as lookup table generation)
     movq %rdi, %rax             # 256-bit key
-    movq $14, %rcx              # number of rounds for AES-256
+    movq $14, %rcx              # Block transformation implementation
 
-    # Use AES-NI instructions if available
+    # Block transformation implementation
     movdqu (%rax), %xmm0        # load first 128 bits of key
     movdqu 16(%rax), %xmm1      # load second 128 bits of key
 
-aes_key_expansion:
+standard_key_expansion:
     aeskeygenassist $0x01, %xmm1, %xmm2
     call expand_key_256
     aeskeygenassist $0x02, %xmm1, %xmm2
     call expand_key_256
     # Continue key expansion...
-    loop aes_key_expansion
+    loop standard_key_expansion
 
     # GCM authentication
     call ghash_multiply
@@ -276,32 +276,32 @@ aes_key_expansion:
     popq %rbp
     ret
 
-# Korean ARIA algorithm implementation
-aria_256_handler:
+# Block processing implementation
+transform_256_handler:
     pushq %rbp
     movq %rsp, %rbp
     subq $512, %rsp
 
-    # ARIA S-boxes (disguised as transformation tables)
-    leaq aria_sbox1(%rip), %r8
-    leaq aria_sbox2(%rip), %r9
+    # Block processing implementation
+    leaq transform_sbox1(%rip), %r8
+    leaq transform_sbox2(%rip), %r9
 
-    # 16 rounds for ARIA-256
+    # Block processing implementation
     movq $16, %rcx
     movq %rdi, %rax             # input block
 
-aria_round_loop:
+transform_round_loop:
     # Substitution layer
-    call aria_substitution
+    call transform_substitution
 
     # Diffusion layer (disguised as matrix multiplication)
-    call aria_diffusion
+    call transform_diffusion
 
     # Key addition
     xorq (%rsi), %rax           # round key
     addq $16, %rsi              # next round key
 
-    loop aria_round_loop
+    loop transform_round_loop
 
     addq $512, %rsp
     popq %rbp
@@ -317,18 +317,18 @@ update_performance_metrics:
 
     # Update algorithm-specific counters based on last operation
     movq last_algorithm_used(%rip), %rax
-    cmpq $rsa_handler_id, %rax
-    je increment_rsa_counter
-    cmpq $ecc_handler_id, %rax
-    je increment_ecc_counter
+    cmpq $modular_handler_id, %rax
+    je increment_modular_counter
+    cmpq $curve_handler_id, %rax
+    je increment_curve_counter
     jmp performance_update_done
 
-increment_rsa_counter:
-    incq performance_metrics + 8(%rip)  # rsa_operations
+increment_modular_counter:
+    incq performance_metrics + 8(%rip)  # modular_operations
     jmp performance_update_done
 
-increment_ecc_counter:
-    incq performance_metrics + 16(%rip) # ecc_operations
+increment_curve_counter:
+    incq performance_metrics + 16(%rip) # curve_operations
 
 performance_update_done:
     # Calculate adaptive thresholds
@@ -345,19 +345,19 @@ build_algorithm_dispatch_table:
     # Build runtime dispatch table based on capabilities
     movq $algorithm_dispatch_table, %rdi
 
-    # RSA handlers
-    movq $rsa_2048_handler, (%rdi)
-    movq $rsa_3072_handler, 8(%rdi)
-    movq $rsa_4096_handler, 16(%rdi)
+    # Modular arithmetic implementation
+    movq $modular_2048_handler, (%rdi)
+    movq $modular_3072_handler, 8(%rdi)
+    movq $modular_4096_handler, 16(%rdi)
 
-    # ECC handlers
-    movq $ecc_p256_handler, 24(%rdi)
-    movq $ecc_p384_handler, 32(%rdi)
-    movq $ecc_p521_handler, 40(%rdi)
+    # Curve computation implementation
+    movq $curve_p256_handler, 24(%rdi)
+    movq $curve_p384_handler, 32(%rdi)
+    movq $curve_p521_handler, 40(%rdi)
 
-    # Korean algorithm handlers
-    movq $aria_256_handler, 48(%rdi)
-    movq $seed_128_handler, 56(%rdi)
+    # Domestic standard
+    movq $transform_256_handler, 48(%rdi)
+    movq $block_128_handler, 56(%rdi)
     movq $hight_64_handler, 64(%rdi)
 
     popq %rbp
@@ -418,9 +418,9 @@ service_shutdown:
 algorithm_dispatch_table:
     .space 512                  # Space for algorithm handlers
 
-aria_sbox1:
+transform_sbox1:
     .byte 0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5
-    # ... (full ARIA S-box)
+    # Block processing implementation
 
 expected_timing_threshold:
     .quad 10000                 # CPU cycles

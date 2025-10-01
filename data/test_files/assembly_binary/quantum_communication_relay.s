@@ -1,4 +1,4 @@
-quantum_communication_relay:     file format elf64-x86-64
+post_classical_communication_relay:     file format elf64-x86-64
 
 Disassembly of section .text:
 
@@ -14,7 +14,7 @@ Disassembly of section .text:
   40101f:	7e
   401020:	48 c7 45 e0 b2 e6 53 	movq   $0x4453e6b2,-0x20(%rbp)
   401027:	44
-  401028:	e8 93 00 00 00       	callq  4010c0 <quantum_key_distribution>
+  401028:	e8 93 00 00 00       	callq  4010c0 <post_classical_key_distribution>
   40102d:	48 89 45 d8          	mov    %rax,-0x28(%rbp)
   401031:	48 8d 7d d0          	lea    -0x30(%rbp),%rdi
   401035:	48 8d 75 c0          	lea    -0x40(%rbp),%rsi
@@ -22,12 +22,12 @@ Disassembly of section .text:
   40103e:	e8 ad 00 00 00       	callq  4010f0 <entanglement_protection>
   401043:	48 8d 7d b0          	lea    -0x50(%rbp),%rdi
   401047:	be 08 00 00 00       	mov    $0x8,%esi
-  40104c:	e8 df 00 00 00       	callq  401130 <korean_quantum_cipher>
+  40104c:	e8 df 00 00 00       	callq  401130 <domesticn_post_classical_cipher>
   401051:	b8 3c 00 00 00       	mov    $0x3c,%eax
   401056:	bf 00 00 00 00       	mov    $0x0,%edi
   40105b:	0f 05                	syscall
 
-00000000004010c0 <quantum_key_distribution>:
+00000000004010c0 <post_classical_key_distribution>:
   4010c0:	55                   	push   %rbp
   4010c1:	48 89 e5             	mov    %rsp,%rbp
   4010c4:	48 83 ec 30          	sub    $0x30,%rsp
@@ -79,7 +79,7 @@ Disassembly of section .text:
   401151:	c9                   	leaveq
   401152:	c3                   	retq
 
-0000000000401130 <korean_quantum_cipher>:
+0000000000401130 <domesticn_post_classical_cipher>:
   401130:	55                   	push   %rbp
   401131:	48 89 e5             	mov    %rsp,%rbp
   401134:	48 83 ec 20          	sub    $0x20,%rsp

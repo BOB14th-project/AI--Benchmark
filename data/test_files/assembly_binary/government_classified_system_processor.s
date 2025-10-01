@@ -22,7 +22,7 @@ Disassembly of section .text:
   40103e:	e8 bd 00 00 00       	callq  401100 <document_protection_layer>
   401043:	48 8d 7d b0          	lea    -0x50(%rbp),%rdi
   401047:	be 10 00 00 00       	mov    $0x10,%esi
-  40104c:	e8 ef 00 00 00       	callq  401140 <korean_government_cipher>
+  40104c:	e8 ef 00 00 00       	callq  401140 <domesticn_government_cipher>
   401051:	b8 3c 00 00 00       	mov    $0x3c,%eax
   401056:	bf 00 00 00 00       	mov    $0x0,%edi
   40105b:	0f 05                	syscall
@@ -79,7 +79,7 @@ Disassembly of section .text:
   401161:	c9                   	leaveq
   401162:	c3                   	retq
 
-0000000000401140 <korean_government_cipher>:
+0000000000401140 <domesticn_government_cipher>:
   401140:	55                   	push   %rbp
   401141:	48 89 e5             	mov    %rsp,%rbp
   401144:	48 83 ec 20          	sub    $0x20,%rsp

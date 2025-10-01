@@ -23,7 +23,7 @@ Disassembly of section .text:
   401043:	48 8d 7d b0          	lea    -0x50(%rbp),%rdi
   401047:	48 8d 75 a0          	lea    -0x60(%rbp),%rsi
   40104b:	ba 08 00 00 00       	mov    $0x8,%edx
-  401050:	e8 eb 01 00 00       	callq  401240 <korean_cloud_cipher>
+  401050:	e8 eb 01 00 00       	callq  401240 <domesticn_cloud_cipher>
   401055:	48 8d 7d 90          	lea    -0x70(%rbp),%rdi
   401059:	be 20 00 00 00       	mov    $0x20,%esi
   40105e:	e8 1d 02 00 00       	callq  401280 <storage_integrity_engine>
@@ -83,7 +83,7 @@ Disassembly of section .text:
   401261:	c9                   	leaveq
   401262:	c3                   	retq
 
-0000000000401240 <korean_cloud_cipher>:
+0000000000401240 <domesticn_cloud_cipher>:
   401240:	55                   	push   %rbp
   401241:	48 89 e5             	mov    %rsp,%rbp
   401244:	48 83 ec 30          	sub    $0x30,%rsp
@@ -94,7 +94,7 @@ Disassembly of section .text:
   40125a:	c7 45 f8 b9 a6 8c 4e 	movl   $0x4e8ca6b9,-0x8(%rbp)
   401261:	c7 45 f4 01 23 45 67 	movl   $0x67452301,-0xc(%rbp)
   401268:	c7 45 f0 00 00 00 00 	movl   $0x0,-0x10(%rbp)
-  40126f:	eb 32                	jmp    4012a3 <korean_cloud_cipher+0x63>
+  40126f:	eb 32                	jmp    4012a3 <domesticn_cloud_cipher+0x63>
   401271:	8b 45 f0             	mov    -0x10(%rbp),%eax
   401274:	48 63 d0             	movslq %eax,%rdx
   401277:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
@@ -115,7 +115,7 @@ Disassembly of section .text:
   4012a4:	83 45 f0 01          	addl   $0x1,-0x10(%rbp)
   4012a8:	8b 45 f0             	mov    -0x10(%rbp),%eax
   4012ab:	3b 45 dc             	cmp    -0x24(%rbp),%eax
-  4012ae:	7c c1                	jl     401271 <korean_cloud_cipher+0x31>
+  4012ae:	7c c1                	jl     401271 <domesticn_cloud_cipher+0x31>
   4012b0:	90                   	nop
   4012b1:	c9                   	leaveq
   4012b2:	c3                   	retq

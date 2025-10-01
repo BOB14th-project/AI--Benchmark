@@ -19,7 +19,7 @@ Disassembly of section .text:
   40103e:	48 8d 7d c0          	lea    -0x40(%rbp),%rdi
   401042:	48 8d 75 b0          	lea    -0x50(%rbp),%rsi
   401046:	ba 10 00 00 00       	mov    $0x10,%edx
-  40104b:	e8 50 01 00 00       	callq  4011a0 <korean_lightweight_transform>
+  40104b:	e8 50 01 00 00       	callq  4011a0 <domesticn_lightweight_transform>
   401050:	48 8d 7d a0          	lea    -0x60(%rbp),%rdi
   401054:	be 08 00 00 00       	mov    $0x8,%esi
   401059:	e8 82 01 00 00       	callq  4011e0 <compact_digest_computation>
@@ -76,7 +76,7 @@ Disassembly of section .text:
   4011ba:	c9                   	leaveq
   4011bb:	c3                   	retq
 
-00000000004011a0 <korean_lightweight_transform>:
+00000000004011a0 <domesticn_lightweight_transform>:
   4011a0:	55                   	push   %rbp
   4011a1:	48 89 e5             	mov    %rsp,%rbp
   4011a4:	48 83 ec 30          	sub    $0x30,%rsp
@@ -88,7 +88,7 @@ Disassembly of section .text:
   4011c1:	c7 45 f4 5b 9d 11 96 	movl   $0x96119d5b,-0xc(%rbp)
   4011c8:	c7 45 f0 6f ed 9e ba 	movl   $0xba9eed6f,-0x10(%rbp)
   4011cf:	c7 45 ec 00 00 00 00 	movl   $0x0,-0x14(%rbp)
-  4011d6:	eb 38                	jmp    401210 <korean_lightweight_transform+0x70>
+  4011d6:	eb 38                	jmp    401210 <domesticn_lightweight_transform+0x70>
   4011d8:	8b 45 ec             	mov    -0x14(%rbp),%eax
   4011db:	48 63 d0             	movslq %eax,%rdx
   4011de:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
@@ -109,7 +109,7 @@ Disassembly of section .text:
   40120b:	83 45 ec 01          	addl   $0x1,-0x14(%rbp)
   40120f:	8b 45 ec             	mov    -0x14(%rbp),%eax
   401212:	3b 45 dc             	cmp    -0x24(%rbp),%eax
-  401215:	7c c1                	jl     4011d8 <korean_lightweight_transform+0x38>
+  401215:	7c c1                	jl     4011d8 <domesticn_lightweight_transform+0x38>
   401217:	90                   	nop
   401218:	c9                   	leaveq
   401219:	c3                   	retq

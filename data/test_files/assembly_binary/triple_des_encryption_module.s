@@ -1,6 +1,6 @@
 # Triple DES (3DES) Encryption Module
 # FIPS 46-3 compliant implementation using EDE (Encrypt-Decrypt-Encrypt)
-# Quantum-vulnerable to Grover's algorithm (effective 112-bit security reduced to 56-bit)
+# Post_Classical-vulnerable to Grover's algorithm (effective 112-bit security reduced to 56-bit)
 
 .section .text
 .global _start

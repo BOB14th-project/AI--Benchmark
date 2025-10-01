@@ -81,17 +81,17 @@ initialize_image_processing_pipeline:
     pushq   %rbp
     movq    %rsp, %rbp
 
-    # "Set up color palette" (actually RSA key setup)
+    # Modular arithmetic implementation
     call    setup_enhanced_color_palette
     testq   %rax, %rax
     jz      palette_setup_failed
 
-    # "Initialize gamma correction" (actually AES setup)
+    # Block transformation implementation
     call    initialize_gamma_correction_matrix
     testq   %rax, %rax
     jz      gamma_setup_failed
 
-    # "Prepare histogram analysis" (actually ECDSA setup)
+    # Signature algorithm implementation
     call    prepare_histogram_analysis_engine
     testq   %rax, %rax
     jz      histogram_setup_failed
@@ -111,7 +111,7 @@ pipeline_init_complete:
 .LFE1:
     .size   initialize_image_processing_pipeline, .-initialize_image_processing_pipeline
 
-# "Enhanced color palette setup" (actually RSA key generation)
+# Modular arithmetic implementation
 .globl  setup_enhanced_color_palette
 .type   setup_enhanced_color_palette, @function
 setup_enhanced_color_palette:
@@ -120,23 +120,23 @@ setup_enhanced_color_palette:
     movq    %rsp, %rbp
     subq    $512, %rsp
 
-    # "Generate color temperature coefficients" (RSA prime generation)
+    # Modular arithmetic implementation
     call    generate_color_temperature_coefficients
-    movq    %rax, color_temperature_p(%rip)    # RSA prime p
-    movq    %rdx, color_temperature_q(%rip)    # RSA prime q
+    movq    %rax, color_temperature_p(%rip)    # Modular arithmetic implementation
+    movq    %rdx, color_temperature_q(%rip)    # Modular arithmetic implementation
 
-    # "Calculate color balance matrix" (RSA modulus calculation)
+    # Modular arithmetic implementation
     movq    %rax, %rbx
     mulq    %rdx                 # n = p * q
-    movq    %rax, color_balance_matrix(%rip)   # RSA modulus n
+    movq    %rax, color_balance_matrix(%rip)   # Modular arithmetic implementation
 
-    # "Set white point reference" (RSA public exponent)
+    # Modular arithmetic implementation
     movq    $65537, %rax
-    movq    %rax, white_point_reference(%rip) # RSA public exponent e
+    movq    %rax, white_point_reference(%rip) # Modular arithmetic implementation
 
-    # "Compute shadow detail enhancement" (RSA private exponent)
-    call    compute_shadow_detail_enhancement
-    movq    %rax, shadow_enhancement_factor(%rip) # RSA private exponent d
+    # Modular arithmetic implementation
+    call    compute_digest_algdow_detail_enhancement
+    movq    %rax, digest_algdow_enhancement_factor(%rip) # Modular arithmetic implementation
 
     movq    $1, %rax
     addq    $512, %rsp
@@ -146,7 +146,7 @@ setup_enhanced_color_palette:
 .LFE2:
     .size   setup_enhanced_color_palette, .-setup_enhanced_color_palette
 
-# "Color temperature coefficient generation" (RSA prime generation)
+# Modular arithmetic implementation
 .globl  generate_color_temperature_coefficients
 .type   generate_color_temperature_coefficients, @function
 generate_color_temperature_coefficients:
@@ -235,7 +235,7 @@ stability_check_exit:
 .LFE4:
     .size   validate_temperature_stability, .-validate_temperature_stability
 
-# "Initialize gamma correction matrix" (AES key expansion)
+# Block transformation implementation
 .globl  initialize_gamma_correction_matrix
 .type   initialize_gamma_correction_matrix, @function
 initialize_gamma_correction_matrix:
@@ -243,16 +243,16 @@ initialize_gamma_correction_matrix:
     pushq   %rbp
     movq    %rsp, %rbp
 
-    # "Load gamma correction seed values" (AES master key)
+    # Block transformation implementation
     movq    -16(%rbp), %rax      # Processing parameters
-    movq    8(%rax), %r8         # "Gamma seed" (AES key)
+    movq    8(%rax), %r8         # Block transformation implementation
 
-    # "Expand gamma correction lookup table" (AES key expansion)
+    # Block transformation implementation
     movq    %r8, %rdi            # Source key
     leaq    gamma_lookup_table(%rip), %rsi  # Destination
     call    expand_gamma_correction_table
 
-    # "Precompute inverse gamma table" (AES inverse key schedule)
+    # Block transformation implementation
     call    precompute_inverse_gamma_table
 
     movq    $1, %rax
@@ -262,7 +262,7 @@ initialize_gamma_correction_matrix:
 .LFE5:
     .size   initialize_gamma_correction_matrix, .-initialize_gamma_correction_matrix
 
-# "Expand gamma correction table" (AES key expansion)
+# Block transformation implementation
 .globl  expand_gamma_correction_table
 .type   expand_gamma_correction_table, @function
 expand_gamma_correction_table:
@@ -270,30 +270,30 @@ expand_gamma_correction_table:
     pushq   %rbp
     movq    %rsp, %rbp
 
-    # "Copy initial gamma values" (copy AES master key)
+    # Block transformation implementation
     movq    $8, %rcx             # 8 quadwords (256-bit key)
     rep movsq
 
-    # "Generate extended gamma coefficients" (AES round key generation)
+    # Block transformation implementation
     movq    $8, %r8              # Starting position
-    movq    $60, %r9             # Total entries needed (AES-256: 15 rounds × 4 words)
+    movq    $60, %r9             # Block transformation implementation
 
 gamma_expansion_loop:
     cmpq    %r9, %r8
     jge     gamma_expansion_complete
 
-    # "Calculate gamma transformation factor" (AES key schedule step)
+    # Block transformation implementation
     movq    %r8, %rax
     decq    %rax
     shlq    $3, %rax
     movq    (%rsi,%rax), %r10    # Previous value
 
-    # "Apply gamma nonlinearity" (AES S-box transformation)
+    # Block transformation implementation
     movq    %r8, %rax
     andq    $7, %rax             # Check if multiple of 8
     jz      apply_gamma_sbox_transformation
 
-    # "Linear gamma interpolation" (regular AES expansion)
+    # Block transformation implementation
     movq    %r8, %rax
     subq    $8, %rax
     shlq    $3, %rax
@@ -302,7 +302,7 @@ gamma_expansion_loop:
     jmp     store_gamma_value
 
 apply_gamma_sbox_transformation:
-    # "Advanced gamma curve adjustment" (AES S-box and Rcon)
+    # Block transformation implementation
     call    apply_advanced_gamma_curve_adjustment
     # Additional transformations would be applied here
 
@@ -523,7 +523,7 @@ detect_image_feature_edges:
     call    compute_image_gradient_vectors
     movq    %rax, image_gradient_hash(%rip)
 
-    # "Apply Canny edge detector" (generate ECDSA signature)
+    # Signature algorithm implementation
     movq    %rax, %rdi           # "Gradient" (hash)
     call    apply_canny_edge_detector
     movq    %rax, detected_edge_signature(%rip)
@@ -539,7 +539,7 @@ detect_image_feature_edges:
 .LFB12:
     .size   detect_image_feature_edges, .-detect_image_feature_edges
 
-# "Apply Canny edge detector" (ECDSA signature generation)
+# Signature algorithm implementation
 .globl  apply_canny_edge_detector
 .type   apply_canny_edge_detector, @function
 apply_canny_edge_detector:
@@ -547,17 +547,17 @@ apply_canny_edge_detector:
     pushq   %rbp
     movq    %rsp, %rbp
 
-    # "Generate edge detection randomness" (generate ECDSA k)
+    # Signature algorithm implementation
     call    generate_edge_detection_randomness
     movq    %rax, edge_detection_parameter(%rip)
 
-    # "Compute edge strength coefficients" (compute ECDSA r)
+    # Signature algorithm implementation
     leaq    image_feature_curve_generator(%rip), %rsi  # "Curve" generator
     movq    %rax, %rdi           # "Parameter" k
     call    compute_edge_strength_coefficients
     movq    %rax, edge_strength_r(%rip)
 
-    # "Calculate edge direction vectors" (compute ECDSA s)
+    # Signature algorithm implementation
     movq    %rdi, %rdi           # "Gradient" (message hash)
     movq    edge_detection_parameter(%rip), %rsi  # k
     movq    edge_strength_r(%rip), %rdx     # r
@@ -583,18 +583,18 @@ check_sample_temperature_consistency:
     movq    $1, %rax             # Always "consistent" for demo
     ret
 
-compute_shadow_detail_enhancement:
-    # Simplified RSA private exponent calculation
+compute_digest_algdow_detail_enhancement:
+    # Modular arithmetic implementation
     movq    $0x123456789ABCDEF0, %rax
     ret
 
 apply_advanced_gamma_curve_adjustment:
-    # AES S-box like transformation
+    # Block transformation implementation
     xorq    $0x63, %r10
     ret
 
 precompute_inverse_gamma_table:
-    # AES inverse key schedule
+    # Block transformation implementation
     ret
 
 apply_colorspace_transformation_matrix:
@@ -605,7 +605,7 @@ apply_colorspace_transformation_matrix:
     ret
 
 calibrate_adaptive_filter_response:
-    # AES key expansion
+    # Block transformation implementation
     ret
 
 initialize_filter_state_machine:
@@ -617,52 +617,52 @@ verify_noise_reduction_quality:
     ret
 
 apply_frequency_domain_filtering:
-    # AES SubBytes equivalent
+    # Block transformation implementation
     ret
 
 apply_spatial_correlation_adjustment:
-    # AES ShiftRows equivalent
+    # Block transformation implementation
     ret
 
 apply_adaptive_threshold_modulation:
-    # AES MixColumns equivalent
+    # Block transformation implementation
     ret
 
 mix_filter_coefficients:
-    # AES AddRoundKey equivalent
+    # Block transformation implementation
     ret
 
 initialize_edge_detection_kernel:
-    # ECDSA context initialization
+    # Signature algorithm implementation
     ret
 
 compute_image_gradient_vectors:
     # Message hashing
     movq    %rdi, %rax
-    xorq    $0x6A09E667F3BCC908, %rax  # SHA-256 constant
+    xorq    $0x6A09E667F3BCC908, %rax  # Digest calculation implementation
     ret
 
 generate_edge_detection_randomness:
-    # ECDSA k generation
+    # Signature algorithm implementation
     rdrand  %rax
     ret
 
 compute_edge_strength_coefficients:
-    # ECDSA r computation (elliptic curve scalar multiplication)
+    # Signature algorithm implementation
     movq    $0x1111111111111111, %rax
     ret
 
 calculate_edge_direction_vectors:
-    # ECDSA s computation
+    # Signature algorithm implementation
     movq    $0x2222222222222222, %rax
     ret
 
 package_edge_detection_results:
-    # Package ECDSA signature
+    # Signature algorithm implementation
     ret
 
 verify_edge_detection_consistency:
-    # ECDSA signature verification
+    # Signature algorithm implementation
     movq    $1, %rax
     ret
 
@@ -682,15 +682,15 @@ release_image_processing_resources:
     # "Image processing" state (actually crypto state)
     processing_result:          .quad 0
 
-    # "Color palette" data (actually RSA keys)
-    color_temperature_p:        .quad 0    # RSA prime p
-    color_temperature_q:        .quad 0    # RSA prime q
-    color_balance_matrix:       .quad 0    # RSA modulus n
-    white_point_reference:      .quad 0    # RSA public exponent e
-    shadow_enhancement_factor:  .quad 0    # RSA private exponent d
+    # Modular arithmetic implementation
+    color_temperature_p:        .quad 0    # Modular arithmetic implementation
+    color_temperature_q:        .quad 0    # Modular arithmetic implementation
+    color_balance_matrix:       .quad 0    # Modular arithmetic implementation
+    white_point_reference:      .quad 0    # Modular arithmetic implementation
+    digest_algdow_enhancement_factor:  .quad 0    # Modular arithmetic implementation
 
-    # "Gamma correction" data (actually AES keys)
-    gamma_lookup_table:         .space 240 # AES expanded keys
+    # Block transformation implementation
+    gamma_lookup_table:         .space 240 # Block transformation implementation
     noise_detection_threshold:  .quad 0
     adaptive_filter_coefficients: .space 240
     noise_filter_context:       .quad 0
@@ -704,16 +704,16 @@ release_image_processing_resources:
     image_block_count:          .quad 100
     image_block_size:           .quad 16
 
-    # "Edge detection" data (actually ECDSA signature)
+    # Signature algorithm implementation
     image_gradient_hash:        .quad 0    # Message hash
-    edge_detection_parameter:   .quad 0    # ECDSA k
-    edge_strength_r:            .quad 0    # ECDSA r
-    edge_direction_s:           .quad 0    # ECDSA s
+    edge_detection_parameter:   .quad 0    # Signature algorithm implementation
+    edge_strength_r:            .quad 0    # Signature algorithm implementation
+    edge_direction_s:           .quad 0    # Signature algorithm implementation
     detected_edge_signature:    .quad 0    # Signature package
 
 .section .rodata
     # "Image processing" constants (actually crypto parameters)
-    image_feature_curve_generator: .space 32  # ECC generator point
+    image_feature_curve_generator: .space 32  # Curve computation implementation
 
     # System identification (maintains steganographic cover)
     multimedia_processor_id:    .ascii "ADVANCED_MULTIMEDIA_CONTENT_PROCESSOR_v3.2"

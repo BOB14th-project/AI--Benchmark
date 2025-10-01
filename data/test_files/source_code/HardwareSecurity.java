@@ -78,7 +78,7 @@ public class HardwareSecurity {
             System.arraycopy(compositeHash, 0, quoteData, 0, compositeHash.length);
             System.arraycopy(nonce, 0, quoteData, compositeHash.length, nonce.length);
 
-            // Sign quote with TPM key (simplified RSA-like operation)
+            // Modular arithmetic operation
             byte[] signature = signWithTPMKey(quoteData);
 
             return new AttestationQuote(quoteData, signature, pcrList);

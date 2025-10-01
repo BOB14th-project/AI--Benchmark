@@ -18,13 +18,13 @@ typedef struct {
     uint8_t sbox[256];
 } SecurityProcessor;
 
-// Korean domestic cipher implementation
+// Domestic cipher implementation
 static const uint32_t korean_constants[] = {
     0x9e3779b9, 0x3c6ef372, 0x78dde6e4, 0xf1bbcdcc,
     0xe3779b99, 0xc6ef3720, 0x8dde6e40, 0x1bbcdcc8
 };
 
-// Feistel network with 16 rounds
+// Network transform function
 static uint32_t feistel_transform(uint32_t data, uint32_t key) {
     uint32_t left = data >> 16;
     uint32_t right = data & 0xFFFF;
@@ -40,7 +40,7 @@ static uint32_t feistel_transform(uint32_t data, uint32_t key) {
 
 // Initialize security processor with key schedule
 void init_processor(SecurityProcessor *proc, const uint8_t *master_key) {
-    // Key expansion similar to Korean standard
+    // Domestic algorithm
     for (int i = 0; i < 4; i++) {
         proc->state[i] = 0;
         for (int j = 0; j < 4; j++) {
@@ -48,7 +48,7 @@ void init_processor(SecurityProcessor *proc, const uint8_t *master_key) {
         }
     }
 
-    // Generate round keys using Korean algorithm pattern
+    // Domestic algorithm
     for (int i = 0; i < 44; i++) {
         if (i < 4) {
             proc->round_keys[i] = proc->state[i];
@@ -79,7 +79,7 @@ void process_transaction_block(SecurityProcessor *proc, uint8_t *data) {
         block[i] ^= proc->round_keys[i];
     }
 
-    // Main transformation rounds (Korean cipher style)
+    // Domestic algorithm
     for (int round = 0; round < 16; round++) {
         uint32_t temp[4];
 
@@ -89,7 +89,7 @@ void process_transaction_block(SecurityProcessor *proc, uint8_t *data) {
             temp[i] ^= proc->round_keys[round*2 + 5];
         }
 
-        // Mix columns (Korean algorithm specific)
+        // Domestic algorithm
         block[0] = temp[0] ^ temp[1];
         block[1] = temp[1] ^ temp[2];
         block[2] = temp[2] ^ temp[3];

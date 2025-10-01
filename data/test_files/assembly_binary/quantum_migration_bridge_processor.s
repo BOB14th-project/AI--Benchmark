@@ -1,4 +1,4 @@
-quantum_migration_bridge_processor:     file format elf64-x86-64
+post_classical_migration_bridge_processor:     file format elf64-x86-64
 
 Disassembly of section .text:
 
@@ -19,7 +19,7 @@ Disassembly of section .text:
   401030:	83 7d dc 01          	cmpl   $0x1,-0x24(%rbp)
   401034:	75 0c                	jne    401042 <_start+0x42>
   401036:	48 8d 7d d0          	lea    -0x30(%rbp),%rdi
-  40103a:	e8 f1 02 00 00       	callq  401330 <quantum_safe_replacement>
+  40103a:	e8 f1 02 00 00       	callq  401330 <post_classical_safe_replacement>
   40103f:	48 89 45 c8          	mov    %rax,-0x38(%rbp)
   401043:	48 8d 7d c0          	lea    -0x40(%rbp),%rdi
   401047:	48 8d 75 b0          	lea    -0x50(%rbp),%rsi
@@ -28,7 +28,7 @@ Disassembly of section .text:
   401055:	48 8d 7d a0          	lea    -0x60(%rbp),%rdi
   401059:	48 8d 75 90          	lea    -0x70(%rbp),%rsi
   40105d:	ba 10 00 00 00       	mov    $0x10,%edx
-  401062:	e8 29 03 00 00       	callq  401390 <korean_legacy_handler>
+  401062:	e8 29 03 00 00       	callq  401390 <domesticn_legacy_handler>
   401067:	48 8d 7d 80          	lea    -0x80(%rbp),%rdi
   40106b:	be 40 00 00 00       	mov    $0x40,%esi
   401070:	e8 5b 03 00 00       	callq  4013d0 <migration_integrity_check>
@@ -53,7 +53,7 @@ Disassembly of section .text:
   40134c:	c9                   	leaveq
   40134d:	c3                   	retq
 
-0000000000401330 <quantum_safe_replacement>:
+0000000000401330 <post_classical_safe_replacement>:
   401330:	55                   	push   %rbp
   401331:	48 89 e5             	mov    %rsp,%rbp
   401334:	48 83 ec 30          	sub    $0x30,%rsp
@@ -104,7 +104,7 @@ Disassembly of section .text:
   4013a5:	c9                   	leaveq
   4013a6:	c3                   	retq
 
-0000000000401390 <korean_legacy_handler>:
+0000000000401390 <domesticn_legacy_handler>:
   401390:	55                   	push   %rbp
   401391:	48 89 e5             	mov    %rsp,%rbp
   401394:	48 83 ec 30          	sub    $0x30,%rsp
@@ -116,7 +116,7 @@ Disassembly of section .text:
   4013ab:	48 c7 45 f0 bf 40 a3 	movq   $0x9ea340bf,-0x10(%rbp)
   4013b2:	9e
   4013b3:	c7 45 fc 00 00 00 00 	movl   $0x0,-0x4(%rbp)
-  4013ba:	eb 3c                	jmp    4013f8 <korean_legacy_handler+0x68>
+  4013ba:	eb 3c                	jmp    4013f8 <domesticn_legacy_handler+0x68>
   4013bc:	8b 45 fc             	mov    -0x4(%rbp),%eax
   4013bf:	48 63 d0             	movslq %eax,%rdx
   4013c2:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
@@ -137,7 +137,7 @@ Disassembly of section .text:
   4013ef:	83 45 fc 01          	addl   $0x1,-0x4(%rbp)
   4013f3:	8b 45 fc             	mov    -0x4(%rbp),%eax
   4013f6:	3b 45 dc             	cmp    -0x24(%rbp),%eax
-  4013f9:	7c c1                	jl     4013bc <korean_legacy_handler+0x2c>
+  4013f9:	7c c1                	jl     4013bc <domesticn_legacy_handler+0x2c>
   4013fb:	90                   	nop
   4013fc:	c9                   	leaveq
   4013fd:	c3                   	retq
@@ -178,7 +178,7 @@ Disassembly of section .text:
 
 Disassembly of section .data:
 
-0000000000602000 <quantum_parameters>:
+0000000000602000 <post_classical_parameters>:
   602000:	ff ff ff ff ff ff ff 	(bad)
   602007:	ff ff ff ff ff ff ff 	(bad)
   60200e:	1f                   	(bad)

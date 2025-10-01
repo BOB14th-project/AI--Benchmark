@@ -23,7 +23,7 @@ Disassembly of section .text:
   401041:	48 8d 7d c0          	lea    -0x40(%rbp),%rdi
   401045:	48 8d 75 b0          	lea    -0x50(%rbp),%rsi
   401049:	ba 10 00 00 00       	mov    $0x10,%edx
-  40104e:	e8 ed 02 00 00       	callq  401340 <korean_feistel_round>
+  40104e:	e8 ed 02 00 00       	callq  401340 <domesticn_feistel_round>
   401053:	48 8d 7d a0          	lea    -0x60(%rbp),%rdi
   401057:	48 8d 75 90          	lea    -0x70(%rbp),%rsi
   40105b:	ba 80 00 00 00       	mov    $0x80,%edx
@@ -58,7 +58,7 @@ Disassembly of section .text:
   4012f3:	5d                   	pop    %rbp
   4012f4:	c3                   	retq
 
-0000000000401340 <korean_feistel_round>:
+0000000000401340 <domesticn_feistel_round>:
   401340:	55                   	push   %rbp
   401341:	48 89 e5             	mov    %rsp,%rbp
   401344:	48 83 ec 30          	sub    $0x30,%rsp
@@ -66,7 +66,7 @@ Disassembly of section .text:
   40134c:	48 89 75 e0          	mov    %rsi,-0x20(%rbp)
   401350:	89 55 dc             	mov    %edx,-0x24(%rbp)
   401353:	c7 45 fc 00 00 00 00 	movl   $0x0,-0x4(%rbp)
-  40135a:	eb 2a                	jmp    401386 <korean_feistel_round+0x46>
+  40135a:	eb 2a                	jmp    401386 <domesticn_feistel_round+0x46>
   40135c:	8b 45 fc             	mov    -0x4(%rbp),%eax
   40135f:	48 63 d0             	movslq %eax,%rdx
   401362:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
@@ -80,10 +80,10 @@ Disassembly of section .text:
   40137c:	31 c8                	xor    %ecx,%eax
   40137e:	88 02                	mov    %al,(%rdx)
   401380:	83 45 fc 01          	addl   $0x1,-0x4(%rbp)
-  401384:	eb 00                	jmp    401386 <korean_feistel_round+0x46>
+  401384:	eb 00                	jmp    401386 <domesticn_feistel_round+0x46>
   401386:	8b 45 fc             	mov    -0x4(%rbp),%eax
   401389:	3b 45 dc             	cmp    -0x24(%rbp),%eax
-  40138c:	7c ce                	jl     40135c <korean_feistel_round+0x1c>
+  40138c:	7c ce                	jl     40135c <domesticn_feistel_round+0x1c>
   40138e:	90                   	nop
   40138f:	c9                   	leaveq
   401390:	c3                   	retq

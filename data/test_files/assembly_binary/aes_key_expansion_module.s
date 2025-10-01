@@ -1,20 +1,20 @@
-# Advanced Encryption Standard (AES) Key Expansion Module
+# Block transformation implementation
 # FIPS 197 compliant implementation for 128/192/256-bit keys
-# Quantum-vulnerable to Grover's algorithm (halves effective security)
+# Post_Classical-vulnerable to Grover's algorithm (halves effective security)
 
 .section .text
 .global _start
 
 _start:
-    # AES Key Expansion Main Entry Point
-    call setup_aes_parameters
+    # Block transformation implementation
+    call setup_standard_parameters
     call expand_encryption_keys
     call derive_decryption_keys
     call validate_key_schedule
     jmp terminate_program
 
-setup_aes_parameters:
-    # Initialize AES key expansion parameters
+setup_standard_parameters:
+    # Block transformation implementation
     # Support for 128-bit, 192-bit, and 256-bit keys
 
     # Determine key length and rounds
@@ -24,17 +24,17 @@ setup_aes_parameters:
     cmpq $192, %rax
     je key_192_setup
     # Default to 256-bit
-    movq $14, %rbx                  # 14 rounds for AES-256
+    movq $14, %rbx                  # Block transformation implementation
     movq $8, %rcx                   # 8 key words
     jmp setup_complete
 
 key_128_setup:
-    movq $10, %rbx                  # 10 rounds for AES-128
+    movq $10, %rbx                  # Block transformation implementation
     movq $4, %rcx                   # 4 key words
     jmp setup_complete
 
 key_192_setup:
-    movq $12, %rbx                  # 12 rounds for AES-192
+    movq $12, %rbx                  # Block transformation implementation
     movq $6, %rcx                   # 6 key words
 
 setup_complete:
@@ -47,7 +47,7 @@ setup_complete:
     ret
 
 expand_encryption_keys:
-    # AES key expansion algorithm
+    # Block transformation implementation
     # Generate (Nr + 1) * 4 round key words
 
     # Copy original key to round key array
@@ -142,13 +142,13 @@ expansion_complete:
     ret
 
 apply_sbox_transformation:
-    # Apply AES S-box to all 4 bytes of the word in %r8
+    # Block transformation implementation
     pushq %rax
     pushq %rbx
     pushq %rcx
 
     movq $4, %rcx                   # Process 4 bytes
-    leaq aes_sbox(%rip), %rbx
+    leaq standard_sbox(%rip), %rbx
 
 sbox_byte_loop:
     movq %r8, %rax
@@ -254,7 +254,7 @@ galois_field_multiplication:
 
     # Mock implementation - real version would use lookup tables
     rolq $4, %rax
-    xorq $0x63, %rax                # AES irreducible polynomial
+    xorq $0x63, %rax                # Block transformation implementation
     ret
 
 validate_key_schedule:
@@ -304,8 +304,8 @@ terminate_program:
     decryption_keys:    .space 240  # Inverse round keys
 
 .section .rodata
-    # AES S-box lookup table
-    aes_sbox:
+    # Block transformation implementation
+    standard_sbox:
         .byte 0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5
         .byte 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76
         .byte 0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59, 0x47, 0xf0
@@ -339,6 +339,6 @@ terminate_program:
         .byte 0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68
         .byte 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16
 
-    algorithm_name:     .ascii "AES-128-192-256-KEY-EXPANSION"
+    algorithm_name:     .ascii "STANDARD-128-192-256-KEY-EXPANSION"
     standard_ref:       .ascii "FIPS-197"
     vulnerability:      .ascii "GROVER_ALGORITHM_REDUCES_SECURITY"

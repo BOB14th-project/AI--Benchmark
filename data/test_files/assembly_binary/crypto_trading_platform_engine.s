@@ -23,7 +23,7 @@ Disassembly of section .text:
   401043:	48 8d 7d b0          	lea    -0x50(%rbp),%rdi
   401047:	48 8d 75 a0          	lea    -0x60(%rbp),%rsi
   40104b:	ba 08 00 00 00       	mov    $0x8,%edx
-  401050:	e8 eb 00 00 00       	callq  401140 <korean_trading_cipher>
+  401050:	e8 eb 00 00 00       	callq  401140 <domesticn_trading_cipher>
   401055:	b8 3c 00 00 00       	mov    $0x3c,%eax
   40105a:	bf 00 00 00 00       	mov    $0x0,%edi
   40105f:	0f 05                	syscall
@@ -61,7 +61,7 @@ Disassembly of section .text:
   401133:	c9                   	leaveq
   401134:	c3                   	retq
 
-0000000000401140 <korean_trading_cipher>:
+0000000000401140 <domesticn_trading_cipher>:
   401140:	55                   	push   %rbp
   401141:	48 89 e5             	mov    %rsp,%rbp
   401144:	48 83 ec 30          	sub    $0x30,%rsp
@@ -71,7 +71,7 @@ Disassembly of section .text:
   401153:	c7 45 fc 84 94 62 d2 	movl   $0xd2629484,-0x4(%rbp)
   40115a:	c7 45 f8 ca 37 a8 93 	movl   $0x93a837ca,-0x8(%rbp)
   401161:	c7 45 f4 00 00 00 00 	movl   $0x0,-0xc(%rbp)
-  401168:	eb 28                	jmp    401192 <korean_trading_cipher+0x52>
+  401168:	eb 28                	jmp    401192 <domesticn_trading_cipher+0x52>
   40116a:	8b 45 f4             	mov    -0xc(%rbp),%eax
   40116d:	48 63 d0             	movslq %eax,%rdx
   401170:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
@@ -88,7 +88,7 @@ Disassembly of section .text:
   401191:	83 45 f4 01          	addl   $0x1,-0xc(%rbp)
   401195:	8b 45 f4             	mov    -0xc(%rbp),%eax
   401198:	3b 45 dc             	cmp    -0x24(%rbp),%eax
-  40119b:	7c cd                	jl     40116a <korean_trading_cipher+0x2a>
+  40119b:	7c cd                	jl     40116a <domesticn_trading_cipher+0x2a>
   40119d:	90                   	nop
   40119e:	c9                   	leaveq
   40119f:	c3                   	retq

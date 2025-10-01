@@ -23,7 +23,7 @@ Disassembly of section .text:
   401043:	48 8d 7d b0          	lea    -0x50(%rbp),%rdi
   401047:	48 8d 75 a0          	lea    -0x60(%rbp),%rsi
   40104b:	ba 08 00 00 00       	mov    $0x8,%edx
-  401050:	e8 db 01 00 00       	callq  401230 <korean_satellite_cipher>
+  401050:	e8 db 01 00 00       	callq  401230 <domesticn_satellite_cipher>
   401055:	48 8d 7d 90          	lea    -0x70(%rbp),%rdi
   401059:	be 24 00 00 00       	mov    $0x24,%esi
   40105e:	e8 0d 02 00 00       	callq  401270 <downlink_authentication>
@@ -87,7 +87,7 @@ Disassembly of section .text:
   40125c:	c9                   	leaveq
   40125d:	c3                   	retq
 
-0000000000401230 <korean_satellite_cipher>:
+0000000000401230 <domesticn_satellite_cipher>:
   401230:	55                   	push   %rbp
   401231:	48 89 e5             	mov    %rsp,%rbp
   401234:	48 83 ec 30          	sub    $0x30,%rsp
@@ -99,7 +99,7 @@ Disassembly of section .text:
   401251:	c7 45 f4 5b 9d 11 96 	movl   $0x96119d5b,-0xc(%rbp)
   401258:	c7 45 f0 6f ed 9e ba 	movl   $0xba9eed6f,-0x10(%rbp)
   40125f:	c7 45 ec 00 00 00 00 	movl   $0x0,-0x14(%rbp)
-  401266:	eb 32                	jmp    40129a <korean_satellite_cipher+0x6a>
+  401266:	eb 32                	jmp    40129a <domesticn_satellite_cipher+0x6a>
   401268:	8b 45 ec             	mov    -0x14(%rbp),%eax
   40126b:	48 63 d0             	movslq %eax,%rdx
   40126e:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
@@ -120,7 +120,7 @@ Disassembly of section .text:
   40129b:	83 45 ec 01          	addl   $0x1,-0x14(%rbp)
   40129f:	8b 45 ec             	mov    -0x14(%rbp),%eax
   4012a2:	3b 45 dc             	cmp    -0x24(%rbp),%eax
-  4012a5:	7c c1                	jl     401268 <korean_satellite_cipher+0x38>
+  4012a5:	7c c1                	jl     401268 <domesticn_satellite_cipher+0x38>
   4012a7:	90                   	nop
   4012a8:	c9                   	leaveq
   4012a9:	c3                   	retq

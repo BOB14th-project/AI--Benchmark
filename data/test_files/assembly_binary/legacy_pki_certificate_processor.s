@@ -1,6 +1,6 @@
 # Legacy PKI Certificate Processing Engine
 # X.509 certificate validation with multiple signature algorithms
-# Complex certificate chain validation with mixed quantum-vulnerable algorithms
+# Complex certificate chain validation with mixed post_classical-vulnerable algorithms
 
 .section .text
 .global _start
@@ -19,23 +19,23 @@ initialize_certificate_validation_context:
 
     # Set up supported signature algorithms registry
     leaq supported_algorithms(%rip), %rdi
-    movq $0x01, (%rdi)           # RSA-1024 (legacy)
-    movq $0x02, 8(%rdi)          # RSA-2048
-    movq $0x03, 16(%rdi)         # RSA-4096
-    movq $0x11, 24(%rdi)         # ECDSA-P256
-    movq $0x12, 32(%rdi)         # ECDSA-P384
-    movq $0x13, 40(%rdi)         # ECDSA-P521
-    movq $0x21, 48(%rdi)         # DSA-1024 (legacy)
-    movq $0x22, 56(%rdi)         # DSA-2048
+    movq $0x01, (%rdi)           # Modular arithmetic implementation
+    movq $0x02, 8(%rdi)          # Modular arithmetic implementation
+    movq $0x03, 16(%rdi)         # Modular arithmetic implementation
+    movq $0x11, 24(%rdi)         # Signature algorithm implementation
+    movq $0x12, 32(%rdi)         # Signature algorithm implementation
+    movq $0x13, 40(%rdi)         # Signature algorithm implementation
+    movq $0x21, 48(%rdi)         # Signature algorithm implementation
+    movq $0x22, 56(%rdi)         # Signature algorithm implementation
 
     # Initialize hash algorithm support
     leaq hash_algorithms(%rip), %rdi
-    movq $0x04, (%rdi)           # MD5 (legacy - deprecated)
-    movq $0x05, 8(%rdi)          # SHA-1 (legacy - deprecated)
-    movq $0x06, 16(%rdi)         # SHA-224
-    movq $0x07, 24(%rdi)         # SHA-256
-    movq $0x08, 32(%rdi)         # SHA-384
-    movq $0x09, 40(%rdi)         # SHA-512
+    movq $0x04, (%rdi)           # Hash computation implementation
+    movq $0x05, 8(%rdi)          # Digest calculation implementation
+    movq $0x06, 16(%rdi)         # Digest calculation implementation
+    movq $0x07, 24(%rdi)         # Digest calculation implementation
+    movq $0x08, 32(%rdi)         # Digest calculation implementation
+    movq $0x09, 40(%rdi)         # Digest calculation implementation
 
     # Set validation flags
     movq $0xFFFF, validation_flags(%rip)  # Enable all checks
@@ -166,63 +166,63 @@ parse_algorithm_identifier:
     # Parse AlgorithmIdentifier structure
     # Returns algorithm OID as simplified numeric identifier
 
-    # Look for RSA signature algorithms
+    # Modular arithmetic implementation
     movq (%rsi), %rax
-    cmpq $0x2A864886F70D0101, %rax  # RSA PKCS#1 prefix
-    je check_rsa_variant
+    cmpq $0x2A864886F70D0101, %rax  # Modular arithmetic implementation
+    je check_modular_variant
 
-    # Look for ECDSA algorithms
-    cmpq $0x2A8648CE3D040301, %rax  # ECDSA with SHA-256
-    je ecdsa_sha256_found
+    # Signature algorithm implementation
+    cmpq $0x2A8648CE3D040301, %rax  # Signature algorithm implementation
+    je curve_sig_digest_alg256_found
 
-    # Look for DSA algorithms
-    cmpq $0x2A8648CE38040301, %rax  # DSA with SHA-256
-    je dsa_sha256_found
+    # Signature algorithm implementation
+    cmpq $0x2A8648CE38040301, %rax  # Signature algorithm implementation
+    je sig_alg_digest_alg256_found
 
     # Default to unknown
     movq $0xFF, %rax
     ret
 
-check_rsa_variant:
-    # Check RSA signature variant
+check_modular_variant:
+    # Modular arithmetic implementation
     movb 8(%rsi), %al
-    cmpb $0x01, %al              # PKCS#1 v1.5 with SHA-1
-    je rsa_sha1_found
-    cmpb $0x0B, %al              # PKCS#1 v1.5 with SHA-256
-    je rsa_sha256_found
-    cmpb $0x0C, %al              # PKCS#1 v1.5 with SHA-384
-    je rsa_sha384_found
-    cmpb $0x0D, %al              # PKCS#1 v1.5 with SHA-512
-    je rsa_sha512_found
-    cmpb $0x04, %al              # PKCS#1 v1.5 with MD5 (legacy)
-    je rsa_md5_found
+    cmpb $0x01, %al              # Digest calculation implementation
+    je modular_digest_alg1_found
+    cmpb $0x0B, %al              # Digest calculation implementation
+    je modular_digest_alg256_found
+    cmpb $0x0C, %al              # Digest calculation implementation
+    je modular_digest_alg384_found
+    cmpb $0x0D, %al              # Digest calculation implementation
+    je modular_digest_alg512_found
+    cmpb $0x04, %al              # Hash computation implementation
+    je modular_hash_alg_found
 
-rsa_sha1_found:
-    movq $0x0201, %rax           # RSA + SHA-1
+modular_digest_alg1_found:
+    movq $0x0201, %rax           # Modular arithmetic implementation
     ret
 
-rsa_sha256_found:
-    movq $0x0207, %rax           # RSA + SHA-256
+modular_digest_alg256_found:
+    movq $0x0207, %rax           # Modular arithmetic implementation
     ret
 
-rsa_sha384_found:
-    movq $0x0208, %rax           # RSA + SHA-384
+modular_digest_alg384_found:
+    movq $0x0208, %rax           # Modular arithmetic implementation
     ret
 
-rsa_sha512_found:
-    movq $0x0209, %rax           # RSA + SHA-512
+modular_digest_alg512_found:
+    movq $0x0209, %rax           # Modular arithmetic implementation
     ret
 
-rsa_md5_found:
-    movq $0x0204, %rax           # RSA + MD5 (deprecated)
+modular_hash_alg_found:
+    movq $0x0204, %rax           # Modular arithmetic implementation
     ret
 
-ecdsa_sha256_found:
-    movq $0x1107, %rax           # ECDSA + SHA-256
+curve_sig_digest_alg256_found:
+    movq $0x1107, %rax           # Signature algorithm implementation
     ret
 
-dsa_sha256_found:
-    movq $0x2107, %rax           # DSA + SHA-256
+sig_alg_digest_alg256_found:
+    movq $0x2107, %rax           # Signature algorithm implementation
     ret
 
 parse_subject_public_key_info:
@@ -238,53 +238,53 @@ parse_subject_public_key_info:
 
     # Extract key based on algorithm type
     movq subject_key_algorithm(%rip), %rax
-    cmpb $0x02, %al              # Check if RSA
-    je extract_rsa_public_key
-    cmpb $0x11, %al              # Check if ECDSA
-    je extract_ecdsa_public_key
-    cmpb $0x21, %al              # Check if DSA
-    je extract_dsa_public_key
+    cmpb $0x02, %al              # Modular arithmetic implementation
+    je extract_modular_public_key
+    cmpb $0x11, %al              # Signature algorithm implementation
+    je extract_curve_sig_public_key
+    cmpb $0x21, %al              # Signature algorithm implementation
+    je extract_sig_alg_public_key
 
     movq $1, %rax                # Generic success
     ret
 
-extract_rsa_public_key:
-    # Extract RSA public key (n, e)
+extract_modular_public_key:
+    # Modular arithmetic implementation
     movq (%rsi), %rax            # Modulus n (simplified)
-    movq %rax, rsa_modulus(%rip)
+    movq %rax, modular_modulus(%rip)
     movq 8(%rsi), %rax           # Exponent e
-    movq %rax, rsa_exponent(%rip)
+    movq %rax, modular_exponent(%rip)
 
     # Determine key size from modulus
-    bsrq rsa_modulus(%rip), %rax # Find most significant bit
+    bsrq modular_modulus(%rip), %rax # Find most significant bit
     incq %rax                    # Convert to bit count
-    movq %rax, rsa_key_size(%rip)
+    movq %rax, modular_key_size(%rip)
 
     movq $1, %rax
     ret
 
-extract_ecdsa_public_key:
-    # Extract ECDSA public key point
+extract_curve_sig_public_key:
+    # Signature algorithm implementation
     movq (%rsi), %rax            # X coordinate
-    movq %rax, ecdsa_point_x(%rip)
+    movq %rax, curve_sig_point_x(%rip)
     movq 8(%rsi), %rax           # Y coordinate
-    movq %rax, ecdsa_point_y(%rip)
+    movq %rax, curve_sig_point_y(%rip)
 
     # Extract curve parameters
     call extract_curve_parameters
     movq $1, %rax
     ret
 
-extract_dsa_public_key:
-    # Extract DSA public key and parameters
+extract_sig_alg_public_key:
+    # Signature algorithm implementation
     movq (%rsi), %rax            # Prime p
-    movq %rax, dsa_prime_p(%rip)
+    movq %rax, sig_alg_prime_p(%rip)
     movq 8(%rsi), %rax           # Prime q
-    movq %rax, dsa_prime_q(%rip)
+    movq %rax, sig_alg_prime_q(%rip)
     movq 16(%rsi), %rax          # Generator g
-    movq %rax, dsa_generator_g(%rip)
+    movq %rax, sig_alg_generator_g(%rip)
     movq 24(%rsi), %rax          # Public key y
-    movq %rax, dsa_public_y(%rip)
+    movq %rax, sig_alg_public_y(%rip)
 
     movq $1, %rax
     ret
@@ -309,19 +309,19 @@ validate_sig_loop:
     movq %r9, %rax
     shrq $8, %rax                # Extract signature algorithm
 
-    cmpb $0x02, %al              # RSA
-    je validate_rsa_signature
-    cmpb $0x11, %al              # ECDSA
-    je validate_ecdsa_signature
-    cmpb $0x21, %al              # DSA
-    je validate_dsa_signature
+    cmpb $0x02, %al              # Modular arithmetic implementation
+    je validate_modular_signature
+    cmpb $0x11, %al              # Signature algorithm implementation
+    je validate_curve_sig_signature
+    cmpb $0x21, %al              # Signature algorithm implementation
+    je validate_sig_alg_signature
 
     # Unknown algorithm
     movq $0, %rax
     ret
 
-validate_rsa_signature:
-    # RSA signature validation
+validate_modular_signature:
+    # Modular arithmetic implementation
     pushq %r8
     pushq %r9
 
@@ -332,12 +332,12 @@ validate_rsa_signature:
     call extract_signature_value
     movq %rax, %rdi              # Signature S
 
-    # Get RSA public key from issuer certificate
-    call get_issuer_rsa_public_key
+    # Modular arithmetic implementation
+    call get_issuer_modular_public_key
     movq %rax, %rsi              # Public key (n, e)
 
-    # Perform RSA verification: M = S^e mod n
-    call perform_rsa_verification
+    # Modular arithmetic implementation
+    call perform_modular_verification
 
     # Verify padding and hash
     call verify_pkcs1_padding_and_hash
@@ -346,27 +346,27 @@ validate_rsa_signature:
     popq %r8
     jmp next_certificate
 
-validate_ecdsa_signature:
-    # ECDSA signature validation
+validate_curve_sig_signature:
+    # Signature algorithm implementation
     pushq %r8
     pushq %r9
 
-    call extract_ecdsa_signature_components  # (r, s)
-    call get_issuer_ecdsa_public_key
-    call perform_ecdsa_verification
+    call extract_curve_sig_signature_components  # (r, s)
+    call get_issuer_curve_sig_public_key
+    call perform_curve_sig_verification
 
     popq %r9
     popq %r8
     jmp next_certificate
 
-validate_dsa_signature:
-    # DSA signature validation
+validate_sig_alg_signature:
+    # Signature algorithm implementation
     pushq %r8
     pushq %r9
 
-    call extract_dsa_signature_components   # (r, s)
-    call get_issuer_dsa_public_key
-    call perform_dsa_verification
+    call extract_sig_alg_signature_components   # (r, s)
+    call get_issuer_sig_alg_public_key
+    call perform_sig_alg_verification
 
     popq %r9
     popq %r8
@@ -379,8 +379,8 @@ validation_complete:
     movq $1, %rax                # All signatures valid
     ret
 
-perform_rsa_verification:
-    # RSA signature verification: M = S^e mod n
+perform_modular_verification:
+    # Modular arithmetic implementation
     # Input: %rdi = signature S, %rsi = public key structure
     # Output: %rax = decrypted message
 
@@ -388,8 +388,8 @@ perform_rsa_verification:
     movq %rsp, %rbp
 
     movq %rdi, %r8               # Signature value
-    movq (%rsi), %r9             # RSA modulus n
-    movq 8(%rsi), %r10           # RSA exponent e
+    movq (%rsi), %r9             # Modular arithmetic implementation
+    movq 8(%rsi), %r10           # Modular arithmetic implementation
 
     # Modular exponentiation: S^e mod n
     movq %r8, %rdi               # Base S
@@ -401,7 +401,7 @@ perform_rsa_verification:
     ret
 
 fast_modular_exponentiation_rsa:
-    # Optimized RSA modular exponentiation
+    # Modular arithmetic implementation
     # Uses sliding window method for performance
 
     pushq %rbp
@@ -474,17 +474,17 @@ exp_done:
     popq %rbp
     ret
 
-perform_ecdsa_verification:
-    # ECDSA signature verification using elliptic curve operations
+perform_curve_sig_verification:
+    # Signature algorithm implementation
     # Input: signature (r,s), public key point, message hash
     # Output: verification result
 
     pushq %rbp
     movq %rsp, %rbp
 
-    # Load ECDSA signature components
-    movq ecdsa_sig_r(%rip), %r8  # r component
-    movq ecdsa_sig_s(%rip), %r9  # s component
+    # Signature algorithm implementation
+    movq curve_sig_sig_r(%rip), %r8  # r component
+    movq curve_sig_sig_s(%rip), %r9  # s component
 
     # Compute modular inverse: w = s^(-1) mod n
     movq %r9, %rdi               # s
@@ -512,7 +512,7 @@ perform_ecdsa_verification:
     movq %rax, %r13              # u1*G
 
     movq %r12, %rdi              # u2
-    leaq ecdsa_public_key_point(%rip), %rsi  # Public key point Q
+    leaq curve_sig_public_key_point(%rip), %rsi  # Public key point Q
     call elliptic_curve_scalar_multiply
     movq %rax, %r14              # u2*Q
 
@@ -533,27 +533,27 @@ perform_ecdsa_verification:
     popq %rbp
     ret
 
-perform_dsa_verification:
-    # DSA signature verification
-    # Similar to ECDSA but uses modular arithmetic instead of elliptic curves
+perform_sig_alg_verification:
+    # Signature algorithm implementation
+    # Signature algorithm implementation
 
     pushq %rbp
     movq %rsp, %rbp
 
-    # Load DSA signature components (r, s)
-    movq dsa_sig_r(%rip), %r8
-    movq dsa_sig_s(%rip), %r9
+    # Signature algorithm implementation
+    movq sig_alg_sig_r(%rip), %r8
+    movq sig_alg_sig_s(%rip), %r9
 
     # Compute w = s^(-1) mod q
     movq %r9, %rdi
-    movq dsa_prime_q(%rip), %rsi
+    movq sig_alg_prime_q(%rip), %rsi
     call compute_modular_inverse
     movq %rax, %r10              # w
 
     # Compute u1 = (message_hash * w) mod q
     movq message_hash_value(%rip), %rax
     mulq %r10
-    movq dsa_prime_q(%rip), %rbx
+    movq sig_alg_prime_q(%rip), %rbx
     divq %rbx
     movq %rdx, %r11              # u1
 
@@ -565,28 +565,28 @@ perform_dsa_verification:
 
     # Compute v = ((g^u1 * y^u2) mod p) mod q
     # First: g^u1 mod p
-    movq dsa_generator_g(%rip), %rdi
+    movq sig_alg_generator_g(%rip), %rdi
     movq %r11, %rsi              # u1
-    movq dsa_prime_p(%rip), %rdx
+    movq sig_alg_prime_p(%rip), %rdx
     call fast_modular_exponentiation_rsa
     movq %rax, %r13              # g^u1 mod p
 
     # Second: y^u2 mod p
-    movq dsa_public_y(%rip), %rdi
+    movq sig_alg_public_y(%rip), %rdi
     movq %r12, %rsi              # u2
-    movq dsa_prime_p(%rip), %rdx
+    movq sig_alg_prime_p(%rip), %rdx
     call fast_modular_exponentiation_rsa
     movq %rax, %r14              # y^u2 mod p
 
     # Multiply: (g^u1 * y^u2) mod p
     movq %r13, %rax
     mulq %r14
-    movq dsa_prime_p(%rip), %rcx
+    movq sig_alg_prime_p(%rip), %rcx
     divq %rcx
     movq %rdx, %rax              # (g^u1 * y^u2) mod p
 
     # Final reduction: v = result mod q
-    movq dsa_prime_q(%rip), %rcx
+    movq sig_alg_prime_q(%rip), %rcx
     divq %rcx
 
     # Compare v with r
@@ -609,38 +609,38 @@ extract_signature_value:
     movq $0x1234567890ABCDEF, %rax
     ret
 
-get_issuer_rsa_public_key:
-    # Return pointer to RSA public key structure
-    leaq rsa_modulus(%rip), %rax
+get_issuer_modular_public_key:
+    # Modular arithmetic implementation
+    leaq modular_modulus(%rip), %rax
     ret
 
-get_issuer_ecdsa_public_key:
-    leaq ecdsa_public_key_point(%rip), %rax
+get_issuer_curve_sig_public_key:
+    leaq curve_sig_public_key_point(%rip), %rax
     ret
 
-get_issuer_dsa_public_key:
-    leaq dsa_prime_p(%rip), %rax
+get_issuer_sig_alg_public_key:
+    leaq sig_alg_prime_p(%rip), %rax
     ret
 
 verify_pkcs1_padding_and_hash:
     movq $1, %rax                # Always succeed for demo
     ret
 
-extract_ecdsa_signature_components:
+extract_curve_sig_signature_components:
     # Load signature components into global variables
     leaq current_certificate_signature(%rip), %rax
     movq (%rax), %rbx
-    movq %rbx, ecdsa_sig_r(%rip)
+    movq %rbx, curve_sig_sig_r(%rip)
     movq 8(%rax), %rbx
-    movq %rbx, ecdsa_sig_s(%rip)
+    movq %rbx, curve_sig_sig_s(%rip)
     ret
 
-extract_dsa_signature_components:
+extract_sig_alg_signature_components:
     leaq current_certificate_signature(%rip), %rax
     movq (%rax), %rbx
-    movq %rbx, dsa_sig_r(%rip)
+    movq %rbx, sig_alg_sig_r(%rip)
     movq 8(%rax), %rbx
-    movq %rbx, dsa_sig_s(%rip)
+    movq %rbx, sig_alg_sig_s(%rip)
     ret
 
 compute_modular_inverse:
@@ -707,27 +707,27 @@ finalize_validation_results:
     subject_key_algorithm:      .quad 0
     current_certificate_signature: .space 64
 
-    # RSA key data
-    rsa_modulus:                .quad 0
-    rsa_exponent:               .quad 0
-    rsa_key_size:               .quad 0
+    # Modular arithmetic implementation
+    modular_modulus:                .quad 0
+    modular_exponent:               .quad 0
+    modular_key_size:               .quad 0
 
-    # ECDSA key data
-    ecdsa_point_x:              .quad 0
-    ecdsa_point_y:              .quad 0
-    ecdsa_public_key_point:     .space 24
-    ecdsa_sig_r:                .quad 0
-    ecdsa_sig_s:                .quad 0
+    # Signature algorithm implementation
+    curve_sig_point_x:              .quad 0
+    curve_sig_point_y:              .quad 0
+    curve_sig_public_key_point:     .space 24
+    curve_sig_sig_r:                .quad 0
+    curve_sig_sig_s:                .quad 0
 
-    # DSA key data
-    dsa_prime_p:                .quad 0
-    dsa_prime_q:                .quad 0
-    dsa_generator_g:            .quad 0
-    dsa_public_y:               .quad 0
-    dsa_sig_r:                  .quad 0
-    dsa_sig_s:                  .quad 0
+    # Signature algorithm implementation
+    sig_alg_prime_p:                .quad 0
+    sig_alg_prime_q:                .quad 0
+    sig_alg_generator_g:            .quad 0
+    sig_alg_public_y:               .quad 0
+    sig_alg_sig_r:                  .quad 0
+    sig_alg_sig_s:                  .quad 0
 
-    # Elliptic curve parameters
+    # Mathematical curve implementation
     curve_order_n:              .quad 0xFFFFFFFF00000000FFFFFFFFFFFFFFFFBCE6FAADA7179E84F3B9CAC2FC632551
     curve_generator_g:          .space 24
 
@@ -736,12 +736,12 @@ finalize_validation_results:
 
 .section .rodata
     # Algorithm OID prefixes (simplified representations)
-    oid_rsa_encryption:         .quad 0x2A864886F70D0101  # RSA
-    oid_ecdsa_with_sha256:      .quad 0x2A8648CE3D040302  # ECDSA with SHA-256
-    oid_dsa_with_sha256:        .quad 0x2A8648CE38040302  # DSA with SHA-256
+    oid_modular_encryption:         .quad 0x2A864886F70D0101  # Modular arithmetic implementation
+    oid_curve_sig_with_digest_alg256:      .quad 0x2A8648CE3D040302  # Signature algorithm implementation
+    oid_sig_alg_with_digest_alg256:        .quad 0x2A8648CE38040302  # Signature algorithm implementation
 
     # System identification
     pki_system_id:              .ascii "LEGACY_PKI_CERTIFICATE_PROCESSOR_v1.2"
-    supported_standards:        .ascii "X509v3_RSA_ECDSA_DSA_MULTI_ALGORITHM"
-    quantum_vulnerability:      .ascii "ALL_SIGNATURE_ALGORITHMS_QUANTUM_VULNERABLE"
+    supported_standards:        .ascii "X509v3_MODULAR_CURVE_SIG_SIG_ALG_MULTI_ALGORITHM"
+    post_classical_vulnerability:      .ascii "ALL_SIGNATURE_ALGORITHMS_QUANTUM_VULNERABLE"
     compliance_level:           .ascii "LEGACY_COMPATIBILITY_MODE_DEPRECATED"

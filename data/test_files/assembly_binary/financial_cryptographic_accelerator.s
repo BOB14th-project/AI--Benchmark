@@ -23,7 +23,7 @@ Disassembly of section .text:
   401042:	48 8d 7d c0          	lea    -0x40(%rbp),%rdi
   401046:	48 8d 75 b0          	lea    -0x50(%rbp),%rsi
   40104a:	ba 10 00 00 00       	mov    $0x10,%edx
-  40104f:	e8 fc 01 00 00       	callq  401250 <korean_banking_cipher>
+  40104f:	e8 fc 01 00 00       	callq  401250 <domesticn_banking_cipher>
   401054:	48 8d 7d a0          	lea    -0x60(%rbp),%rdi
   401058:	be 20 00 00 00       	mov    $0x20,%esi
   40105d:	e8 2e 02 00 00       	callq  401290 <transaction_digest_generator>
@@ -78,7 +78,7 @@ Disassembly of section .text:
   401270:	c9                   	leaveq
   401271:	c3                   	retq
 
-0000000000401250 <korean_banking_cipher>:
+0000000000401250 <domesticn_banking_cipher>:
   401250:	55                   	push   %rbp
   401251:	48 89 e5             	mov    %rsp,%rbp
   401254:	48 83 ec 30          	sub    $0x30,%rsp
@@ -90,7 +90,7 @@ Disassembly of section .text:
   40126b:	48 c7 45 f0 b9 a6 8c 	movq   $0x4e8ca6b9,-0x10(%rbp)
   401272:	4e
   401273:	c7 45 fc 00 00 00 00 	movl   $0x0,-0x4(%rbp)
-  40127a:	eb 2a                	jmp    4012a6 <korean_banking_cipher+0x56>
+  40127a:	eb 2a                	jmp    4012a6 <domesticn_banking_cipher+0x56>
   40127c:	8b 45 fc             	mov    -0x4(%rbp),%eax
   40127f:	48 63 d0             	movslq %eax,%rdx
   401282:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
@@ -107,7 +107,7 @@ Disassembly of section .text:
   4012a4:	83 45 fc 01          	addl   $0x1,-0x4(%rbp)
   4012a8:	8b 45 fc             	mov    -0x4(%rbp),%eax
   4012ab:	3b 45 dc             	cmp    -0x24(%rbp),%eax
-  4012ae:	7c cc                	jl     40127c <korean_banking_cipher+0x2c>
+  4012ae:	7c cc                	jl     40127c <domesticn_banking_cipher+0x2c>
   4012b0:	90                   	nop
   4012b1:	c9                   	leaveq
   4012b2:	c3                   	retq

@@ -1,15 +1,15 @@
-# Elliptic Curve Scalar Multiplication Engine
-# Optimized point operations for ECDSA signature generation
-# Binary analysis target: Quantum-vulnerable ECC implementation
+# Mathematical curve implementation
+# Signature algorithm implementation
+# Curve computation implementation
 
-.file   "ecc_scalar_mult.c"
+.file   "curve_scalar_mult.c"
 .text
 .globl  ec_scalar_multiplication
 .type   ec_scalar_multiplication, @function
 
 # Function: ec_scalar_multiplication
 # Performs k*P on elliptic curve (scalar point multiplication)
-# Critical for ECDSA/ECDH key operations
+# Signature algorithm implementation
 
 ec_scalar_multiplication:
 .LFB0:
@@ -74,7 +74,7 @@ skip_point_add:
 .LFE0:
     .size   ec_scalar_multiplication, .-ec_scalar_multiplication
 
-# Elliptic curve point doubling: 2*P
+# Mathematical curve implementation
 .globl  elliptic_point_double
 .type   elliptic_point_double, @function
 
@@ -204,7 +204,7 @@ double_exit:
 .LFE1:
     .size   elliptic_point_double, .-elliptic_point_double
 
-# Elliptic curve point addition: P + Q
+# Mathematical curve implementation
 .globl  elliptic_point_add
 .type   elliptic_point_add, @function
 
@@ -386,12 +386,12 @@ initialize_point_at_infinity:
 create_point_at_infinity:
     jmp     initialize_point_at_infinity
 
-# ECC curve parameters and constants
+# Curve computation implementation
 .section .rodata
     .align 8
 curve_secp256r1_p:      .quad 0xFFFFFFFFFFFFFFFF, 0x00000000FFFFFFFF, 0x0000000000000000, 0xFFFFFFFF00000001
 curve_secp256r1_a:      .quad 0xFFFFFFFFFFFFFFFC, 0x00000000FFFFFFFF, 0x0000000000000000, 0xFFFFFFFF00000001
 curve_secp256r1_b:      .quad 0x3BCE3C3E27D2604B, 0x651D06B0CC53B0F6, 0xB3EBBD55769886BC, 0x5AC635D8AA3A93E7
 
-algorithm_identifier:   .ascii "ECC-P256-SCALAR-MULTIPLICATION"
+algorithm_identifier:   .ascii "CURVE-P256-SCALAR-MULTIPLICATION"
 operation_type:         .ascii "ELLIPTIC_CURVE_POINT_OPS"

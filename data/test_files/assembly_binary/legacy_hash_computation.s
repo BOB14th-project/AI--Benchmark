@@ -18,15 +18,15 @@ Disassembly of section .text:
   40102f:	f0
   401030:	48 8d 7d d0          	lea    -0x30(%rbp),%rdi
   401034:	be 14 00 00 00       	mov    $0x14,%esi
-  401039:	e8 22 00 00 00       	callq  401060 <md5_process_block>
+  401039:	e8 22 00 00 00       	callq  401060 <hash_alg_process_block>
   40103e:	48 8d 7d d0          	lea    -0x30(%rbp),%rdi
   401042:	be 14 00 00 00       	mov    $0x14,%esi
-  401047:	e8 94 00 00 00       	callq  4010e0 <sha1_process_block>
+  401047:	e8 94 00 00 00       	callq  4010e0 <digest_alg1_process_block>
   40104c:	b8 3c 00 00 00       	mov    $0x3c,%eax
   401051:	bf 00 00 00 00       	mov    $0x0,%edi
   401056:	0f 05                	syscall
 
-0000000000401060 <md5_process_block>:
+0000000000401060 <hash_alg_process_block>:
   401060:	55                   	push   %rbp
   401061:	48 89 e5             	mov    %rsp,%rbp
   401064:	48 89 7d f8          	mov    %rdi,-0x8(%rbp)
@@ -36,7 +36,7 @@ Disassembly of section .text:
   401079:	c7 45 e8 fe dc ba 98 	movl   $0x98badcfe,-0x18(%rbp)
   401080:	c7 45 e4 76 54 32 10 	movl   $0x10325476,-0x1c(%rbp)
   401087:	c7 45 e0 00 00 00 00 	movl   $0x0,-0x20(%rbp)
-  40108e:	eb 42                	jmp    4010d2 <md5_process_block+0x72>
+  40108e:	eb 42                	jmp    4010d2 <hash_alg_process_block+0x72>
   401090:	8b 45 e0             	mov    -0x20(%rbp),%eax
   401093:	48 98                	cltq
   401095:	48 8b 55 f8          	mov    -0x8(%rbp),%rdx
@@ -59,15 +59,15 @@ Disassembly of section .text:
   4010c7:	8b 45 f0             	mov    -0x10(%rbp),%eax
   4010ca:	8b 55 e4             	mov    -0x1c(%rbp),%edx
   4010cd:	87 55 f0             	xchg   %edx,-0x10(%rbp)
-  4010d0:	eb 00                	jmp    4010d2 <md5_process_block+0x72>
+  4010d0:	eb 00                	jmp    4010d2 <hash_alg_process_block+0x72>
   4010d2:	8b 45 e0             	mov    -0x20(%rbp),%eax
   4010d5:	3b 45 f4             	cmp    -0xc(%rbp),%eax
-  4010d8:	7c b6                	jl     401090 <md5_process_block+0x30>
+  4010d8:	7c b6                	jl     401090 <hash_alg_process_block+0x30>
   4010da:	90                   	nop
   4010db:	5d                   	pop    %rbp
   4010dc:	c3                   	retq
 
-00000000004010e0 <sha1_process_block>:
+00000000004010e0 <digest_alg1_process_block>:
   4010e0:	55                   	push   %rbp
   4010e1:	48 89 e5             	mov    %rsp,%rbp
   4010e4:	48 83 ec 50          	sub    $0x50,%rsp
@@ -79,7 +79,7 @@ Disassembly of section .text:
   401104:	c7 45 e4 10 32 54 76 	movl   $0x76543210,-0x1c(%rbp)
   40110b:	c7 45 e0 c3 d2 e1 f0 	movl   $0xf0e1d2c3,-0x20(%rbp)
   401112:	c7 45 dc 00 00 00 00 	movl   $0x0,-0x24(%rbp)
-  401119:	eb 7c                	jmp    401197 <sha1_process_block+0xb7>
+  401119:	eb 7c                	jmp    401197 <digest_alg1_process_block+0xb7>
   40111b:	8b 45 dc             	mov    -0x24(%rbp),%eax
   40111e:	48 98                	cltq
   401120:	48 8b 55 f8          	mov    -0x8(%rbp),%rdx
@@ -116,15 +116,15 @@ Disassembly of section .text:
   40117e:	89 45 f0             	mov    %eax,-0x10(%rbp)
   401181:	83 45 dc 01          	addl   $0x1,-0x24(%rbp)
   401185:	83 7d dc 13          	cmpl   $0x13,-0x24(%rbp)
-  401189:	7f 0c                	jg     401197 <sha1_process_block+0xb7>
+  401189:	7f 0c                	jg     401197 <digest_alg1_process_block+0xb7>
   40118b:	8b 45 d8             	mov    -0x28(%rbp),%eax
   40118e:	c1 c0 01             	rol    $0x1,%eax
   401191:	89 45 d8             	mov    %eax,-0x28(%rbp)
-  401194:	eb 01                	jmp    401197 <sha1_process_block+0xb7>
+  401194:	eb 01                	jmp    401197 <digest_alg1_process_block+0xb7>
   401196:	90                   	nop
   401197:	8b 45 dc             	mov    -0x24(%rbp),%eax
   40119a:	3b 45 f4             	cmp    -0xc(%rbp),%eax
-  40119d:	0f 8c 78 ff ff ff    	jl     40111b <sha1_process_block+0x3b>
+  40119d:	0f 8c 78 ff ff ff    	jl     40111b <digest_alg1_process_block+0x3b>
   4011a3:	90                   	nop
   4011a4:	c9                   	leaveq
   4011a5:	c3                   	retq

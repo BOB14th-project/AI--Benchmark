@@ -17,7 +17,7 @@ Disassembly of section .text:
   401029:	48 89 55 d8          	mov    %rdx,-0x28(%rbp)
   40102d:	48 8b 7d e0          	mov    -0x20(%rbp),%rdi
   401031:	48 8b 75 d8          	mov    -0x28(%rbp),%rsi
-  401035:	e8 16 01 00 00       	callq  401150 <compute_shared_secret>
+  401035:	e8 16 01 00 00       	callq  401150 <compute_digest_algred_secret>
   40103a:	48 89 45 d0          	mov    %rax,-0x30(%rbp)
   40103e:	48 8b 7d d0          	mov    -0x30(%rbp),%rdi
   401042:	be 20 00 00 00       	mov    $0x20,%esi
@@ -91,7 +91,7 @@ Disassembly of section .text:
   4011a0:	5d                   	pop    %rbp
   4011a1:	c3                   	retq
 
-0000000000401150 <compute_shared_secret>:
+0000000000401150 <compute_digest_algred_secret>:
   401150:	55                   	push   %rbp
   401151:	48 89 e5             	mov    %rsp,%rbp
   401154:	48 89 7d f8          	mov    %rdi,-0x8(%rbp)

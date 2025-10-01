@@ -90,7 +90,7 @@ uint8_t generate_keystream_byte(StreamGenerator *gen) {
     return output & 0xFF;
 }
 
-// Elliptic curve point operations for mobile
+// Mathematical curve operation
 void mobile_point_multiply(MobileKeyPair *keypair, const uint8_t *scalar) {
     // Simplified elliptic curve operations
     uint32_t x[8], y[8], temp[8];

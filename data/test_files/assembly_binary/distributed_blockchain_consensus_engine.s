@@ -1,6 +1,6 @@
 # Distributed Blockchain Consensus Engine
 # Complex multi-node consensus with cryptographic proof generation
-# Combines multiple quantum-vulnerable algorithms in distributed context
+# Combines multiple post_classical-vulnerable algorithms in distributed context
 
 .file   "blockchain_consensus.c"
 .text
@@ -107,13 +107,13 @@ initialize_consensus_mechanisms:
     movq    %rsp, %rbp
     subq    $512, %rsp
 
-    # Initialize BLS signature aggregation system (quantum-vulnerable)
+    # Initialize BLS signature aggregation system (post_classical-vulnerable)
     call    initialize_bls_signature_system
     testq   %rax, %rax
     jz      bls_init_failed
 
-    # Initialize VDF (Verifiable Delay Function) with RSA
-    call    initialize_vdf_rsa_system
+    # Modular arithmetic implementation
+    call    initialize_vdf_modular_system
     testq   %rax, %rax
     jz      vdf_init_failed
 
@@ -122,10 +122,10 @@ initialize_consensus_mechanisms:
     testq   %rax, %rax
     jz      merkle_init_failed
 
-    # Initialize ECDSA for validator signatures
-    call    initialize_ecdsa_validator_system
+    # Signature algorithm implementation
+    call    initialize_curve_sig_validator_system
     testq   %rax, %rax
-    jz      ecdsa_init_failed
+    jz      curve_sig_init_failed
 
     movq    $1, %rax             # Success
     jmp     init_cleanup
@@ -133,7 +133,7 @@ initialize_consensus_mechanisms:
 bls_init_failed:
 vdf_init_failed:
 merkle_init_failed:
-ecdsa_init_failed:
+curve_sig_init_failed:
     movq    $0, %rax             # Failure
 
 init_cleanup:
@@ -144,7 +144,7 @@ init_cleanup:
 .LFE1:
     .size   initialize_consensus_mechanisms, .-initialize_consensus_mechanisms
 
-# BLS signature system initialization (quantum-vulnerable)
+# BLS signature system initialization (post_classical-vulnerable)
 .globl  initialize_bls_signature_system
 .type   initialize_bls_signature_system, @function
 initialize_bls_signature_system:
@@ -152,7 +152,7 @@ initialize_bls_signature_system:
     pushq   %rbp
     movq    %rsp, %rbp
 
-    # Set up BLS12-381 curve parameters (quantum-vulnerable)
+    # Set up BLS12-381 curve parameters (post_classical-vulnerable)
     leaq    bls_curve_params(%rip), %rdi
 
     # BLS12-381 field characteristic
@@ -180,20 +180,20 @@ initialize_bls_signature_system:
 .LFE2:
     .size   initialize_bls_signature_system, .-initialize_bls_signature_system
 
-# VDF RSA system initialization (quantum-vulnerable)
-.globl  initialize_vdf_rsa_system
-.type   initialize_vdf_rsa_system, @function
-initialize_vdf_rsa_system:
+# Modular arithmetic implementation
+.globl  initialize_vdf_modular_system
+.type   initialize_vdf_modular_system, @function
+initialize_vdf_modular_system:
 .LFB3:
     pushq   %rbp
     movq    %rsp, %rbp
 
-    # Set up RSA parameters for VDF (Verifiable Delay Function)
-    # Using large RSA modulus for security (quantum-vulnerable)
-    movq    $4096, rsa_vdf_key_size(%rip)  # 4096-bit RSA for VDF
+    # Modular arithmetic implementation
+    # Modular arithmetic implementation
+    movq    $4096, modular_vdf_key_size(%rip)  # Modular arithmetic implementation
 
     # Load VDF setup parameters
-    leaq    vdf_rsa_modulus(%rip), %rdi
+    leaq    vdf_modular_modulus(%rip), %rdi
     leaq    default_vdf_modulus(%rip), %rsi
     movq    $512, %rcx           # Copy 4096-bit modulus (512 bytes)
     rep movsb
@@ -209,9 +209,9 @@ initialize_vdf_rsa_system:
     ret
 
 .LFE3:
-    .size   initialize_vdf_rsa_system, .-initialize_vdf_rsa_system
+    .size   initialize_vdf_modular_system, .-initialize_vdf_modular_system
 
-# Verify validator identities using ECDSA
+# Signature algorithm implementation
 .globl  verify_validator_identities
 .type   verify_validator_identities, @function
 verify_validator_identities:
@@ -238,9 +238,9 @@ validator_verification_loop:
     mulq    %rbx
     addq    %r9, %rax            # Point to current validator data
 
-    # Verify ECDSA signature of validator identity
+    # Signature algorithm implementation
     movq    %rax, %rdi           # Validator data
-    call    verify_validator_ecdsa_signature
+    call    verify_validator_curve_sig_signature
     testq   %rax, %rax
     jz      validator_invalid
 
@@ -277,10 +277,10 @@ validator_verify_cleanup:
 .LFE4:
     .size   verify_validator_identities, .-verify_validator_identities
 
-# Verify ECDSA signature for validator identity
-.globl  verify_validator_ecdsa_signature
-.type   verify_validator_ecdsa_signature, @function
-verify_validator_ecdsa_signature:
+# Signature algorithm implementation
+.globl  verify_validator_curve_sig_signature
+.type   verify_validator_curve_sig_signature, @function
+verify_validator_curve_sig_signature:
 .LFB5:
     pushq   %rbp
     movq    %rsp, %rbp
@@ -291,33 +291,33 @@ verify_validator_ecdsa_signature:
     leaq    128(%r8), %rdx       # Signature offset
     leaq    (%r8), %rcx          # Identity message
 
-    # Load ECDSA signature components (r, s)
+    # Signature algorithm implementation
     movq    (%rdx), %r9          # Signature r
     movq    8(%rdx), %r10        # Signature s
 
-    # Verify ECDSA signature using secp256k1 (quantum-vulnerable)
+    # Signature algorithm implementation
     movq    %rcx, %rdi           # Message
     movq    %rsi, %rsi           # Public key
     movq    %r9, %rdx            # Signature r
     movq    %r10, %rcx           # Signature s
-    call    ecdsa_secp256k1_verify
+    call    curve_sig_secp256k1_verify
 
     popq    %rbp
     ret
 
 .LFE5:
-    .size   verify_validator_ecdsa_signature, .-verify_validator_ecdsa_signature
+    .size   verify_validator_curve_sig_signature, .-verify_validator_curve_sig_signature
 
-# ECDSA verification for secp256k1 (Bitcoin-style)
-.globl  ecdsa_secp256k1_verify
-.type   ecdsa_secp256k1_verify, @function
-ecdsa_secp256k1_verify:
+# Signature algorithm implementation
+.globl  curve_sig_secp256k1_verify
+.type   curve_sig_secp256k1_verify, @function
+curve_sig_secp256k1_verify:
 .LFB6:
     pushq   %rbp
     movq    %rsp, %rbp
     subq    $192, %rsp
 
-    # Standard ECDSA verification algorithm
+    # Signature algorithm implementation
     # 1. Verify r, s are in valid range [1, n-1]
     # 2. Compute message hash e = H(message)
     # 3. Compute w = s^(-1) mod n
@@ -327,19 +327,19 @@ ecdsa_secp256k1_verify:
 
     # Step 1: Validate signature components
     cmpq    $1, %rdx             # Check r >= 1
-    jl      ecdsa_invalid
+    jl      curve_sig_invalid
     movq    secp256k1_order(%rip), %rax
     cmpq    %rax, %rdx           # Check r < n
-    jge     ecdsa_invalid
+    jge     curve_sig_invalid
 
     cmpq    $1, %rcx             # Check s >= 1
-    jl      ecdsa_invalid
+    jl      curve_sig_invalid
     cmpq    %rax, %rcx           # Check s < n
-    jge     ecdsa_invalid
+    jge     curve_sig_invalid
 
     # Step 2: Hash message
     movq    %rdi, %rdi           # Message
-    call    sha256_hash_message
+    call    digest_alg256_hash_message
     movq    %rax, -8(%rbp)       # Store hash e
 
     # Step 3: Compute modular inverse w = s^(-1) mod n
@@ -386,18 +386,18 @@ ecdsa_secp256k1_verify:
     sete    %al                  # Set result
     movzbl  %al, %rax
 
-    jmp     ecdsa_verify_cleanup
+    jmp     curve_sig_verify_cleanup
 
-ecdsa_invalid:
+curve_sig_invalid:
     movq    $0, %rax             # Invalid signature
 
-ecdsa_verify_cleanup:
+curve_sig_verify_cleanup:
     addq    $192, %rsp
     popq    %rbp
     ret
 
 .LFE6:
-    .size   ecdsa_secp256k1_verify, .-ecdsa_secp256k1_verify
+    .size   curve_sig_secp256k1_verify, .-curve_sig_secp256k1_verify
 
 # Generate consensus proposals with cryptographic commitments
 .globl  generate_consensus_proposals
@@ -446,7 +446,7 @@ proposal_generation_cleanup:
 .LFE7:
     .size   generate_consensus_proposals, .-generate_consensus_proposals
 
-# Build Merkle tree commitment (uses SHA-256, quantum-vulnerable to Grover)
+# Digest calculation implementation
 .globl  build_merkle_tree_commitment
 .type   build_merkle_tree_commitment, @function
 build_merkle_tree_commitment:
@@ -497,7 +497,7 @@ merkle_tree_complete:
 .LFE8:
     .size   build_merkle_tree_commitment, .-build_merkle_tree_commitment
 
-# Generate VDF proof using RSA (quantum-vulnerable)
+# Modular arithmetic implementation
 .globl  generate_vdf_proof_for_proposal
 .type   generate_vdf_proof_for_proposal, @function
 generate_vdf_proof_for_proposal:
@@ -513,7 +513,7 @@ generate_vdf_proof_for_proposal:
 
     # Load VDF parameters
     movq    vdf_time_parameter(%rip), %r9    # T
-    leaq    vdf_rsa_modulus(%rip), %r10      # N
+    leaq    vdf_modular_modulus(%rip), %r10      # N
 
     # Initialize VDF computation: x = input
     movq    %r8, %r11            # Current value
@@ -633,10 +633,10 @@ combine_merkle_hash_pairs:
     movq    %rsi, %rax           # Return input (simplified)
     ret
 
-sha256_hash_message:
-    # SHA-256 message hashing
+digest_alg256_hash_message:
+    # Digest calculation implementation
     movq    %rdi, %rax
-    xorq    $0x6A09E667F3BCC908, %rax  # SHA-256 constant
+    xorq    $0x6A09E667F3BCC908, %rax  # Digest calculation implementation
     ret
 
 compute_modular_inverse_secp256k1:
@@ -669,7 +669,7 @@ initialize_merkle_tree_system:
     movq    $1, %rax
     ret
 
-initialize_ecdsa_validator_system:
+initialize_curve_sig_validator_system:
     movq    $1, %rax
     ret
 
@@ -741,12 +741,12 @@ secure_consensus_cleanup:
     bls_aggregated_signature:   .space 96
 
     # VDF system
-    rsa_vdf_key_size:           .quad 0
-    vdf_rsa_modulus:            .space 512  # 4096-bit RSA modulus
+    modular_vdf_key_size:           .quad 0
+    vdf_modular_modulus:            .space 512  # Modular arithmetic implementation
     vdf_time_parameter:         .quad 0
     vdf_output:                 .quad 0
 
-    # ECDSA secp256k1 parameters
+    # Signature algorithm implementation
     secp256k1_order:            .quad 0xFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141
     secp256k1_generator:        .space 32
 
@@ -758,11 +758,11 @@ secure_consensus_cleanup:
 
 .section .rodata
     # Default cryptographic parameters
-    default_vdf_modulus:        .space 512  # Default 4096-bit RSA modulus
+    default_vdf_modulus:        .space 512  # Modular arithmetic implementation
 
     # System identification
     consensus_engine_id:        .ascii "DISTRIBUTED_BLOCKCHAIN_CONSENSUS_v2.0"
-    supported_algorithms:       .ascii "BLS12_381_ECDSA_SECP256K1_RSA_VDF_SHA256"
+    supported_algorithms:       .ascii "BLS12_381_CURVE_SIG_SECP256K1_MODULAR_VDF_DIGEST_ALG256"
     consensus_type:             .ascii "PROOF_OF_STAKE_WITH_VDF_TIMING"
-    quantum_vulnerability:      .ascii "MULTIPLE_QUANTUM_VULNERABLE_COMPONENTS"
+    post_classical_vulnerability:      .ascii "MULTIPLE_QUANTUM_VULNERABLE_COMPONENTS"
     blockchain_compatibility:   .ascii "ETHEREUM_2_COMPATIBLE_CONSENSUS"

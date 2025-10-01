@@ -15,7 +15,7 @@ Disassembly of section .text:
   40102c:	48 8d 7d e0          	lea    -0x20(%rbp),%rdi
   401030:	48 8d 75 d0          	lea    -0x30(%rbp),%rsi
   401034:	ba 08 00 00 00       	mov    $0x8,%edx
-  401039:	e8 22 01 00 00       	callq  401160 <korean_mobile_cipher>
+  401039:	e8 22 01 00 00       	callq  401160 <domesticn_mobile_cipher>
   40103e:	48 8d 7d c0          	lea    -0x40(%rbp),%rdi
   401042:	be 10 00 00 00       	mov    $0x10,%esi
   401047:	e8 54 01 00 00       	callq  4011a0 <transaction_authentication>
@@ -41,7 +41,7 @@ Disassembly of section .text:
   40115d:	c9                   	leaveq
   40115e:	c3                   	retq
 
-0000000000401160 <korean_mobile_cipher>:
+0000000000401160 <domesticn_mobile_cipher>:
   401160:	55                   	push   %rbp
   401161:	48 89 e5             	mov    %rsp,%rbp
   401164:	48 83 ec 30          	sub    $0x30,%rsp
@@ -51,7 +51,7 @@ Disassembly of section .text:
   401173:	c7 45 fc 84 94 62 d2 	movl   $0xd2629484,-0x4(%rbp)
   40117a:	c7 45 f8 ca 37 a8 93 	movl   $0x93a837ca,-0x8(%rbp)
   401181:	c7 45 f4 00 00 00 00 	movl   $0x0,-0xc(%rbp)
-  401188:	eb 2e                	jmp    4011b8 <korean_mobile_cipher+0x58>
+  401188:	eb 2e                	jmp    4011b8 <domesticn_mobile_cipher+0x58>
   40118a:	8b 45 f4             	mov    -0xc(%rbp),%eax
   40118d:	48 63 d0             	movslq %eax,%rdx
   401190:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
@@ -71,7 +71,7 @@ Disassembly of section .text:
   4011ba:	83 45 f4 01          	addl   $0x1,-0xc(%rbp)
   4011be:	8b 45 f4             	mov    -0xc(%rbp),%eax
   4011c1:	3b 45 dc             	cmp    -0x24(%rbp),%eax
-  4011c4:	7c c4                	jl     40118a <korean_mobile_cipher+0x2a>
+  4011c4:	7c c4                	jl     40118a <domesticn_mobile_cipher+0x2a>
   4011c6:	90                   	nop
   4011c7:	c9                   	leaveq
   4011c8:	c3                   	retq
