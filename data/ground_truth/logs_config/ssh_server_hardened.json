@@ -1,0 +1,8 @@
+{
+  "expected_findings": {
+    "vulnerable_algorithms_detected": ["RSA", "ECDSA", "Ed25519", "Curve25519", "X25519", "DH", "ChaCha20", "Poly1305"],
+    "algorithm_categories": ["shor_vulnerable", "public_key", "grover_vulnerable", "symmetric_key"],
+    "korean_algorithms_detected": []
+  },
+  "expected_confidence_range": [0.85, 0.95]
+}
