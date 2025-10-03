@@ -1,0 +1,67 @@
+{
+  "file_name": "IoTDeviceSecurityController.go",
+  "vulnerability_analysis": {
+    "quantum_vulnerable_algorithms": [
+      {
+        "algorithm": "HIGHT",
+        "category": "grover_vulnerable_lightweight",
+        "locations": [
+          {
+            "line_range": "20-40",
+            "description": "CompactCipher implements HIGHT lightweight block cipher",
+            "evidence": "64-bit block size, 128-bit key, 32 rounds, Feistel-like structure",
+            "severity": "medium"
+          }
+        ]
+      },
+      {
+        "algorithm": "LEA",
+        "category": "grover_vulnerable_symmetric",
+        "locations": [
+          {
+            "line_range": "60-80",
+            "description": "LightweightProcessor implements LEA cipher operations",
+            "evidence": "128-bit block, ARX operations, rotation and addition",
+            "severity": "medium"
+          }
+        ]
+      },
+      {
+        "algorithm": "SHA-256",
+        "category": "grover_vulnerable_hash",
+        "locations": [
+          {
+            "line_range": "100-120",
+            "description": "HashingUnit implements SHA-256 for device authentication",
+            "evidence": "256-bit digest, compression rounds, device ID hashing",
+            "severity": "medium"
+          }
+        ]
+      }
+    ],
+    "implementation_patterns": {
+      "obfuscation_techniques": [
+        "IoT device management context",
+        "CompactCipher instead of HIGHT",
+        "LightweightProcessor instead of LEA",
+        "HashingUnit instead of SHA",
+        "Embedded systems terminology"
+      ],
+      "detection_difficulty": "high",
+      "requires_deep_analysis": true
+    },
+    "risk_assessment": {
+      "overall_risk": "medium",
+      "quantum_readiness": "not_ready",
+      "recommendation": "Migrate to post-quantum lightweight ciphers for IoT constraints",
+      "priority": "medium"
+    }
+  },
+  "metadata": {
+    "programming_language": "Go",
+    "lines_of_code": 160,
+    "complexity": "medium",
+    "business_domain": "iot_device_management",
+    "cryptographic_context": "lightweight_embedded_security"
+  }
+}

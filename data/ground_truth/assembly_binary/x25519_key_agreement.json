@@ -1,0 +1,8 @@
+{
+  "expected_findings": {
+    "vulnerable_algorithms_detected": ["X25519", "Curve25519", "ECDH"],
+    "algorithm_categories": ["shor_vulnerable", "public_key"],
+    "korean_algorithms_detected": []
+  },
+  "expected_confidence_range": [0.80, 0.95]
+}

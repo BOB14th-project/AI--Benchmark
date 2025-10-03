@@ -1,0 +1,91 @@
+{
+  "file_name": "SecureVirtualPrivateNetwork.ts",
+  "vulnerability_analysis": {
+    "quantum_vulnerable_algorithms": [
+      {
+        "algorithm": "IKEv2",
+        "category": "shor_vulnerable_protocol",
+        "locations": [
+          {
+            "line_range": "30-50",
+            "description": "TunnelEstablishmentProtocol implements IKEv2 with DH key exchange",
+            "evidence": "Internet Key Exchange, Diffie-Hellman groups, IPSec SA negotiation",
+            "severity": "high"
+          }
+        ]
+      },
+      {
+        "algorithm": "AES-256-GCM",
+        "category": "grover_vulnerable_aead",
+        "locations": [
+          {
+            "line_range": "70-90",
+            "description": "TunnelEncryption implements AES-256-GCM for VPN traffic",
+            "evidence": "Galois Counter Mode, 256-bit key, authenticated encryption",
+            "severity": "low"
+          }
+        ]
+      },
+      {
+        "algorithm": "RSA",
+        "category": "shor_vulnerable_public_key",
+        "locations": [
+          {
+            "line_range": "110-130",
+            "description": "CertificateAuthentication implements RSA for VPN certificates",
+            "evidence": "RSA certificate verification, PKI authentication, X.509 certificates",
+            "severity": "high"
+          }
+        ]
+      },
+      {
+        "algorithm": "ECDH",
+        "category": "shor_vulnerable_key_exchange",
+        "locations": [
+          {
+            "line_range": "150-170",
+            "description": "EllipticKeyAgreement implements ECDH for ephemeral keys",
+            "evidence": "P-384 curve, ephemeral key generation, perfect forward secrecy",
+            "severity": "high"
+          }
+        ]
+      },
+      {
+        "algorithm": "HMAC-SHA256",
+        "category": "grover_vulnerable_mac",
+        "locations": [
+          {
+            "line_range": "190-210",
+            "description": "TunnelIntegrityProtection implements HMAC for packet authentication",
+            "evidence": "keyed hash function, packet integrity, IPSec ESP authentication",
+            "severity": "medium"
+          }
+        ]
+      }
+    ],
+    "implementation_patterns": {
+      "obfuscation_techniques": [
+        "VPN infrastructure terminology",
+        "TunnelEstablishmentProtocol instead of IKEv2",
+        "TunnelEncryption instead of AES-GCM",
+        "CertificateAuthentication instead of RSA",
+        "Enterprise VPN context"
+      ],
+      "detection_difficulty": "medium",
+      "requires_deep_analysis": true
+    },
+    "risk_assessment": {
+      "overall_risk": "high",
+      "quantum_readiness": "not_ready",
+      "recommendation": "Replace IKEv2, RSA, and ECDH with post-quantum alternatives for VPN security",
+      "priority": "high"
+    }
+  },
+  "metadata": {
+    "programming_language": "TypeScript",
+    "lines_of_code": 230,
+    "complexity": "high",
+    "business_domain": "network_security",
+    "cryptographic_context": "enterprise_vpn_infrastructure"
+  }
+}

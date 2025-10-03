@@ -1,0 +1,67 @@
+{
+  "file_name": "quantum_resistant_messenger.py",
+  "vulnerability_analysis": {
+    "quantum_vulnerable_algorithms": [
+      {
+        "algorithm": "NTRU",
+        "category": "post_quantum_safe",
+        "locations": [
+          {
+            "line_range": "20-40",
+            "description": "LatticeEncryption implements NTRU-like lattice-based encryption",
+            "evidence": "polynomial ring operations, convolution, lattice reduction resistance",
+            "severity": "safe"
+          }
+        ]
+      },
+      {
+        "algorithm": "Dilithium",
+        "category": "post_quantum_safe",
+        "locations": [
+          {
+            "line_range": "60-80",
+            "description": "SignatureGenerator implements Dilithium-like signature scheme",
+            "evidence": "module lattice signatures, rejection sampling, Fiat-Shamir transform",
+            "severity": "safe"
+          }
+        ]
+      },
+      {
+        "algorithm": "SHAKE256",
+        "category": "grover_vulnerable_hash",
+        "locations": [
+          {
+            "line_range": "100-120",
+            "description": "ExtendableHashFunction implements SHAKE256 for key derivation",
+            "evidence": "extendable output function, Keccak-based, variable output length",
+            "severity": "medium"
+          }
+        ]
+      }
+    ],
+    "implementation_patterns": {
+      "obfuscation_techniques": [
+        "Secure messaging context",
+        "LatticeEncryption instead of NTRU",
+        "SignatureGenerator instead of Dilithium",
+        "ExtendableHashFunction instead of SHAKE",
+        "Quantum-resistant terminology"
+      ],
+      "detection_difficulty": "high",
+      "requires_deep_analysis": true
+    },
+    "risk_assessment": {
+      "overall_risk": "low",
+      "quantum_readiness": "mostly_ready",
+      "recommendation": "Upgrade hash functions to quantum-resistant alternatives",
+      "priority": "low"
+    }
+  },
+  "metadata": {
+    "programming_language": "Python",
+    "lines_of_code": 180,
+    "complexity": "high",
+    "business_domain": "secure_communications",
+    "cryptographic_context": "post_quantum_messaging"
+  }
+}

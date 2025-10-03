@@ -1,0 +1,79 @@
+{
+  "file_name": "cloud_security_orchestrator.py",
+  "vulnerability_analysis": {
+    "quantum_vulnerable_algorithms": [
+      {
+        "algorithm": "ECC",
+        "category": "shor_vulnerable_public_key",
+        "locations": [
+          {
+            "line_range": "30-50",
+            "description": "EllipticCurveProcessor implements P-384 curve operations",
+            "evidence": "elliptic curve point operations, NIST P-384, scalar multiplication",
+            "severity": "high"
+          }
+        ]
+      },
+      {
+        "algorithm": "ChaCha20-Poly1305",
+        "category": "grover_vulnerable_aead",
+        "locations": [
+          {
+            "line_range": "70-90",
+            "description": "StreamCipherAuthenticator implements ChaCha20-Poly1305 AEAD",
+            "evidence": "quarter-round function, Poly1305 MAC, authenticated encryption",
+            "severity": "medium"
+          }
+        ]
+      },
+      {
+        "algorithm": "X25519",
+        "category": "shor_vulnerable_key_exchange",
+        "locations": [
+          {
+            "line_range": "110-130",
+            "description": "CurveKeyExchange implements X25519 ECDH",
+            "evidence": "Curve25519, Montgomery ladder, shared secret derivation",
+            "severity": "high"
+          }
+        ]
+      },
+      {
+        "algorithm": "Ed25519",
+        "category": "shor_vulnerable_signature",
+        "locations": [
+          {
+            "line_range": "150-170",
+            "description": "EdwardsSignature implements Ed25519 digital signatures",
+            "evidence": "Edwards curve, Schnorr signatures, deterministic nonces",
+            "severity": "high"
+          }
+        ]
+      }
+    ],
+    "implementation_patterns": {
+      "obfuscation_techniques": [
+        "Cloud orchestration terminology",
+        "EllipticCurveProcessor instead of ECC",
+        "StreamCipherAuthenticator instead of ChaCha20-Poly1305",
+        "CurveKeyExchange instead of X25519",
+        "Multi-tenant security context"
+      ],
+      "detection_difficulty": "high",
+      "requires_deep_analysis": true
+    },
+    "risk_assessment": {
+      "overall_risk": "high",
+      "quantum_readiness": "not_ready",
+      "recommendation": "Full migration to post-quantum cryptography for cloud infrastructure",
+      "priority": "immediate"
+    }
+  },
+  "metadata": {
+    "programming_language": "Python",
+    "lines_of_code": 210,
+    "complexity": "high",
+    "business_domain": "cloud_security",
+    "cryptographic_context": "multi_tenant_platform_security"
+  }
+}

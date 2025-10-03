@@ -1,0 +1,67 @@
+{
+  "file_name": "medical_device_encryption.rs",
+  "vulnerability_analysis": {
+    "quantum_vulnerable_algorithms": [
+      {
+        "algorithm": "AES-128",
+        "category": "grover_vulnerable_symmetric",
+        "locations": [
+          {
+            "line_range": "25-45",
+            "description": "StandardBlockCipher implements AES-128 operations",
+            "evidence": "128-bit block, 10 rounds, SubBytes and MixColumns operations",
+            "severity": "medium"
+          }
+        ]
+      },
+      {
+        "algorithm": "Kyber",
+        "category": "post_quantum_safe",
+        "locations": [
+          {
+            "line_range": "65-85",
+            "description": "LatticeProcessor implements Kyber-like post-quantum operations",
+            "evidence": "module learning with errors, polynomial operations, lattice-based",
+            "severity": "safe"
+          }
+        ]
+      },
+      {
+        "algorithm": "SHA-3",
+        "category": "grover_vulnerable_hash",
+        "locations": [
+          {
+            "line_range": "105-125",
+            "description": "KeccakProcessor implements SHA-3/Keccak sponge function",
+            "evidence": "sponge construction, 1600-bit state, absorption and squeezing",
+            "severity": "medium"
+          }
+        ]
+      }
+    ],
+    "implementation_patterns": {
+      "obfuscation_techniques": [
+        "Medical device terminology",
+        "StandardBlockCipher instead of AES",
+        "LatticeProcessor instead of Kyber",
+        "KeccakProcessor instead of SHA-3",
+        "Healthcare IoT context"
+      ],
+      "detection_difficulty": "high",
+      "requires_deep_analysis": true
+    },
+    "risk_assessment": {
+      "overall_risk": "low",
+      "quantum_readiness": "partially_ready",
+      "recommendation": "Full migration to post-quantum algorithms for critical medical data",
+      "priority": "high"
+    }
+  },
+  "metadata": {
+    "programming_language": "Rust",
+    "lines_of_code": 170,
+    "complexity": "high",
+    "business_domain": "medical_devices",
+    "cryptographic_context": "healthcare_data_protection"
+  }
+}

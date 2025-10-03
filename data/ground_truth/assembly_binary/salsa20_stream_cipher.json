@@ -1,0 +1,8 @@
+{
+  "expected_findings": {
+    "vulnerable_algorithms_detected": ["Salsa20"],
+    "algorithm_categories": ["grover_vulnerable", "symmetric_key"],
+    "korean_algorithms_detected": []
+  },
+  "expected_confidence_range": [0.75, 0.90]
+}

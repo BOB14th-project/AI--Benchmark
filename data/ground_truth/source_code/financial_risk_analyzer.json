@@ -1,0 +1,79 @@
+{
+  "file_name": "financial_risk_analyzer.py",
+  "vulnerability_analysis": {
+    "quantum_vulnerable_algorithms": [
+      {
+        "algorithm": "RSA",
+        "category": "shor_vulnerable_public_key",
+        "locations": [
+          {
+            "line_range": "30-50",
+            "description": "RiskAssessmentEngine implements RSA for secure computation",
+            "evidence": "homomorphic properties, large integer operations, modular arithmetic",
+            "severity": "high"
+          }
+        ]
+      },
+      {
+        "algorithm": "Paillier",
+        "category": "shor_vulnerable_homomorphic",
+        "locations": [
+          {
+            "line_range": "70-90",
+            "description": "HomomorphicProcessor implements Paillier cryptosystem",
+            "evidence": "additive homomorphism, n-squared group, secure multi-party computation",
+            "severity": "high"
+          }
+        ]
+      },
+      {
+        "algorithm": "BGN",
+        "category": "shor_vulnerable_homomorphic",
+        "locations": [
+          {
+            "line_range": "110-130",
+            "description": "BilinearEngine implements BGN cryptosystem",
+            "evidence": "bilinear pairings, limited multiplicative homomorphism, elliptic curves",
+            "severity": "high"
+          }
+        ]
+      },
+      {
+        "algorithm": "Shamir",
+        "category": "grover_vulnerable_secret_sharing",
+        "locations": [
+          {
+            "line_range": "150-170",
+            "description": "SecretSharingProtocol implements Shamir's threshold scheme",
+            "evidence": "polynomial interpolation, threshold reconstruction, finite field arithmetic",
+            "severity": "medium"
+          }
+        ]
+      }
+    ],
+    "implementation_patterns": {
+      "obfuscation_techniques": [
+        "Financial risk analysis terminology",
+        "RiskAssessmentEngine instead of RSA",
+        "HomomorphicProcessor instead of Paillier",
+        "BilinearEngine instead of BGN",
+        "Privacy-preserving computation context"
+      ],
+      "detection_difficulty": "high",
+      "requires_deep_analysis": true
+    },
+    "risk_assessment": {
+      "overall_risk": "high",
+      "quantum_readiness": "not_ready",
+      "recommendation": "Transition to post-quantum homomorphic encryption and secure computation",
+      "priority": "immediate"
+    }
+  },
+  "metadata": {
+    "programming_language": "Python",
+    "lines_of_code": 200,
+    "complexity": "very_high",
+    "business_domain": "financial_services",
+    "cryptographic_context": "privacy_preserving_risk_analysis"
+  }
+}

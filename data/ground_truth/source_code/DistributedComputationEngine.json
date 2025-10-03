@@ -1,0 +1,67 @@
+{
+  "file_name": "DistributedComputationEngine.py",
+  "vulnerability_analysis": {
+    "quantum_vulnerable_algorithms": [
+      {
+        "algorithm": "SHA-256",
+        "category": "grover_vulnerable_hash",
+        "locations": [
+          {
+            "line_range": "15-25",
+            "description": "DigestProcessor implements SHA-256-like hash computation with standard constants",
+            "evidence": "digestConstants array with SHA-256 values, hash state operations",
+            "severity": "medium"
+          }
+        ]
+      },
+      {
+        "algorithm": "ChaCha20",
+        "category": "grover_vulnerable_stream",
+        "locations": [
+          {
+            "line_range": "45-65",
+            "description": "StreamGenerator implements ChaCha20 stream cipher operations",
+            "evidence": "quarter-round operations, 20-round structure, 32-byte key",
+            "severity": "medium"
+          }
+        ]
+      },
+      {
+        "algorithm": "Poly1305",
+        "category": "grover_vulnerable_mac",
+        "locations": [
+          {
+            "line_range": "85-105",
+            "description": "AuthenticationProcessor implements Poly1305 MAC algorithm",
+            "evidence": "prime field operations, accumulator-based MAC, 16-byte tag",
+            "severity": "medium"
+          }
+        ]
+      }
+    ],
+    "implementation_patterns": {
+      "obfuscation_techniques": [
+        "Mathematical computation terminology",
+        "DigestProcessor instead of SHA",
+        "StreamGenerator instead of ChaCha20",
+        "AuthenticationProcessor instead of Poly1305",
+        "Distributed computing context disguise"
+      ],
+      "detection_difficulty": "medium",
+      "requires_deep_analysis": true
+    },
+    "risk_assessment": {
+      "overall_risk": "medium",
+      "quantum_readiness": "partially_vulnerable",
+      "recommendation": "Upgrade to quantum-resistant hash functions and authenticated encryption",
+      "priority": "medium"
+    }
+  },
+  "metadata": {
+    "programming_language": "Python",
+    "lines_of_code": 150,
+    "complexity": "medium",
+    "business_domain": "distributed_computing",
+    "cryptographic_context": "data_integrity_and_authentication"
+  }
+}

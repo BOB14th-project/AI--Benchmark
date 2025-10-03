@@ -1,0 +1,67 @@
+{
+  "file_name": "financial_transaction_security.c",
+  "vulnerability_analysis": {
+    "quantum_vulnerable_algorithms": [
+      {
+        "algorithm": "SEED",
+        "category": "grover_vulnerable_symmetric",
+        "locations": [
+          {
+            "line_range": "25-45",
+            "description": "RegionalBlockCipher implements SEED-like operations with Korean cipher structure",
+            "evidence": "16 rounds, 128-bit block size, Feistel structure, regional_constants array",
+            "severity": "medium"
+          }
+        ]
+      },
+      {
+        "algorithm": "SHA-256",
+        "category": "grover_vulnerable_hash",
+        "locations": [
+          {
+            "line_range": "65-85",
+            "description": "DigestComputation implements SHA-256 hash function",
+            "evidence": "256-bit output, compression function, standard hash constants",
+            "severity": "medium"
+          }
+        ]
+      },
+      {
+        "algorithm": "HMAC",
+        "category": "grover_vulnerable_mac",
+        "locations": [
+          {
+            "line_range": "105-125",
+            "description": "TransactionValidator uses HMAC for message authentication",
+            "evidence": "inner and outer padding, key derivation, hash-based MAC",
+            "severity": "medium"
+          }
+        ]
+      }
+    ],
+    "implementation_patterns": {
+      "obfuscation_techniques": [
+        "Financial transaction processing context",
+        "RegionalBlockCipher instead of SEED",
+        "DigestComputation instead of SHA",
+        "TransactionValidator instead of HMAC",
+        "Banking security terminology"
+      ],
+      "detection_difficulty": "medium",
+      "requires_deep_analysis": true
+    },
+    "risk_assessment": {
+      "overall_risk": "medium",
+      "quantum_readiness": "not_ready",
+      "recommendation": "Replace SEED with post-quantum symmetric cipher, upgrade hash functions",
+      "priority": "medium"
+    }
+  },
+  "metadata": {
+    "programming_language": "C",
+    "lines_of_code": 180,
+    "complexity": "medium",
+    "business_domain": "financial_services",
+    "cryptographic_context": "transaction_security_and_integrity"
+  }
+}

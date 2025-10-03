@@ -1,0 +1,79 @@
+{
+  "file_name": "network_infrastructure_monitor.cpp",
+  "vulnerability_analysis": {
+    "quantum_vulnerable_algorithms": [
+      {
+        "algorithm": "RSA",
+        "category": "shor_vulnerable_public_key",
+        "locations": [
+          {
+            "line_range": "30-50",
+            "description": "CertificateValidator implements RSA signature verification",
+            "evidence": "4096-bit RSA keys, PKCS#1 v1.5 padding, certificate chain validation",
+            "severity": "high"
+          }
+        ]
+      },
+      {
+        "algorithm": "AES-256-CBC",
+        "category": "grover_vulnerable_symmetric",
+        "locations": [
+          {
+            "line_range": "70-90",
+            "description": "NetworkEncryption implements AES-256-CBC for traffic encryption",
+            "evidence": "256-bit key, CBC mode, PKCS#7 padding, IV generation",
+            "severity": "low"
+          }
+        ]
+      },
+      {
+        "algorithm": "HMAC-SHA256",
+        "category": "grover_vulnerable_mac",
+        "locations": [
+          {
+            "line_range": "110-130",
+            "description": "IntegrityChecker implements HMAC-SHA256 for packet authentication",
+            "evidence": "keyed hash, packet integrity, network traffic validation",
+            "severity": "medium"
+          }
+        ]
+      },
+      {
+        "algorithm": "DH",
+        "category": "shor_vulnerable_key_exchange",
+        "locations": [
+          {
+            "line_range": "150-170",
+            "description": "SecureChannelEstablisher implements DHE key exchange",
+            "evidence": "discrete logarithm, prime groups, ephemeral keys, perfect forward secrecy",
+            "severity": "high"
+          }
+        ]
+      }
+    ],
+    "implementation_patterns": {
+      "obfuscation_techniques": [
+        "Network monitoring terminology",
+        "CertificateValidator instead of RSA",
+        "NetworkEncryption instead of AES",
+        "IntegrityChecker instead of HMAC",
+        "Infrastructure security context"
+      ],
+      "detection_difficulty": "medium",
+      "requires_deep_analysis": true
+    },
+    "risk_assessment": {
+      "overall_risk": "high",
+      "quantum_readiness": "not_ready",
+      "recommendation": "Replace RSA and DH with post-quantum alternatives for network security",
+      "priority": "high"
+    }
+  },
+  "metadata": {
+    "programming_language": "C++",
+    "lines_of_code": 190,
+    "complexity": "high",
+    "business_domain": "network_security",
+    "cryptographic_context": "infrastructure_monitoring_and_protection"
+  }
+}

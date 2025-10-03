@@ -1,0 +1,79 @@
+{
+  "file_name": "distributed_key_management.php",
+  "vulnerability_analysis": {
+    "quantum_vulnerable_algorithms": [
+      {
+        "algorithm": "Shamir",
+        "category": "grover_vulnerable_secret_sharing",
+        "locations": [
+          {
+            "line_range": "25-45",
+            "description": "ThresholdSecretSharing implements Shamir's secret sharing scheme",
+            "evidence": "polynomial interpolation, Lagrange interpolation, threshold reconstruction",
+            "severity": "medium"
+          }
+        ]
+      },
+      {
+        "algorithm": "BLS",
+        "category": "shor_vulnerable_signature",
+        "locations": [
+          {
+            "line_range": "65-85",
+            "description": "ThresholdSignature implements BLS threshold signatures",
+            "evidence": "pairing-based signatures, signature aggregation, threshold signing",
+            "severity": "high"
+          }
+        ]
+      },
+      {
+        "algorithm": "ECDSA",
+        "category": "shor_vulnerable_signature",
+        "locations": [
+          {
+            "line_range": "105-125",
+            "description": "DistributedSigner implements distributed ECDSA",
+            "evidence": "threshold ECDSA, multi-party computation, signature shares",
+            "severity": "high"
+          }
+        ]
+      },
+      {
+        "algorithm": "Feldman",
+        "category": "shor_vulnerable_commitment",
+        "locations": [
+          {
+            "line_range": "145-165",
+            "description": "VerifiableSecretSharing implements Feldman's VSS",
+            "evidence": "discrete logarithm commitments, verifiable shares, public verification",
+            "severity": "high"
+          }
+        ]
+      }
+    ],
+    "implementation_patterns": {
+      "obfuscation_techniques": [
+        "Enterprise key management terminology",
+        "ThresholdSecretSharing instead of Shamir",
+        "ThresholdSignature instead of BLS",
+        "DistributedSigner instead of ECDSA",
+        "Multi-party computation context"
+      ],
+      "detection_difficulty": "high",
+      "requires_deep_analysis": true
+    },
+    "risk_assessment": {
+      "overall_risk": "high",
+      "quantum_readiness": "not_ready",
+      "recommendation": "Migrate to post-quantum threshold cryptography and secret sharing",
+      "priority": "high"
+    }
+  },
+  "metadata": {
+    "programming_language": "PHP",
+    "lines_of_code": 190,
+    "complexity": "very_high",
+    "business_domain": "enterprise_security",
+    "cryptographic_context": "distributed_key_management_system"
+  }
+}

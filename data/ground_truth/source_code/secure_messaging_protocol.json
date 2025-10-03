@@ -1,0 +1,79 @@
+{
+  "file_name": "secure_messaging_protocol.rb",
+  "vulnerability_analysis": {
+    "quantum_vulnerable_algorithms": [
+      {
+        "algorithm": "X25519",
+        "category": "shor_vulnerable_key_exchange",
+        "locations": [
+          {
+            "line_range": "20-40",
+            "description": "EphemeralKeyExchange implements X25519 ECDH",
+            "evidence": "Curve25519, Montgomery ladder, ephemeral key generation",
+            "severity": "high"
+          }
+        ]
+      },
+      {
+        "algorithm": "XChaCha20",
+        "category": "grover_vulnerable_stream",
+        "locations": [
+          {
+            "line_range": "60-80",
+            "description": "ExtendedStreamCipher implements XChaCha20 encryption",
+            "evidence": "extended nonce, ChaCha20 variant, stream cipher operations",
+            "severity": "medium"
+          }
+        ]
+      },
+      {
+        "algorithm": "Poly1305",
+        "category": "grover_vulnerable_mac",
+        "locations": [
+          {
+            "line_range": "100-120",
+            "description": "MessageAuthenticator implements Poly1305 MAC",
+            "evidence": "one-time authenticator, prime field arithmetic, 16-byte tag",
+            "severity": "medium"
+          }
+        ]
+      },
+      {
+        "algorithm": "Double Ratchet",
+        "category": "shor_vulnerable_protocol",
+        "locations": [
+          {
+            "line_range": "140-160",
+            "description": "ForwardSecrecyEngine implements Double Ratchet protocol",
+            "evidence": "DH ratchet, symmetric key ratchet, Signal protocol, forward secrecy",
+            "severity": "high"
+          }
+        ]
+      }
+    ],
+    "implementation_patterns": {
+      "obfuscation_techniques": [
+        "Secure messaging terminology",
+        "EphemeralKeyExchange instead of X25519",
+        "ExtendedStreamCipher instead of XChaCha20",
+        "MessageAuthenticator instead of Poly1305",
+        "End-to-end encryption context"
+      ],
+      "detection_difficulty": "high",
+      "requires_deep_analysis": true
+    },
+    "risk_assessment": {
+      "overall_risk": "high",
+      "quantum_readiness": "not_ready",
+      "recommendation": "Implement post-quantum key exchange and forward secrecy protocols",
+      "priority": "high"
+    }
+  },
+  "metadata": {
+    "programming_language": "Ruby",
+    "lines_of_code": 180,
+    "complexity": "high",
+    "business_domain": "secure_communications",
+    "cryptographic_context": "end_to_end_encrypted_messaging"
+  }
+}

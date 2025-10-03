@@ -1,0 +1,67 @@
+{
+  "file_name": "AutomotiveSecurityUnit.cpp",
+  "vulnerability_analysis": {
+    "quantum_vulnerable_algorithms": [
+      {
+        "algorithm": "ARIA",
+        "category": "grover_vulnerable_symmetric",
+        "locations": [
+          {
+            "line_range": "30-50",
+            "description": "RealtimeBlockProcessor implements ARIA-like operations",
+            "evidence": "128-bit block, substitution-permutation network, diffusion layer",
+            "severity": "medium"
+          }
+        ]
+      },
+      {
+        "algorithm": "ECC",
+        "category": "shor_vulnerable_public_key",
+        "locations": [
+          {
+            "line_range": "70-90",
+            "description": "CurveArithmetic implements elliptic curve operations",
+            "evidence": "point addition, scalar multiplication, P-256 curve parameters",
+            "severity": "high"
+          }
+        ]
+      },
+      {
+        "algorithm": "ECDSA",
+        "category": "shor_vulnerable_signature",
+        "locations": [
+          {
+            "line_range": "110-130",
+            "description": "VehicleAuthentication implements ECDSA digital signatures",
+            "evidence": "signature generation and verification, nonce generation, key pairs",
+            "severity": "high"
+          }
+        ]
+      }
+    ],
+    "implementation_patterns": {
+      "obfuscation_techniques": [
+        "Automotive ECU terminology",
+        "RealtimeBlockProcessor instead of ARIA",
+        "CurveArithmetic instead of ECC",
+        "VehicleAuthentication instead of ECDSA",
+        "Real-time processing context"
+      ],
+      "detection_difficulty": "high",
+      "requires_deep_analysis": true
+    },
+    "risk_assessment": {
+      "overall_risk": "high",
+      "quantum_readiness": "not_ready",
+      "recommendation": "Critical migration to post-quantum algorithms for vehicle security",
+      "priority": "immediate"
+    }
+  },
+  "metadata": {
+    "programming_language": "C++",
+    "lines_of_code": 200,
+    "complexity": "high",
+    "business_domain": "automotive_security",
+    "cryptographic_context": "vehicle_ecu_authentication"
+  }
+}

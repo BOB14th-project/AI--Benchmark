@@ -1,0 +1,72 @@
+{
+  "file_name": "EnterpriseSecurityGateway.java",
+  "vulnerability_analysis": {
+    "quantum_vulnerable_algorithms": [
+      {
+        "algorithm": "RSA",
+        "category": "shor_vulnerable_public_key",
+        "locations": [
+          {
+            "line_range": "31-45",
+            "description": "LargeIntegerProcessor implements RSA key generation with prime generation",
+            "evidence": "generateLargePrime, modular exponentiation, public/private key operations",
+            "severity": "high"
+          },
+          {
+            "line_range": "46-60",
+            "description": "RSA digital signature implementation",
+            "evidence": "signWithPrivateKey method using modular exponentiation",
+            "severity": "high"
+          }
+        ]
+      },
+      {
+        "algorithm": "ECC",
+        "category": "shor_vulnerable_public_key",
+        "locations": [
+          {
+            "line_range": "96-115",
+            "description": "PolynomialProcessor implements elliptic curve operations",
+            "evidence": "processPolynomialField method with curve arithmetic",
+            "severity": "high"
+          }
+        ]
+      },
+      {
+        "algorithm": "SHA-256",
+        "category": "grover_vulnerable_hash",
+        "locations": [
+          {
+            "line_range": "75-90",
+            "description": "DigestProcessor implements SHA-256-like hash function",
+            "evidence": "computeSecureDigest with SHA constants and operations",
+            "severity": "medium"
+          }
+        ]
+      }
+    ],
+    "implementation_patterns": {
+      "obfuscation_techniques": [
+        "Mathematical terminology instead of algorithm names",
+        "LargeIntegerProcessor instead of RSA",
+        "PolynomialProcessor instead of ECC",
+        "DigestProcessor instead of SHA"
+      ],
+      "detection_difficulty": "high",
+      "requires_deep_analysis": true
+    },
+    "risk_assessment": {
+      "overall_risk": "high",
+      "quantum_readiness": "not_ready",
+      "recommendation": "Replace RSA and ECC with post-quantum algorithms",
+      "priority": "immediate"
+    }
+  },
+  "metadata": {
+    "programming_language": "Java",
+    "lines_of_code": 200,
+    "complexity": "high",
+    "business_domain": "enterprise_network_security",
+    "cryptographic_context": "multi_algorithm_security_gateway"
+  }
+}

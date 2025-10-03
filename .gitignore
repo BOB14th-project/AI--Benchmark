@@ -105,9 +105,3 @@ models/
 *.pkl
 *.joblib
 
-# Large data files
-*.csv
-*.json
-*.xlsx
-!data/ground_truth/*.json
-!data/test_files/**/*

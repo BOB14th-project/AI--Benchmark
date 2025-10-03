@@ -1,0 +1,8 @@
+{
+  "expected_findings": {
+    "vulnerable_algorithms_detected": ["SipHash"],
+    "algorithm_categories": ["grover_vulnerable", "hash_function"],
+    "korean_algorithms_detected": []
+  },
+  "expected_confidence_range": [0.70, 0.85]
+}

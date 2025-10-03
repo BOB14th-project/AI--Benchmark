@@ -1,0 +1,79 @@
+{
+  "file_name": "digital_identity_platform.js",
+  "vulnerability_analysis": {
+    "quantum_vulnerable_algorithms": [
+      {
+        "algorithm": "secp256k1",
+        "category": "shor_vulnerable_public_key",
+        "locations": [
+          {
+            "line_range": "25-45",
+            "description": "IdentityKeyManager implements secp256k1 elliptic curve operations",
+            "evidence": "ECDSA key generation, Bitcoin-style signatures, public key derivation",
+            "severity": "high"
+          }
+        ]
+      },
+      {
+        "algorithm": "BLS",
+        "category": "shor_vulnerable_signature",
+        "locations": [
+          {
+            "line_range": "65-85",
+            "description": "AggregateSignatureProcessor implements BLS signature aggregation",
+            "evidence": "pairing-based cryptography, signature aggregation, threshold signatures",
+            "severity": "high"
+          }
+        ]
+      },
+      {
+        "algorithm": "Keccak-256",
+        "category": "grover_vulnerable_hash",
+        "locations": [
+          {
+            "line_range": "105-125",
+            "description": "IdentityHashFunction implements Keccak-256 for identity hashing",
+            "evidence": "Ethereum-style hashing, 256-bit output, sponge construction",
+            "severity": "medium"
+          }
+        ]
+      },
+      {
+        "algorithm": "scrypt",
+        "category": "grover_vulnerable_kdf",
+        "locations": [
+          {
+            "line_range": "145-165",
+            "description": "PasswordDerivationEngine implements scrypt for password hashing",
+            "evidence": "memory-hard function, N, r, p parameters, salt generation",
+            "severity": "medium"
+          }
+        ]
+      }
+    ],
+    "implementation_patterns": {
+      "obfuscation_techniques": [
+        "Digital identity terminology",
+        "IdentityKeyManager instead of secp256k1",
+        "AggregateSignatureProcessor instead of BLS",
+        "IdentityHashFunction instead of Keccak",
+        "Decentralized identity context"
+      ],
+      "detection_difficulty": "high",
+      "requires_deep_analysis": true
+    },
+    "risk_assessment": {
+      "overall_risk": "high",
+      "quantum_readiness": "not_ready",
+      "recommendation": "Migrate to post-quantum identity systems and aggregatable signatures",
+      "priority": "high"
+    }
+  },
+  "metadata": {
+    "programming_language": "JavaScript",
+    "lines_of_code": 180,
+    "complexity": "high",
+    "business_domain": "digital_identity",
+    "cryptographic_context": "decentralized_identity_management"
+  }
+}
