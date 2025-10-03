@@ -1,36 +1,17 @@
 {
-  "file_type": "assembly_binary",
-  "difficulty": "hard",
-  "crypto_elements": [
-    {
-      "type": "elliptic_curve_digital_signature",
-      "algorithm": "ECDSA",
-      "curve": "secp256r1",
-      "implementation": "ECDSA signature generation with P-256 curve",
-      "location": "sub_401000 ecdsa_sign",
-      "severity": "medium",
-      "description": "ECDSA digital signature implementation"
-    },
-    {
-      "type": "secure_hash_algorithm",
-      "algorithm": "SHA-1",
-      "hash_size": 160,
-      "implementation": "SHA-1 hash function",
-      "location": "sub_401400 sha1_hash",
-      "severity": "critical",
-      "description": "SHA-1 hash function with known collision vulnerabilities"
-    },
-    {
-      "type": "elliptic_curve_parameters",
-      "algorithm": "secp256r1 curve",
-      "implementation": "NIST P-256 elliptic curve parameters",
-      "location": "secp256r1_gx, secp256r1_gy data",
-      "severity": "medium",
-      "description": "Standard NIST P-256 elliptic curve parameters"
-    }
-  ],
-  "quantum_vulnerable": true,
-  "vulnerability_count": 2,
-  "primary_weakness": "ECDSA is completely broken by Shor's algorithm and SHA-1 has practical collision attacks",
-  "additional_notes": "Combination of quantum-vulnerable ECC and cryptographically broken SHA-1 makes this highly vulnerable"
+  "expected_findings": {
+    "vulnerable_algorithms_detected": [
+      "ECDSA",
+      "SHA1"
+    ],
+    "algorithm_categories": [
+      "shor_vulnerable",
+      "weak_hash"
+    ],
+    "korean_algorithms_detected": []
+  },
+  "expected_confidence_range": [
+    0.7,
+    0.9
+  ]
 }

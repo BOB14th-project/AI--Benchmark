@@ -1,68 +1,8 @@
 {
-  "file_name": "elliptic_curve_scalar_multiplication",
-  "file_type": "assembly_binary",
-  "quantum_vulnerable_algorithms": [
-    {
-      "algorithm": "ECC",
-      "type": "elliptic_curve_cryptography",
-      "quantum_vulnerability": "shor_algorithm",
-      "security_impact": "complete_break",
-      "locations": [
-        {
-          "line_range": "14-73",
-          "context": "ec_scalar_multiplication main function with binary method",
-          "confidence": "high"
-        },
-        {
-          "line_range": "81-202",
-          "context": "elliptic_point_double function for ECC point doubling",
-          "confidence": "high"
-        },
-        {
-          "line_range": "211-345",
-          "context": "elliptic_point_add function for ECC point addition",
-          "confidence": "high"
-        },
-        {
-          "line_range": "392-397",
-          "context": "secp256r1 curve parameters and ECC constants",
-          "confidence": "high"
-        }
-      ],
-      "key_indicators": [
-        "elliptic_curve",
-        "scalar_multiplication",
-        "point_double",
-        "point_add",
-        "secp256r1",
-        "ecdsa"
-      ]
-    }
-  ],
-  "cryptographic_patterns": [
-    {
-      "pattern": "elliptic_curve_operations",
-      "lines": ["14-73", "81-345"],
-      "description": "Core ECC operations: scalar multiplication, point doubling, point addition"
-    },
-    {
-      "pattern": "finite_field_arithmetic",
-      "lines": ["103-176", "251-310"],
-      "description": "Modular arithmetic operations in elliptic curve finite field"
-    },
-    {
-      "pattern": "curve_parameters",
-      "lines": ["390-397"],
-      "description": "NIST P-256 curve parameters (secp256r1)"
-    }
-  ],
-  "quantum_resistance": "none",
-  "migration_priority": "high",
-  "algorithm_details": {
-    "curve_name": "secp256r1 (P-256)",
-    "field_size": "256-bit",
-    "security_level": "128-bit (classical), 0-bit (quantum)",
-    "standard_reference": "NIST FIPS 186-4",
-    "usage_context": "ECDSA signature generation"
-  }
+  "expected_findings": {
+    "vulnerable_algorithms_detected": ["ECC", "ECDSA"],
+    "algorithm_categories": ["shor_vulnerable", "public_key"],
+    "korean_algorithms_detected": []
+  },
+  "expected_confidence_range": [0.7, 0.9]
 }

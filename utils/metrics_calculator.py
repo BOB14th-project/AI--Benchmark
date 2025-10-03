@@ -146,6 +146,50 @@ class MetricsCalculator:
                 algorithm_variations = ['lsh']
             elif 'ecdh' in algorithm_lower:
                 algorithm_variations = ['ecdh']
+            elif 'dilithium' in algorithm_lower:
+                algorithm_variations = ['dilithium']
+            elif 'sphincs' in algorithm_lower:
+                algorithm_variations = ['sphincs', 'sphincs+']
+            elif 'ntru' in algorithm_lower:
+                algorithm_variations = ['ntru']
+            elif 'paillier' in algorithm_lower:
+                algorithm_variations = ['paillier']
+            elif 'bgn' in algorithm_lower:
+                algorithm_variations = ['bgn']
+            elif 'shamir' in algorithm_lower:
+                algorithm_variations = ['shamir']
+            elif 'feldman' in algorithm_lower:
+                algorithm_variations = ['feldman']
+            elif 'x25519' in algorithm_lower:
+                algorithm_variations = ['x25519', 'curve25519']
+            elif 'ed25519' in algorithm_lower:
+                algorithm_variations = ['ed25519', 'edwards']
+            elif 'xchacha20' in algorithm_lower:
+                algorithm_variations = ['xchacha20', 'xchacha']
+            elif 'double ratchet' in algorithm_lower or 'doubleratchet' in algorithm_lower:
+                algorithm_variations = ['double ratchet', 'doubleratchet', 'signal']
+            elif 'ikev2' in algorithm_lower or 'ike' in algorithm_lower:
+                algorithm_variations = ['ikev2', 'ike']
+            elif 'ocsp' in algorithm_lower:
+                algorithm_variations = ['ocsp']
+            elif 'pbkdf2' in algorithm_lower:
+                algorithm_variations = ['pbkdf2']
+            elif 'gcm' in algorithm_lower:
+                algorithm_variations = ['gcm']
+            elif 'ripemd' in algorithm_lower:
+                algorithm_variations = ['ripemd', 'ripemd-160', 'ripemd160']
+            elif 'scrypt' in algorithm_lower:
+                algorithm_variations = ['scrypt']
+            elif 'keccak' in algorithm_lower:
+                algorithm_variations = ['keccak', 'keccak-256']
+            elif 'secp256k1' in algorithm_lower:
+                algorithm_variations = ['secp256k1', 'secp-256k1']
+            elif 'shake' in algorithm_lower:
+                algorithm_variations = ['shake', 'shake256']
+            elif 'siphash' in algorithm_lower:
+                algorithm_variations = ['siphash', 'siphash-2-4']
+            elif 'rc2' in algorithm_lower:
+                algorithm_variations = ['rc2']
 
             for variation in algorithm_variations:
                 if variation in actual_text:
@@ -163,17 +207,25 @@ class MetricsCalculator:
         found_count = 0
 
         category_keywords = {
-            'shor_vulnerable': ['rsa', 'ecc', 'dh', 'dsa', 'ecdsa', 'kcdsa', 'bls'],
-            'grover_vulnerable': ['aes', 'des', 'md5', 'sha', 'sha256', 'sha-256', '3des', 'tea', 'salsa20', 'chacha20', 'poly1305', 'hmac', 'crc32', 'seed', 'aria', 'hight', 'lea', 'blake2', 'ghash'],
-            'classical_vulnerable': ['a5', 'trivium', 'rc4', 'crc32', 'md5', 'sha1'],
-            'public_key': ['rsa', 'ecc', 'dh', 'dsa', 'ecdsa', 'kcdsa', 'bls', 'pss'],
-            'symmetric': ['aes', 'des', '3des', 'tea', 'salsa20', 'chacha20', 'seed', 'aria', 'hight', 'lea'],
-            'hash_functions': ['md5', 'sha', 'sha256', 'sha-256', 'sha1', 'hmac', 'crc32', 'has-160', 'blake2', 'blake2b', 'ghash'],
+            'shor_vulnerable': ['rsa', 'ecc', 'dh', 'dsa', 'ecdsa', 'kcdsa', 'bls', 'paillier', 'bgn', 'x25519', 'ed25519', 'secp256k1', 'ecdh', 'feldman'],
+            'grover_vulnerable': ['aes', 'des', 'md5', 'sha', 'sha256', 'sha-256', '3des', 'tea', 'salsa20', 'chacha20', 'poly1305', 'hmac', 'crc32', 'seed', 'aria', 'hight', 'lea', 'blake2', 'ghash', 'xchacha20', 'pbkdf2', 'gcm', 'ripemd', 'scrypt', 'keccak', 'shake', 'shamir', 'siphash'],
+            'classical_vulnerable': ['a5', 'trivium', 'rc4', 'rc2', 'crc32', 'md5', 'sha1'],
+            'public_key': ['rsa', 'ecc', 'dh', 'dsa', 'ecdsa', 'kcdsa', 'bls', 'pss', 'paillier', 'bgn', 'x25519', 'ed25519', 'secp256k1', 'ecdh'],
+            'symmetric': ['aes', 'des', '3des', 'tea', 'salsa20', 'chacha20', 'seed', 'aria', 'hight', 'lea', 'xchacha20'],
+            'symmetric_key': ['aes', 'des', '3des', 'tea', 'salsa20', 'chacha20', 'seed', 'aria', 'hight', 'lea', 'xchacha20', 'rc2', 'rc4'],
+            'hash_functions': ['md5', 'sha', 'sha256', 'sha-256', 'sha1', 'hmac', 'crc32', 'has-160', 'blake2', 'blake2b', 'ghash', 'ripemd', 'keccak', 'shake', 'siphash'],
+            'hash_function': ['md5', 'sha', 'sha256', 'sha-256', 'sha1', 'hmac', 'crc32', 'has-160', 'blake2', 'blake2b', 'ghash', 'ripemd', 'keccak', 'shake', 'siphash'],
+            'mac': ['hmac', 'poly1305', 'ghash', 'siphash'],
             'korean_algorithms': ['seed', 'aria', 'hight', 'lea', 'kcdsa', 'has-160', 'lsh', 'ec-kcdsa', 'ecdh'],
-            'post_quantum': ['kyber'],
-            'pairing_based': ['bls'],
+            'post_quantum': ['kyber', 'dilithium', 'sphincs', 'ntru'],
+            'pairing_based': ['bls', 'bgn'],
             'verification_functions': ['vdf'],
-            'weak_hash': ['md5', 'sha1', 'crc32']
+            'weak_hash': ['md5', 'sha1', 'crc32'],
+            'homomorphic_encryption': ['paillier', 'bgn'],
+            'secret_sharing': ['shamir', 'feldman'],
+            'key_derivation': ['pbkdf2', 'scrypt'],
+            'authenticated_encryption': ['gcm'],
+            'protocols': ['ikev2', 'ocsp', 'double ratchet']
         }
 
         for category in expected_categories:
@@ -304,10 +356,13 @@ class MetricsCalculator:
         if not expected_algorithms:
             actual_text = json.dumps(actual_findings).lower()
             vulnerable_keywords = ['rsa', 'ecc', 'ecdsa', 'dsa', 'diffie-hellman', 'dh', 'des', '3des',
-                                 'rc4', 'md5', 'sha1', 'sha256', 'tea', 'salsa20', 'chacha20', 'poly1305',
+                                 'rc4', 'rc2', 'md5', 'sha1', 'sha256', 'tea', 'salsa20', 'chacha20', 'poly1305',
                                  'hmac', 'crc32', 'seed', 'aria', 'hight', 'lea', 'trivium', 'a5',
                                  'bls', 'blake2', 'ghash', 'pss', 'montgomery', 'rijndael', 'aes',
-                                 'has-160', 'lsh', 'kcdsa', 'ecdh', 'ec-kcdsa', 'kyber', 'vdf', 'misty']
+                                 'has-160', 'lsh', 'kcdsa', 'ecdh', 'ec-kcdsa', 'kyber', 'vdf', 'misty',
+                                 'dilithium', 'sphincs', 'ntru', 'paillier', 'bgn', 'shamir', 'feldman',
+                                 'x25519', 'ed25519', 'xchacha20', 'double ratchet', 'ikev2', 'ocsp',
+                                 'pbkdf2', 'gcm', 'ripemd', 'scrypt', 'keccak', 'secp256k1', 'shake', 'siphash']
 
             false_positives = sum(1 for keyword in vulnerable_keywords if keyword in actual_text)
             return min(1.0, false_positives / len(vulnerable_keywords))
@@ -379,6 +434,50 @@ class MetricsCalculator:
                     variations = ['lsh']
                 elif 'ecdh' in algorithm_lower:
                     variations = ['ecdh']
+                elif 'dilithium' in algorithm_lower:
+                    variations = ['dilithium']
+                elif 'sphincs' in algorithm_lower:
+                    variations = ['sphincs', 'sphincs+']
+                elif 'ntru' in algorithm_lower:
+                    variations = ['ntru']
+                elif 'paillier' in algorithm_lower:
+                    variations = ['paillier']
+                elif 'bgn' in algorithm_lower:
+                    variations = ['bgn']
+                elif 'shamir' in algorithm_lower:
+                    variations = ['shamir']
+                elif 'feldman' in algorithm_lower:
+                    variations = ['feldman']
+                elif 'x25519' in algorithm_lower:
+                    variations = ['x25519', 'curve25519']
+                elif 'ed25519' in algorithm_lower:
+                    variations = ['ed25519', 'edwards']
+                elif 'xchacha20' in algorithm_lower:
+                    variations = ['xchacha20', 'xchacha']
+                elif 'double ratchet' in algorithm_lower or 'doubleratchet' in algorithm_lower:
+                    variations = ['double ratchet', 'doubleratchet', 'signal']
+                elif 'ikev2' in algorithm_lower or 'ike' in algorithm_lower:
+                    variations = ['ikev2', 'ike']
+                elif 'ocsp' in algorithm_lower:
+                    variations = ['ocsp']
+                elif 'pbkdf2' in algorithm_lower:
+                    variations = ['pbkdf2']
+                elif 'gcm' in algorithm_lower:
+                    variations = ['gcm']
+                elif 'ripemd' in algorithm_lower:
+                    variations = ['ripemd', 'ripemd-160', 'ripemd160']
+                elif 'scrypt' in algorithm_lower:
+                    variations = ['scrypt']
+                elif 'keccak' in algorithm_lower:
+                    variations = ['keccak', 'keccak-256']
+                elif 'secp256k1' in algorithm_lower:
+                    variations = ['secp256k1', 'secp-256k1']
+                elif 'shake' in algorithm_lower:
+                    variations = ['shake', 'shake256']
+                elif 'siphash' in algorithm_lower:
+                    variations = ['siphash', 'siphash-2-4']
+                elif 'rc2' in algorithm_lower:
+                    variations = ['rc2']
 
                 found_variation = any(var in actual_text for var in variations)
                 if not found_variation:

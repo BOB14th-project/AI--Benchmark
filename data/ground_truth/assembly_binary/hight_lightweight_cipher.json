@@ -1,70 +1,8 @@
 {
-  "file_name": "hight_lightweight_cipher.s",
-  "file_type": "assembly_binary",
-  "quantum_vulnerable_algorithms": [
-    {
-      "algorithm": "HIGHT",
-      "type": "lightweight_block_cipher",
-      "quantum_vulnerability": "grover_algorithm",
-      "security_impact": "halved_key_length",
-      "locations": [
-        {
-          "line_range": "17-36",
-          "context": "initialize_hight_parameters function with cipher setup",
-          "confidence": "high"
-        },
-        {
-          "line_range": "67-113",
-          "context": "expand_master_key function with HIGHT key schedule",
-          "confidence": "high"
-        },
-        {
-          "line_range": "115-208",
-          "context": "encrypt_block_hight function with 32-round Feistel structure",
-          "confidence": "high"
-        },
-        {
-          "line_range": "210-298",
-          "context": "hight_round_function with F0/F1 functions",
-          "confidence": "high"
-        }
-      ],
-      "key_indicators": [
-        "hight_cipher",
-        "lightweight_encryption",
-        "ks_x_1262",
-        "korean_standard",
-        "feistel_network",
-        "iot_embedded"
-      ]
-    }
-  ],
-  "cryptographic_patterns": [
-    {
-      "pattern": "lightweight_cryptography",
-      "lines": ["17-36", "379-384"],
-      "description": "Resource-constrained implementation for IoT devices"
-    },
-    {
-      "pattern": "korean_cipher_standard",
-      "lines": ["379-384"],
-      "description": "Korean Standard KS X 1262 lightweight block cipher"
-    },
-    {
-      "pattern": "feistel_structure",
-      "lines": ["115-208", "210-298"],
-      "description": "32-round Feistel network with F0/F1 functions"
-    }
-  ],
-  "quantum_resistance": "weak",
-  "migration_priority": "high",
-  "algorithm_details": {
-    "block_size": "64-bit",
-    "key_size": "128-bit",
-    "rounds": "32",
-    "security_level": "64-bit (classical), 32-bit (quantum)",
-    "standard_reference": "KS X 1262 Korean Standard",
-    "usage_context": "IoT and embedded systems",
-    "design_goal": "lightweight_implementation"
-  }
+  "expected_findings": {
+    "vulnerable_algorithms_detected": ["HIGHT"],
+    "algorithm_categories": ["grover_vulnerable", "symmetric"],
+    "korean_algorithms_detected": ["HIGHT"]
+  },
+  "expected_confidence_range": [0.6, 0.8]
 }

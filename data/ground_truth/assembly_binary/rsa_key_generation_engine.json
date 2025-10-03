@@ -1,67 +1,8 @@
 {
-  "file_name": "rsa_key_generation_engine.s",
-  "file_type": "assembly_binary",
-  "quantum_vulnerable_algorithms": [
-    {
-      "algorithm": "RSA",
-      "type": "public_key_cryptography",
-      "quantum_vulnerability": "shor_algorithm",
-      "security_impact": "complete_break",
-      "locations": [
-        {
-          "line_range": "17-30",
-          "context": "setup_rsa_parameters function with key length initialization",
-          "confidence": "high"
-        },
-        {
-          "line_range": "32-49",
-          "context": "generate_prime_candidates function for RSA prime generation",
-          "confidence": "high"
-        },
-        {
-          "line_range": "67-134",
-          "context": "miller_rabin_test function for primality testing",
-          "confidence": "high"
-        },
-        {
-          "line_range": "186-212",
-          "context": "compute_rsa_keys function with modulus and key computation",
-          "confidence": "high"
-        }
-      ],
-      "key_indicators": [
-        "modular_exponentiation",
-        "prime generation",
-        "miller_rabin_test",
-        "rsa_modulus",
-        "public_exponent",
-        "private_exponent"
-      ]
-    }
-  ],
-  "cryptographic_patterns": [
-    {
-      "pattern": "modular_arithmetic",
-      "lines": ["148-184", "214-231"],
-      "description": "Fast modular exponentiation and extended GCD operations"
-    },
-    {
-      "pattern": "prime_generation",
-      "lines": ["32-66", "67-134"],
-      "description": "Random prime candidate generation and primality testing"
-    },
-    {
-      "pattern": "key_validation",
-      "lines": ["233-259"],
-      "description": "RSA key pair validation through encryption/decryption test"
-    }
-  ],
-  "quantum_resistance": "none",
-  "migration_priority": "high",
-  "algorithm_details": {
-    "key_size": "2048-bit",
-    "security_level": "112-bit (classical), 0-bit (quantum)",
-    "standard_reference": "RSA-PKCS#1",
-    "usage_context": "key generation engine"
-  }
+  "expected_findings": {
+    "vulnerable_algorithms_detected": ["RSA"],
+    "algorithm_categories": ["shor_vulnerable", "public_key"],
+    "korean_algorithms_detected": []
+  },
+  "expected_confidence_range": [0.8, 0.95]
 }

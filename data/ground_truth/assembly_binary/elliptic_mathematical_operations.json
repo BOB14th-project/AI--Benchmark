@@ -1,43 +1,16 @@
 {
-  "file_type": "assembly_binary",
-  "difficulty": "hard",
-  "crypto_elements": [
-    {
-      "type": "elliptic_curve_cryptography",
-      "algorithm": "ECC",
-      "curve": "secp256k1",
-      "implementation": "Elliptic curve point operations and scalar multiplication",
-      "location": "sub_401000 ecc point operations",
-      "severity": "critical",
-      "description": "Elliptic curve cryptography implementation"
-    },
-    {
-      "type": "elliptic_curve_point_addition",
-      "algorithm": "ECC point addition",
-      "implementation": "Elliptic curve point addition with projective coordinates",
-      "location": "sub_401200 point addition",
-      "severity": "medium",
-      "description": "Elliptic curve point addition operations"
-    },
-    {
-      "type": "scalar_multiplication",
-      "algorithm": "ECC scalar multiplication",
-      "implementation": "Binary method scalar multiplication on elliptic curves",
-      "location": "sub_401400 scalar multiplication",
-      "severity": "medium",
-      "description": "Elliptic curve scalar multiplication implementation"
-    },
-    {
-      "type": "modular_inverse",
-      "algorithm": "Modular inverse",
-      "implementation": "Extended Euclidean algorithm for modular inverse",
-      "location": "sub_401600 modular inverse",
-      "severity": "low",
-      "description": "Modular inverse computation for elliptic curve operations"
-    }
-  ],
-  "quantum_vulnerable": true,
-  "vulnerability_count": 1,
-  "primary_weakness": "ECC is completely broken by Shor's algorithm on quantum computers",
-  "additional_notes": "Elliptic curve cryptography provides strong security against classical attacks but is vulnerable to quantum computers"
+  "expected_findings": {
+    "vulnerable_algorithms_detected": [
+      "ECC"
+    ],
+    "algorithm_categories": [
+      "shor_vulnerable",
+      "public_key"
+    ],
+    "korean_algorithms_detected": []
+  },
+  "expected_confidence_range": [
+    0.7,
+    0.9
+  ]
 }

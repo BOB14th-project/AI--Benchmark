@@ -1,50 +1,16 @@
 {
-  "file_type": "assembly_binary",
-  "difficulty": "hard",
-  "crypto_elements": [
-    {
-      "type": "lattice_based_cryptography",
-      "algorithm": "NTRU",
-      "implementation": "NTRU lattice-based public key cryptography",
-      "location": "sub_401000 ntru operations",
-      "severity": "low",
-      "description": "NTRU post-quantum cryptographic implementation"
-    },
-    {
-      "type": "isogeny_based_cryptography",
-      "algorithm": "SIKE",
-      "implementation": "Supersingular isogeny key encapsulation",
-      "location": "sub_401500 isogeny operations",
-      "severity": "critical",
-      "description": "SIKE isogeny-based cryptography (broken by classical attacks)"
-    },
-    {
-      "type": "polynomial_arithmetic",
-      "algorithm": "Lattice polynomial operations",
-      "implementation": "Polynomial arithmetic for lattice-based schemes",
-      "location": "sub_401200 polynomial operations",
-      "severity": "low",
-      "description": "Polynomial arithmetic operations for post-quantum cryptography"
-    },
-    {
-      "type": "elliptic_curve_isogeny",
-      "algorithm": "Supersingular elliptic curves",
-      "implementation": "Isogeny computations on supersingular elliptic curves",
-      "location": "sub_401700 isogeny computation",
-      "severity": "critical",
-      "description": "Supersingular elliptic curve isogeny operations"
-    },
-    {
-      "type": "lattice_reduction",
-      "algorithm": "LLL algorithm",
-      "implementation": "Lattice reduction for cryptanalysis",
-      "location": "sub_401900 lattice reduction",
-      "severity": "medium",
-      "description": "Lattice reduction algorithm implementation"
-    }
-  ],
-  "quantum_vulnerable": false,
-  "vulnerability_count": 2,
-  "primary_weakness": "SIKE component is broken by classical attacks (Castryck-Decru attack)",
-  "additional_notes": "Mixed post-quantum implementation with both secure (NTRU) and broken (SIKE) components"
+  "expected_findings": {
+    "vulnerable_algorithms_detected": [
+      "Kyber",
+      "Dilithium"
+    ],
+    "algorithm_categories": [
+      "post_quantum"
+    ],
+    "korean_algorithms_detected": []
+  },
+  "expected_confidence_range": [
+    0.5,
+    0.7
+  ]
 }

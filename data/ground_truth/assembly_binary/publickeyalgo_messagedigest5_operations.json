@@ -1,44 +1,17 @@
 {
-  "file_type": "assembly_binary",
-  "difficulty": "hard",
-  "crypto_elements": [
-    {
-      "type": "public_key_cryptography",
-      "algorithm": "RSA",
-      "key_size": 2048,
-      "implementation": "RSA public key encryption with modular exponentiation",
-      "location": "sub_401000 rsa encrypt",
-      "severity": "critical",
-      "description": "RSA public key cryptography implementation vulnerable to quantum attacks"
-    },
-    {
-      "type": "cryptographic_hash",
-      "algorithm": "MD5",
-      "hash_size": 128,
-      "implementation": "MD5 hash function with compression rounds",
-      "location": "sub_401800 md5 hash",
-      "severity": "critical",
-      "description": "MD5 hash function with known collision vulnerabilities"
-    },
-    {
-      "type": "modular_arithmetic",
-      "algorithm": "RSA modular operations",
-      "implementation": "Modular exponentiation for RSA operations",
-      "location": "sub_401300 modular exponentiation",
-      "severity": "medium",
-      "description": "RSA modular arithmetic operations"
-    },
-    {
-      "type": "hash_compression",
-      "algorithm": "MD5 compression",
-      "implementation": "MD5 compression function with round operations",
-      "location": "sub_401900 md5 compression",
-      "severity": "high",
-      "description": "MD5 compression function implementation"
-    }
-  ],
-  "quantum_vulnerable": true,
-  "vulnerability_count": 3,
-  "primary_weakness": "RSA is completely broken by Shor's algorithm and MD5 has practical collision attacks",
-  "additional_notes": "Combination of quantum-vulnerable RSA and cryptographically broken MD5 makes this extremely vulnerable"
+  "expected_findings": {
+    "vulnerable_algorithms_detected": [
+      "RSA",
+      "MD5"
+    ],
+    "algorithm_categories": [
+      "shor_vulnerable",
+      "weak_hash"
+    ],
+    "korean_algorithms_detected": []
+  },
+  "expected_confidence_range": [
+    0.7,
+    0.9
+  ]
 }

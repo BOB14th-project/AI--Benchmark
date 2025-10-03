@@ -1,69 +1,8 @@
 {
-  "file_name": "triple_des_encryption_module.s",
-  "file_type": "assembly_binary",
-  "quantum_vulnerable_algorithms": [
-    {
-      "algorithm": "3DES",
-      "type": "block_cipher",
-      "quantum_vulnerability": "grover_algorithm",
-      "security_impact": "reduced_from_112bit_to_56bit_security",
-      "locations": [
-        {
-          "line_range": "17-45",
-          "context": "setup_3des_parameters function with EDE configuration",
-          "confidence": "high"
-        },
-        {
-          "line_range": "75-104",
-          "context": "perform_3des_encryption function with three-key EDE",
-          "confidence": "high"
-        },
-        {
-          "line_range": "113-191",
-          "context": "des_encrypt_block function with Feistel network",
-          "confidence": "high"
-        },
-        {
-          "line_range": "193-206",
-          "context": "des_decrypt_block function for middle decryption step",
-          "confidence": "high"
-        }
-      ],
-      "key_indicators": [
-        "triple_des",
-        "3des_ede",
-        "fips_46_3",
-        "encrypt_decrypt_encrypt",
-        "des_feistel",
-        "legacy_deprecated"
-      ]
-    }
-  ],
-  "cryptographic_patterns": [
-    {
-      "pattern": "triple_encryption",
-      "lines": ["75-104"],
-      "description": "EDE (Encrypt-Decrypt-Encrypt) with three DES keys"
-    },
-    {
-      "pattern": "feistel_network",
-      "lines": ["113-191", "339-385"],
-      "description": "16-round DES Feistel structure with key schedule"
-    },
-    {
-      "pattern": "legacy_cipher",
-      "lines": ["475-481"],
-      "description": "Deprecated cipher maintained for backward compatibility"
-    }
-  ],
-  "quantum_resistance": "weak",
-  "migration_priority": "high",
-  "algorithm_details": {
-    "block_size": "64-bit",
-    "key_size": "168-bit effective (3×56-bit DES keys)",
-    "security_level": "112-bit (classical), 56-bit (quantum)",
-    "standard_reference": "NIST FIPS 46-3",
-    "usage_context": "legacy_systems_compatibility",
-    "deprecation_status": "deprecated_avoid_new_use"
-  }
+  "expected_findings": {
+    "vulnerable_algorithms_detected": ["3DES"],
+    "algorithm_categories": ["grover_vulnerable", "symmetric"],
+    "korean_algorithms_detected": []
+  },
+  "expected_confidence_range": [0.8, 0.95]
 }

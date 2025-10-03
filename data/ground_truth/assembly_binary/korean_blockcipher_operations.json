@@ -1,44 +1,8 @@
 {
-  "file_type": "assembly_binary",
-  "difficulty": "hard",
-  "crypto_elements": [
-    {
-      "type": "korean_block_cipher",
-      "algorithm": "ARIA",
-      "key_size": 128,
-      "implementation": "ARIA Korean block cipher with 12 rounds",
-      "location": "sub_401000 korean cipher encrypt",
-      "severity": "medium",
-      "description": "ARIA Korean domestic block cipher implementation"
-    },
-    {
-      "type": "korean_block_cipher",
-      "algorithm": "SEED",
-      "key_size": 128,
-      "implementation": "SEED Korean block cipher with 16 rounds",
-      "location": "sub_401700 korean seed encrypt",
-      "severity": "medium",
-      "description": "SEED Korean domestic block cipher implementation"
-    },
-    {
-      "type": "substitution_boxes",
-      "algorithm": "ARIA S-boxes",
-      "implementation": "ARIA-specific substitution boxes",
-      "location": "data_402000 and data_402020",
-      "severity": "low",
-      "description": "ARIA substitution boxes for nonlinear transformation"
-    },
-    {
-      "type": "round_constants",
-      "algorithm": "Korean cipher constants",
-      "implementation": "ARIA and SEED round constants",
-      "location": "data_402040 through data_402120",
-      "severity": "low",
-      "description": "Round constants for Korean cipher operations"
-    }
-  ],
-  "quantum_vulnerable": false,
-  "vulnerability_count": 0,
-  "primary_weakness": "Korean algorithms are secure against classical attacks but vulnerable to Grover's algorithm (halved security)",
-  "additional_notes": "ARIA and SEED are Korean government approved algorithms, considered secure but should transition to post-quantum alternatives"
+  "expected_findings": {
+    "vulnerable_algorithms_detected": ["SEED", "ARIA"],
+    "algorithm_categories": ["grover_vulnerable", "symmetric"],
+    "korean_algorithms_detected": ["SEED", "ARIA"]
+  },
+  "expected_confidence_range": [0.6, 0.8]
 }

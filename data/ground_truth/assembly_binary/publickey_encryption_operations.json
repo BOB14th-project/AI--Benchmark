@@ -1,43 +1,16 @@
 {
-  "file_type": "assembly_binary",
-  "difficulty": "medium",
-  "crypto_elements": [
-    {
-      "type": "public_key_encryption",
-      "algorithm": "RSAES (RSA Encryption Scheme)",
-      "key_size": 2048,
-      "implementation": "RSA encryption with basic padding",
-      "location": "sub_401000 main function",
-      "severity": "high",
-      "description": "RSAES public key encryption implementation"
-    },
-    {
-      "type": "modular_exponentiation",
-      "algorithm": "Fast exponentiation",
-      "implementation": "Square-and-multiply algorithm for RSA encryption",
-      "location": "sub_401100 and loc_401120",
-      "severity": "medium",
-      "description": "Modular exponentiation without timing attack protection"
-    },
-    {
-      "type": "padding_scheme",
-      "algorithm": "Basic padding",
-      "implementation": "Simple additive padding",
-      "location": "sub_401200",
-      "severity": "critical",
-      "description": "Weak padding scheme vulnerable to padding oracle attacks"
-    },
-    {
-      "type": "large_integers",
-      "algorithm": "Multi-precision arithmetic",
-      "implementation": "Large integer operations for RSA",
-      "location": "data_404000 constants",
-      "severity": "low",
-      "description": "Large prime numbers and modular arithmetic"
-    }
-  ],
-  "quantum_vulnerable": true,
-  "vulnerability_count": 3,
-  "primary_weakness": "RSAES is completely broken by Shor's algorithm and vulnerable to padding oracle attacks with weak padding",
-  "additional_notes": "Implementation lacks proper OAEP padding and timing attack protections. Vulnerable to chosen ciphertext attacks"
+  "expected_findings": {
+    "vulnerable_algorithms_detected": [
+      "RSA"
+    ],
+    "algorithm_categories": [
+      "shor_vulnerable",
+      "public_key"
+    ],
+    "korean_algorithms_detected": []
+  },
+  "expected_confidence_range": [
+    0.7,
+    0.9
+  ]
 }

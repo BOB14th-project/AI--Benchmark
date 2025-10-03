@@ -1,0 +1,145 @@
+# IoT Device Firmware Security Configuration
+# Manufacturer: SmartHome Solutions Inc.
+# Device Model: SHS-GW-5000 Gateway Controller
+# Firmware Version: 3.2.1-stable
+
+device_security:
+  identity:
+    device_id: "gateway-5000-aef8b3c2"
+    serial_number: "SHS2024-GW-089234"
+
+  authentication:
+    method: "certificate_based"
+    key_type: "prime_field_elliptic_curve"
+    curve_parameters:
+      field_type: "prime"
+      curve_name: "secp256r1"
+      key_size_bits: 256
+      base_point_order: "0xffffffff00000000ffffffffffffffffbce6faada7179e84f3b9cac2fc632551"
+
+    certificate_chain:
+      root_ca: "/secure/certs/root_ca.pem"
+      intermediate_ca: "/secure/certs/intermediate.pem"
+      device_cert: "/secure/certs/device_secp256r1.pem"
+      private_key: "/secure/keys/device_private.key"
+
+  secure_boot:
+    enabled: true
+    signature_algorithm: "scalar_multiplication_scheme"
+    verification_key: "/boot/verify_key_ecc.pub"
+    hash_algorithm: "sha256_digest"
+
+  firmware_updates:
+    signature_verification: true
+    signing_method: "elliptic_curve_digital_signature"
+    allowed_signers:
+      - name: "manufacturer_primary"
+        algorithm: "ecdsa_p256"
+        public_key_hash: "a8b3f2e9d4c7..."
+      - name: "manufacturer_backup"
+        algorithm: "ecdsa_p256"
+        public_key_hash: "f3d8e2b9c4a7..."
+
+  secure_communications:
+    protocols:
+      - name: "mqtt_tls"
+        version: "1.2"
+        cipher_suites:
+          - "ECDHE-ECDSA-AES128-GCM-SHA256"
+          - "ECDHE-ECDSA-AES256-GCM-SHA384"
+          - "ECDHE-RSA-AES128-GCM-SHA256"
+
+        key_exchange:
+          algorithm: "ephemeral_elliptic_curve_diffie_hellman"
+          curve: "secp256r1"
+          rekey_interval_hours: 24
+
+      - name: "coap_dtls"
+        version: "1.2"
+        preshared_keys: false
+        certificate_mode: true
+        compression: false
+
+  data_protection:
+    at_rest:
+      algorithm: "symmetric_block_cipher"
+      mode: "galois_counter_mode"
+      key_size_bits: 128
+      key_derivation:
+        function: "hmac_based_extract_and_expand"
+        hash: "sha256"
+        iterations: 10000
+        salt_length: 16
+
+    in_transit:
+      encryption: "authenticated_encryption_with_associated_data"
+      mac_algorithm: "galois_message_authentication"
+
+  key_management:
+    storage:
+      type: "hardware_security_module"
+      model: "TPM_2.0"
+      protected_operations:
+        - "private_key_operations"
+        - "random_number_generation"
+        - "key_derivation"
+
+    lifecycle:
+      generation_method: "hardware_random"
+      rotation_policy: "90_days"
+      revocation_check: "ocsp_stapling"
+
+  legacy_support:
+    backward_compatibility: false
+    minimum_security_level: "modern"
+    deprecated_algorithms:
+      disabled:
+        - "ssl_v3"
+        - "tls_v1_0"
+        - "tls_v1_1"
+        - "cipher_block_chaining"
+        - "export_grade_ciphers"
+
+compliance:
+  standards:
+    - "IoT_Security_Foundation_v2.1"
+    - "ETSI_EN_303_645"
+    - "NIST_Cybersecurity_Framework"
+
+  certifications:
+    - name: "Common_Criteria_EAL4+"
+      certificate_id: "CC-2024-IoT-089"
+    - name: "FIPS_140_3_Level_2"
+      certificate_id: "FIPS-2024-1234"
+
+logging:
+  security_events:
+    authentication_failures: true
+    key_usage: true
+    certificate_validation: true
+    firmware_verification: true
+
+  audit_trail:
+    retention_days: 365
+    tamper_protection: true
+    signature_chain: "merkle_tree_root"
+
+# Cryptographic Library Information
+crypto_backend:
+  library: "mbedTLS"
+  version: "3.5.1"
+  fips_mode: true
+
+  hardware_acceleration:
+    enabled: true
+    features:
+      - "ecc_point_multiplication"
+      - "aes_gcm_encryption"
+      - "sha2_hashing"
+      - "secure_random_generation"
+
+# Security Notes
+# This device uses elliptic curve cryptography for all public key operations
+# All symmetric encryption uses AES-GCM for authenticated encryption
+# SHA-256 is used for all hashing operations
+# No legacy or weak cryptographic algorithms are enabled

@@ -1,35 +1,16 @@
 {
-  "file_type": "assembly_binary",
-  "difficulty": "hard",
-  "crypto_elements": [
-    {
-      "type": "elliptic_curve_cryptography",
-      "algorithm": "ECC",
-      "curve": "P-256 (secp256r1)",
-      "implementation": "Elliptic curve point operations and scalar multiplication",
-      "location": "sub_401000 main function",
-      "severity": "medium",
-      "description": "Elliptic curve cryptographic operations"
-    },
-    {
-      "type": "point_multiplication",
-      "algorithm": "Double-and-add",
-      "implementation": "Scalar multiplication using binary method",
-      "location": "sub_401100 and loc_401140",
-      "severity": "medium",
-      "description": "ECC point multiplication without side-channel protection"
-    },
-    {
-      "type": "elliptic_curve_parameters",
-      "algorithm": "P-256 curve",
-      "implementation": "NIST P-256 curve parameters",
-      "location": "data_402000 and data_402020",
-      "severity": "low",
-      "description": "Standard P-256 elliptic curve generator points"
-    }
-  ],
-  "quantum_vulnerable": true,
-  "vulnerability_count": 2,
-  "primary_weakness": "ECC is vulnerable to Shor's algorithm on quantum computers, but currently secure against classical attacks",
-  "additional_notes": "Implementation may be vulnerable to timing attacks due to lack of constant-time operations"
+  "expected_findings": {
+    "vulnerable_algorithms_detected": [
+      "ECC"
+    ],
+    "algorithm_categories": [
+      "shor_vulnerable",
+      "public_key"
+    ],
+    "korean_algorithms_detected": []
+  },
+  "expected_confidence_range": [
+    0.7,
+    0.9
+  ]
 }

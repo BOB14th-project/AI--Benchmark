@@ -1,35 +1,16 @@
 {
-  "file_type": "assembly_binary",
-  "difficulty": "easy",
-  "crypto_elements": [
-    {
-      "type": "broken_hash",
-      "algorithm": "MD5",
-      "hash_size": 128,
-      "implementation": "MD5 message digest algorithm",
-      "location": "sub_401000 main function",
-      "severity": "critical",
-      "description": "MD5 hash function with known collision vulnerabilities"
-    },
-    {
-      "type": "hash_initialization",
-      "algorithm": "MD5 IV",
-      "implementation": "MD5 magic constants initialization",
-      "location": "Initial state setup",
-      "severity": "critical",
-      "description": "MD5 initialization with standard magic constants"
-    },
-    {
-      "type": "compression_rounds",
-      "algorithm": "MD5 rounds",
-      "implementation": "64-round compression function",
-      "location": "sub_401100 compression loop",
-      "severity": "critical",
-      "description": "MD5 compression rounds with additive constants"
-    }
-  ],
-  "quantum_vulnerable": true,
-  "vulnerability_count": 3,
-  "primary_weakness": "MD5 is cryptographically broken with practical collision attacks and is vulnerable to length extension attacks",
-  "additional_notes": "MD5 should never be used for security purposes. Collision attacks are practical and rainbow tables exist for common inputs"
+  "expected_findings": {
+    "vulnerable_algorithms_detected": [
+      "MD5"
+    ],
+    "algorithm_categories": [
+      "grover_vulnerable",
+      "weak_hash"
+    ],
+    "korean_algorithms_detected": []
+  },
+  "expected_confidence_range": [
+    0.7,
+    0.9
+  ]
 }

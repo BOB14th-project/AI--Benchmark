@@ -16,6 +16,13 @@
 - **4가지 분석 도메인**: 소스코드, 어셈블리/바이너리, 동적분석, 로그/설정
 - **한국 국산 암호**: SEED, ARIA, HIGHT, LEA, KCDSA 등 특화 탐지
 - **종합 성능 분석**: 정확도, 속도, 토큰 효율성 등 다각도 평가
+- **183개 테스트 케이스**: 실제 환경을 반영한 다양한 시나리오
+
+## 📚 상세 문서
+
+- **[평가 메트릭 및 점수 계산](docs/METRICS.md)** - F1 Score, Precision, Recall 등 상세 계산 방법
+- **[테스트 파일 생성 가이드](docs/TEST_FILES.md)** - 테스트 케이스 생성 방법 및 현황
+- **[프로젝트 상세 문서](CLAUDE.md)** - 전체 아키텍처 및 사용 가이드
 
 ## 🧪 지원 모델
 
@@ -33,27 +40,33 @@
 | **Qwen 3** | `qwen3:8b` | 멀티모달 특화 |
 | **Code Llama** | `codellama:7b` | 코드 분석 최적화 |
 
-## 📊 분석 에이전트
+## 📊 분석 에이전트 및 테스트 데이터
 
-### 🔍 Source Code Agent
-- **대상**: Python, Java, C/C++, JavaScript 소스 코드
+### 🔍 Source Code Agent (80개 테스트 파일)
+- **대상**: Python, Java, C/C++, JavaScript, TypeScript 소스 코드
 - **탐지**: RSA, ECC, DH, DSA, 한국 암호 알고리즘
 - **특화**: 코드 패턴 분석, 라이브러리 사용 탐지
+- **예시**: RSA 키 생성, ECDSA 서명, SEED 암호화 구현
 
-### ⚙️ Assembly Binary Agent
-- **대상**: 어셈블리 코드, 바이너리 덤프
+### ⚙️ Assembly Binary Agent (80개 테스트 파일)
+- **대상**: 어셈블리 코드, 바이너리 덤프, 디스어셈블리
 - **탐지**: 모듈러 지수 연산, 타원곡선 연산, 큰 정수 연산
 - **특화**: 컴파일된 코드의 암호 연산 시그니처 분석
+- **예시**: RSA 모듈러 연산, ECC 스칼라 곱셈, ChaCha20 구현
 
-### 📈 Dynamic Analysis Agent
-- **대상**: 런타임 데이터, API 호출 로그
-- **탐지**: 암호화 API 사용 패턴, 메모리 할당
-- **특화**: 실행 시 행동 분석, 성능 특성 기반 탐지
+### 📈 Dynamic Analysis Agent (6개 테스트 파일)
+- **대상**: 런타임 데이터, API 호출 로그, 메모리 덤프
+- **탐지**: 암호화 API 사용 패턴, 메모리 할당, 성능 특성
+- **특화**: 실행 시 행동 분석, 간접적 암호 사용 증거
+- **예시**: OpenSSL API 호출, 암호 연산 타이밍, 메모리 패턴
 
-### 📋 Logs Config Agent
-- **대상**: 설정 파일, 시스템 로그
-- **탐지**: SSL/TLS 설정, 인증서 구성
-- **특화**: 간접적 암호 사용 증거 수집
+### 📋 Logs Config Agent (17개 테스트 파일)
+- **대상**: 설정 파일, 시스템 로그, 애플리케이션 로그
+- **탐지**: SSL/TLS 설정, 인증서 구성, 암호 라이브러리 설정
+- **특화**: 설정 기반 암호 사용, 로그의 암호 이벤트
+- **예시**: Apache SSL 설정, VPN 설정, HSM 로그, 한국 암호 라이브러리 설정
+
+**총 183개 테스트 파일** - 각 파일에 대응하는 ground_truth JSON 포함
 
 ## 🚀 빠른 시작
 
@@ -131,6 +144,9 @@ python benchmark_runner.py --agents source_code assembly_binary --limit 2
 
 # 병렬 실행 (빠른 처리)
 python benchmark_runner.py --parallel --limit 3
+
+# 전체 벤치마크 (모든 파일)
+python benchmark_runner.py
 ```
 
 ### 결과 분석
@@ -155,86 +171,104 @@ python test_single_file.py
 
 ## 📈 성능 지표
 
-### 평가 메트릭
-- **탐지 정확도**: 실제 취약점 대비 정확 탐지율
-- **정밀도/재현율**: 거짓양성/거짓음성 최소화
-- **F1 점수**: 정밀도와 재현율의 조화평균
-- **응답 시간**: API 호출 속도
-- **토큰 효율성**: 비용 대비 성능
+### 핵심 평가 메트릭 (상세 내용은 [METRICS.md](docs/METRICS.md) 참조)
+
+- **탐지 정확도 (Detection Accuracy)**: 양자 취약 알고리즘 탐지율
+- **정밀도 (Precision)**: TP / (TP + FP) - 거짓양성 최소화
+- **재현율 (Recall)**: TP / (TP + FN) - 거짓음성 최소화
+- **F1 점수**: 2 × (Precision × Recall) / (Precision + Recall)
+- **응답 시간 (Response Time)**: API 호출부터 응답까지
+- **토큰 효율성**: F1 점수 / 총 토큰 수
 - **JSON 유효성**: 구조화된 출력 생성 능력
 
 ### 예상 성능 (F1 점수 기준)
 
-| 모델 | 예상 성능 | 응답 시간 | 특징 |
-|------|-----------|-----------|------|
-| gemini-2.0-flash-exp | 0.85-0.90 | 10-15초 | 최고 정확도 |
-| gpt-4.1 | 0.80-0.85 | 8-12초 | 균형잡힌 성능 |
-| grok-3-mini | 0.75-0.80 | 5-8초 | 빠른 응답 |
-| llama3:8b | 0.70-0.75 | 3-5초 | 로컬 실행, 빠름 |
-| qwen3:8b | 0.65-0.70 | 4-6초 | 멀티모달 특화 |
-| codellama:7b | 0.60-0.65 | 2-4초 | 코드 분석 최적화 |
+| 모델 | 예상 F1 | 응답 시간 | 토큰 효율성 | 특징 |
+|------|---------|-----------|-------------|------|
+| gemini-2.0-flash-exp | 0.85-0.90 | 10-15초 | 높음 | 최고 정확도, 상세한 분석 |
+| gpt-4.1 | 0.80-0.85 | 8-12초 | 중간 | 균형잡힌 성능 |
+| grok-3-mini | 0.75-0.80 | 5-8초 | 높음 | 빠른 응답, 경량화 |
+| llama3:8b | 0.70-0.75 | 3-5초 | 매우높음 | 로컬 실행, 빠름 |
+| qwen3:8b | 0.65-0.70 | 4-6초 | 높음 | 멀티모달 특화 |
+| codellama:7b | 0.60-0.65 | 2-4초 | 매우높음 | 코드 특화, 빠름 |
 
 ## 📁 프로젝트 구조
 
 ```
 AI--Benchmark/
-├── 📋 README.md                 # 이 파일
-├── ⚙️ benchmark_runner.py       # 메인 벤치마크 실행기
-├── 📊 analyze_results.py        # 결과 분석 도구
-├── 🧪 test_benchmark_system.py  # 시스템 테스트
-├── 📄 requirements.txt          # 의존성 목록
-├── 📁 docs/                     # 문서들
-│   └── CLAUDE.md               # 상세 문서
-├── 🔧 config/                   # 설정 파일들
-│   ├── config.yaml             # 메인 설정 파일
-│   └── config_loader.py        # 설정 로더
-├── 🤖 agents/                   # 분석 에이전트들
-│   ├── base_agent.py           # 기본 에이전트
-│   ├── source_code_agent.py    # 소스코드 분석
-│   ├── assembly_agent.py       # 어셈블리 분석
-│   ├── dynamic_analysis_agent.py # 동적 분석
-│   ├── logs_config_agent.py    # 로그/설정 분석
-│   └── agent_factory.py        # 에이전트 팩토리
-├── 🌐 clients/                  # LLM API 클라이언트들
-│   ├── base_client.py          # 기본 클라이언트
-│   ├── google_client.py        # Google Gemini
-│   ├── openai_client.py        # OpenAI GPT
-│   ├── xai_client.py           # xAI Grok
-│   ├── ollama_client.py        # Ollama 로컬
-│   └── client_factory.py       # 클라이언트 팩토리
-├── 📂 data/                     # 테스트 데이터
-│   ├── test_files/             # 실제 테스트 파일들
-│   │   ├── source_code/        # 소스코드 샘플 (28개)
-│   │   ├── assembly_binary/    # 어셈블리 샘플 (17개)
-│   │   ├── dynamic_analysis/   # 동적분석 데이터 (1개)
-│   │   └── logs_config/        # 로그/설정 (5개)
-│   └── ground_truth/           # 정답 데이터
-├── 🛠️ utils/                    # 유틸리티
-│   └── test_case_manager.py    # 테스트 케이스 관리
-├── 📜 scripts/                  # 추가 스크립트들
-│   ├── test_single_file.py     # 단일 파일 테스트
-│   ├── test_available_models.py # 모델 가용성 확인
+├── 📋 README.md                      # 이 파일
+├── 📄 CLAUDE.md                      # 프로젝트 상세 문서
+├── ⚙️ benchmark_runner.py            # 메인 벤치마크 실행기
+├── 📊 analyze_results.py             # 결과 분석 도구
+├── 🧪 test_benchmark_system.py       # 시스템 테스트
+├── 📄 requirements.txt               # 의존성 목록
+│
+├── 📁 docs/                          # 추가 문서들
+│   ├── METRICS.md                   # 평가 메트릭 상세 설명
+│   └── TEST_FILES.md                # 테스트 파일 생성 가이드
+│
+├── 🔧 config/                        # 설정 파일들
+│   ├── config.yaml                  # 메인 설정 파일
+│   └── config_loader.py             # 설정 로더
+│
+├── 🤖 agents/                        # 분석 에이전트들
+│   ├── base_agent.py                # 기본 에이전트
+│   ├── source_code_agent.py         # 소스코드 분석 (80개 파일)
+│   ├── assembly_agent.py            # 어셈블리 분석 (80개 파일)
+│   ├── dynamic_analysis_agent.py    # 동적 분석 (6개 파일)
+│   ├── logs_config_agent.py         # 로그/설정 분석 (17개 파일)
+│   └── agent_factory.py             # 에이전트 팩토리
+│
+├── 🌐 clients/                       # LLM API 클라이언트들
+│   ├── base_client.py               # 기본 클라이언트
+│   ├── google_client.py             # Google Gemini
+│   ├── openai_client.py             # OpenAI GPT
+│   ├── xai_client.py                # xAI Grok
+│   ├── ollama_client.py             # Ollama 로컬
+│   └── client_factory.py            # 클라이언트 팩토리
+│
+├── 📂 data/                          # 테스트 데이터 (183개 파일)
+│   ├── test_files/                  # 실제 테스트 파일들
+│   │   ├── source_code/             # 소스코드 샘플 (80개)
+│   │   ├── assembly_binary/         # 어셈블리 샘플 (80개)
+│   │   ├── dynamic_analysis/        # 동적분석 데이터 (6개)
+│   │   └── logs_config/             # 로그/설정 (17개)
+│   └── ground_truth/                # 정답 데이터 (183개 JSON)
+│
+├── 🛠️ utils/                         # 유틸리티
+│   ├── test_case_manager.py         # 테스트 케이스 관리
+│   └── metrics_calculator.py        # 성능 메트릭 계산
+│
+├── 📜 scripts/                       # 추가 스크립트들
+│   ├── test_single_file.py          # 단일 파일 테스트
+│   ├── test_available_models.py     # 모델 가용성 확인
 │   └── (기타 개발/테스트 스크립트)
-├── 📊 results/                  # 결과 파일들 (JSON + CSV)
-└── 📋 reports/                  # 분석 리포트들
+│
+├── 📊 results/                       # 결과 파일들 (JSON + CSV)
+└── 📋 reports/                       # 분석 리포트들
 ```
 
 ## 🔍 탐지 대상 암호 알고리즘
 
-### 양자 취약 공개키 암호
-- **RSA**: 1024, 2048, 3072, 4096비트
-- **ECC**: secp256r1, secp384r1, secp521r1
-- **DH/DSA**: 1024, 2048, 3072비트
-- **ElGamal**: 이산로그 기반
+### Shor 알고리즘에 취약한 공개키 암호
+- **RSA**: 모든 키 크기 (1024, 2048, 3072, 4096비트)
+- **ECC**: secp256r1, secp384r1, secp521r1, Curve25519, Ed25519, secp256k1
+- **DH/DSA**: Diffie-Hellman, DSA, ElGamal (모든 키 크기)
+- **BLS**: BLS12-381 페어링 기반 암호
 
 ### 한국 국산 암호 알고리즘
 - **대칭키**: SEED, ARIA, HIGHT, LEA
-- **공개키**: KCDSA, EC-KCDSA
-- **해시**: HAS-160, LSH
+- **공개키**: KCDSA, EC-KCDSA (양자 취약)
+- **해시**: HAS-160, LSH (Grover 취약)
 
-### Grover 알고리즘 취약 대칭키
-- **블록암호**: AES-128, 3DES, DES, RC4
-- **해시함수**: MD5, SHA-1, SHA-256
+### Grover 알고리즘에 취약한 대칭키/해시
+- **블록암호**: AES-128 (→64비트 보안강도), 3DES, DES, RC4, RC2
+- **해시함수**: MD5, SHA-1, SHA-256, BLAKE2b, SipHash
+
+### 양자 내성 알고리즘 (탐지 대상 아님)
+- **격자 기반**: Kyber, Dilithium, NTRU
+- **해시 기반**: SPHINCS+
+- **대칭키**: AES-256 (128비트 양자 보안강도 유지)
 
 ## 📊 예제 결과
 
@@ -246,39 +280,51 @@ $ python benchmark_runner.py --limit 2
 ✅ Ollama 사용 가능한 모델: ['llama3:8b', 'codellama:7b']
 📁 source_code: 2개 테스트 파일 로드됨
 📁 assembly_binary: 2개 테스트 파일 로드됨
-📊 총 12개 테스트 조합
+📁 dynamic_analysis: 2개 테스트 파일 로드됨
+📁 logs_config: 2개 테스트 파일 로드됨
+📊 총 24개 테스트 조합 (3개 프로바이더 × 4개 에이전트 × 2개 파일)
 
-📋 테스트 1/12: google/gemini-2.0-flash-exp/source_code
-    파일: rsa_public_key_system
+📋 테스트 1/24: google/gemini-2.0-flash-exp/source_code
+    파일: rsa_public_key_system.java
     ✅ 완료 (13.2초)
-    🎯 신뢰도: 0.850
-    🔍 취약점: 8개
+    🎯 정확도: 0.850
+    📊 F1 Score: 0.878
+    🔍 탐지: RSA, SHA-256, PKCS
 
-📋 테스트 2/12: ollama/llama3:8b/source_code
-    파일: rsa_public_key_system
+📋 테스트 2/24: ollama/llama3:8b/source_code
+    파일: rsa_public_key_system.java
     ✅ 완료 (4.1초)
-    🎯 신뢰도: 0.720
-    🔍 취약점: 6개
+    🎯 정확도: 0.720
+    📊 F1 Score: 0.745
+    🔍 탐지: RSA, SHA-256
 
 ============================================================
 📊 벤치마크 결과 요약
 ============================================================
-전체 테스트: 12
-성공: 11
+전체 테스트: 24
+성공: 22
 성공률: 91.7%
 
 🏆 프로바이더별 성능:
   google:
     성공률: 100.0%
+    평균 F1 Score: 0.863
     평균 응답시간: 12.34초
-    평균 신뢰도: 0.863
-    평균 취약점 탐지: 7.8개
+    평균 Precision: 0.881
+    평균 Recall: 0.847
 
   ollama:
     성공률: 87.5%
+    평균 F1 Score: 0.701
     평균 응답시간: 3.91초
-    평균 신뢰도: 0.701
-    평균 취약점 탐지: 5.2개
+    평균 Precision: 0.723
+    평균 Recall: 0.682
+
+📁 에이전트별 성능:
+  source_code:    F1 평균 0.812 (가장 쉬움)
+  assembly_binary: F1 평균 0.734 (중간 난이도)
+  logs_config:    F1 평균 0.698 (중간 난이도)
+  dynamic_analysis: F1 평균 0.645 (가장 어려움)
 ```
 
 ## 🛠️ 문제 해결

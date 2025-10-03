@@ -1,0 +1,137 @@
+[2025-01-22 16:45:00] ==== Security Vulnerability Scan Report ====
+[2025-01-22 16:45:00] Scanner: CryptoAudit Pro v8.3.2
+[2025-01-22 16:45:00] Target: Enterprise Application Stack
+[2025-01-22 16:45:00] Scan Type: Comprehensive Cryptographic Analysis
+[2025-01-22 16:45:00] ==========================================
+
+[2025-01-22 16:45:01] [INFO] Initializing cryptographic module scanner...
+[2025-01-22 16:45:02] [INFO] Scanning 487 services across 52 servers...
+
+[2025-01-22 16:45:05] [CRITICAL] System: web-server-01.internal
+[2025-01-22 16:45:05] [CRITICAL] Finding: Weak SSL/TLS Configuration
+[2025-01-22 16:45:05] [CRITICAL] Details: Server accepts RC4-SHA cipher suite
+[2025-01-22 16:45:05] [CRITICAL] Severity: 9.8/10 (CVSS)
+[2025-01-22 16:45:05] [CRITICAL] CVE: CVE-2013-2566, CVE-2015-2808
+[2025-01-22 16:45:05] [CRITICAL] Impact: Stream cipher vulnerabilities, known biases in RC4
+[2025-01-22 16:45:05] [CRITICAL] Recommendation: Disable RC4 immediately, use AEAD ciphers only
+
+[2025-01-22 16:45:08] [HIGH] System: api-gateway-03.internal
+[2025-01-22 16:45:08] [HIGH] Finding: RSA 1024-bit Certificate Detected
+[2025-01-22 16:45:08] [HIGH] Details: Certificate /etc/ssl/api-cert.pem uses 1024-bit RSA key
+[2025-01-22 16:45:08] [HIGH] Severity: 7.5/10
+[2025-01-22 16:45:08] [HIGH] Impact: Factorization attacks feasible with modern computing
+[2025-01-22 16:45:08] [HIGH] Quantum Threat: Shor's algorithm will break this efficiently
+[2025-01-22 16:45:08] [HIGH] Recommendation: Upgrade to 3072-bit RSA or migrate to ECC P-384
+
+[2025-01-22 16:45:12] [HIGH] System: legacy-app-server.internal
+[2025-01-22 16:45:12] [HIGH] Finding: MD5 Hash Function in Use
+[2025-01-22 16:45:12] [HIGH] Details: Application uses MD5 for password hashing
+[2025-01-22 16:45:12] [HIGH] Code Location: /opt/app/auth/password_hash.py:line 45
+[2025-01-22 16:45:12] [HIGH] Severity: 8.2/10
+[2025-01-22 16:45:12] [HIGH] Impact: Collision attacks, rainbow table vulnerabilities
+[2025-01-22 16:45:12] [HIGH] Recommendation: Migrate to Argon2id or PBKDF2-HMAC-SHA512
+
+[2025-01-22 16:45:15] [HIGH] System: payment-processor.internal
+[2025-01-22 16:45:15] [HIGH] Finding: Elliptic Curve P-192 Detected
+[2025-01-22 16:45:15] [HIGH] Details: ECDSA signatures using secp192r1 curve
+[2025-01-22 16:45:15] [HIGH] Severity: 7.8/10
+[2025-01-22 16:45:15] [HIGH] Impact: Insufficient security margin, vulnerable to advances
+[2025-01-22 16:45:15] [HIGH] Quantum Threat: Shor's algorithm breaks all ECC variants
+[2025-01-22 16:45:15] [HIGH] Recommendation: Upgrade to P-384 or plan PQ migration
+
+[2025-01-22 16:45:18] [MEDIUM] System: database-cluster-01.internal
+[2025-01-22 16:45:18] [MEDIUM] Finding: 3DES Encryption Detected
+[2025-01-22 16:45:18] [MEDIUM] Details: Database uses 3DES-CBC for column encryption
+[2025-01-22 16:45:18] [MEDIUM] Severity: 6.5/10
+[2025-01-22 16:45:18] [MEDIUM] Impact: Sweet32 attack, 64-bit block size limitation
+[2025-01-22 16:45:18] [MEDIUM] Recommendation: Migrate to AES-256-GCM
+
+[2025-01-22 16:45:22] [MEDIUM] System: vpn-gateway.internal
+[2025-01-22 16:45:22] [MEDIUM] Finding: Diffie-Hellman Group 14 (2048-bit)
+[2025-01-22 16:45:22] [MEDIUM] Details: IKEv2 uses 2048-bit MODP group
+[2025-01-22 16:45:22] [MEDIUM] Severity: 5.5/10
+[2025-01-22 16:45:22] [MEDIUM] Impact: Acceptable now, insufficient for long-term (2030+)
+[2025-01-22 16:45:22] [MEDIUM] Quantum Threat: Shor's algorithm applies to all DH groups
+[2025-01-22 16:45:22] [MEDIUM] Recommendation: Plan migration to post-quantum KEM
+
+[2025-01-22 16:45:25] [MEDIUM] System: file-server-05.internal
+[2025-01-22 16:45:25] [MEDIUM] Finding: SHA-1 Digital Signatures
+[2025-01-22 16:45:25] [MEDIUM] Details: SMB signing uses SHA-1 HMAC
+[2025-01-22 16:45:25] [MEDIUM] Severity: 6.0/10
+[2025-01-22 16:45:25] [MEDIUM] Impact: Collision attacks demonstrated (SHAttered)
+[2025-01-22 16:45:25] [MEDIUM] Recommendation: Upgrade to SHA-256 or SHA-384
+
+[2025-01-22 16:45:28] [INFO] System: main-app-cluster.internal
+[2025-01-22 16:45:28] [INFO] Finding: Korean Cryptography Detected
+[2025-01-22 16:45:28] [INFO] Details: Application uses SEED cipher for data encryption
+[2025-01-22 16:45:28] [INFO] Algorithm: SEED-128-CBC
+[2025-01-22 16:45:28] [INFO] Compliance: KCMVP certified, approved by KISA
+[2025-01-22 16:45:28] [INFO] Security: Adequate for current threats, monitor quantum developments
+[2025-01-22 16:45:28] [INFO] Recommendation: Consider adding authentication (GCM mode)
+
+[2025-01-22 16:45:31] [INFO] System: auth-service-cluster.internal
+[2025-01-22 16:45:31] [INFO] Finding: Korean Hash Function Detected
+[2025-01-22 16:45:31] [INFO] Details: HAS-160 used for legacy compatibility
+[2025-01-22 16:45:31] [INFO] Security: 160-bit output, domestic standard
+[2025-01-22 16:45:31] [INFO] Status: Acceptable for legacy systems, not recommended for new deployments
+[2025-01-22 16:45:31] [INFO] Recommendation: Migrate to LSH-256 (newer Korean standard) or SHA-256
+
+[2025-01-22 16:45:34] [LOW] System: monitoring-server.internal
+[2025-01-22 16:45:34] [LOW] Finding: AES-128-GCM
+[2025-01-22 16:45:34] [LOW] Details: Adequate security level
+[2025-01-22 16:45:34] [LOW] Quantum Impact: Grover's algorithm reduces to 64-bit security
+[2025-01-22 16:45:34] [LOW] Recommendation: Consider AES-256-GCM for long-term data protection
+
+[2025-01-22 16:45:37] [LOW] System: backup-storage.internal
+[2025-01-22 16:45:37] [LOW] Finding: ARIA-256-CTR
+[2025-01-22 16:45:37] [LOW] Details: Korean standard block cipher, 256-bit key
+[2025-01-22 16:45:37] [LOW] Security: Strong against classical and quantum attacks (256-bit)
+[2025-01-22 16:45:37] [LOW] Compliance: Approved for Korean government use
+[2025-01-22 16:45:37] [LOW] Status: Secure, no action required
+
+[2025-01-22 16:45:40] ==========================================
+[2025-01-22 16:45:40] ==== Scan Summary ====
+[2025-01-22 16:45:40] Total Systems Scanned: 52
+[2025-01-22 16:45:40] Total Services Analyzed: 487
+[2025-01-22 16:45:40] 
+[2025-01-22 16:45:40] Findings by Severity:
+[2025-01-22 16:45:40]   CRITICAL: 8
+[2025-01-22 16:45:40]   HIGH:     23
+[2025-01-22 16:45:40]   MEDIUM:   41
+[2025-01-22 16:45:40]   LOW:      67
+[2025-01-22 16:45:40]   INFO:     89
+[2025-01-22 16:45:40]
+[2025-01-22 16:45:40] Quantum-Vulnerable Algorithms Detected:
+[2025-01-22 16:45:40]   - RSA (various key sizes): 156 instances
+[2025-01-22 16:45:40]   - ECDSA/ECDH (P-256, P-384, Curve25519): 89 instances
+[2025-01-22 16:45:40]   - DSA: 12 instances
+[2025-01-22 16:45:40]   - Diffie-Hellman: 34 instances
+[2025-01-22 16:45:40]
+[2025-01-22 16:45:40] Deprecated/Weak Algorithms Detected:
+[2025-01-22 16:45:40]   - RC4: 8 instances
+[2025-01-22 16:45:40]   - 3DES: 15 instances
+[2025-01-22 16:45:40]   - MD5: 23 instances
+[2025-01-22 16:45:40]   - SHA-1: 45 instances
+[2025-01-22 16:45:40]   - DES: 3 instances
+[2025-01-22 16:45:40]
+[2025-01-22 16:45:40] Korean Cryptographic Standards:
+[2025-01-22 16:45:40]   - SEED: 27 instances (adequate security)
+[2025-01-22 16:45:40]   - ARIA: 19 instances (strong security)
+[2025-01-22 16:45:40]   - HIGHT: 5 instances (IoT devices)
+[2025-01-22 16:45:40]   - LEA: 8 instances (performance-optimized)
+[2025-01-22 16:45:40]   - HAS-160: 12 instances (legacy compatibility)
+[2025-01-22 16:45:40]   - LSH: 6 instances (modern standard)
+[2025-01-22 16:45:40]   - KCDSA: 4 instances (digital signatures)
+[2025-01-22 16:45:40]
+[2025-01-22 16:45:40] Post-Quantum Readiness: 2%
+[2025-01-22 16:45:40] Cryptographic Agility Score: 45/100
+[2025-01-22 16:45:40] 
+[2025-01-22 16:45:40] Recommended Actions:
+[2025-01-22 16:45:40]   1. IMMEDIATE: Disable RC4, DES, MD5 in all systems
+[2025-01-22 16:45:40]   2. 30 DAYS: Upgrade RSA <2048-bit certificates
+[2025-01-22 16:45:40]   3. 90 DAYS: Migrate from 3DES to AES
+[2025-01-22 16:45:40]   4. 180 DAYS: Replace SHA-1 with SHA-256+
+[2025-01-22 16:45:40]   5. 2026: Begin post-quantum cryptography pilot program
+[2025-01-22 16:45:40]
+[2025-01-22 16:45:40] Next Scan Scheduled: 2025-02-22
+[2025-01-22 16:45:40] ==== End of Report ====

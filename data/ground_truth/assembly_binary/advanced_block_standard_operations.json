@@ -1,41 +1,8 @@
 {
-  "file_type": "assembly_binary",
-  "difficulty": "medium",
-  "crypto_elements": [
-    {
-      "type": "symmetric_encryption",
-      "algorithm": "AES-128",
-      "key_size": 128,
-      "implementation": "Standard AES with 10 rounds",
-      "location": "sub_401000 main function",
-      "severity": "low",
-      "description": "AES-128 implementation with standard operations"
-    },
-    {
-      "type": "substitution_box",
-      "algorithm": "AES S-box",
-      "implementation": "Rijndael S-box lookup",
-      "location": "sub_401100 substitution layer",
-      "severity": "low",
-      "description": "Standard AES substitution box implementation"
-    },
-    {
-      "type": "linear_transformation",
-      "algorithm": "ShiftRows and MixColumns",
-      "location": "sub_401200 and sub_401300",
-      "severity": "low",
-      "description": "AES linear transformation operations"
-    },
-    {
-      "type": "key_addition",
-      "algorithm": "AddRoundKey",
-      "location": "sub_401400",
-      "severity": "low",
-      "description": "Round key XOR operation"
-    }
-  ],
-  "quantum_vulnerable": false,
-  "vulnerability_count": 0,
-  "primary_weakness": "None - AES-128 is considered secure against classical attacks",
-  "additional_notes": "Implementation appears to follow standard AES specification with proper round count and transformations"
+  "expected_findings": {
+    "vulnerable_algorithms_detected": ["AES"],
+    "algorithm_categories": ["grover_vulnerable", "symmetric"],
+    "korean_algorithms_detected": []
+  },
+  "expected_confidence_range": [0.8, 0.95]
 }
