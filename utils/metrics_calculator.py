@@ -145,7 +145,7 @@ class MetricsCalculator:
             elif 'lsh' in algorithm_lower:
                 algorithm_variations = ['lsh']
             elif 'ecdh' in algorithm_lower:
-                algorithm_variations = ['ecdh']
+                algorithm_variations = ['ecdh', 'ecdhe']
             elif 'dilithium' in algorithm_lower:
                 algorithm_variations = ['dilithium']
             elif 'sphincs' in algorithm_lower:
@@ -207,10 +207,10 @@ class MetricsCalculator:
         found_count = 0
 
         category_keywords = {
-            'shor_vulnerable': ['rsa', 'ecc', 'dh', 'dsa', 'ecdsa', 'kcdsa', 'bls', 'paillier', 'bgn', 'x25519', 'ed25519', 'secp256k1', 'ecdh', 'feldman'],
+            'shor_vulnerable': ['rsa', 'ecc', 'dh', 'dsa', 'ecdsa', 'kcdsa', 'bls', 'paillier', 'bgn', 'x25519', 'ed25519', 'secp256k1', 'ecdh', 'ecdhe', 'feldman'],
             'grover_vulnerable': ['aes', 'des', 'md5', 'sha', 'sha256', 'sha-256', '3des', 'tea', 'salsa20', 'chacha20', 'poly1305', 'hmac', 'crc32', 'seed', 'aria', 'hight', 'lea', 'blake2', 'ghash', 'xchacha20', 'pbkdf2', 'gcm', 'ripemd', 'scrypt', 'keccak', 'shake', 'shamir', 'siphash'],
             'classical_vulnerable': ['a5', 'trivium', 'rc4', 'rc2', 'crc32', 'md5', 'sha1'],
-            'public_key': ['rsa', 'ecc', 'dh', 'dsa', 'ecdsa', 'kcdsa', 'bls', 'pss', 'paillier', 'bgn', 'x25519', 'ed25519', 'secp256k1', 'ecdh'],
+            'public_key': ['rsa', 'ecc', 'dh', 'dsa', 'ecdsa', 'kcdsa', 'bls', 'pss', 'paillier', 'bgn', 'x25519', 'ed25519', 'secp256k1', 'ecdh', 'ecdhe'],
             'symmetric': ['aes', 'des', '3des', 'tea', 'salsa20', 'chacha20', 'seed', 'aria', 'hight', 'lea', 'xchacha20'],
             'symmetric_key': ['aes', 'des', '3des', 'tea', 'salsa20', 'chacha20', 'seed', 'aria', 'hight', 'lea', 'xchacha20', 'rc2', 'rc4'],
             'hash_functions': ['md5', 'sha', 'sha256', 'sha-256', 'sha1', 'hmac', 'crc32', 'has-160', 'blake2', 'blake2b', 'ghash', 'ripemd', 'keccak', 'shake', 'siphash'],
@@ -359,7 +359,7 @@ class MetricsCalculator:
                                  'rc4', 'rc2', 'md5', 'sha1', 'sha256', 'tea', 'salsa20', 'chacha20', 'poly1305',
                                  'hmac', 'crc32', 'seed', 'aria', 'hight', 'lea', 'trivium', 'a5',
                                  'bls', 'blake2', 'ghash', 'pss', 'montgomery', 'rijndael', 'aes',
-                                 'has-160', 'lsh', 'kcdsa', 'ecdh', 'ec-kcdsa', 'kyber', 'vdf', 'misty',
+                                 'has-160', 'lsh', 'kcdsa', 'ecdh', 'ecdhe', 'ec-kcdsa', 'kyber', 'vdf', 'misty',
                                  'dilithium', 'sphincs', 'ntru', 'paillier', 'bgn', 'shamir', 'feldman',
                                  'x25519', 'ed25519', 'xchacha20', 'double ratchet', 'ikev2', 'ocsp',
                                  'pbkdf2', 'gcm', 'ripemd', 'scrypt', 'keccak', 'secp256k1', 'shake', 'siphash']
@@ -433,7 +433,7 @@ class MetricsCalculator:
                 elif 'lsh' in algorithm_lower:
                     variations = ['lsh']
                 elif 'ecdh' in algorithm_lower:
-                    variations = ['ecdh']
+                    variations = ['ecdh', 'ecdhe']
                 elif 'dilithium' in algorithm_lower:
                     variations = ['dilithium']
                 elif 'sphincs' in algorithm_lower:
