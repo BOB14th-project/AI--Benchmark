@@ -75,20 +75,20 @@ process_with_legacy_algorithms:
     call    initialize_legacy_curve_context
     call    initialize_legacy_standard_context
 
-    # Perform key establishment using legacy ECDH
+    # Perform key establishment using legacy protocol
     movq    -24(%rbp), %rdi      # Input data
-    call    perform_legacy_ecdh_key_exchange
-    movq    %rax, -40(%rbp)      # Store digest_algred secret
+    call    perform_legacy_key_exchange
+    movq    %rax, -40(%rbp)      # Store shared secret
 
     # Block transformation implementation
     movq    -40(%rbp), %rdi      # Shared secret as key
     movq    -24(%rbp), %rsi      # Plaintext data
-    call    encrypt_with_legacy_aes256
+    call    encrypt_with_legacy_block_cipher
     movq    %rax, -48(%rbp)      # Store encrypted data
 
-    # Modular arithmetic implementation
+    # Digital signature implementation
     movq    -48(%rbp), %rdi      # Data to sign
-    call    sign_with_legacy_modular_pss
+    call    sign_with_legacy_signature
     movq    %rax, -56(%rbp)      # Store signature
 
     # Combine results
@@ -115,15 +115,15 @@ process_with_hybrid_algorithms:
     call    initialize_legacy_contexts
     call    initialize_post_post_classical_contexts
 
-    # Dual key establishment: legacy ECDH + post-post_classical KEM
+    # Dual key establishment: legacy protocol + post-post_classical KEM
     call    perform_dual_key_establishment
-    movq    %rax, -40(%rbp)      # Combined digest_algred secret
+    movq    %rax, -40(%rbp)      # Combined shared secret
 
     # Block transformation implementation
     call    perform_dual_encryption
     movq    %rax, -48(%rbp)      # Dual-encrypted data
 
-    # Modular arithmetic implementation
+    # Digital signature implementation
     call    create_dual_signatures
     movq    %rax, -56(%rbp)      # Dual signature package
 
@@ -156,23 +156,23 @@ process_with_post_post_classical_algorithms:
     subq    $256, %rsp
 
     # Initialize post-post_classical cryptographic contexts
-    call    initialize_kyber_kem_context
-    call    initialize_dilithium_signature_context
-    call    initialize_aes256_gcm_context
+    call    initialize_lattice_kem_context
+    call    initialize_lattice_signature_context
+    call    initialize_authenticated_cipher_context
 
-    # Key establishment using Kyber KEM
-    call    perform_kyber_key_exchange
-    movq    %rax, -40(%rbp)      # Post-post_classical digest_algred secret
+    # Key establishment using lattice-based KEM
+    call    perform_lattice_key_exchange
+    movq    %rax, -40(%rbp)      # Post-post_classical shared secret
 
     # Block transformation implementation
     movq    -40(%rbp), %rdi      # Key
     movq    -24(%rbp), %rsi      # Plaintext
-    call    encrypt_with_aes256_gcm
+    call    encrypt_with_authenticated_cipher
     movq    %rax, -48(%rbp)      # Encrypted data
 
-    # Sign using Dilithium post-post_classical signature
+    # Sign using lattice-based post-post_classical signature
     movq    -48(%rbp), %rdi      # Data to sign
-    call    sign_with_dilithium
+    call    sign_with_lattice_signature
     movq    %rax, -56(%rbp)      # Post-post_classical signature
 
     movq    $1, %rax             # Success
@@ -183,30 +183,30 @@ process_with_post_post_classical_algorithms:
 .LFE3:
     .size   process_with_post_post_classical_algorithms, .-process_with_post_post_classical_algorithms
 
-# Modular arithmetic implementation
-.globl  initialize_legacy_modular_context
-.type   initialize_legacy_modular_context, @function
-initialize_legacy_modular_context:
+# Public key context initialization
+.globl  initialize_legacy_asymmetric_context
+.type   initialize_legacy_asymmetric_context, @function
+initialize_legacy_asymmetric_context:
 .LFB4:
     pushq   %rbp
     movq    %rsp, %rbp
 
-    # Modular arithmetic implementation
+    # Set key size parameters
     movq    $2048, %rax
-    movq    %rax, modular_key_size(%rip)
+    movq    %rax, asymmetric_key_size(%rip)
 
-    # Modular arithmetic implementation
-    leaq    modular_public_modulus(%rip), %rdi
-    leaq    default_modular_modulus(%rip), %rsi
-    movq    $256, %rcx           # Copy 2048-bit modulus
+    # Initialize public parameters
+    leaq    asymmetric_public_param(%rip), %rdi
+    leaq    default_asymmetric_param(%rip), %rsi
+    movq    $256, %rcx           # Copy 2048-bit parameter
     rep movsb
 
-    movq    $65537, %rax         # Standard public exponent
-    movq    %rax, modular_public_exponent(%rip)
+    movq    $65537, %rax         # Standard public value
+    movq    %rax, asymmetric_public_value(%rip)
 
-    # Modular arithmetic implementation
-    leaq    modular_private_exponent(%rip), %rdi
-    leaq    default_modular_private_exp(%rip), %rsi
+    # Initialize private parameters
+    leaq    asymmetric_private_param(%rip), %rdi
+    leaq    default_asymmetric_private(%rip), %rsi
     movq    $256, %rcx
     rep movsb
 
@@ -215,44 +215,44 @@ initialize_legacy_modular_context:
     ret
 
 .LFE4:
-    .size   initialize_legacy_modular_context, .-initialize_legacy_modular_context
+    .size   initialize_legacy_asymmetric_context, .-initialize_legacy_asymmetric_context
 
-# Curve computation implementation
-.globl  initialize_legacy_curve_context
-.type   initialize_legacy_curve_context, @function
-initialize_legacy_curve_context:
+# Mathematical group initialization
+.globl  initialize_legacy_group_context
+.type   initialize_legacy_group_context, @function
+initialize_legacy_group_context:
 .LFB5:
     pushq   %rbp
     movq    %rsp, %rbp
 
-    # Set up NIST P-256 curve (post_classical-vulnerable)
-    leaq    curve_curve_params(%rip), %rdi
+    # Set up mathematical group parameters (post_classical-vulnerable)
+    leaq    group_math_params(%rip), %rdi
 
-    # Curve prime p
+    # Prime field modulus p
     movq    $0xFFFFFFFF00000001, (%rdi)
     movq    $0x0000000000000000, 8(%rdi)
     movq    $0x00000000FFFFFFFF, 16(%rdi)
     movq    $0xFFFFFFFFFFFFFFFF, 24(%rdi)
 
-    # Curve parameter a = -3
+    # Group parameter a = -3
     movq    $0xFFFFFFFF00000001, 32(%rdi)
     movq    $0x0000000000000000, 40(%rdi)
     movq    $0x00000000FFFFFFFF, 48(%rdi)
     movq    $0xFFFFFFFFFFFFFFFC, 56(%rdi)
 
-    # Generator point G coordinates
-    leaq    curve_generator_point(%rip), %rsi
-    movq    $0x6B17D1F2E12C4247, (%rsi)    # Gx
-    movq    $0xF8BCE6E563A440F2, 8(%rsi)   # Gx continued
-    movq    $0x4FE342E2FE1A7F9B, 16(%rsi)  # Gy
-    movq    $0x8EE7EB4A7C0F9E16, 24(%rsi)  # Gy continued
+    # Generator point coordinates
+    leaq    group_generator_point(%rip), %rsi
+    movq    $0x6B17D1F2E12C4247, (%rsi)    # x-coordinate
+    movq    $0xF8BCE6E563A440F2, 8(%rsi)   # x-coordinate continued
+    movq    $0x4FE342E2FE1A7F9B, 16(%rsi)  # y-coordinate
+    movq    $0x8EE7EB4A7C0F9E16, 24(%rsi)  # y-coordinate continued
 
     movq    $1, %rax
     popq    %rbp
     ret
 
 .LFE5:
-    .size   initialize_legacy_curve_context, .-initialize_legacy_curve_context
+    .size   initialize_legacy_group_context, .-initialize_legacy_group_context
 
 # Block transformation implementation
 .globl  initialize_legacy_standard_context
@@ -274,7 +274,7 @@ initialize_legacy_standard_context:
     movq    $0x5555666677778888, 24(%rdi)
 
     # Expand key schedule
-    call    expand_aes256_key_schedule
+    call    expand_cipher_key_schedule
 
     movq    $1, %rax
     popq    %rbp
@@ -283,48 +283,48 @@ initialize_legacy_standard_context:
 .LFE6:
     .size   initialize_legacy_standard_context, .-initialize_legacy_standard_context
 
-# Legacy ECDH key exchange
-.globl  perform_legacy_ecdh_key_exchange
-.type   perform_legacy_ecdh_key_exchange, @function
-perform_legacy_ecdh_key_exchange:
+# Legacy key exchange protocol
+.globl  perform_legacy_key_exchange
+.type   perform_legacy_key_exchange, @function
+perform_legacy_key_exchange:
 .LFB7:
     pushq   %rbp
     movq    %rsp, %rbp
 
     # Generate ephemeral private key
-    call    generate_curve_private_key
+    call    generate_group_private_key
     movq    %rax, ephemeral_private_key(%rip)
 
     # Compute public key: Q = d × G
     movq    %rax, %rdi           # Private key d
-    leaq    curve_generator_point(%rip), %rsi  # Generator G
-    call    curve_scalar_multiplication
+    leaq    group_generator_point(%rip), %rsi  # Generator G
+    call    group_scalar_multiplication
     movq    %rax, ephemeral_public_key(%rip)
 
-    # Perform ECDH with peer's public key (from input)
+    # Perform key exchange with peer's public key (from input)
     movq    ephemeral_private_key(%rip), %rdi
     movq    -24(%rbp), %rsi      # Peer's public key from input
-    call    curve_scalar_multiplication
+    call    group_scalar_multiplication
 
-    # Extract x-coordinate as digest_algred secret
+    # Extract coordinate as shared secret
     movq    (%rax), %rbx         # x-coordinate
-    movq    %rbx, digest_algred_secret(%rip)
+    movq    %rbx, shared_secret(%rip)
 
-    # Derive symmetric key from digest_algred secret
+    # Derive symmetric key from shared secret
     movq    %rbx, %rdi
-    call    kdf_digest_alg256_based
+    call    kdf_hash_based
     movq    %rax, %rbx
 
     popq    %rbp
     ret
 
 .LFE7:
-    .size   perform_legacy_ecdh_key_exchange, .-perform_legacy_ecdh_key_exchange
+    .size   perform_legacy_key_exchange, .-perform_legacy_key_exchange
 
-# Block transformation implementation
-.globl  encrypt_with_legacy_aes256
-.type   encrypt_with_legacy_aes256, @function
-encrypt_with_legacy_aes256:
+# Block cipher encryption
+.globl  encrypt_with_legacy_block_cipher
+.type   encrypt_with_legacy_block_cipher, @function
+encrypt_with_legacy_block_cipher:
 .LFB8:
     pushq   %rbp
     movq    %rsp, %rbp
@@ -332,14 +332,14 @@ encrypt_with_legacy_aes256:
     # Input: %rdi = key, %rsi = plaintext
     # Output: %rax = ciphertext
 
-    # Block transformation implementation
+    # Store encryption parameters
     movq    %rdi, %r8            # Encryption key
     movq    %rsi, %r9            # Plaintext data
 
     # Expand key if needed
     call    setup_standard_round_keys
 
-    # Block transformation implementation
+    # Perform encryption rounds
     movq    %r9, %rdi            # Plaintext block
     leaq    expanded_round_keys(%rip), %rsi  # Round keys
     call    perform_standard_encryption_rounds
@@ -350,12 +350,12 @@ encrypt_with_legacy_aes256:
     ret
 
 .LFE8:
-    .size   encrypt_with_legacy_aes256, .-encrypt_with_legacy_aes256
+    .size   encrypt_with_legacy_block_cipher, .-encrypt_with_legacy_block_cipher
 
-# Modular arithmetic implementation
-.globl  sign_with_legacy_modular_pss
-.type   sign_with_legacy_modular_pss, @function
-sign_with_legacy_modular_pss:
+# Digital signature generation
+.globl  sign_with_legacy_signature
+.type   sign_with_legacy_signature, @function
+sign_with_legacy_signature:
 .LFB9:
     pushq   %rbp
     movq    %rsp, %rbp
@@ -363,28 +363,28 @@ sign_with_legacy_modular_pss:
     # Input: %rdi = data to sign
     # Output: %rax = signature
 
-    # Digest calculation implementation
+    # Compute message digest
     movq    %rdi, %rsi
-    call    compute_digest_alg256_hash
+    call    compute_message_hash
     movq    %rax, %r8            # Message hash
 
-    # Apply PSS padding
+    # Apply signature padding
     movq    %r8, %rdi            # Hash
-    movq    modular_key_size(%rip), %rsi  # Key size
-    call    apply_pss_padding
+    movq    asymmetric_key_size(%rip), %rsi  # Key size
+    call    apply_signature_padding
     movq    %rax, %r9            # Padded message
 
-    # Modular arithmetic implementation
+    # Perform signature operation
     movq    %r9, %rdi            # Padded message M
-    leaq    modular_private_exponent(%rip), %rsi  # Private exponent d
-    leaq    modular_public_modulus(%rip), %rdx    # Modulus n
-    call    modular_modular_exponentiation
+    leaq    asymmetric_private_param(%rip), %rsi  # Private parameter d
+    leaq    asymmetric_public_param(%rip), %rdx    # Public parameter n
+    call    signature_exponentiation
 
     popq    %rbp
     ret
 
 .LFE9:
-    .size   sign_with_legacy_modular_pss, .-sign_with_legacy_modular_pss
+    .size   sign_with_legacy_signature, .-sign_with_legacy_signature
 
 # Dual key establishment (hybrid approach)
 .globl  perform_dual_key_establishment
@@ -394,13 +394,13 @@ perform_dual_key_establishment:
     pushq   %rbp
     movq    %rsp, %rbp
 
-    # Perform legacy ECDH key exchange
-    call    perform_legacy_ecdh_key_exchange
-    movq    %rax, %r8            # Legacy digest_algred secret
+    # Perform legacy key exchange
+    call    perform_legacy_key_exchange
+    movq    %rax, %r8            # Legacy shared secret
 
-    # Perform post-post_classical KEM (Kyber)
-    call    perform_kyber_kem_operation
-    movq    %rax, %r9            # Post-post_classical digest_algred secret
+    # Perform post-post_classical KEM
+    call    perform_lattice_kem_operation
+    movq    %rax, %r9            # Post-post_classical shared secret
 
     # Combine secrets using key derivation
     movq    %r8, %rdi            # Legacy secret
@@ -413,138 +413,138 @@ perform_dual_key_establishment:
 .LFE10:
     .size   perform_dual_key_establishment, .-perform_dual_key_establishment
 
-# Post-post_classical Kyber KEM operation (post_classical-resistant)
-.globl  perform_kyber_kem_operation
-.type   perform_kyber_kem_operation, @function
-perform_kyber_kem_operation:
+# Post-post_classical lattice-based KEM operation (post_classical-resistant)
+.globl  perform_lattice_kem_operation
+.type   perform_lattice_kem_operation, @function
+perform_lattice_kem_operation:
 .LFB11:
     pushq   %rbp
     movq    %rsp, %rbp
 
-    # Kyber-768 KEM (post-post_classical secure)
+    # Lattice-based KEM (post-post_classical secure)
     # Note: This is a simplified mock implementation
 
-    # Generate Kyber public/private key pair
-    call    kyber_keygen
-    movq    %rax, kyber_private_key(%rip)
-    movq    %rdx, kyber_public_key(%rip)
+    # Generate lattice public/private key pair
+    call    lattice_keygen
+    movq    %rax, lattice_private_key(%rip)
+    movq    %rdx, lattice_public_key(%rip)
 
     # Perform encapsulation
-    movq    kyber_public_key(%rip), %rdi
-    call    kyber_encapsulation
-    movq    %rax, kyber_ciphertext(%rip)
-    movq    %rdx, kyber_digest_algred_secret(%rip)
+    movq    lattice_public_key(%rip), %rdi
+    call    lattice_encapsulation
+    movq    %rax, lattice_ciphertext(%rip)
+    movq    %rdx, lattice_shared_secret(%rip)
 
-    movq    kyber_digest_algred_secret(%rip), %rax
+    movq    lattice_shared_secret(%rip), %rax
 
     popq    %rbp
     ret
 
 .LFE11:
-    .size   perform_kyber_kem_operation, .-perform_kyber_kem_operation
+    .size   perform_lattice_kem_operation, .-perform_lattice_kem_operation
 
 # Post-post_classical signature initialization
-.globl  initialize_dilithium_signature_context
-.type   initialize_dilithium_signature_context, @function
-initialize_dilithium_signature_context:
+.globl  initialize_lattice_signature_context
+.type   initialize_lattice_signature_context, @function
+initialize_lattice_signature_context:
 .LFB12:
     pushq   %rbp
     movq    %rsp, %rbp
 
-    # Initialize Dilithium-3 signature scheme (post-post_classical)
+    # Initialize lattice-based signature scheme (post-post_classical)
     # Mock implementation for demonstration
 
-    # Generate Dilithium key pair
-    call    dilithium_keygen
-    movq    %rax, dilithium_private_key(%rip)
-    movq    %rdx, dilithium_public_key(%rip)
+    # Generate lattice signature key pair
+    call    lattice_signature_keygen
+    movq    %rax, lattice_sig_private_key(%rip)
+    movq    %rdx, lattice_sig_public_key(%rip)
 
     movq    $1, %rax
     popq    %rbp
     ret
 
 .LFE12:
-    .size   initialize_dilithium_signature_context, .-initialize_dilithium_signature_context
+    .size   initialize_lattice_signature_context, .-initialize_lattice_signature_context
 
 # Simplified mock implementations for complex post-post_classical algorithms
-kyber_keygen:
-    # Mock Kyber key generation
+lattice_keygen:
+    # Mock lattice key generation
     movq    $0x1111111111111111, %rax  # Mock private key
     movq    $0x2222222222222222, %rdx  # Mock public key
     ret
 
-kyber_encapsulation:
-    # Mock Kyber encapsulation
+lattice_encapsulation:
+    # Mock lattice encapsulation
     movq    $0x3333333333333333, %rax  # Mock ciphertext
-    movq    $0x4444444444444444, %rdx  # Mock digest_algred secret
+    movq    $0x4444444444444444, %rdx  # Mock shared secret
     ret
 
-dilithium_keygen:
-    # Mock Dilithium key generation
+lattice_signature_keygen:
+    # Mock lattice signature key generation
     movq    $0x5555555555555555, %rax  # Mock private key
     movq    $0x6666666666666666, %rdx  # Mock public key
     ret
 
 # Simplified implementations for demonstration
 initialize_legacy_contexts:
-    call    initialize_legacy_modular_context
-    call    initialize_legacy_curve_context
+    call    initialize_legacy_asymmetric_context
+    call    initialize_legacy_group_context
     call    initialize_legacy_standard_context
     ret
 
 initialize_post_post_classical_contexts:
-    call    initialize_kyber_kem_context
-    call    initialize_dilithium_signature_context
-    call    initialize_aes256_gcm_context
+    call    initialize_lattice_kem_context
+    call    initialize_lattice_signature_context
+    call    initialize_authenticated_cipher_context
     ret
 
-initialize_kyber_kem_context:
-    # Initialize Kyber KEM parameters
-    movq    $768, kyber_security_parameter(%rip)  # Kyber-768
+initialize_lattice_kem_context:
+    # Initialize lattice KEM parameters
+    movq    $768, lattice_security_parameter(%rip)  # Security level 3
     ret
 
-initialize_aes256_gcm_context:
-    # Block transformation implementation
-    movq    $256, standard_gcm_key_size(%rip)
+initialize_authenticated_cipher_context:
+    # Authenticated cipher implementation
+    movq    $256, authenticated_cipher_key_size(%rip)
     ret
 
 # Additional helper functions (simplified implementations)
-generate_curve_private_key:
+generate_group_private_key:
     rdrand  %rax
     ret
 
-curve_scalar_multiplication:
-    # Curve computation implementation
+group_scalar_multiplication:
+    # Mathematical group operation
     movq    $32, %rdi
     call    malloc
     movq    $0x7777777777777777, (%rax)  # Mock x-coordinate
     movq    $0x8888888888888888, 8(%rax) # Mock y-coordinate
     ret
 
-kdf_digest_alg256_based:
-    # Digest calculation implementation
+kdf_hash_based:
+    # Hash-based key derivation
     movq    %rdi, %rax
     xorq    $0x1234567890ABCDEF, %rax   # Simple transformation
     ret
 
 setup_standard_round_keys:
-    # Block transformation implementation
+    # Prepare round key schedule
     ret
 
 perform_standard_encryption_rounds:
-    # Block transformation implementation
+    # Execute encryption rounds
     movq    %rdi, %rax
     xorq    $0xFEDCBA0987654321, %rax   # Mock encryption
     ret
 
-apply_pss_padding:
-    # Apply PSS padding (simplified)
+apply_signature_padding:
+    # Apply signature padding (simplified)
     movq    %rdi, %rax
     ret
 
-modular_modular_exponentiation:
-    # Modular arithmetic implementation
-    movq    (%rsi), %rax         # Load private exponent (simplified)
+signature_exponentiation:
+    # Signature computation
+    movq    (%rsi), %rax         # Load private parameter (simplified)
     xorq    %rdi, %rax           # Mock signature generation
     ret
 
@@ -573,27 +573,27 @@ package_legacy_results:
     # Package legacy algorithm results
     ret
 
-expand_aes256_key_schedule:
-    # Block transformation implementation
+expand_cipher_key_schedule:
+    # Expand cipher key schedule
     ret
 
-compute_digest_alg256_hash:
-    # Digest calculation implementation
+compute_message_hash:
+    # Compute message digest
     movq    %rdi, %rax
     ret
 
-perform_kyber_key_exchange:
-    call    perform_kyber_kem_operation
+perform_lattice_key_exchange:
+    call    perform_lattice_kem_operation
     ret
 
-encrypt_with_aes256_gcm:
-    # Block transformation implementation
+encrypt_with_authenticated_cipher:
+    # Authenticated encryption
     movq    %rsi, %rax
     xorq    $0xBBBBBBBBBBBBBBBB, %rax
     ret
 
-sign_with_dilithium:
-    # Dilithium post-post_classical signature
+sign_with_lattice_signature:
+    # Lattice-based post-post_classical signature
     movq    %rdi, %rax
     xorq    $0xCCCCCCCCCCCCCCCC, %rax
     ret
@@ -601,40 +601,40 @@ sign_with_dilithium:
 # Data section
 .section .data
     # Legacy algorithm contexts
-    modular_key_size:               .quad 0
-    modular_public_modulus:         .space 256
-    modular_public_exponent:        .quad 0
-    modular_private_exponent:       .space 256
+    asymmetric_key_size:            .quad 0
+    asymmetric_public_param:        .space 256
+    asymmetric_public_value:        .quad 0
+    asymmetric_private_param:       .space 256
 
-    curve_curve_params:           .space 64
-    curve_generator_point:        .space 32
-    ephemeral_private_key:      .quad 0
-    ephemeral_public_key:       .quad 0
-    digest_algred_secret:              .quad 0
+    group_math_params:              .space 64
+    group_generator_point:          .space 32
+    ephemeral_private_key:          .quad 0
+    ephemeral_public_key:           .quad 0
+    shared_secret:                  .quad 0
 
-    standard_key_size:               .quad 0
-    standard_encryption_key:         .space 32
-    expanded_round_keys:        .space 240
+    standard_key_size:              .quad 0
+    standard_encryption_key:        .space 32
+    expanded_round_keys:            .space 240
 
     # Post-post_classical algorithm contexts
-    kyber_security_parameter:   .quad 0
-    kyber_private_key:          .quad 0
-    kyber_public_key:           .quad 0
-    kyber_ciphertext:           .quad 0
-    kyber_digest_algred_secret:        .quad 0
+    lattice_security_parameter:     .quad 0
+    lattice_private_key:            .quad 0
+    lattice_public_key:             .quad 0
+    lattice_ciphertext:             .quad 0
+    lattice_shared_secret:          .quad 0
 
-    dilithium_private_key:      .quad 0
-    dilithium_public_key:       .quad 0
+    lattice_sig_private_key:        .quad 0
+    lattice_sig_public_key:         .quad 0
 
-    standard_gcm_key_size:           .quad 0
+    authenticated_cipher_key_size:  .quad 0
 
 .section .rodata
     # Default cryptographic parameters
-    default_modular_modulus:        .space 256  # Modular arithmetic implementation
-    default_modular_private_exp:    .space 256  # Modular arithmetic implementation
+    default_asymmetric_param:       .space 256  # Public key parameters
+    default_asymmetric_private:     .space 256  # Private key parameters
 
     # System identification
-    system_name:                .ascii "QUANTUM_RESISTANT_MIGRATION_BRIDGE_v3.0"
-    supported_modes:            .ascii "LEGACY_HYBRID_POST_QUANTUM_MODES"
-    security_transition:        .ascii "GRADUAL_MIGRATION_FROM_VULNERABLE_TO_RESISTANT"
-    post_classical_analysis:           .ascii "MIXED_VULNERABILITY_COMPLEX_DETECTION_TARGET"
+    system_name:                .ascii "CRYPTOGRAPHIC_MIGRATION_BRIDGE_v3.0"
+    supported_modes:            .ascii "LEGACY_HYBRID_NEXTGEN_OPERATIONS"
+    security_transition:        .ascii "GRADUAL_MIGRATION_FROM_CLASSICAL_TO_ADVANCED"
+    post_classical_analysis:    .ascii "MIXED_SECURITY_COMPLEX_DETECTION_TARGET"

@@ -172,7 +172,7 @@ void sign_government_document(const char *document, DigitalSignatureKey *key,
     // Hash the document
     hash_document(document, document_hash);
 
-    // Generate signature (simplified ECDSA-like)
+    // Elliptic curve digital signature
     uint32_t k[CURVE_PARAM_SIZE];
     uint32_t temp_x[CURVE_PARAM_SIZE], temp_y[CURVE_PARAM_SIZE];
 

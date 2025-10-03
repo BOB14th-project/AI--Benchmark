@@ -19,7 +19,7 @@ typedef struct {
     uint8_t communication_key[MILITARY_KEY_SIZE];
 } MilitaryCrypto;
 
-// SHA-256 like constants for military hash
+// Cryptographic hash function
 static const uint64_t military_constants[80] = {
     0x428a2f98d728ae22ULL, 0x7137449123ef65cdULL, 0xb5c0fbcfec4d3b2fULL, 0xe9b5dba58189dbbcULL,
     0x3956c25bf348b538ULL, 0x59f111f1b605d019ULL, 0x923f82a4af194f9bULL, 0xab1c5ed5da6d8118ULL,
@@ -30,7 +30,7 @@ static const uint64_t military_constants[80] = {
 void init_military_crypto(MilitaryCrypto *crypto, const uint8_t *master_key) {
     memcpy(crypto->communication_key, master_key, MILITARY_KEY_SIZE);
 
-    // Initialize SHA-256 like state
+    // Cryptographic hash function
     crypto->hash_state[0] = 0x6a09e667f3bcc908ULL;
     crypto->hash_state[1] = 0xbb67ae8584caa73bULL;
     crypto->hash_state[2] = 0x3c6ef372fe94f82bULL;
@@ -43,7 +43,7 @@ void init_military_crypto(MilitaryCrypto *crypto, const uint8_t *master_key) {
     crypto->bit_length = 0;
 }
 
-// SHA-256 like transformation
+// Cryptographic hash function
 uint64_t sha_rotr(uint64_t x, int n) {
     return (x >> n) | (x << (64 - n));
 }

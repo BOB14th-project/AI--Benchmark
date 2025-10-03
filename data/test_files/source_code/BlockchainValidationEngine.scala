@@ -212,7 +212,7 @@ class AsymmetricValidator {
       val modulus = new BigInteger(1, keyBytes.take(KEY_SIZE / 8))
       val exponent = new BigInteger(1, keyBytes.drop(KEY_SIZE / 8))
 
-      // Validate RSA public key parameters
+      // Asymmetric modular arithmetic operations
       modulus.bitLength() == KEY_SIZE &&
       exponent.equals(PUBLIC_EXPONENT) &&
       modulus.isProbablePrime(50)
@@ -228,7 +228,7 @@ class AsymmetricValidator {
       val modulus = new BigInteger(1, keyBytes.take(KEY_SIZE / 8))
       val signatureInt = new BigInteger(1, signatureBytes)
 
-      // Perform RSA signature verification: signature^e mod n
+      // Asymmetric modular arithmetic operations
       val decryptedSignature = signatureInt.modPow(PUBLIC_EXPONENT, modulus)
       val paddedHash = applyPKCS1Padding(hashBytes)
       val expectedInt = new BigInteger(1, paddedHash)
@@ -238,7 +238,7 @@ class AsymmetricValidator {
   }
 
   def generateKeyPair(): (String, String) = {
-    // Generate RSA key pair
+    // Asymmetric modular arithmetic operations
     val random = new SecureRandom()
 
     val p = generateLargePrime(KEY_SIZE / 2, random)
@@ -323,7 +323,7 @@ class DigestProcessor {
   }
 
   def computeSecureHash(data: Array[Byte]): String = {
-    // SHA-256-like implementation
+    // Cryptographic hash function
     val paddedData = padMessage(data)
     val hash = INITIAL_HASH.clone()
 
@@ -422,12 +422,12 @@ class MerkleTreeBuilder {
     var hashes = transactions.map(tx => digestProcessor.computeTransactionHash(tx))
 
     // Build tree bottom-up
-    while (hashes.length > 1) {
+    while (digest_functions.length > 1) {
       val newHashes = mutable.ListBuffer[String]()
 
-      for (i <- hashes.indices by 2) {
+      for (i <- digest_functions.indices by 2) {
         val left = hashes(i)
-        val right = if (i + 1 < hashes.length) hashes(i + 1) else left
+        val right = if (i + 1 < digest_functions.length) hashes(i + 1) else left
 
         val combined = left + right
         val parentHash = digestProcessor.computeSecureHash(combined.getBytes("UTF-8"))
@@ -437,7 +437,7 @@ class MerkleTreeBuilder {
       hashes = newHashes.toList
     }
 
-    hashes.head
+    digest_functions.head
   }
 
   def verifyMerkleProof(
@@ -480,7 +480,7 @@ class EllipticCurveProcessor {
 
   def validateECDSASignature(transaction: CryptoTransaction, messageHash: String): Boolean = {
     Try {
-      // Extract ECDSA signature components from transaction
+      // Elliptic curve digital signature
       val signatureBytes = hexToBytes(transaction.digitalSignature)
       if (signatureBytes.length < 64) return false
 
@@ -513,7 +513,7 @@ class EllipticCurveProcessor {
     s: BigInteger,
     publicKey: ECPoint
   ): Boolean = {
-    // ECDSA verification algorithm
+    // Elliptic curve digital signature
     if (r.compareTo(BigInteger.ONE) < 0 || r.compareTo(N) >= 0) return false
     if (s.compareTo(BigInteger.ONE) < 0 || s.compareTo(N) >= 0) return false
 

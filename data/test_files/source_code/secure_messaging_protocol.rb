@@ -192,7 +192,7 @@ class LargeIntegerArithmetic
   end
 
   def apply_signature_padding(message_hash)
-    # SHA-256 DigestInfo
+    # 256-bit cryptographic hash
     digest_info = "\x30\x31\x30\x0d\x06\x09\x60\x86\x48\x01\x65\x03\x04\x02\x01\x05\x00\x04\x20"
 
     padding_length = (@key_size / 8) - digest_info.length - message_hash.length - 3
@@ -703,7 +703,7 @@ class SecureMessagingProtocol
 
         message_hash = Digest::SHA256.digest(message_data)
 
-        # Verify RSA signature
+        # Asymmetric modular arithmetic operations
         rsa_signature = Base64.decode64(encrypted_message[:signatures][:rsa])
         rsa_valid = @rsa_processor.verify_signature(
           message_hash,
@@ -711,7 +711,7 @@ class SecureMessagingProtocol
           @contacts[sender_id][:public_keys][:rsa]
         )
 
-        # Verify ECC signature
+        # Elliptic curve cryptography
         ecc_valid = @ecc_processor.verify_signature(
           message_hash,
           encrypted_message[:signatures][:ecc],
@@ -840,7 +840,7 @@ class SecureMessagingProtocol
   def perform_key_exchange(contact_id)
     contact = @contacts[contact_id]
 
-    # Perform ECDH key exchange
+    # Elliptic curve key exchange
     shared_secret = @ecc_processor.perform_key_exchange(
       contact[:public_keys][:ecc],
       @user_keys[:ecc][:private_key]

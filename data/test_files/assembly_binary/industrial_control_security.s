@@ -16,10 +16,10 @@ Disassembly of section .text:
   401027:	10
   401028:	48 8d 7d d0          	lea    -0x30(%rbp),%rdi
   40102c:	48 8d 75 f8          	lea    -0x8(%rbp),%rsi
-  401030:	e8 2b 00 00 00       	callq  401060 <lea_key_schedule>
+  401030:	e8 2b 00 00 00       	callq  401060 <fast_cipher_key_schedule>
   401035:	48 8d 7d c0          	lea    -0x40(%rbp),%rdi
   401039:	48 8d 75 d0          	lea    -0x30(%rbp),%rsi
-  40103d:	e8 9e 00 00 00       	callq  4010e0 <lea_encrypt_block>
+  40103d:	e8 9e 00 00 00       	callq  4010e0 <fast_cipher_encrypt_block>
   401042:	48 8d 7d c0          	lea    -0x40(%rbp),%rdi
   401046:	be 10 00 00 00       	mov    $0x10,%esi
   40104b:	e8 20 01 00 00       	callq  401170 <scada_protocol_auth>
@@ -27,7 +27,7 @@ Disassembly of section .text:
   401055:	bf 00 00 00 00       	mov    $0x0,%edi
   40105a:	0f 05                	syscall
 
-0000000000401060 <lea_key_schedule>:
+0000000000401060 <fast_cipher_key_schedule>:
   401060:	55                   	push   %rbp
   401061:	48 89 e5             	mov    %rsp,%rbp
   401064:	48 89 7d f8          	mov    %rdi,-0x8(%rbp)
@@ -45,7 +45,7 @@ Disassembly of section .text:
   40108d:	8b 40 0c             	mov    0xc(%rax),%eax
   401090:	89 45 e0             	mov    %eax,-0x20(%rbp)
   401093:	c7 45 dc 00 00 00 00 	movl   $0x0,-0x24(%rbp)
-  40109a:	eb 37                	jmp    4010d3 <lea_key_schedule+0x73>
+  40109a:	eb 37                	jmp    4010d3 <fast_cipher_key_schedule+0x73>
   40109c:	8b 45 ec             	mov    -0x14(%rbp),%eax
   40109f:	c1 c0 01             	rol    $0x1,%eax
   4010a2:	89 45 ec             	mov    %eax,-0x14(%rbp)
@@ -73,12 +73,12 @@ Disassembly of section .text:
   4010e4:	89 50 0c             	mov    %edx,0xc(%rax)
   4010e7:	83 45 dc 01          	addl   $0x1,-0x24(%rbp)
   4010eb:	83 7d dc 17          	cmpl   $0x17,-0x24(%rbp)
-  4010ef:	7e ab                	jle    40109c <lea_key_schedule+0x3c>
+  4010ef:	7e ab                	jle    40109c <fast_cipher_key_schedule+0x3c>
   4010f1:	90                   	nop
   4010f2:	5d                   	pop    %rbp
   4010f3:	c3                   	retq
 
-00000000004010e0 <lea_encrypt_block>:
+00000000004010e0 <fast_cipher_encrypt_block>:
   4010e0:	55                   	push   %rbp
   4010e1:	48 89 e5             	mov    %rsp,%rbp
   4010e4:	48 89 7d f8          	mov    %rdi,-0x8(%rbp)
@@ -96,7 +96,7 @@ Disassembly of section .text:
   40110d:	8b 40 0c             	mov    0xc(%rax),%eax
   401110:	89 45 e0             	mov    %eax,-0x20(%rbp)
   401113:	c7 45 dc 00 00 00 00 	movl   $0x0,-0x24(%rbp)
-  40111a:	eb 42                	jmp    40115e <lea_encrypt_block+0x7e>
+  40111a:	eb 42                	jmp    40115e <fast_cipher_encrypt_block+0x7e>
   40111c:	8b 45 dc             	mov    -0x24(%rbp),%eax
   40111f:	48 98                	cltq
   401121:	48 8b 55 f0          	mov    -0x10(%rbp),%rdx
@@ -121,7 +121,7 @@ Disassembly of section .text:
   40115b:	89 45 e0             	mov    %eax,-0x20(%rbp)
   40115e:	83 45 dc 01          	addl   $0x1,-0x24(%rbp)
   401162:	83 7d dc 17          	cmpl   $0x17,-0x24(%rbp)
-  401166:	7e b4                	jle    40111c <lea_encrypt_block+0x3c>
+  401166:	7e b4                	jle    40111c <fast_cipher_encrypt_block+0x3c>
   401168:	90                   	nop
   401169:	5d                   	pop    %rbp
   40116a:	c3                   	retq

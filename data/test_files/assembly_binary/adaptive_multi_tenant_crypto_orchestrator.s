@@ -358,7 +358,7 @@ build_algorithm_dispatch_table:
     # Domestic standard
     movq $transform_256_handler, 48(%rdi)
     movq $block_128_handler, 56(%rdi)
-    movq $hight_64_handler, 64(%rdi)
+    movq $light_cipher_64_handler, 64(%rdi)
 
     popq %rbp
     ret

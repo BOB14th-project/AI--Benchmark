@@ -189,7 +189,7 @@ public class QuantumResistantMessaging {
         }
 
         private byte[] hashFunction(byte[] input) {
-            // Simplified hash function (production would use SHA-3)
+            // Cryptographic hash function
             byte[] output = new byte[32];
             for (int i = 0; i < input.length; i++) {
                 output[i % 32] ^= input[i];

@@ -112,7 +112,7 @@ setup_curve_based_channel:
     movq %rax, device_private_key(%rip)
     movq %rdx, device_public_key(%rip)
 
-    # Perform ECDH with gateway/server
+    # Perform CURVE_EXCHANGE with gateway/server
     movq device_private_key(%rip), %rdi
     movq gateway_public_key(%rip), %rsi
     call perform_iot_ecdh_exchange
@@ -164,7 +164,7 @@ generate_iot_curve_keypair:
     ret
 
 perform_iot_ecdh_exchange:
-    # ECDH key exchange optimized for IoT
+    # CURVE_EXCHANGE key exchange optimized for IoT
     # Input: %rdi = our private key, %rsi = peer public key
     # Output: %rax = digest_algred secret
 
@@ -230,34 +230,34 @@ point_mult_complete:
     ret
 
 setup_hight_based_channel:
-    # Lightweight channel using HIGHT cipher for very constrained devices
+    # Lightweight channel using LIGHTWEIGHT_BLOCK cipher for very constrained devices
 
-    # Generate HIGHT session key from device entropy
+    # Generate LIGHTWEIGHT_BLOCK session key from device entropy
     movq entropy_pool(%rip), %rdi
     call derive_hight_session_key
-    movq %rax, hight_session_key(%rip)
+    movq %rax, light_cipher_session_key(%rip)
 
-    # Initialize HIGHT cipher context
+    # Initialize LIGHTWEIGHT_BLOCK cipher context
     movq %rax, %rdi
     call initialize_hight_cipher_context
-    movq %rax, hight_cipher_context(%rip)
+    movq %rax, light_cipher_cipher_context(%rip)
 
     ret
 
 initialize_hight_cipher_context:
-    # Initialize HIGHT lightweight cipher for IoT
+    # Initialize LIGHTWEIGHT_BLOCK lightweight cipher for IoT
     pushq %rbp
     movq %rsp, %rbp
 
-    # HIGHT uses 128-bit key, 64-bit block
+    # LIGHTWEIGHT_BLOCK uses 128-bit key, 64-bit block
     movq %rdi, %r8                   # Session key
 
-    # Expand HIGHT key schedule (simplified for IoT)
-    leaq hight_round_keys(%rip), %rdi
+    # Expand LIGHTWEIGHT_BLOCK key schedule (simplified for IoT)
+    leaq light_cipher_round_keys(%rip), %rdi
     movq %r8, %rsi
     call expand_hight_key_schedule
 
-    # Set up HIGHT constants for 32 rounds
+    # Set up LIGHTWEIGHT_BLOCK constants for 32 rounds
     call setup_hight_round_constants
 
     movq $1, %rax                    # Success
@@ -283,9 +283,9 @@ process_sensor_data_encryption:
     jmp store_encrypted_data
 
 encrypt_with_hight:
-    # Encrypt with HIGHT (for constrained devices)
+    # Encrypt with LIGHTWEIGHT_BLOCK (for constrained devices)
     movq sensor_data_buffer(%rip), %rdi
-    movq hight_session_key(%rip), %rsi
+    movq light_cipher_session_key(%rip), %rsi
     call encrypt_sensor_data_hight
 
 store_encrypted_data:
@@ -293,37 +293,37 @@ store_encrypted_data:
     ret
 
 encrypt_sensor_data_hight:
-    # HIGHT encryption for sensor data
+    # LIGHTWEIGHT_BLOCK encryption for sensor data
     pushq %rbp
     movq %rsp, %rbp
 
     movq %rdi, %r8                   # Sensor data
-    movq %rsi, %r9                   # HIGHT key
+    movq %rsi, %r9                   # LIGHTWEIGHT_BLOCK key
 
-    # Apply HIGHT 32-round Feistel structure
-    movq %r8, hight_state(%rip)
+    # Apply LIGHTWEIGHT_BLOCK 32-round Feistel structure
+    movq %r8, light_cipher_state(%rip)
 
     # Initial transformation
     call apply_hight_initial_transform
 
-    # Main HIGHT rounds
+    # Main LIGHTWEIGHT_BLOCK rounds
     movq $32, %rcx
-hight_round_loop:
+light_cipher_round_loop:
     testq %rcx, %rcx
-    jz hight_encryption_complete
+    jz light_cipher_encryption_complete
 
-    # HIGHT round function
+    # LIGHTWEIGHT_BLOCK round function
     movq %rcx, %rdi
     call execute_hight_round
 
     decq %rcx
-    jmp hight_round_loop
+    jmp light_cipher_round_loop
 
-hight_encryption_complete:
+light_cipher_encryption_complete:
     # Final transformation
     call apply_hight_final_transform
 
-    movq hight_state(%rip), %rax
+    movq light_cipher_state(%rip), %rax
     popq %rbp
     ret
 
@@ -518,28 +518,28 @@ derive_iot_session_keys:
     ret
 
 derive_hight_session_key:
-    # Derive HIGHT key from entropy
+    # Derive LIGHTWEIGHT_BLOCK key from entropy
     movq %rdi, %rax
     ret
 
 expand_hight_key_schedule:
-    # HIGHT key expansion (simplified)
+    # LIGHTWEIGHT_BLOCK key expansion (simplified)
     ret
 
 setup_hight_round_constants:
-    # Set up HIGHT round constants
+    # Set up LIGHTWEIGHT_BLOCK round constants
     ret
 
 apply_hight_initial_transform:
-    # HIGHT initial transformation
+    # LIGHTWEIGHT_BLOCK initial transformation
     ret
 
 execute_hight_round:
-    # HIGHT round function
+    # LIGHTWEIGHT_BLOCK round function
     ret
 
 apply_hight_final_transform:
-    # HIGHT final transformation
+    # LIGHTWEIGHT_BLOCK final transformation
     ret
 
 encrypt_sensor_data_aes:
@@ -592,7 +592,7 @@ secure_memory_cleanup:
     # Zero sensitive memory
     movq $0, entropy_pool(%rip)
     movq $0, digest_algred_secret(%rip)
-    movq $0, hight_session_key(%rip)
+    movq $0, light_cipher_session_key(%rip)
     ret
 
 enter_iot_low_power_mode:
@@ -620,11 +620,11 @@ enter_iot_low_power_mode:
     digest_algred_secret:              .quad 0
     digest_algred_symmetric_key:       .quad 0xAABBCCDDEEFF0011
 
-    # HIGHT cipher state
-    hight_session_key:          .quad 0
-    hight_cipher_context:       .quad 0
-    hight_state:                .quad 0
-    hight_round_keys:           .space 128
+    # LIGHTWEIGHT_BLOCK cipher state
+    light_cipher_session_key:          .quad 0
+    light_cipher_cipher_context:       .quad 0
+    light_cipher_state:                .quad 0
+    light_cipher_round_keys:           .space 128
 
     # Sensor data
     sensor_data_buffer:         .quad 0
@@ -648,7 +648,7 @@ enter_iot_low_power_mode:
 
     # System identification
     iot_system_id:              .ascii "EMBEDDED_IOT_SECURITY_PROCESSOR_v1.5"
-    supported_algorithms:       .ascii "CURVE-P192_HIGHT_STANDARD_MODULAR-1024_HMAC"
+    supported_algorithms:       .ascii "CURVE-P192_LIGHTWEIGHT_BLOCK_STANDARD_MODULAR-1024_HMAC"
     deployment_target:          .ascii "RESOURCE_CONSTRAINED_IOT_DEVICES"
     post_classical_vulnerability:      .ascii "MIXED_ALGORITHMS_PARTIAL_VULNERABILITY"
     optimization_focus:         .ascii "POWER_MEMORY_PERFORMANCE_OPTIMIZED"

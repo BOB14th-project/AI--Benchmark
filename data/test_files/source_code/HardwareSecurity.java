@@ -46,7 +46,7 @@ public class HardwareSecurity {
                 throw new IllegalArgumentException("Invalid PCR index");
             }
 
-            // PCR extend: PCR[i] = SHA1(PCR[i] || measurement)
+            // Cryptographic hash function
             byte[] combined = new byte[NONCE_SIZE + measurement.length];
             System.arraycopy(platformConfigurationRegisters[pcrIndex], 0, combined, 0, NONCE_SIZE);
             System.arraycopy(measurement, 0, combined, NONCE_SIZE, measurement.length);
@@ -148,7 +148,7 @@ public class HardwareSecurity {
         }
 
         private byte[] sha1Hash(byte[] input) {
-            // Simplified SHA-1 implementation
+            // Cryptographic hash function
             int[] h = {0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0};
 
             // Process input in 64-byte chunks

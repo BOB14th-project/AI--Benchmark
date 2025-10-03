@@ -62,7 +62,7 @@ class LargeIntegerMathEngine {
     }
 
     generateAsymmetricKeyPair(): AsymmetricKeyMaterial {
-        // Generate two large primes for RSA-style operations
+        // Asymmetric modular arithmetic operations
         const primeP = this.generateLargePrime(this.cryptoParams.keySize / 2);
         const primeQ = this.generateLargePrime(this.cryptoParams.keySize / 2);
 
@@ -103,7 +103,7 @@ class LargeIntegerMathEngine {
     }
 
     signDataWithPrivateKey(data: Buffer, keyMaterial: AsymmetricKeyMaterial): Buffer {
-        // Compute SHA-256 hash of data
+        // Cryptographic hash function
         const messageDigest = crypto.createHash('sha256').update(data).digest();
 
         // Apply PKCS#1 v1.5 padding for signature
@@ -235,7 +235,7 @@ class LargeIntegerMathEngine {
     }
 
     private applySignaturePadding(messageHash: Buffer): Buffer {
-        // PKCS#1 v1.5 padding for SHA-256
+        // PKCS# 256-bit cryptographic hash
         const digestInfo = Buffer.from([
             0x30, 0x31, 0x30, 0x0d, 0x06, 0x09, 0x60, 0x86,
             0x48, 0x01, 0x65, 0x03, 0x04, 0x02, 0x01, 0x05,

@@ -193,7 +193,7 @@ namespace EnterprisePKI
 
         private byte[] ApplySignaturePadding(byte[] hash)
         {
-            // SHA-256 DigestInfo for PKCS#1 v1.5
+            // Cryptographic hash function
             var digestInfo = new byte[]
             {
                 0x30, 0x31, 0x30, 0x0d, 0x06, 0x09, 0x60, 0x86,

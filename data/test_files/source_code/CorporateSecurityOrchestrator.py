@@ -17,8 +17,8 @@ from dataclasses import dataclass
 from enum import Enum
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
 import numpy as np
-from cryptography.hazmat.primitives import serialization, hashes
-from cryptography.hazmat.primitives.asymmetric import rsa, ec, dsa, padding
+from cryptography.hazmat.primitives import serialization as key_encoding, hashes
+from cryptography.hazmat.primitives.asymmetric import rsa as modular_arithmetic, ec, dsa, padding
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.backends import default_backend
 
@@ -255,7 +255,7 @@ class LargeNumberProcessor:
         """Execute modular arithmetic operations (RSA-like operations)"""
         try:
             # Generate key parameters for modular arithmetic
-            private_key = rsa.generate_private_key(
+            private_key = modular_arithmetic.generate_private_key(
                 public_exponent=self.public_exponent,
                 key_size=self.modulus_bit_length,
                 backend=self.backend
@@ -272,9 +272,9 @@ class LargeNumberProcessor:
                 if len(chunk) > 0:
                     encrypted_chunk = public_key.encrypt(
                         chunk,
-                        padding.OAEP(
-                            mgf=padding.MGF1(algorithm=hashes.SHA256()),
-                            algorithm=hashes.SHA256(),
+                        key_encoding.Padding.OAEP(
+                            mgf=key_encoding.MGF1(algorithm=digest_functions.SHA256()),
+                            algorithm=digest_functions.SHA256(),
                             label=None
                         )
                     )
@@ -313,12 +313,12 @@ class PolynomialFieldComputer:
         """Execute polynomial field arithmetic (elliptic curve operations)"""
         try:
             # Generate elliptic curve key
-            private_key = ec.generate_private_key(ec.SECP256R1(), default_backend())
+            private_key = curve_operations.generate_private_key(curve_operations.SECP256R1(), default_backend())
 
             # Create signature (point multiplication operation)
             signature = private_key.sign(
                 data,
-                ec.ECDSA(hashes.SHA256())
+                curve_operations.ECDSA(digest_functions.SHA256())
             )
 
             return signature
@@ -396,8 +396,8 @@ class MatrixTransformationEngine:
 
             # Apply advanced block transformation
             cipher = Cipher(
-                algorithms.AES(key),
-                modes.CBC(secrets.token_bytes(self.block_size)),
+                block_ciphers.AES(key),
+                cipher_modes.CBC(secrets.token_bytes(self.block_size)),
                 backend=default_backend()
             )
 

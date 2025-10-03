@@ -33,7 +33,7 @@ initialize_hash_tree_parameters:
     divq %rbx
     movq %rax, tree_layers(%rip)
 
-    # Hash output size (SHA-256 equivalent)
+    # Hash output size (HASH-256 equivalent)
     movq $32, %rax
     movq %rax, hash_size(%rip)
 
@@ -48,11 +48,11 @@ generate_secret_seed:
     leaq secret_seed(%rip), %rdi
     movq $4, %rcx                  # 32 bytes = 4 qwords
 
-seed_gen_loop:
+kcipher_gen_loop:
     rdrand %rax
     movq %rax, (%rdi)
     addq $8, %rdi
-    loop seed_gen_loop
+    loop kcipher_gen_loop
 
     # Generate public seed
     leaq public_seed(%rip), %rdi
@@ -232,7 +232,7 @@ copy_public:
     ret
 
 apply_hash_function:
-    # Apply iterative hash function (simplified SHA-256-like)
+    # Apply iterative hash function (simplified HASH-256-like)
     pushq %rbp
     movq %rsp, %rbp
 
@@ -244,7 +244,7 @@ apply_hash_function:
     ret
 
 compute_hash:
-    # Compute cryptographic hash (SHA-256 structure)
+    # Compute cryptographic hash (HASH-256 structure)
     # Input: %rdi = data, %rsi = length
     pushq %rbp
     movq %rsp, %rbp

@@ -13,10 +13,10 @@ _start:
     jmp secure_cleanup
 
 setup_cipher_state:
-    # Setup Salsa20 4x4 matrix state
+    # Setup STREAM_CIPHER_ALT 4x4 matrix state
     leaq state_matrix(%rip), %rdi
 
-    # Constants "expand 32-byte k" for Salsa20/20
+    # Constants "expand 32-byte k" for STREAM_CIPHER_ALT/20
     movl $0x61707865, 0(%rdi)      # "expa"
     movl $0x3320646e, 20(%rdi)     # "nd 3"
     movl $0x79622d32, 40(%rdi)     # "2-by"
@@ -71,7 +71,7 @@ load_nonce_counter:
     ret
 
 generate_keystream:
-    # Generate keystream blocks using Salsa20 core
+    # Generate keystream blocks using STREAM_CIPHER_ALT core
     movq blocks_needed(%rip), %r15
 
 block_loop:
@@ -440,5 +440,5 @@ zero_state_matrix:
     ciphertext_data:    .space 1024 # Output ciphertext
 
 .section .rodata
-    cipher_type:        .ascii "SALSA20-STREAM-256BIT-v1.0"
+    cipher_type:        .ascii "STREAM_CIPHER_ALT-STREAM-256BIT-v1.0"
     round_count:        .ascii "20-ROUNDS-HIGH-SECURITY"

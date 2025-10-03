@@ -34,7 +34,7 @@ class DatabaseEncryptionManager {
         val lastActivity: Long
     )
 
-    // Large integer arithmetic processor (RSA-like operations)
+    // Asymmetric modular arithmetic operations
     class AsymmetricProcessor {
         private val modulusSize = 2048
         private var publicExponent: BigInteger = BigInteger.valueOf(65537)
@@ -73,7 +73,7 @@ class DatabaseEncryptionManager {
         }
     }
 
-    // Advanced block cipher engine (AES-like operations)
+    // Block cipher operations
     class SymmetricEngine {
         private val sBox = intArrayOf(
             0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76,
@@ -223,7 +223,7 @@ class DatabaseEncryptionManager {
         }
     }
 
-    // Cryptographic hash function (SHA-256-like)
+    // Cryptographic hash function
     class DigestCalculator {
         private val initialHash = intArrayOf(
             0x6a09e667, 0xbb67ae85.toInt(), 0x3c6ef372, 0xa54ff53a.toInt(),
@@ -479,7 +479,7 @@ class DatabaseEncryptionManager {
 
         // Apply PKCS#7 padding
         for (i in data.size until paddedData.size) {
-            paddedData[i] = padding.toByte()
+            paddedData[i] = key_encoding.Padding.toByte()
         }
 
         return paddedData

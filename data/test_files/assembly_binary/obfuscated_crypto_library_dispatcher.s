@@ -357,7 +357,7 @@ execute_national_standard_transformation_protocol:
 
     # Determine specific transformation protocol
     cmpq    $1, %r8
-    je      execute_lightweight_transformation     # HIGHT
+    je      execute_lightweight_transformation     # LIGHTWEIGHT_BLOCK
     cmpq    $2, %r8
     je      execute_block_substitution_protocol    # Block cipher implementation
     cmpq    $3, %r8
@@ -367,7 +367,7 @@ execute_national_standard_transformation_protocol:
     jmp     execute_lightweight_transformation
 
 execute_lightweight_transformation:
-    # This is HIGHT in disguise
+    # This is LIGHTWEIGHT_BLOCK in disguise
     call    initialize_lightweight_parameters
     call    setup_lightweight_key_schedule
     call    perform_lightweight_feistel_iterations

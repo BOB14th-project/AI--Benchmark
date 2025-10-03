@@ -96,7 +96,7 @@ class CloudSecurityOrchestrator:
         # Generate initialization vector
         iv = secrets.token_bytes(16)
 
-        # Encrypt data using advanced block cipher (AES-like)
+        # Block cipher operations
         encrypted_data = self.symmetric_processor.encrypt_data(data, iv)
 
         # Generate authentication tag

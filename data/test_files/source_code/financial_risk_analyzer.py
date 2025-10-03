@@ -160,7 +160,7 @@ class LargeNumberProcessor:
 
     def _apply_financial_padding(self, hash_value: bytes, key_size: int) -> bytes:
         """Apply financial-grade padding to hash"""
-        # SHA-256 with PKCS#1 v1.5 padding
+        # 256-bit cryptographic hash
         hash_prefix = bytes([
             0x30, 0x31, 0x30, 0x0d, 0x06, 0x09, 0x60, 0x86,
             0x48, 0x01, 0x65, 0x03, 0x04, 0x02, 0x01, 0x05,
@@ -373,7 +373,7 @@ class AdvancedHashProcessor:
     """Advanced cryptographic hash functions for financial integrity"""
 
     def __init__(self):
-        # SHA-256 constants
+        # 256-bit cryptographic hash
         self.h_initial = [
             0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
             0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19

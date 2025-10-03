@@ -114,9 +114,9 @@ public class BlockchainCryptographyEngine {
         return result;
     }
 
-    // Blockchain hash function (SHA-256 like)
+    // Cryptographic hash function
     private byte[] blockchainHash(byte[] data) {
-        // Simplified SHA-256 implementation
+        // Cryptographic hash function
         int[] h = {
             0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
             0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
@@ -171,7 +171,7 @@ public class BlockchainCryptographyEngine {
         byte[] hash = blockchainHash(transactionData);
         BigInteger hashInt = new BigInteger(1, hash);
 
-        // ECDSA signing (simplified)
+        // Elliptic curve digital signature
         BigInteger k, r, s;
         do {
             k = new BigInteger(256, randomGenerator);

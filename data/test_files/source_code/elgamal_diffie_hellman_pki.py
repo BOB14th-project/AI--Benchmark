@@ -1,5 +1,5 @@
-class KoreanElGamalSystem:
-    """Korean government PublicKeySystem implementation for secure communications"""
+class KoreanPublicKeySystem:
+    """Korean government public key cryptosystem for secure communications"""
 
     def __init__(self, key_size=1024):
         self.key_size = key_size
@@ -62,8 +62,8 @@ class KoreanElGamalSystem:
             if pow(g, 2, p) != 1 and pow(g, q, p) != 1:
                 return g
 
-    def generate_elgamal_keypair(self):
-        """Generate PublicKeySystem key pair for Korean government use"""
+    def generate_asymmetric_keypair(self):
+        """Generate asymmetric key pair for Korean government use"""
         import random
 
         p, q = self._generate_safe_prime(self.key_size)
@@ -80,8 +80,8 @@ class KoreanElGamalSystem:
             'domain_params': (p, q, g)
         }
 
-    def elgamal_encrypt(self, message, public_key):
-        """Encrypt message using PublicKeySystem"""
+    def asymmetric_encrypt(self, message, public_key):
+        """Encrypt message using asymmetric cryptography"""
         import random
 
         p, g, y = public_key
@@ -101,8 +101,8 @@ class KoreanElGamalSystem:
 
         return (c1, c2)
 
-    def elgamal_decrypt(self, ciphertext, private_key, p):
-        """Decrypt PublicKeySystem ciphertext"""
+    def asymmetric_decrypt(self, ciphertext, private_key, p):
+        """Decrypt asymmetric ciphertext"""
         c1, c2 = ciphertext
         x = private_key
 
@@ -114,8 +114,8 @@ class KoreanElGamalSystem:
 
         return m
 
-class KoreanDiffieHellman:
-    """Korean government KeyExchange-KeyAgreement key exchange"""
+class KoreanModularKeyExchange:
+    """Korean government modular key exchange protocol"""
 
     def __init__(self, key_size=2048):
         self.key_size = key_size
@@ -135,8 +135,8 @@ class KoreanDiffieHellman:
         """Get Korean government approved generator"""
         return 2
 
-    def generate_dh_keypair(self):
-        """Generate KeyExchange-KeyAgreement key pair"""
+    def generate_exchange_keypair(self):
+        """Generate modular key exchange pair"""
         import random
 
         private_key = random.randrange(1, self.p - 1)
@@ -168,8 +168,8 @@ class GovernmentPKI:
     """Korean government public key infrastructure"""
 
     def __init__(self):
-        self.elgamal_system = KoreanElGamalSystem(1024)
-        self.dh_system = KoreanDiffieHellman(2048)
+        self.asymmetric_system = KoreanPublicKeySystem(1024)
+        self.exchange_system = KoreanModularKeyExchange(2048)
 
     def _government_hash_function(self, data):
         """Government approved hash function"""
@@ -220,20 +220,20 @@ class GovernmentPKI:
     def secure_government_communication(self, message, recipient_public_key):
         """Establish secure communication channel"""
 
-        dh_keypair = self.dh_system.generate_dh_keypair()
+        exchange_keypair = self.exchange_system.generate_exchange_keypair()
 
         simulated_recipient_private = 12345
-        simulated_recipient_public = pow(self.dh_system.g, simulated_recipient_private, self.dh_system.p)
+        simulated_recipient_public = pow(self.exchange_system.g, simulated_recipient_private, self.exchange_system.p)
 
-        shared_secret = self.dh_system.compute_shared_secret(
-            dh_keypair['private_key'],
+        shared_secret = self.exchange_system.compute_shared_secret(
+            exchange_keypair['private_key'],
             simulated_recipient_public
         )
 
-        session_key = self.dh_system.derive_session_key(shared_secret)
+        session_key = self.exchange_system.derive_session_key(shared_secret)
 
         if isinstance(recipient_public_key, tuple):
-            wrapped_key = self.elgamal_system.elgamal_encrypt(
+            wrapped_key = self.asymmetric_system.asymmetric_encrypt(
                 session_key[:8],
                 recipient_public_key
             )
@@ -245,8 +245,8 @@ class GovernmentPKI:
         return {
             'encrypted_message': encrypted_message,
             'wrapped_session_key': wrapped_key,
-            'ephemeral_public_key': dh_keypair['public_key'],
-            'dh_domain_params': dh_keypair['domain_params']
+            'ephemeral_public_key': exchange_keypair['public_key'],
+            'exchange_domain_params': exchange_keypair['domain_params']
         }
 
     def _symmetric_encrypt(self, plaintext, key):
@@ -266,32 +266,32 @@ def korean_government_pki_demo(operation="full_demo"):
 
     if operation == "key_generation":
 
-        publickeysys = KoreanElGamalSystem()
-        elgamal_keys = publickeysys.generate_elgamal_keypair()
+        asymmetric_sys = KoreanPublicKeySystem()
+        asymmetric_keys = asymmetric_sys.generate_asymmetric_keypair()
 
-        dh = KoreanDiffieHellman()
-        dh_keys = dh.generate_dh_keypair()
+        exchange = KoreanModularKeyExchange()
+        exchange_keys = exchange.generate_exchange_keypair()
 
         return {
-            'elgamal_keys': elgamal_keys,
-            'dh_keys': dh_keys
+            'asymmetric_keys': asymmetric_keys,
+            'exchange_keys': exchange_keys
         }
 
     elif operation == "secure_communication":
 
         pki = GovernmentPKI()
 
-        elgamal_keys = pki.elgamal_system.generate_elgamal_keypair()
+        asymmetric_keys = pki.asymmetric_system.generate_asymmetric_keypair()
 
         certificate = pki.create_digital_certificate(
             "Ministry of Digital Government",
-            elgamal_keys['public_key']
+            asymmetric_keys['public_key']
         )
 
         message = b"Classified government communication"
         secure_comm = pki.secure_government_communication(
             message,
-            elgamal_keys['public_key']
+            asymmetric_keys['public_key']
         )
 
         return {

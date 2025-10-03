@@ -3,13 +3,13 @@ import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DiffieHellmanKeyExchange {
+public class ModularKeyExchange {
 
-    private static final Map<Integer, DHParameters> STANDARD_PARAMETERS = new HashMap<>();
+    private static final Map<Integer, KeyExchangeParameters> STANDARD_PARAMETERS = new HashMap<>();
 
     static {
-        
-        STANDARD_PARAMETERS.put(1024, new DHParameters(
+
+        STANDARD_PARAMETERS.put(1024, new KeyExchangeParameters(
             new BigInteger("FFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD1" +
                           "29024E088A67CC74020BBEA63B139B22514A08798E3404DD" +
                           "EF9519B3CD3A431B302B0A6DF25F14374FE1356D6D51C245" +
@@ -19,7 +19,7 @@ public class DiffieHellmanKeyExchange {
             BigInteger.valueOf(2)
         ));
 
-        STANDARD_PARAMETERS.put(2048, new DHParameters(
+        STANDARD_PARAMETERS.put(2048, new KeyExchangeParameters(
             new BigInteger("FFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD1" +
                           "29024E088A67CC74020BBEA63B139B22514A08798E3404DD" +
                           "EF9519B3CD3A431B302B0A6DF25F14374FE1356D6D51C245" +
@@ -35,12 +35,12 @@ public class DiffieHellmanKeyExchange {
         ));
     }
 
-    public static class DHParameters {
-        public final BigInteger prime;      
-        public final BigInteger generator;  
+    public static class KeyExchangeParameters {
+        public final BigInteger prime;
+        public final BigInteger generator;
         public final int bitLength;
 
-        public DHParameters(BigInteger prime, BigInteger generator) {
+        public KeyExchangeParameters(BigInteger prime, BigInteger generator) {
             this.prime = prime;
             this.generator = generator;
             this.bitLength = prime.bitLength();
@@ -48,16 +48,16 @@ public class DiffieHellmanKeyExchange {
 
         @Override
         public String toString() {
-            return String.format("DH-%d (p=%d bits, g=%d)", bitLength, prime.bitLength(), generator);
+            return String.format("KeyExchange-%d (p=%d bits, g=%d)", bitLength, prime.bitLength(), generator);
         }
     }
 
-    public static class DHKeyPair {
-        public final BigInteger privateKey;  
-        public final BigInteger publicKey;   
-        public final DHParameters parameters;
+    public static class ModularKeyPair {
+        public final BigInteger privateKey;
+        public final BigInteger publicKey;
+        public final KeyExchangeParameters parameters;
 
-        public DHKeyPair(BigInteger privateKey, BigInteger publicKey, DHParameters parameters) {
+        public ModularKeyPair(BigInteger privateKey, BigInteger publicKey, KeyExchangeParameters parameters) {
             this.privateKey = privateKey;
             this.publicKey = publicKey;
             this.parameters = parameters;
@@ -66,8 +66,8 @@ public class DiffieHellmanKeyExchange {
 
     private static final SecureRandom random = new SecureRandom();
 
-    public static DHKeyPair generateKeyPair(int keySize) {
-        DHParameters params = STANDARD_PARAMETERS.get(keySize);
+    public static ModularKeyPair generateKeyPair(int keySize) {
+        KeyExchangeParameters params = STANDARD_PARAMETERS.get(keySize);
         if (params == null) {
             throw new IllegalArgumentException("Unsupported key size: " + keySize);
         }
@@ -75,8 +75,8 @@ public class DiffieHellmanKeyExchange {
         return generateKeyPair(params);
     }
 
-    public static DHKeyPair generateKeyPair(DHParameters params) {
-        
+    public static ModularKeyPair generateKeyPair(KeyExchangeParameters params) {
+
         BigInteger privateKey;
         do {
             privateKey = new BigInteger(params.bitLength - 1, random);
@@ -85,11 +85,11 @@ public class DiffieHellmanKeyExchange {
 
         BigInteger publicKey = params.generator.modPow(privateKey, params.prime);
 
-        return new DHKeyPair(privateKey, publicKey, params);
+        return new ModularKeyPair(privateKey, publicKey, params);
     }
 
-    public static BigInteger computeSharedSecret(DHKeyPair myKeyPair, BigInteger otherPublicKey) {
-        
+    public static BigInteger computeSharedSecret(ModularKeyPair myKeyPair, BigInteger otherPublicKey) {
+
         if (!isValidPublicKey(otherPublicKey, myKeyPair.parameters)) {
             throw new IllegalArgumentException("Invalid public key");
         }
@@ -97,7 +97,7 @@ public class DiffieHellmanKeyExchange {
         return otherPublicKey.modPow(myKeyPair.privateKey, myKeyPair.parameters.prime);
     }
 
-    private static boolean isValidPublicKey(BigInteger publicKey, DHParameters params) {
+    private static boolean isValidPublicKey(BigInteger publicKey, KeyExchangeParameters params) {
         
         if (publicKey.compareTo(BigInteger.ONE) <= 0 ||
             publicKey.compareTo(params.prime.subtract(BigInteger.ONE)) >= 0) {
@@ -126,11 +126,11 @@ public class DiffieHellmanKeyExchange {
         return key;
     }
 
-    public static class EphemeralDH {
-        private DHKeyPair ephemeralKeyPair;
-        private DHParameters parameters;
+    public static class EphemeralKeyExchange {
+        private ModularKeyPair ephemeralKeyPair;
+        private KeyExchangeParameters parameters;
 
-        public EphemeralDH(int keySize) {
+        public EphemeralKeyExchange(int keySize) {
             this.parameters = STANDARD_PARAMETERS.get(keySize);
             this.ephemeralKeyPair = generateKeyPair(parameters);
         }
@@ -141,33 +141,33 @@ public class DiffieHellmanKeyExchange {
 
         public byte[] computeSessionKey(BigInteger otherPublicKey, String algorithm) {
             BigInteger sharedSecret = computeSharedSecret(ephemeralKeyPair, otherPublicKey);
-            return deriveSessionKey(sharedSecret, algorithm, 32); 
+            return deriveSessionKey(sharedSecret, algorithm, 32);
         }
 
         public void destroyPrivateKey() {
-            
+
             ephemeralKeyPair = null;
         }
     }
 
-    public static class ElGamalEncryption {
-        private DHParameters parameters;
+    public static class PublicKeyEncryption {
+        private KeyExchangeParameters parameters;
 
-        public ElGamalEncryption(int keySize) {
+        public PublicKeyEncryption(int keySize) {
             this.parameters = STANDARD_PARAMETERS.get(keySize);
         }
 
-        public static class ElGamalCiphertext {
-            public final BigInteger c1; 
-            public final BigInteger c2; 
+        public static class PublicKeyCiphertext {
+            public final BigInteger c1;
+            public final BigInteger c2;
 
-            public ElGamalCiphertext(BigInteger c1, BigInteger c2) {
+            public PublicKeyCiphertext(BigInteger c1, BigInteger c2) {
                 this.c1 = c1;
                 this.c2 = c2;
             }
         }
 
-        public ElGamalCiphertext encrypt(BigInteger message, BigInteger publicKey) {
+        public PublicKeyCiphertext encrypt(BigInteger message, BigInteger publicKey) {
             if (message.compareTo(parameters.prime) >= 0) {
                 throw new IllegalArgumentException("Message too large");
             }
@@ -178,11 +178,11 @@ public class DiffieHellmanKeyExchange {
 
             BigInteger c2 = message.multiply(publicKey.modPow(r, parameters.prime)).mod(parameters.prime);
 
-            return new ElGamalCiphertext(c1, c2);
+            return new PublicKeyCiphertext(c1, c2);
         }
 
-        public BigInteger decrypt(ElGamalCiphertext ciphertext, BigInteger privateKey) {
-            
+        public BigInteger decrypt(PublicKeyCiphertext ciphertext, BigInteger privateKey) {
+
             BigInteger s = ciphertext.c1.modPow(privateKey, parameters.prime);
 
             BigInteger sInverse = s.modInverse(parameters.prime);
@@ -191,26 +191,26 @@ public class DiffieHellmanKeyExchange {
         }
     }
 
-    public static class SRPProtocol {
-        private DHParameters parameters;
-        private BigInteger k; 
+    public static class SecurePasswordProtocol {
+        private KeyExchangeParameters parameters;
+        private BigInteger k;
 
-        public SRPProtocol(int keySize) {
+        public SecurePasswordProtocol(int keySize) {
             this.parameters = STANDARD_PARAMETERS.get(keySize);
-            this.k = BigInteger.valueOf(3); 
+            this.k = BigInteger.valueOf(3);
         }
 
-        public static class SRPVerifier {
+        public static class PasswordVerifier {
             public final BigInteger salt;
-            public final BigInteger verifier; 
+            public final BigInteger verifier;
 
-            public SRPVerifier(BigInteger salt, BigInteger verifier) {
+            public PasswordVerifier(BigInteger salt, BigInteger verifier) {
                 this.salt = salt;
                 this.verifier = verifier;
             }
         }
 
-        public SRPVerifier generateVerifier(String username, String password) {
+        public PasswordVerifier generateVerifier(String username, String password) {
             
             BigInteger salt = new BigInteger(64, random);
 
@@ -218,7 +218,7 @@ public class DiffieHellmanKeyExchange {
 
             BigInteger verifier = parameters.generator.modPow(x, parameters.prime);
 
-            return new SRPVerifier(salt, verifier);
+            return new PasswordVerifier(salt, verifier);
         }
 
         private BigInteger hashCredentials(String username, String password, BigInteger salt) {
@@ -268,11 +268,11 @@ public class DiffieHellmanKeyExchange {
 
     public static void main(String[] args) {
         try {
-            System.out.println("KeyExchange-KeyAgreement Key Exchange Demo");
+            System.out.println("Modular Key Exchange Demo");
 
-            System.out.println("\n=== Standard DH Key Exchange ===");
-            DHKeyPair aliceKeys = generateKeyPair(1024);
-            DHKeyPair bobKeys = generateKeyPair(1024);
+            System.out.println("\n=== Standard Key Exchange ===");
+            ModularKeyPair aliceKeys = generateKeyPair(1024);
+            ModularKeyPair bobKeys = generateKeyPair(1024);
 
             System.out.println("Alice's key pair generated");
             System.out.println("Bob's key pair generated");
@@ -287,25 +287,25 @@ public class DiffieHellmanKeyExchange {
 
             System.out.println("Session keys match: " + java.util.Arrays.equals(aliceSessionKey, bobSessionKey));
 
-            System.out.println("\n=== Ephemeral DH ===");
-            EphemeralDH aliceEphemeral = new EphemeralDH(1024);
-            EphemeralDH bobEphemeral = new EphemeralDH(1024);
+            System.out.println("\n=== Ephemeral Key Exchange ===");
+            EphemeralKeyExchange aliceEphemeral = new EphemeralKeyExchange(1024);
+            EphemeralKeyExchange bobEphemeral = new EphemeralKeyExchange(1024);
 
             byte[] aliceEphemeralKey = aliceEphemeral.computeSessionKey(bobEphemeral.getPublicKey(), "AdvancedBlockStandard");
             byte[] bobEphemeralKey = bobEphemeral.computeSessionKey(aliceEphemeral.getPublicKey(), "AdvancedBlockStandard");
 
             System.out.println("Ephemeral keys match: " + java.util.Arrays.equals(aliceEphemeralKey, bobEphemeralKey));
 
-            System.out.println("\n=== PublicKeySystem Encryption ===");
-            ElGamalEncryption publickeysys = new ElGamalEncryption(1024);
+            System.out.println("\n=== Public Key Encryption ===");
+            PublicKeyEncryption publickeysys = new PublicKeyEncryption(1024);
             BigInteger message = BigInteger.valueOf(12345);
 
-            ElGamalEncryption.ElGamalCiphertext ciphertext = publickeysys.encrypt(message, aliceKeys.publicKey);
+            PublicKeyEncryption.PublicKeyCiphertext ciphertext = publickeysys.encrypt(message, aliceKeys.publicKey);
             BigInteger decrypted = publickeysys.decrypt(ciphertext, aliceKeys.privateKey);
 
             System.out.println("Original message: " + message);
             System.out.println("Decrypted message: " + decrypted);
-            System.out.println("PublicKeySystem decryption successful: " + message.equals(decrypted));
+            System.out.println("Public key decryption successful: " + message.equals(decrypted));
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,16 +1,16 @@
-# LEA (Lightweight Encryption Algorithm) Block Cipher
+# FAST_BLOCK (Lightweight Encryption Algorithm) Block Cipher
 # Domestic standard
 # Optimized for software implementation on 32-bit and 64-bit platforms
 # Post_Classical-vulnerable to Grover's algorithm
 
-.file   "lea_cipher.c"
+.file   "fast_cipher_cipher.c"
 .text
-.globl  lea_encrypt_block
-.type   lea_encrypt_block, @function
+.globl  fast_cipher_encrypt_block
+.type   fast_cipher_encrypt_block, @function
 
-# LEA Block Cipher Encryption Function
+# FAST_BLOCK Block Cipher Encryption Function
 # Supports 128/192/256-bit keys with 24/28/32 rounds respectively
-lea_encrypt_block:
+fast_cipher_encrypt_block:
 .LFB0:
     pushq   %rbp
     movq    %rsp, %rbp
@@ -30,17 +30,17 @@ lea_encrypt_block:
     # Determine number of rounds based on key length
     movq    -24(%rbp), %rax
     cmpq    $128, %rax
-    je      lea_24_rounds
+    je      fast_cipher_24_rounds
     cmpq    $192, %rax
-    je      lea_28_rounds
+    je      fast_cipher_28_rounds
     movq    $32, %r8             # 256-bit key = 32 rounds
     jmp     load_plaintext
 
-lea_24_rounds:
+fast_cipher_24_rounds:
     movq    $24, %r8             # 128-bit key = 24 rounds
     jmp     load_plaintext
 
-lea_28_rounds:
+fast_cipher_28_rounds:
     movq    $28, %r8             # 192-bit key = 28 rounds
 
 load_plaintext:
@@ -56,16 +56,16 @@ load_plaintext:
     # Initialize round counter
     movq    $0, -48(%rbp)        # Current round
 
-lea_encryption_loop:
+fast_cipher_encryption_loop:
     movq    -48(%rbp), %rax
     cmpq    -40(%rbp), %rax      # Compare with total rounds
     jge     encryption_complete
 
-    # LEA round function
-    call    lea_round_transformation
+    # FAST_BLOCK round function
+    call    fast_cipher_round_transformation
 
     incq    -48(%rbp)            # Increment round counter
-    jmp     lea_encryption_loop
+    jmp     fast_cipher_encryption_loop
 
 encryption_complete:
     # Store ciphertext result
@@ -80,12 +80,12 @@ encryption_complete:
     ret
 
 .LFE0:
-    .size   lea_encrypt_block, .-lea_encrypt_block
+    .size   fast_cipher_encrypt_block, .-fast_cipher_encrypt_block
 
-# LEA round transformation function
-.globl  lea_round_transformation
-.type   lea_round_transformation, @function
-lea_round_transformation:
+# FAST_BLOCK round transformation function
+.globl  fast_cipher_round_transformation
+.type   fast_cipher_round_transformation, @function
+fast_cipher_round_transformation:
 .LFB1:
     pushq   %rbp
     movq    %rsp, %rbp
@@ -101,7 +101,7 @@ lea_round_transformation:
     movl    8(%rax), %r15d       # Load RK2
     movl    12(%rax), %esi       # Load RK3
 
-    # LEA round function: (X0, X1, X2, X3) → (X1, X2, X3, X0')
+    # FAST_BLOCK round function: (X0, X1, X2, X3) → (X1, X2, X3, X0')
     # X0' = ROL((X0 ⊕ RK0) + (X1 ⊕ RK1), 9)
 
     # Compute X0 ⊕ RK0
@@ -142,12 +142,12 @@ lea_round_transformation:
     ret
 
 .LFE1:
-    .size   lea_round_transformation, .-lea_round_transformation
+    .size   fast_cipher_round_transformation, .-fast_cipher_round_transformation
 
-# LEA Key Schedule Function
-.globl  lea_key_schedule
-.type   lea_key_schedule, @function
-lea_key_schedule:
+# FAST_BLOCK Key Schedule Function
+.globl  fast_cipher_key_schedule
+.type   fast_cipher_key_schedule, @function
+fast_cipher_key_schedule:
 .LFB2:
     pushq   %rbp
     movq    %rsp, %rbp
@@ -159,7 +159,7 @@ lea_key_schedule:
     movq    %rdx, -24(%rbp)      # Output buffer
 
     # Initialize key schedule constants
-    leaq    lea_constants(%rip), %rax
+    leaq    fast_cipher_constants(%rip), %rax
     movq    %rax, -32(%rbp)      # Constants pointer
 
     # Load master key into working variables
@@ -180,7 +180,7 @@ lea_key_schedule:
 key_schedule_128:
     # 128-bit key schedule (24 rounds)
     movq    $24, %r12            # Number of rounds
-    call    lea_generate_round_keys_128
+    call    fast_cipher_generate_round_keys_128
     jmp     key_schedule_done
 
 key_schedule_192:
@@ -189,7 +189,7 @@ key_schedule_192:
     movq    -8(%rbp), %rax
     movl    16(%rax), %r13d      # K4
     movl    20(%rax), %r14d      # K5
-    call    lea_generate_round_keys_192
+    call    fast_cipher_generate_round_keys_192
     jmp     key_schedule_done
 
 key_schedule_256:
@@ -200,7 +200,7 @@ key_schedule_256:
     movl    20(%rax), %r14d      # K5
     movl    24(%rax), %r15d      # K6
     movl    28(%rax), %esi       # K7
-    call    lea_generate_round_keys_256
+    call    fast_cipher_generate_round_keys_256
 
 key_schedule_done:
     addq    $64, %rsp
@@ -208,12 +208,12 @@ key_schedule_done:
     ret
 
 .LFE2:
-    .size   lea_key_schedule, .-lea_key_schedule
+    .size   fast_cipher_key_schedule, .-fast_cipher_key_schedule
 
 # Generate round keys for 128-bit master key
-.globl  lea_generate_round_keys_128
-.type   lea_generate_round_keys_128, @function
-lea_generate_round_keys_128:
+.globl  fast_cipher_generate_round_keys_128
+.type   fast_cipher_generate_round_keys_128, @function
+fast_cipher_generate_round_keys_128:
 .LFB3:
     pushq   %rbp
     movq    %rsp, %rbp
@@ -225,7 +225,7 @@ round_key_loop_128:
     cmpq    %r12, %rcx           # Compare with total rounds
     jge     round_keys_complete_128
 
-    # LEA key schedule update for 128-bit key
+    # FAST_BLOCK key schedule update for 128-bit key
     # T = ROL(K0 + delta[i], 1)
     movq    -32(%rbp), %rax      # Constants pointer
     movl    (%rax,%rcx,4), %eax  # Load delta[i]
@@ -286,25 +286,25 @@ round_keys_complete_128:
     ret
 
 .LFB3:
-    .size   lea_generate_round_keys_128, .-lea_generate_round_keys_128
+    .size   fast_cipher_generate_round_keys_128, .-fast_cipher_generate_round_keys_128
 
 # Placeholder functions for 192 and 256-bit key schedules
-.globl  lea_generate_round_keys_192
-.type   lea_generate_round_keys_192, @function
-lea_generate_round_keys_192:
+.globl  fast_cipher_generate_round_keys_192
+.type   fast_cipher_generate_round_keys_192, @function
+fast_cipher_generate_round_keys_192:
     # Similar to 128-bit but with 6 key words
     ret
 
-.globl  lea_generate_round_keys_256
-.type   lea_generate_round_keys_256, @function
-lea_generate_round_keys_256:
+.globl  fast_cipher_generate_round_keys_256
+.type   fast_cipher_generate_round_keys_256, @function
+fast_cipher_generate_round_keys_256:
     # Similar to 128-bit but with 8 key words
     ret
 
-# LEA Constants (delta values for key schedule)
+# FAST_BLOCK Constants (delta values for key schedule)
 .section .rodata
     .align 4
-lea_constants:
+fast_cipher_constants:
     .long 0xc3efe9db, 0x44626b02, 0x79e27c8a, 0x78df30ec
     .long 0x715ea49e, 0xc785da0a, 0xe04ef22a, 0xe5c40957
     .long 0xf73c65da, 0x41c6ceca, 0x5dae2223, 0x42e5b6e7
@@ -315,7 +315,7 @@ lea_constants:
     .long 0x41c6ceca, 0x5dae2223, 0x42e5b6e7, 0x2f842438
 
 # Algorithm identification
-algorithm_name:     .ascii "LEA-LIGHTWEIGHT-ENCRYPTION-ALGORITHM"
+algorithm_name:     .ascii "FAST_BLOCK-LIGHTWEIGHT-ENCRYPTION-ALGORITHM"
 domesticn_standard:    .ascii "K-KCMVP-DOMESTICN-CRYPTOGRAPHIC-MODULE"
 key_sizes:          .ascii "128-192-256-BIT-KEYS-SUPPORTED"
 post_classical_status:     .ascii "GROVER_ALGORITHM_HALVES_SECURITY"

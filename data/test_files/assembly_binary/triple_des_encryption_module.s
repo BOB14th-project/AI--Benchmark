@@ -1,4 +1,4 @@
-# Triple DES (3DES) Encryption Module
+# Triple Block Cipher Encryption Module
 # FIPS 46-3 compliant implementation using EDE (Encrypt-Decrypt-Encrypt)
 # Post_Classical-vulnerable to Grover's algorithm (effective 112-bit security reduced to 56-bit)
 
@@ -6,16 +6,16 @@
 .global _start
 
 _start:
-    # Triple DES encryption main entry
-    call setup_3des_parameters
+    # Triple block cipher encryption main entry
+    call setup_triple_cipher_parameters
     call validate_key_components
-    call perform_3des_encryption
+    call perform_triple_cipher_encryption
     call verify_encryption_result
     jmp cleanup_and_terminate
 
-setup_3des_parameters:
-    # Initialize 3DES encryption parameters
-    # Uses three 56-bit DES keys for EDE operation
+setup_triple_cipher_parameters:
+    # Initialize triple cipher encryption parameters
+    # Uses three 56-bit cipher keys for EDE operation
 
     movq $64, %rax                  # Block size (64 bits)
     movq %rax, block_size(%rip)
@@ -23,18 +23,18 @@ setup_3des_parameters:
     movq $168, %rbx                 # Key size (3×56 = 168 bits effective)
     movq %rbx, total_key_bits(%rip)
 
-    # Load three DES keys
-    leaq des_key1(%rip), %rdi
+    # Load three cipher keys
+    leaq cipher_key1(%rip), %rdi
     leaq master_key_material(%rip), %rsi
     movq $8, %rcx                   # Copy 8 bytes for key1
     rep movsb
 
-    leaq des_key2(%rip), %rdi
+    leaq cipher_key2(%rip), %rdi
     leaq master_key_material+8(%rip), %rsi
     movq $8, %rcx                   # Copy 8 bytes for key2
     rep movsb
 
-    leaq des_key3(%rip), %rdi
+    leaq cipher_key3(%rip), %rdi
     leaq master_key_material+16(%rip), %rsi
     movq $8, %rcx                   # Copy 8 bytes for key3
     rep movsb
@@ -42,32 +42,32 @@ setup_3des_parameters:
     ret
 
 validate_key_components:
-    # Validate that the three DES keys are distinct
+    # Validate that the three cipher keys are distinct
     # Weak keys and semi-weak keys must be avoided
 
     # Check key1 != key2
-    leaq des_key1(%rip), %rsi
-    leaq des_key2(%rip), %rdi
+    leaq cipher_key1(%rip), %rsi
+    leaq cipher_key2(%rip), %rdi
     movq $8, %rcx
     repe cmpsb
     je invalid_key_configuration
 
     # Check key2 != key3
-    leaq des_key2(%rip), %rsi
-    leaq des_key3(%rip), %rdi
+    leaq cipher_key2(%rip), %rsi
+    leaq cipher_key3(%rip), %rdi
     movq $8, %rcx
     repe cmpsb
     je invalid_key_configuration
 
     # Check key1 != key3
-    leaq des_key1(%rip), %rsi
-    leaq des_key3(%rip), %rdi
+    leaq cipher_key1(%rip), %rsi
+    leaq cipher_key3(%rip), %rdi
     movq $8, %rcx
     repe cmpsb
     je invalid_key_configuration
 
-    # Check for weak DES keys (simplified check)
-    call check_weak_des_keys
+    # Check for weak Block cipherkeys (simplified check)
+    call check_weak_cipher_keys
 
     movq $1, %rax
     movq %rax, keys_valid(%rip)
@@ -78,11 +78,11 @@ invalid_key_configuration:
     movq %rax, keys_valid(%rip)
     ret
 
-check_weak_des_keys:
-    # Check against known weak DES keys
+check_weak_cipher_keys:
+    # Check against known weak Block cipherkeys
     # Simplified implementation - real version would check all weak keys
 
-    leaq des_key1(%rip), %rax
+    leaq cipher_key1(%rip), %rax
     movq (%rax), %rbx
     cmpq $0x0101010101010101, %rbx  # Weak key example
     je weak_key_detected
@@ -97,8 +97,8 @@ weak_key_detected:
     movq %rax, keys_valid(%rip)
     ret
 
-perform_3des_encryption:
-    # Triple DES EDE (Encrypt-Decrypt-Encrypt) operation
+perform_triple_cipher_encryption:
+    # Triple Block cipherEDE (Encrypt-Decrypt-Encrypt) operation
     # Input: 64-bit plaintext block
     # Output: 64-bit ciphertext block
 
@@ -110,22 +110,22 @@ perform_3des_encryption:
     # Load plaintext block
     movq plaintext_data(%rip), %r8
 
-    # Step 1: DES Encrypt with key1
+    # Step 1: Block cipher encrypt with key1
     movq %r8, %rdi                  # Plaintext
-    leaq des_key1(%rip), %rsi       # Key1
-    call des_encrypt_block
+    leaq cipher_key1(%rip), %rsi       # Key1
+    call block_encrypt_function
     movq %rax, %r9                  # Intermediate result 1
 
-    # Step 2: DES Decrypt with key2
+    # Step 2: Block cipher decrypt with key2
     movq %r9, %rdi                  # Input from step 1
-    leaq des_key2(%rip), %rsi       # Key2
-    call des_decrypt_block
+    leaq cipher_key2(%rip), %rsi       # Key2
+    call block_decrypt_function
     movq %rax, %r10                 # Intermediate result 2
 
-    # Step 3: DES Encrypt with key3
+    # Step 3: Block cipher encrypt with key3
     movq %r10, %rdi                 # Input from step 2
-    leaq des_key3(%rip), %rsi       # Key3
-    call des_encrypt_block
+    leaq cipher_key3(%rip), %rsi       # Key3
+    call block_encrypt_function
     movq %rax, ciphertext_data(%rip) # Final ciphertext
 
     movq $1, %rax
@@ -137,8 +137,8 @@ encryption_failed:
     movq %rax, encryption_success(%rip)
     ret
 
-des_encrypt_block:
-    # DES encryption function
+block_encrypt_function:
+    # Block cipherencryption function
     # Input: %rdi = 64-bit data, %rsi = 64-bit key
     # Output: %rax = 64-bit encrypted data
 
@@ -151,12 +151,12 @@ des_encrypt_block:
     movq %rdi, %r8                  # Store data
     movq %rsi, %r9                  # Store key
 
-    # DES key schedule - generate 16 round keys
-    call des_key_schedule
+    # Block cipherkey schedule - generate 16 round keys
+    call block_key_schedule
 
     # Initial permutation
     movq %r8, %rdi
-    call des_initial_permutation
+    call block_initial_permutation
     movq %rax, %r8
 
     # Split into left and right halves
@@ -164,20 +164,20 @@ des_encrypt_block:
     andq $0xFFFFFFFF, %r10
     shrq $32, %r8                   # Left half (upper 32 bits)
 
-    # 16 rounds of DES Feistel network
+    # 16 rounds of Block cipherFeistel network
     movq $0, %rcx                   # Round counter
 
-des_round_loop:
+block_round_loop:
     cmpq $16, %rcx
-    jge des_rounds_complete
+    jge block_rounds_complete
 
-    # DES round function: L[i+1] = R[i], R[i+1] = L[i] ⊕ f(R[i], K[i])
+    # Block cipherround function: L[i+1] = R[i], R[i+1] = L[i] ⊕ f(R[i], K[i])
     movq %r10, %rdi                 # R[i]
     movq %rcx, %rax
     shlq $3, %rax                   # Round key offset
     leaq round_keys(%rip), %rsi
     addq %rax, %rsi                 # Round key K[i]
-    call des_f_function
+    call block_f_function
     xorq %r8, %rax                  # L[i] ⊕ f(R[i], K[i])
 
     # Swap halves
@@ -185,16 +185,16 @@ des_round_loop:
     movq %rax, %r10                 # New R = L ⊕ f(R, K)
 
     incq %rcx
-    jmp des_round_loop
+    jmp block_round_loop
 
-des_rounds_complete:
-    # Combine halves (note: final swap is omitted in DES)
+block_rounds_complete:
+    # Combine halves (note: final swap is omitted in this cipher)
     shlq $32, %r10                  # Left shift R
     orq %r8, %r10                   # Combine L and R
 
     # Final permutation
     movq %r10, %rdi
-    call des_final_permutation
+    call block_final_permutation
     movq %rax, %r8                  # Encrypted result
 
     movq %r8, %rax                  # Return value
@@ -205,8 +205,8 @@ des_rounds_complete:
     popq %rbp
     ret
 
-des_decrypt_block:
-    # DES decryption (same as encryption but with reversed key schedule)
+block_decrypt_function:
+    # Block cipherdecryption (same as encryption but with reversed key schedule)
     # Input: %rdi = 64-bit data, %rsi = 64-bit key
     # Output: %rax = 64-bit decrypted data
 
@@ -214,19 +214,19 @@ des_decrypt_block:
     movq %rsp, %rbp
 
     # Generate round keys
-    call des_key_schedule
+    call block_key_schedule
 
     # Reverse the order of round keys for decryption
     call reverse_round_keys
 
     # Use same encryption process with reversed keys
-    call des_encrypt_block
+    call block_encrypt_function
 
     popq %rbp
     ret
 
-des_key_schedule:
-    # Generate 16 round keys from 64-bit DES key
+block_key_schedule:
+    # Generate 16 round keys from 64-bit Block cipherkey
     # Implements PC-1, rotations, and PC-2 permutations
 
     pushq %rbp
@@ -234,7 +234,7 @@ des_key_schedule:
 
     # PC-1 permutation: reduce 64-bit key to 56-bit
     movq (%r9), %rax                # Load 64-bit key
-    call des_pc1_permutation
+    call block_pc1_permutation
     movq %rax, %r11                 # 56-bit permuted key
 
     # Split into C and D halves (28 bits each)
@@ -300,7 +300,7 @@ apply_pc2:
     shlq $28, %r12                  # Combine C and D
     orq %r13, %r12
     movq %r12, %rdi
-    call des_pc2_permutation
+    call block_pc2_permutation
 
     # Store round key
     movq %rcx, %rbx
@@ -315,8 +315,8 @@ key_schedule_complete:
     popq %rbp
     ret
 
-des_f_function:
-    # DES F function: f(R, K) = P(S(E(R) ⊕ K))
+block_f_function:
+    # Block cipherF function: f(R, K) = P(S(E(R) ⊕ K))
     # Input: %rdi = 32-bit R, %rsi = 48-bit round key
     # Output: %rax = 32-bit result
 
@@ -324,7 +324,7 @@ des_f_function:
     movq %rsp, %rbp
 
     # Expansion (E): 32-bit R to 48-bit
-    call des_expansion_function
+    call block_expansion_function
     movq %rax, %r8                  # Expanded R
 
     # XOR with round key
@@ -332,42 +332,42 @@ des_f_function:
 
     # S-box substitution: 48-bit to 32-bit
     movq %r8, %rdi
-    call des_sbox_substitution
+    call block_sbox_substitution
     movq %rax, %r8                  # S-box output
 
     # Permutation (P): 32-bit to 32-bit
     movq %r8, %rdi
-    call des_p_permutation
+    call block_p_permutation
 
     popq %rbp
     ret
 
 # Simplified permutation functions (real implementations would use lookup tables)
-des_pc1_permutation:
+block_pc1_permutation:
     # PC-1: 64-bit to 56-bit key permutation
     ret
 
-des_pc2_permutation:
+block_pc2_permutation:
     # PC-2: 56-bit to 48-bit round key permutation
     ret
 
-des_initial_permutation:
+block_initial_permutation:
     # Initial permutation of data block
     ret
 
-des_final_permutation:
+block_final_permutation:
     # Final permutation (inverse of initial)
     ret
 
-des_expansion_function:
+block_expansion_function:
     # Expansion function: 32-bit to 48-bit
     ret
 
-des_sbox_substitution:
+block_sbox_substitution:
     # S-box substitution: 48-bit to 32-bit
     ret
 
-des_p_permutation:
+block_p_permutation:
     # P permutation: 32-bit to 32-bit
     ret
 
@@ -424,7 +424,7 @@ verification_failed:
 
 cleanup_and_terminate:
     # Zero sensitive key material
-    leaq des_key1(%rip), %rdi
+    leaq cipher_key1(%rip), %rdi
     movq $24, %rcx                  # Clear all three keys
     xorq %rax, %rax
 clear_keys_loop:
@@ -448,7 +448,7 @@ clear_round_keys:
     syscall
 
 .section .data
-    # 3DES parameters
+    # 3Block cipherparameters
     block_size:         .quad 0     # 64 bits
     total_key_bits:     .quad 0     # 168 bits effective
     keys_valid:         .quad 0     # Key validation flag
@@ -457,9 +457,9 @@ clear_round_keys:
 
     # Key material
     master_key_material: .space 24  # 3×64-bit keys (192 bits total)
-    des_key1:           .space 8    # First DES key
-    des_key2:           .space 8    # Second DES key
-    des_key3:           .space 8    # Third DES key
+    cipher_key1:           .space 8    # First Block cipherkey
+    cipher_key2:           .space 8    # Second Block cipherkey
+    cipher_key3:           .space 8    # Third Block cipherkey
     round_keys:         .space 128  # 16 round keys × 8 bytes
 
     # Data blocks
@@ -468,7 +468,7 @@ clear_round_keys:
 
 .section .rodata
     # Algorithm identification
-    cipher_name:        .ascii "TRIPLE-DES-EDE-ENCRYPTION"
+    cipher_name:        .ascii "TRIPLE-BLOCK-EDE-ENCRYPTION"
     standard_ref:       .ascii "FIPS-46-3"
     key_configuration:  .ascii "THREE-KEY-EDE-OPERATION"
     security_warning:   .ascii "QUANTUM_VULNERABLE_GROVER"

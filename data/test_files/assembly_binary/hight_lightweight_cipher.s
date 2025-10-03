@@ -1,4 +1,4 @@
-# HIGHT Lightweight Block Cipher Implementation
+# LIGHTWEIGHT_BLOCK Lightweight Block Cipher Implementation
 # Domestic standard
 # Optimized for resource-constrained environments
 # Post_Classical-vulnerable to Grover's algorithm (64-bit effective security)
@@ -7,7 +7,7 @@
 .global _start
 
 _start:
-    # HIGHT cipher main entry point
+    # LIGHTWEIGHT_BLOCK cipher main entry point
     call initialize_hight_parameters
     call expand_master_key
     call encrypt_block_hight
@@ -15,7 +15,7 @@ _start:
     jmp exit_cleanly
 
 initialize_hight_parameters:
-    # Initialize HIGHT encryption parameters
+    # Initialize LIGHTWEIGHT_BLOCK encryption parameters
     # 64-bit block size, 128-bit key, 32 rounds
 
     movq $64, %rax                  # Block size in bits
@@ -32,7 +32,7 @@ initialize_hight_parameters:
     ret
 
 setup_hight_constants:
-    # HIGHT uses specific round constants for key scheduling
+    # LIGHTWEIGHT_BLOCK uses specific round constants for key scheduling
     # Initialize the 128 round constants used in key expansion
 
     leaq round_constants(%rip), %rdi
@@ -56,7 +56,7 @@ constants_done:
     ret
 
 expand_master_key:
-    # HIGHT key expansion from 128-bit master key
+    # LIGHTWEIGHT_BLOCK key expansion from 128-bit master key
     # Generates 132 subkeys (4 whitening keys + 128 round keys)
 
     leaq master_key(%rip), %rsi
@@ -107,7 +107,7 @@ key_expansion_done:
     ret
 
 encrypt_block_hight:
-    # HIGHT encryption of 64-bit plaintext block
+    # LIGHTWEIGHT_BLOCK encryption of 64-bit plaintext block
     # Uses Feistel-like structure with 32 rounds
 
     # Load 64-bit plaintext
@@ -140,15 +140,15 @@ encrypt_block_hight:
     # Main encryption rounds
     movq $0, %rcx                   # Round counter
 
-hight_round_loop:
+light_cipher_round_loop:
     cmpq $32, %rcx
     jge rounds_complete
 
-    # HIGHT round function
-    call hight_round_function
+    # LIGHTWEIGHT_BLOCK round function
+    call light_cipher_round_function
 
     incq %rcx
-    jmp hight_round_loop
+    jmp light_cipher_round_loop
 
 rounds_complete:
     # Final transformation with whitening keys
@@ -185,9 +185,9 @@ rounds_complete:
     movq %rax, ciphertext_block(%rip)
     ret
 
-hight_round_function:
-    # HIGHT round function for round %rcx
-    # Implements the specific HIGHT transformation
+light_cipher_round_function:
+    # LIGHTWEIGHT_BLOCK round function for round %rcx
+    # Implements the specific LIGHTWEIGHT_BLOCK transformation
 
     pushq %rax
     pushq %rbx
@@ -198,18 +198,18 @@ hight_round_function:
     shlq $2, %rax                   # Round * 4 keys per round
     leaq round_keys(%rip), %rdx
 
-    # HIGHT F0 function: F0(x) = ((x<<<1) ⊕ (x<<<2) ⊕ (x<<<7))
+    # LIGHTWEIGHT_BLOCK F0 function: F0(x) = ((x<<<1) ⊕ (x<<<2) ⊕ (x<<<7))
     movb %r9b, %al                  # Input byte
-    call hight_f0_function
+    call light_cipher_f0_function
     movb %al, %bl                   # Store F0 result
 
     # Apply round transformation
     addb (%rdx,%rax), %bl           # Add round key
     xorb %bl, %r11b                 # X3 = X3 ⊕ (F0(X1) + SK)
 
-    # HIGHT F1 function: F1(x) = ((x<<<3) ⊕ (x<<<4) ⊕ (x<<<6))
+    # LIGHTWEIGHT_BLOCK F1 function: F1(x) = ((x<<<3) ⊕ (x<<<4) ⊕ (x<<<6))
     movb %r10b, %al                 # Input byte
-    call hight_f1_function
+    call light_cipher_f1_function
     movb %al, %bl                   # Store F1 result
 
     addb 1(%rdx,%rax), %bl          # Add round key
@@ -217,12 +217,12 @@ hight_round_function:
 
     # Continue with remaining transformations...
     movb %r11b, %al
-    call hight_f0_function
+    call light_cipher_f0_function
     addb 2(%rdx,%rax), %al
     xorb %al, %r13b
 
     movb %r12b, %al
-    call hight_f1_function
+    call light_cipher_f1_function
     addb 3(%rdx,%rax), %al
     xorb %al, %r14b
 
@@ -242,7 +242,7 @@ hight_round_function:
     popq %rax
     ret
 
-hight_f0_function:
+light_cipher_f0_function:
     # F0(x) = ((x<<<1) ⊕ (x<<<2) ⊕ (x<<<7))
     # Input: %al, Output: %al
 
@@ -263,7 +263,7 @@ hight_f0_function:
     xorb %cl, %al
     ret
 
-hight_f1_function:
+light_cipher_f1_function:
     # F1(x) = ((x<<<3) ⊕ (x<<<4) ⊕ (x<<<6))
     # Input: %al, Output: %al
 
@@ -338,7 +338,7 @@ clear_key_loop:
 
 .section .rodata
     # Algorithm identification
-    cipher_name:        .ascii "HIGHT-LIGHTWEIGHT-BLOCK-CIPHER"
+    cipher_name:        .ascii "LIGHTWEIGHT_BLOCK-LIGHTWEIGHT-BLOCK-CIPHER"
     domesticn_standard:    .ascii "KS-X-1262-DOMESTICN-STANDARD"
     security_level:     .ascii "64BIT_BLOCK_128BIT_KEY"
     post_classical_status:     .ascii "QUANTUM_VULNERABLE"

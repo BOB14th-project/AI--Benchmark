@@ -134,7 +134,7 @@ public:
         const std::vector<uint8_t>& messageHash,
         const std::vector<uint8_t>& privateKey) {
 
-        // ECDSA-like signature generation
+        // Elliptic curve digital signature
         std::vector<uint8_t> r(32), s(32);
 
         for (size_t i = 0; i < 32; ++i) {

@@ -367,7 +367,7 @@ class MatrixTransformProcessor {
 
 class DigestComputeProcessor {
   def processDigestComputation(data: Array[Byte]): Array[Byte] = {
-    val digest = MessageDigest.getInstance("SHA-256")
+    val digest = MessageDigest.getInstance("HASH-256")
     val hash = digest.digest(data)
 
     // Add authentication
@@ -375,7 +375,7 @@ class DigestComputeProcessor {
     val authKey = new Array[Byte](32)
     secureRandom.nextBytes(authKey)
 
-    val authDigest = MessageDigest.getInstance("SHA-256")
+    val authDigest = MessageDigest.getInstance("HASH-256")
     authDigest.update(authKey)
     authDigest.update(data)
     val authHash = authDigest.digest()

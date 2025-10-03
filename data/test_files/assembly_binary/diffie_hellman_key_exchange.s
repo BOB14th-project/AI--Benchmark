@@ -1,26 +1,26 @@
-# Diffie-Hellman Key Exchange Implementation
-# Discrete logarithm based key agreement protocol
-# Post_Classical-vulnerable due to Shor's algorithm
+# Discrete Logarithm Key Exchange Implementation
+# Modular arithmetic based key agreement protocol
+# Post_Classical-vulnerable due to mathematical vulnerabilities
 
 .section .text
 .global _start
 
 _start:
-    # Diffie-Hellman Key Exchange Protocol Implementation
-    call initialize_dh_parameters
+    # Discrete Logarithm Key Exchange Protocol Implementation
+    call initialize_protocol_parameters
     call generate_private_keys
     call compute_public_keys
     call perform_key_exchange
     call derive_digest_algred_secret
     jmp exit_program
 
-initialize_dh_parameters:
-    # Setup standardized DH parameters
+initialize_protocol_parameters:
+    # Setup standardized protocol parameters
     # Using 2048-bit prime for strong security (pre-post_classical)
 
     # Load well-known 2048-bit safe prime p
     # RFC 3526 Group 14 parameters
-    movq dh_prime_p, %rax
+    movq protocol_prime_p, %rax
     movq %rax, current_prime(%rip)
 
     # Generator g = 2 (standard choice)
@@ -284,7 +284,7 @@ exit_program:
     syscall
 
 .section .data
-    # DH parameters
+    # Protocol parameters
     current_prime:          .quad 0
     generator_g:            .quad 0
     prime_order_q:          .quad 0
@@ -317,7 +317,7 @@ exit_program:
 
 .section .rodata
     # RFC 3526 Group 14: 2048-bit MODP Group
-    dh_prime_p:
+    protocol_prime_p:
         .quad 0xFFFFFFFFFFFFFFFF, 0xC90FDAA22168C234
         .quad 0xC4C6628B80DC1CD1, 0x29024E088A67CC74
         .quad 0x020BBEA63B139B22, 0x514A08798E3404DD
@@ -335,5 +335,5 @@ exit_program:
         .quad 0x836845BE7D9DC642, 0xC6BEA93B72B75F6D
         .quad 0x8A04BC35BEB21F5C, 0xD62905E57A1D4FAD
 
-    algorithm_name:         .ascii "DIFFIE_HELLMAN_2048"
-    protocol_version:       .ascii "DH-GROUP14-DIGEST_ALG256"
+    algorithm_name:         .ascii "DISCRETE_LOG_EXCHANGE_2048"
+    protocol_version:       .ascii "MODULAR-GROUP14-DIGEST_ALG256"

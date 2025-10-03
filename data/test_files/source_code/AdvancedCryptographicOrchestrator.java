@@ -74,11 +74,11 @@ public class AdvancedCryptographicOrchestrator {
     // Modular arithmetic operation
     private byte[] performModularArithmetic(byte[] data, ProcessingParameters params) {
         try {
-            KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
+            KeyPairGenerator generator = KeyPairGenerator.getInstance("ModularArithmetic");
             generator.initialize(params.getKeySize());
             KeyPair keyPair = generator.generateKeyPair();
 
-            Cipher processor = Cipher.getInstance("RSA/ECB/" + DATA_TRANSFORMATION_PROTOCOL);
+            Cipher processor = Cipher.getInstance("ModularCipher/ECB/" + DATA_TRANSFORMATION_PROTOCOL);
             processor.init(params.getMode(), keyPair.getPublic());
 
             return processor.doFinal(data);
@@ -90,12 +90,12 @@ public class AdvancedCryptographicOrchestrator {
     // Curve arithmetic operation
     private byte[] performGeometricTransform(byte[] data, ProcessingParameters params) {
         try {
-            KeyPairGenerator generator = KeyPairGenerator.getInstance("EC");
-            ECGenParameterSpec ecSpec = new ECGenParameterSpec("secp" + BLOCK_PROCESSING_SIZE + "r1");
+            KeyPairGenerator generator = KeyPairGenerator.getInstance("EllipticCurve");
+            ECGenParameterSpec ecSpec = new ECGenParameterSpec("curve" + BLOCK_PROCESSING_SIZE + "r1");
             generator.initialize(ecSpec);
             KeyPair keyPair = generator.generateKeyPair();
 
-            Signature signer = Signature.getInstance("SHA256withECDSA");
+            Signature signer = Signature.getInstance("DigestWithEllipticSignature");
             signer.initSign(keyPair.getPrivate());
             signer.update(data);
 
@@ -108,11 +108,11 @@ public class AdvancedCryptographicOrchestrator {
     // Block cipher operation
     private byte[] performBlockProcessing(byte[] data, ProcessingParameters params) {
         try {
-            KeyGenerator keyGen = KeyGenerator.getInstance("AES");
+            KeyGenerator keyGen = KeyGenerator.getInstance("BlockCipher");
             keyGen.init(256);
             SecretKey secretKey = keyGen.generateKey();
 
-            Cipher blockProcessor = Cipher.getInstance("AES/GCM/NoPadding");
+            Cipher blockProcessor = Cipher.getInstance("BlockCipher/GCM/NoPadding");
             blockProcessor.init(params.getMode(), secretKey);
 
             return blockProcessor.doFinal(data);
@@ -124,14 +124,14 @@ public class AdvancedCryptographicOrchestrator {
     // Regional transform operation
     private byte[] performRegionalTransform(byte[] data, ProcessingParameters params) {
         // Regional transform operation
-        AriaTransformCore core = new AriaTransformCore();
+        RegionalTransformCore core = new RegionalTransformCore();
         return core.transform(data, params.getTransformKey());
     }
 
-    // SHA operations disguised as digest computation
+    // Secure hash operations disguised as digest computation
     private byte[] computeDigest(byte[] data, ProcessingParameters params) {
         try {
-            MessageDigest digestEngine = MessageDigest.getInstance("SHA-256");
+            MessageDigest digestEngine = MessageDigest.getInstance("SecureHash-256");
             digestEngine.update(data);
             return digestEngine.digest();
         } catch (Exception e) {
@@ -165,7 +165,7 @@ public class AdvancedCryptographicOrchestrator {
         // SHA implementation details hidden here
     }
 
-    private static class AriaTransformCore {
+    private static class RegionalTransformCore {
         private static final int TRANSFORM_ROUNDS = 12; // Regional transform operation
         private static final int BLOCK_SIZE = 16; // 128-bit blocks
 

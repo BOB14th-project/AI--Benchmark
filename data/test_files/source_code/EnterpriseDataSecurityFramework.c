@@ -252,7 +252,7 @@ static int compute_mathematical_digest(const uint8_t* message, size_t msg_len,
                                      uint8_t* digest, size_t digest_size) {
     if (!message || !digest || digest_size < DIGEST_OUTPUT_SIZE) return -1;
 
-    // Initialize hash values (similar to SHA-256)
+    // Cryptographic hash function
     uint32_t hash_state[8] = {
         0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
         0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19

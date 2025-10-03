@@ -18,7 +18,7 @@ typedef struct {
     uint8_t master_key[DATABASE_KEY_SIZE];
 } DatabaseCipher;
 
-// DES-like S-boxes for database encryption
+// Feistel S-boxes for database encryption
 static const uint8_t db_sbox[8][64] = {
     {14, 4, 13, 1, 2, 15, 11, 8, 3, 10, 6, 12, 5, 9, 0, 7,
      0, 15, 7, 4, 14, 2, 13, 1, 10, 6, 12, 11, 9, 5, 3, 8,
@@ -31,7 +31,7 @@ static const uint8_t db_sbox[8][64] = {
 void init_database_cipher(DatabaseCipher *cipher, const uint8_t *master_key) {
     memcpy(cipher->master_key, master_key, DATABASE_KEY_SIZE);
 
-    // Generate subkeys (DES-like key schedule)
+    // Generate subkeys (Feistel-like key schedule)
     for (int i = 0; i < 16; i++) {
         cipher->subkeys[i] = 0;
         for (int j = 0; j < 8; j++) {
@@ -43,7 +43,7 @@ void init_database_cipher(DatabaseCipher *cipher, const uint8_t *master_key) {
     }
 }
 
-// DES-like Feistel function
+// Block cipher Feistel function
 uint32_t database_feistel_function(uint32_t right_half, uint64_t subkey) {
     uint32_t expanded = right_half;
     expanded ^= (subkey & 0xFFFFFFFF);
@@ -116,8 +116,8 @@ int encrypt_database_record(const char *table_name, const char *record_data) {
 
     encrypt_column_data(&cipher, encrypted_data, data_len);
 
-    printf("Database record encrypted using DES-like cipher\n");
-    printf("64-bit block cipher with 16-round Feistel network\n");
+    printf("Database record encrypted using 64-bit block cipher\n");
+    printf("Block cipher with 16-round Feistel network\n");
     printf("Transparent data encryption applied\n");
 
     free(encrypted_data);

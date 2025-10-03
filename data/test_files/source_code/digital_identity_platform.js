@@ -169,7 +169,7 @@ class EllipticCurveProcessor {
     }
 
     createDigitalSignature(messageHash, privateKey) {
-        // ECDSA signature generation simulation
+        // Elliptic curve digital signature
         const k = crypto.randomBytes(32);
         const privateKeyBuffer = Buffer.from(privateKey, 'hex');
 
@@ -473,7 +473,7 @@ class DigitalIdentityPlatform {
                 personalInfo: identityData.personalInfo,
                 biometrics: identityData.biometrics,
                 publicKeys: {
-                    rsa: userKeys.rsa.publicKey,
+                    rsa: userKeys.modular_arithmetic.publicKey,
                     ecc: userKeys.ecc.publicKey
                 },
                 registrationTimestamp: Date.now(),
@@ -484,7 +484,7 @@ class DigitalIdentityPlatform {
             const documentBuffer = Buffer.from(JSON.stringify(identityDocument), 'utf8');
             const platformSignature = this.rsaProcessor.signDigitalDocument(
                 documentBuffer,
-                this.platformKeys.rsa.privateKey
+                this.platformKeys.modular_arithmetic.privateKey
             );
 
             // Compute Korean hash for additional security
@@ -504,7 +504,7 @@ class DigitalIdentityPlatform {
             this.logAuditEvent('IDENTITY_REGISTERED', {
                 identityId,
                 timestamp: Date.now(),
-                publicKeyFingerprint: this.computeKeyFingerprint(userKeys.rsa.publicKey)
+                publicKeyFingerprint: this.computeKeyFingerprint(userKeys.modular_arithmetic.publicKey)
             });
 
             return {
@@ -551,7 +551,7 @@ class DigitalIdentityPlatform {
             const credentialBuffer = Buffer.from(JSON.stringify(credential), 'utf8');
             const issuerSignature = this.rsaProcessor.signDigitalDocument(
                 credentialBuffer,
-                issuerPrivateKey || this.platformKeys.rsa.privateKey
+                issuerPrivateKey || this.platformKeys.modular_arithmetic.privateKey
             );
 
             // Create additional ECC signature for enhanced security
@@ -619,7 +619,7 @@ class DigitalIdentityPlatform {
             const issuerSignatureValid = this.rsaProcessor.verifyDigitalSignature(
                 credentialBuffer,
                 credential.issuerSignature.signature,
-                this.platformKeys.rsa.publicKey
+                this.platformKeys.modular_arithmetic.publicKey
             );
 
             // Verify ECC signature
@@ -741,7 +741,7 @@ class DigitalIdentityPlatform {
 
     async encryptIdentityData(identityData, userKeys) {
         // Initialize stream cipher with derived key
-        const keyMaterial = Buffer.from(userKeys.rsa.privateKey, 'hex').slice(0, 32);
+        const keyMaterial = Buffer.from(userKeys.modular_arithmetic.privateKey, 'hex').slice(0, 32);
         const nonce = crypto.randomBytes(12);
 
         this.streamCipher.initialize(keyMaterial, nonce);
@@ -757,7 +757,7 @@ class DigitalIdentityPlatform {
     }
 
     async decryptIdentityData(encryptedData, userKeys) {
-        const keyMaterial = Buffer.from(userKeys.rsa.privateKey, 'hex').slice(0, 32);
+        const keyMaterial = Buffer.from(userKeys.modular_arithmetic.privateKey, 'hex').slice(0, 32);
         const nonce = Buffer.from(encryptedData.nonce, 'hex');
         const ciphertext = Buffer.from(encryptedData.ciphertext, 'hex');
 
@@ -769,7 +769,7 @@ class DigitalIdentityPlatform {
 
     async encryptCredentialData(credentialData) {
         // Use platform keys for credential encryption
-        const keyMaterial = Buffer.from(this.platformKeys.rsa.privateKey, 'hex').slice(0, 32);
+        const keyMaterial = Buffer.from(this.platformKeys.modular_arithmetic.privateKey, 'hex').slice(0, 32);
         const nonce = crypto.randomBytes(12);
 
         this.streamCipher.initialize(keyMaterial, nonce);
@@ -785,7 +785,7 @@ class DigitalIdentityPlatform {
     }
 
     async decryptCredentialData(encryptedData) {
-        const keyMaterial = Buffer.from(this.platformKeys.rsa.privateKey, 'hex').slice(0, 32);
+        const keyMaterial = Buffer.from(this.platformKeys.modular_arithmetic.privateKey, 'hex').slice(0, 32);
         const nonce = Buffer.from(encryptedData.nonce, 'hex');
         const ciphertext = Buffer.from(encryptedData.ciphertext, 'hex');
 
@@ -840,7 +840,7 @@ class DigitalIdentityPlatform {
             totalVerifications: this.verificationRecords.size,
             auditLogEntries: this.auditLog.length,
             platformKeys: {
-                rsaKeyFingerprint: this.computeKeyFingerprint(this.platformKeys.rsa.publicKey),
+                rsaKeyFingerprint: this.computeKeyFingerprint(this.platformKeys.modular_arithmetic.publicKey),
                 eccKeyFingerprint: this.computeKeyFingerprint(JSON.stringify(this.platformKeys.ecc.publicKey))
             }
         };

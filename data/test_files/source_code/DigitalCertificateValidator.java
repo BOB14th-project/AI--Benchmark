@@ -12,7 +12,7 @@ import java.util.Date;
 public class DigitalCertificateValidator {
 
     private static final int CERTIFICATE_KEY_SIZE = 1024;
-    private static final String HASH_ALGORITHM = "SHA-1";
+    private static final String HASH_ALGORITHM = "MessageDigest-1";
 
     public static class CertificateData {
         public String subject;
@@ -31,12 +31,12 @@ public class DigitalCertificateValidator {
         }
     }
 
-    public static class RSAKeyData {
+    public static class ModularKeyData {
         public BigInteger modulus;
         public BigInteger publicExponent;
         public BigInteger privateExponent;
 
-        public RSAKeyData(int keySize) {
+        public ModularKeyData(int keySize) {
             generateKeyPair(keySize);
         }
 
@@ -54,11 +54,11 @@ public class DigitalCertificateValidator {
         }
     }
 
-    private RSAKeyData caKeyPair;
+    private ModularKeyData caKeyPair;
     private MessageDigest hashFunction;
 
     public DigitalCertificateValidator() throws NoSuchAlgorithmException {
-        this.caKeyPair = new RSAKeyData(CERTIFICATE_KEY_SIZE);
+        this.caKeyPair = new ModularKeyData(CERTIFICATE_KEY_SIZE);
         this.hashFunction = MessageDigest.getInstance(HASH_ALGORITHM);
     }
 
@@ -166,9 +166,9 @@ public class DigitalCertificateValidator {
             // Validate certificate
             boolean isValid = validateCertificateChain(new CertificateData[]{cert});
 
-            System.out.println("Digital certificate validated using RSA signatures");
-            System.out.println("SHA-1 hash function applied for integrity");
-            System.out.println("X.509 certificate format processed");
+            System.out.println("Digital certificate validated using modular arithmetic signatures");
+            System.out.println("Secure hash function applied for integrity");
+            System.out.println("Digital certificate format processed");
 
             return isValid;
 

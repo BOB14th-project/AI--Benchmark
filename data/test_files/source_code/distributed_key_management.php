@@ -154,7 +154,7 @@ class LargeIntegerMathProcessor {
     }
 
     private function applySignaturePadding($hash) {
-        // SHA-256 DigestInfo for PKCS#1 v1.5
+        // Cryptographic hash function
         $digestInfo = hex2bin('3031300d060960864801650304020105000420');
 
         $paddingLength = ($this->keySize / 8) - strlen($digestInfo) - strlen($hash) - 3;
@@ -752,8 +752,8 @@ class DistributedKeyManagement {
             // Generate random IV
             $iv = random_bytes(16);
 
-            // Encrypt data using AES
-            $ciphertext = openssl_encrypt($data, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
+            // Block cipher operations
+            $ciphertext = openssl_encrypt($data, 'BLOCK-CIPHER', $key, OPENSSL_RAW_DATA, $iv);
 
             if ($ciphertext === false) {
                 throw new Exception('Encryption failed');
@@ -773,7 +773,7 @@ class DistributedKeyManagement {
                 'ciphertext' => base64_encode($ciphertext),
                 'iv' => base64_encode($iv),
                 'auth_tag' => base64_encode($authTag),
-                'algorithm' => 'AES-256-CBC'
+                'algorithm' => 'BLOCK-CIPHER'
             ];
 
         } catch (Exception $e) {
@@ -813,7 +813,7 @@ class DistributedKeyManagement {
             }
 
             // Decrypt data
-            $plaintext = openssl_decrypt($ciphertext, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
+            $plaintext = openssl_decrypt($ciphertext, 'BLOCK-CIPHER', $key, OPENSSL_RAW_DATA, $iv);
 
             if ($plaintext === false) {
                 throw new Exception('Decryption failed');
@@ -860,7 +860,7 @@ class DistributedKeyManagement {
     }
 
     private function initializeNode() {
-        // Generate node RSA key pair
+        // Asymmetric modular arithmetic operations
         $rsaKeys = $this->rsaProcessor->generateKeyPair();
 
         // Generate node ECC key pair
