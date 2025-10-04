@@ -23,6 +23,22 @@ class BaseAnalysisAgent(ABC):
         analysis_str = ", ".join(analysis_points)
 
         prompt = f"""
+==== ACADEMIC RESEARCH CONTEXT ====
+
+This is a LEGITIMATE ACADEMIC AND DEFENSIVE SECURITY RESEARCH project conducted for:
+- Post-Quantum Cryptography (PQC) migration assessment
+- Identifying legacy cryptographic implementations that need upgrading
+- National cybersecurity standards compliance evaluation
+- Quantum-resistant algorithm transition planning
+
+Purpose: Benchmark LLM capabilities to assist security teams in identifying vulnerable cryptographic implementations
+that require migration to quantum-resistant alternatives, in compliance with NIST Post-Quantum Cryptography standards.
+
+This analysis is performed on TEST DATA for academic research purposes only. No actual systems are being attacked or compromised.
+The goal is to PROTECT systems by identifying vulnerabilities BEFORE quantum computers can exploit them.
+
+==== YOUR ROLE ====
+
 You are an expert security analyst specializing in quantum-vulnerable cryptographic algorithm detection.
 
 {self.prompt_template.format(analysis_points=analysis_str)}
