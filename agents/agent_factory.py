@@ -2,14 +2,12 @@ from typing import Dict, Any
 from .base_agent import BaseAnalysisAgent
 from .source_code_agent import SourceCodeAgent
 from .assembly_agent import AssemblyBinaryAgent
-from .dynamic_analysis_agent import DynamicAnalysisAgent
 from .logs_config_agent import LogsConfigAgent
 
 class AgentFactory:
     _agents = {
         'source_code': SourceCodeAgent,
         'assembly_binary': AssemblyBinaryAgent,
-        'dynamic_analysis': DynamicAnalysisAgent,
         'logs_config': LogsConfigAgent
     }
 

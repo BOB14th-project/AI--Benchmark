@@ -40,11 +40,6 @@ agents:
     description: "Analyzes compiled assembly/binary code to detect quantum-vulnerable cryptographic operations including Korean algorithms"
     prompt_template: "You are an expert in cryptography and assembly analysis. Examine the following assembly/binary code and detect: {analysis_points}. Look for signatures of quantum-vulnerable crypto algorithms, including RSA operations, elliptic curve arithmetic, discrete logarithm computations, Korean cipher implementations (SEED, ARIA, HIGHT, LEA), and other quantum-vulnerable mathematical operations in compiled code that pattern matching might miss."
 
-  dynamic_analysis:
-    name: "Dynamic Analysis Vulnerable Crypto Detection Agent"
-    description: "Analyzes runtime behavior to identify quantum-vulnerable cryptography usage including Korean algorithms"
-    prompt_template: "You are an expert in cryptography and dynamic analysis. Analyze the following runtime data and identify: {analysis_points}. Focus on detecting quantum-vulnerable crypto algorithm usage through API calls, memory patterns, performance characteristics, and behavioral signatures that indicate vulnerable cryptographic operations, including Korean domestic algorithms and international standards."
-
   logs_config:
     name: "Configuration and Logs Vulnerable Crypto Analysis Agent"
     description: "Analyzes configuration files and logs to detect quantum-vulnerable cryptography settings including Korean algorithms"

@@ -94,10 +94,14 @@ class MetricsCalculator:
                 algorithm_variations = ['lea']
             elif 'kcdsa' in algorithm_lower:
                 algorithm_variations = ['kcdsa', 'ec-kcdsa']
+            elif '3des' in algorithm_lower or 'triple des' in algorithm_lower or 'tdes' in algorithm_lower:
+                algorithm_variations = ['3des', 'triple des', 'triple-des', 'tdes']
             elif 'des' in algorithm_lower:
-                algorithm_variations = ['des', '3des', 'triple des']
-            elif 'rc4' in algorithm_lower:
-                algorithm_variations = ['rc4']
+                algorithm_variations = ['des']
+            elif 'rc4' in algorithm_lower or 'arcfour' in algorithm_lower:
+                algorithm_variations = ['rc4', 'arcfour']
+            elif 'blowfish' in algorithm_lower or 'twofish' in algorithm_lower:
+                algorithm_variations = ['blowfish', 'twofish']
             elif 'md5' in algorithm_lower:
                 algorithm_variations = ['md5']
             elif 'sha1' in algorithm_lower or 'sha-1' in algorithm_lower:
@@ -118,8 +122,6 @@ class MetricsCalculator:
                 algorithm_variations = ['sha256', 'sha-256']
             elif 'hmac' in algorithm_lower:
                 algorithm_variations = ['hmac']
-            elif '3des' in algorithm_lower or 'triple des' in algorithm_lower:
-                algorithm_variations = ['3des', 'triple des', 'triple-des', 'tdes']
             elif 'chacha20' in algorithm_lower or 'chacha' in algorithm_lower:
                 algorithm_variations = ['chacha20', 'chacha']
             elif 'poly1305' in algorithm_lower:

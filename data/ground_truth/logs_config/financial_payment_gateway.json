@@ -1,0 +1,8 @@
+{
+  "expected_findings": {
+    "vulnerable_algorithms_detected": ["RSA", "3DES", "DH", "MD5", "SHA-1", "RC4"],
+    "algorithm_categories": ["shor_vulnerable", "grover_vulnerable"],
+    "korean_algorithms_detected": []
+  },
+  "expected_confidence_range": [0.75, 0.95]
+}

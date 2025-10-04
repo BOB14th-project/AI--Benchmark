@@ -49,13 +49,7 @@
 - **지원 형식**: 어셈블리, 바이너리 덤프, 디스어셈블리
 - **탐지 대상**: 양자 취약 암호 연산 (큰 정수 연산, 타원곡선 연산, 모듈러 지수)
 
-### 3. Dynamic Analysis Agent (`dynamic_analysis`)
-- **목적**: 런타임 동작에서 암호 API 사용 탐지
-- **파일 위치**: `data/test_files/dynamic_analysis/`
-- **지원 형식**: JSON, 로그, 트레이스 파일
-- **탐지 대상**: 양자 취약 암호 API 호출, 메모리 패턴, 성능 특성
-
-### 4. Logs Config Agent (`logs_config`)
+### 3. Logs Config Agent (`logs_config`)
 - **목적**: 설정 파일과 로그에서 암호 설정 탐지
 - **파일 위치**: `data/test_files/logs_config/`
 - **지원 형식**: 설정 파일, 시스템 로그, 애플리케이션 로그
@@ -205,7 +199,6 @@ python analyze_results.py --compare-agents
 # ===================================================================
 # Source Code:      양자 취약 알고리즘 탐지 용이, 높은 정확도
 # Assembly Binary:  중간 난이도, 모델별 성능 차이
-# Dynamic Analysis: 복잡한 패턴, 상대적으로 낮은 정확도
 # Logs Config:      설정 기반 탐지, 높은 거짓양성율
 ```
 
@@ -232,7 +225,6 @@ AI--Benchmark/
 │   ├── base_agent.py          # 기본 에이전트 클래스
 │   ├── source_code_agent.py   # 소스 코드 분석
 │   ├── assembly_agent.py      # 어셈블리 분석
-│   ├── dynamic_analysis_agent.py # 동적 분석
 │   ├── logs_config_agent.py   # 로그/설정 분석
 │   └── agent_factory.py       # 에이전트 팩토리
 ├── clients/                   # LLM API 클라이언트들
@@ -248,7 +240,6 @@ AI--Benchmark/
 │   ├── test_files/           # 실제 테스트 파일들
 │   │   ├── source_code/      # 소스 코드 샘플
 │   │   ├── assembly_binary/  # 어셈블리/바이너리
-│   │   ├── dynamic_analysis/ # 동적 분석 데이터
 │   │   └── logs_config/      # 로그/설정 파일
 │   └── ground_truth/         # 정답 데이터
 ├── utils/                     # 유틸리티들
@@ -311,8 +302,7 @@ export PARALLEL_REQUESTS=true
 
 1. **Source Code** (쉬움): 명시적 알고리즘 사용, 높은 탐지율
 2. **Assembly Binary** (어려움): 컴파일된 코드, 패턴 인식 필요
-3. **Dynamic Analysis** (중간): API 호출 패턴, 성능 특성 분석
-4. **Logs Config** (중간): 설정 이해, 간접적 증거 수집
+3. **Logs Config** (중간): 설정 이해, 간접적 증거 수집
 
 ## 🎯 기대 효과
 

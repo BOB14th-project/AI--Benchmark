@@ -33,8 +33,13 @@ class ConfigLoader:
                     config[key] = self._substitute_env_vars(value)
         return config
 
-    def get_llm_config(self, provider: str) -> Dict[str, Any]:
-        """Get LLM configuration, resolving environment variable references"""
+    def get_llm_config(self, provider: str, model_name: str = None) -> Dict[str, Any]:
+        """Get LLM configuration, resolving environment variable references
+
+        Args:
+            provider: Provider name (e.g., 'google', 'openai')
+            model_name: Specific model name to use (optional)
+        """
         provider_config = self.config.get("llm_providers", {}).get(provider, {})
 
         # Resolve environment variable references
@@ -44,7 +49,19 @@ class ConfigLoader:
                 # This is an environment variable reference
                 env_var_name = value
                 actual_key = key[:-4]  # Remove '_env' suffix
-                resolved_config[actual_key] = os.getenv(env_var_name, f"MISSING_{env_var_name}")
+                env_value = os.getenv(env_var_name, f"MISSING_{env_var_name}")
+
+                # Handle model list (comma-separated)
+                if actual_key == 'model' and ',' in env_value:
+                    if model_name:
+                        # Use specific model if provided
+                        resolved_config[actual_key] = model_name
+                    else:
+                        # Return list of models
+                        resolved_config[actual_key] = [m.strip() for m in env_value.split(',')]
+                        resolved_config['models'] = resolved_config[actual_key]
+                else:
+                    resolved_config[actual_key] = env_value
             else:
                 resolved_config[key] = value
 

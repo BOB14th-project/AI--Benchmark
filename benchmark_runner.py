@@ -32,20 +32,42 @@ class BenchmarkRunner:
         self.lock = threading.Lock()
 
     def get_available_models(self) -> Dict[str, List[str]]:
-        """사용 가능한 모델들을 조회"""
-        models = {
-            'google': ['gemini-2.0-flash-exp'],
-            'openai': ['gpt-4.1'],
-            'xai': ['grok-3-mini'],
-            'ollama': ['llama3:8b', 'qwen3:8b', 'codellama:7b']
-        }
+        """사용 가능한 모델들을 조회 (config에서 동적으로 로드)"""
+        models = {}
+
+        # API 기반 프로바이더들 (google, openai, xai)
+        for provider in ['google', 'openai', 'xai']:
+            try:
+                provider_config = self.config_loader.get_llm_config(provider)
+                model_value = provider_config.get('model')
+
+                # 모델이 리스트인 경우
+                if isinstance(model_value, list):
+                    models[provider] = model_value
+                # 모델이 문자열인 경우
+                elif isinstance(model_value, str):
+                    models[provider] = [model_value]
+                else:
+                    models[provider] = []
+
+                if models[provider]:
+                    print(f"✅ {provider} 모델: {models[provider]}")
+            except Exception as e:
+                models[provider] = []
+                print(f"❌ {provider} 설정 로드 실패: {e}")
 
         # Ollama 모델 가용성 확인
         try:
             ollama_client = OllamaClient()
             if ollama_client.is_available():
                 available_ollama = ollama_client.list_available_models()
-                models['ollama'] = [m for m in models['ollama'] if m in available_ollama]
+                ollama_config = self.config_loader.get_llm_config('ollama')
+                configured_models = ollama_config.get('model', [])
+
+                if isinstance(configured_models, str):
+                    configured_models = [configured_models]
+
+                models['ollama'] = [m for m in configured_models if m in available_ollama]
                 print(f"✅ Ollama 사용 가능한 모델: {models['ollama']}")
             else:
                 models['ollama'] = []
@@ -79,8 +101,7 @@ class BenchmarkRunner:
                     'base_url': 'http://localhost:11434'
                 })
             else:
-                llm_config = self.config_loader.get_llm_config(provider)
-                llm_config['model'] = model
+                llm_config = self.config_loader.get_llm_config(provider, model_name=model)
                 client = ClientFactory.create_client(provider, llm_config)
 
             # 에이전트 생성
@@ -267,7 +288,7 @@ class BenchmarkRunner:
         if providers is None:
             providers = ['google', 'openai', 'xai', 'ollama']
         if agents is None:
-            agents = ['source_code', 'assembly_binary', 'dynamic_analysis', 'logs_config']
+            agents = ['source_code', 'assembly_binary', 'logs_config']
 
         available_models = self.get_available_models()
 
@@ -592,7 +613,7 @@ def main():
                        choices=['google', 'openai', 'xai', 'ollama'],
                        help='테스트할 프로바이더들')
     parser.add_argument('--agents', nargs='+',
-                       choices=['source_code', 'assembly_binary', 'dynamic_analysis', 'logs_config'],
+                       choices=['source_code', 'assembly_binary', 'logs_config'],
                        help='테스트할 에이전트들')
     parser.add_argument('--limit', type=int, help='에이전트당 테스트 파일 수 제한')
     parser.add_argument('--parallel', action='store_true', help='병렬 실행')

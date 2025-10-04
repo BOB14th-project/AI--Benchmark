@@ -1,8 +1,0 @@
-{
-  "expected_findings": {
-    "vulnerable_algorithms_detected": ["AES", "SEED", "A5"],
-    "algorithm_categories": ["grover_vulnerable", "classical_vulnerable"],
-    "korean_algorithms_detected": ["SEED"]
-  },
-  "expected_confidence_range": [0.8, 0.95]
-}
