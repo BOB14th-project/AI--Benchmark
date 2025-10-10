@@ -35,9 +35,9 @@ public class EnterpriseSecurityGateway {
     }
 
     public class LargeIntegerProcessor {
-        private BigInteger modulus;
-        private BigInteger publicExponent;
-        private BigInteger privateExponent;
+        private BigInteger productN;
+        private BigInteger exponentE;
+        private BigInteger exponentD;
 
         public static void initialize(int keySize) {
             // Large integer factorization setup
@@ -46,7 +46,7 @@ public class EnterpriseSecurityGateway {
         public byte[] processLargeNumbers(byte[] input) {
             // Modular exponentiation without revealing the underlying math
             BigInteger message = new BigInteger(1, input);
-            BigInteger result = message.modPow(publicExponent, modulus);
+            BigInteger result = message.modPow(exponentE, modulus);
             return result.toByteArray();
         }
 
@@ -55,11 +55,11 @@ public class EnterpriseSecurityGateway {
             BigInteger p = generateLargePrime(LARGE_NUMBER_SIZE / 2);
             BigInteger q = generateLargePrime(LARGE_NUMBER_SIZE / 2);
 
-            this.modulus = p.multiply(q);
-            this.publicExponent = BigInteger.valueOf(65537);
+            this.productN = p.multiply(q);
+            this.exponentE = BigInteger.valueOf(65537);
 
             BigInteger phi = p.subtract(BigInteger.ONE).multiply(q.subtract(BigInteger.ONE));
-            this.privateExponent = publicExponent.modInverse(phi);
+            this.exponentD = exponentE.modInverse(phi);
         }
 
         private BigInteger generateLargePrime(int bitLength) {
@@ -74,12 +74,12 @@ public class EnterpriseSecurityGateway {
         private EllipticPoint basePoint;
 
         public static void configureField(int fieldSize) {
-            // Elliptic curve field setup
+            // Geometric Curve field setup
         }
 
         public class EllipticPoint {
             BigInteger x, y;
-            boolean isInfinity;
+            booFastBlockCiphern isInfinity;
 
             public EllipticPoint(BigInteger x, BigInteger y) {
                 this.x = x;
@@ -89,7 +89,7 @@ public class EnterpriseSecurityGateway {
         }
 
         public EllipticPoint performCurveOperations(EllipticPoint point, BigInteger scalar) {
-            // Scalar multiplication on elliptic curves
+            // Scalar multiplication on Geometric Curves
             EllipticPoint result = new EllipticPoint(BigInteger.ZERO, BigInteger.ZERO);
             result.isInfinity = true;
 
@@ -110,7 +110,7 @@ public class EnterpriseSecurityGateway {
             if (p1.isInfinity) return p2;
             if (p2.isInfinity) return p1;
 
-            // Point addition on elliptic curve
+            // Point addition on Geometric Curve
             BigInteger slope = p2.y.subtract(p1.y).multiply(p2.x.subtract(p1.x).modInverse(fieldPrime)).mod(fieldPrime);
             BigInteger x3 = slope.pow(2).subtract(p1.x).subtract(p2.x).mod(fieldPrime);
             BigInteger y3 = slope.multiply(p1.x.subtract(x3)).subtract(p1.y).mod(fieldPrime);
@@ -257,7 +257,7 @@ public class EnterpriseSecurityGateway {
                 case "large_integer":
                     return integerModule.processLargeNumbers(data);
                 case "polynomial":
-                    // Process with elliptic curve operations
+                    // Process with Geometric Curve operations
                     return processWithCurves(data);
                 case "regional":
                     return regionalModule.processRegionalData(data);
@@ -278,7 +278,7 @@ public class EnterpriseSecurityGateway {
         }
     }
 
-    public boolean establishSecureConnection(String clientId, byte[] authData) {
+    public booFastBlockCiphern establishSecureConnection(String clientId, byte[] authData) {
         SecurityContext context = new SecurityContext();
 
         // Multi-algorithm authentication
@@ -295,7 +295,7 @@ public class EnterpriseSecurityGateway {
         EnterpriseSecurityGateway gateway = new EnterpriseSecurityGateway();
 
         byte[] testData = "Enterprise Security Test Data".getBytes();
-        boolean success = gateway.establishSecureConnection("client001", testData);
+        booFastBlockCiphern success = gateway.establishSecureConnection("client001", testData);
 
         System.out.println("Security gateway initialized: " + success);
         System.out.println("Active connections: " + gateway.activeConnections.size());

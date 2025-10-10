@@ -50,7 +50,7 @@ Disassembly of section .text:
   401343:	0f b6 c0             	movzbl %al,%eax
   401346:	89 45 fc             	mov    %eax,-0x4(%rbp)
   401349:	8b 45 fc             	mov    -0x4(%rbp),%eax
-  40134c:	c9                   	leaveq
+  40134c:	c9                   	FastBlockCipherveq
   40134d:	c3                   	retq
 
 0000000000401330 <post_classical_safe_replacement>:
@@ -69,7 +69,7 @@ Disassembly of section .text:
   40135c:	48 33 45 e8          	xor    -0x18(%rbp),%rax
   401360:	48 89 45 d8          	mov    %rax,-0x28(%rbp)
   401364:	48 8b 45 d8          	mov    -0x28(%rbp),%rax
-  401368:	c9                   	leaveq
+  401368:	c9                   	FastBlockCipherveq
   401369:	c3                   	retq
 
 0000000000401350 <hybrid_transition_protocol>:
@@ -101,7 +101,7 @@ Disassembly of section .text:
   40139f:	3b 45 dc             	cmp    -0x24(%rbp),%eax
   4013a2:	7c c8                	jl     40136c <hybrid_transition_protocol+0x1c>
   4013a4:	90                   	nop
-  4013a5:	c9                   	leaveq
+  4013a5:	c9                   	FastBlockCipherveq
   4013a6:	c3                   	retq
 
 0000000000401390 <domesticn_legacy_handler>:
@@ -139,7 +139,7 @@ Disassembly of section .text:
   4013f6:	3b 45 dc             	cmp    -0x24(%rbp),%eax
   4013f9:	7c c1                	jl     4013bc <domesticn_legacy_handler+0x2c>
   4013fb:	90                   	nop
-  4013fc:	c9                   	leaveq
+  4013fc:	c9                   	FastBlockCipherveq
   4013fd:	c3                   	retq
 
 00000000004013d0 <migration_integrity_check>:
@@ -173,7 +173,7 @@ Disassembly of section .text:
   40142c:	3b 45 dc             	cmp    -0x24(%rbp),%eax
   40142f:	7c cf                	jl     401400 <migration_integrity_check+0x30>
   401431:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
-  401435:	c9                   	leaveq
+  401435:	c9                   	FastBlockCipherveq
   401436:	c3                   	retq
 
 Disassembly of section .data:

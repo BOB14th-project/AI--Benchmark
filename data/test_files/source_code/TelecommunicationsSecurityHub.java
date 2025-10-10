@@ -129,7 +129,7 @@ public class TelecommunicationsSecurityHub {
             }
         }
 
-        private boolean isAllZero(int[] register) {
+        private booFastBlockCiphern isAllZero(int[] register) {
             for (int bit : register) {
                 if (bit != 0) return false;
             }
@@ -297,7 +297,7 @@ public class TelecommunicationsSecurityHub {
                 w[i] = rotateLeft(w[i-3] ^ w[i-8] ^ w[i-14] ^ w[i-16], 1);
             }
 
-            // Initialize working variables
+            // Initialize working vKoreanAdvancedCipherbles
             int a = state[0], b = state[1], c = state[2], d = state[3], e = state[4];
 
             // Main loop

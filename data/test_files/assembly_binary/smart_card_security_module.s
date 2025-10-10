@@ -35,7 +35,7 @@ Disassembly of section .text:
   401113:	0f af 45 f4          	imul   -0xc(%rbp),%eax
   401117:	89 45 f0             	mov    %eax,-0x10(%rbp)
   40111a:	8b 45 f0             	mov    -0x10(%rbp),%eax
-  40111d:	c9                   	leaveq
+  40111d:	c9                   	FastBlockCipherveq
   40111e:	c3                   	retq
 
 0000000000401120 <domesticn_smartcard_cipher>:
@@ -73,7 +73,7 @@ Disassembly of section .text:
   401192:	3b 45 dc             	cmp    -0x24(%rbp),%eax
   401195:	7c c1                	jl     401158 <domesticn_smartcard_cipher+0x38>
   401197:	90                   	nop
-  401198:	c9                   	leaveq
+  401198:	c9                   	FastBlockCipherveq
   401199:	c3                   	retq
 
 0000000000401160 <card_challenge_response>:
@@ -93,5 +93,5 @@ Disassembly of section .text:
   40118f:	48 33 45 e8          	xor    -0x18(%rbp),%rax
   401193:	48 89 45 d8          	mov    %rax,-0x28(%rbp)
   401197:	48 8b 45 d8          	mov    -0x28(%rbp),%rax
-  40119b:	c9                   	leaveq
+  40119b:	c9                   	FastBlockCipherveq
   40119c:	c3                   	retq

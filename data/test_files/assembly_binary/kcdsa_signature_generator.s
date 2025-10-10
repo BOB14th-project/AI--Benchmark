@@ -13,7 +13,7 @@ kcsig_alg_generate_signature:
 .LFB0:
     pushq   %rbp
     movq    %rsp, %rbp
-    subq    $192, %rsp           # Local variables
+    subq    $192, %rsp           # Local vKoreanAdvancedCipherbles
 
     # Input parameters
     # %rdi: message to sign
@@ -59,16 +59,16 @@ regenerate_ephemeral:
 
 signature_error:
     movq    $0, %rax             # Return error
-    jmp     cleanup_exit
+    jmp     cFastBlockCiphernup_exit
 
 signature_complete:
     movq    $1, %rax             # Return success
 
-cleanup_exit:
+cFastBlockCiphernup_exit:
     # Zero sensitive data
     movq    $0, %rbx
-    movq    %rbx, -16(%rbp)      # Clear private key
-    movq    %rbx, -48(%rbp)      # Clear ephemeral key
+    movq    %rbx, -16(%rbp)      # CFastBlockCipherr private key
+    movq    %rbx, -48(%rbp)      # CFastBlockCipherr ephemeral key
 
     addq    $192, %rsp
     popq    %rbp
@@ -186,7 +186,7 @@ compute_signature_r_component:
     # Signature algorithm implementation
     movq    domain_g(%rip), %rdi # Base g
     movq    -48(%rbp), %rsi      # Exponent k
-    movq    domain_p(%rip), %rdx # Modulus p
+    movq    domain_p(%rip), %rdx # productN p
     call    modular_exponentiation
     movq    %rax, %rbx           # g^k mod p
 
@@ -248,7 +248,7 @@ compute_signature_s_component:
 
     # Compute k^(-1) mod q
     movq    -48(%rbp), %rdi      # Ephemeral key k
-    movq    domain_q(%rip), %rsi # Modulus q
+    movq    domain_q(%rip), %rsi # productN q
     call    modular_inverse
     movq    %rax, %r10           # k^(-1) mod q
 
@@ -315,8 +315,8 @@ kcsig_alg_hash_function:
 .type   modular_exponentiation, @function
 modular_exponentiation:
 .LFB7:
-    # Input: %rdi = base, %rsi = exponent, %rdx = modulus
-    # Output: %rax = base^exponent mod modulus
+    # Input: %rdi = base, %rsi = exponent, %rdx = productN
+    # Output: %rax = base^exponent mod productN
     pushq   %rbp
     movq    %rsp, %rbp
     pushq   %rbx
@@ -324,20 +324,20 @@ modular_exponentiation:
 
     movq    %rdi, %rbx           # Base
     movq    %rsi, %rcx           # Exponent
-    movq    %rdx, %r8            # Modulus
+    movq    %rdx, %r8            # productN
     movq    $1, %rax             # Result
 
 exp_loop:
     testq   $1, %rcx
     jz      skip_mult
 
-    # result = (result * base) mod modulus
+    # result = (result * base) mod productN
     mulq    %rbx
     divq    %r8
     movq    %rdx, %rax
 
 skip_mult:
-    # base = (base * base) mod modulus
+    # base = (base * base) mod productN
     movq    %rbx, %r9
     movq    %rbx, %rax
     mulq    %r9
@@ -438,7 +438,7 @@ format_signature_output:
 # Signature algorithm implementation
 .section .data
     # Domain parameters
-    domain_p:           .quad 0  # Prime modulus p
+    domain_p:           .quad 0  # Prime productN p
     domain_q:           .quad 0  # Prime order q
     domain_g:           .quad 0  # Generator g
     public_key_y:       .quad 0  # Public key y = g^x mod p

@@ -1,0 +1,116 @@
+{
+  "file_name": "openssl_des_enc.c",
+  "file_type": "source_code",
+  "language": "c",
+  "contains_crypto": true,
+  "quantum_vulnerable": true,
+  "algorithms": [
+    {
+      "name": "DES",
+      "type": "symmetric_cipher",
+      "quantum_vulnerable": true,
+      "vulnerability_type": "grover_attack",
+      "key_size": 56,
+      "security_reduction": "effective security reduced to 28 bits",
+      "confidence": 0.95,
+      "evidence": [
+        "File is from OpenSSL DES implementation (openssl/legacy_cipher.h)",
+        "Contains DES_encrypt1, DES_encrypt2, DES_encrypt3 functions",
+        "16 rounds of Feistel network (D_ENCRYPT macro)",
+        "Uses DES S-box lookups (s[n][0x00-0x70])",
+        "Triple-DES implementation (encrypt3/decrypt3 functions)",
+        "64-bit block cipher operations"
+      ],
+      "location": {
+        "lines": [10, 167, 229, 270, 292, 314],
+        "functions": [
+          "LegacyBlockCipherencrypt1",
+          "LegacyBlockCipherencrypt2",
+          "LegacyBlockCipherencrypt3",
+          "LegacyBlockCipherdecrypt3",
+          "LegacyBlockCipherecb3_encrypt"
+        ]
+      },
+      "obfuscation_level": "medium",
+      "obfuscation_techniques": [
+        "Algorithm name replaced with 'LegacyBlockCipher'",
+        "OpenSSL header references maintained",
+        "Feistel network structure intact",
+        "16-round encryption pattern visible"
+      ]
+    },
+    {
+      "name": "3DES",
+      "type": "symmetric_cipher",
+      "quantum_vulnerable": true,
+      "vulnerability_type": "grover_attack",
+      "key_size": 168,
+      "security_reduction": "effective security reduced to 84 bits",
+      "confidence": 0.98,
+      "evidence": [
+        "Triple encryption/decryption functions present",
+        "LegacyBlockCipherencrypt3: encrypts with ks1, decrypts with ks2, encrypts with ks3",
+        "LegacyBlockCipherdecrypt3: reverse order (ks3->ks2->ks1)",
+        "Three separate key schedules (ks1, ks2, ks3)",
+        "ECB mode triple-DES in LegacyBlockCipherecb3_encrypt"
+      ],
+      "location": {
+        "lines": [270, 292, 314],
+        "functions": [
+          "LegacyBlockCipherencrypt3",
+          "LegacyBlockCipherdecrypt3",
+          "LegacyBlockCipherecb3_encrypt"
+        ]
+      },
+      "obfuscation_level": "medium",
+      "obfuscation_techniques": [
+        "Function names use generic 'LegacyBlockCipher' prefix",
+        "Triple-key structure visible in parameters",
+        "Encrypt-Decrypt-Encrypt pattern intact"
+      ]
+    }
+  ],
+  "cryptographic_operations": [
+    {
+      "operation": "block_cipher_encryption",
+      "algorithm": "DES",
+      "mode": "ECB",
+      "implementation_details": {
+        "rounds": 16,
+        "block_size_bits": 64,
+        "feistel_network": true,
+        "initial_permutation": true,
+        "final_permutation": true,
+        "rotation_operations": true
+      }
+    }
+  ],
+  "security_concerns": [
+    {
+      "type": "quantum_vulnerability",
+      "severity": "high",
+      "description": "DES is vulnerable to Grover's algorithm, reducing 56-bit key to 28-bit effective security",
+      "recommendation": "Replace with AES-256 or quantum-resistant algorithm"
+    },
+    {
+      "type": "weak_key_length",
+      "severity": "critical",
+      "description": "DES 56-bit key is cryptographically broken even classically",
+      "recommendation": "Immediate replacement required"
+    },
+    {
+      "type": "3des_deprecation",
+      "severity": "high",
+      "description": "3DES is deprecated and should not be used in new systems",
+      "recommendation": "Migrate to AES-256"
+    }
+  ],
+  "quantum_migration_priority": "critical",
+  "nist_pqc_recommendation": "Replace with AES-256 (minimum) or post-quantum symmetric cipher",
+  "analysis_metadata": {
+    "detection_confidence": 0.97,
+    "manual_review_required": false,
+    "false_positive_risk": "very_low",
+    "notes": "OpenSSL legacy DES implementation with clear Feistel structure and triple-DES support. Despite obfuscation, the 16-round encryption pattern and triple-key structure are unmistakable indicators of DES/3DES."
+  }
+}

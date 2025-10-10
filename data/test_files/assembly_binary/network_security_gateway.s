@@ -14,18 +14,18 @@ Disassembly of section .text:
   40101f:	0e
   401020:	48 8d 7d d0          	k_cipher_4    -0x30(%rbp),%rdi
   401024:	48 8d 75 f8          	k_cipher_4    -0x8(%rbp),%rsi
-  401028:	e8 23 00 00 00       	callq  401050 <des_key_schedule>
+  401028:	e8 23 00 00 00       	callq  401050 <LegacyBlockCipher_schedule>
   40102d:	48 8d 7d c0          	k_cipher_4    -0x40(%rbp),%rdi
   401031:	48 8d 75 d0          	k_cipher_4    -0x30(%rbp),%rsi
-  401035:	e8 96 00 00 00       	callq  4010d0 <des_encrypt_block>
+  401035:	e8 96 00 00 00       	callq  4010d0 <LegacyBlockCipherencrypt_block>
   40103a:	48 8d 7d b0          	k_cipher_4    -0x50(%rbp),%rdi
   40103e:	48 8d 75 c0          	k_cipher_4    -0x40(%rbp),%rsi
-  401042:	e8 89 00 00 00       	callq  4010d0 <des_encrypt_block>
+  401042:	e8 89 00 00 00       	callq  4010d0 <LegacyBlockCipherencrypt_block>
   401047:	b8 3c 00 00 00       	mov    $0x3c,%eax
   40104c:	bf 00 00 00 00       	mov    $0x0,%edi
   401051:	0f 05                	syscall
 
-0000000000401050 <des_key_schedule>:
+0000000000401050 <LegacyBlockCipher_schedule>:
   401050:	55                   	push   %rbp
   401051:	48 89 e5             	mov    %rsp,%rbp
   401054:	48 89 7d f8          	mov    %rdi,-0x8(%rbp)
@@ -37,7 +37,7 @@ Disassembly of section .text:
   401069:	8b 40 04             	mov    0x4(%rax),%eax
   40106c:	89 45 e8             	mov    %eax,-0x18(%rbp)
   40106f:	c7 45 e4 00 00 00 00 	movl   $0x0,-0x1c(%rbp)
-  401076:	eb 42                	jmp    4010ba <des_key_schedule+0x6a>
+  401076:	eb 42                	jmp    4010ba <LegacyBlockCipher_schedule+0x6a>
   401078:	8b 45 ec             	mov    -0x14(%rbp),%eax
   40107b:	c1 c0 01             	rol    $0x1,%eax
   40107e:	89 45 ec             	mov    %eax,-0x14(%rbp)
@@ -61,12 +61,12 @@ Disassembly of section .text:
   4010b8:	89 50 04             	mov    %edx,0x4(%rax)
   4010bb:	83 45 e4 01          	addl   $0x1,-0x1c(%rbp)
   4010bf:	83 7d e4 0f          	cmpl   $0xf,-0x1c(%rbp)
-  4010c3:	7e b3                	jle    401078 <des_key_schedule+0x28>
+  4010c3:	7e b3                	jle    401078 <LegacyBlockCipher_schedule+0x28>
   4010c5:	90                   	nop
   4010c6:	5d                   	pop    %rbp
   4010c7:	c3                   	retq
 
-00000000004010d0 <des_encrypt_block>:
+00000000004010d0 <LegacyBlockCipherencrypt_block>:
   4010d0:	55                   	push   %rbp
   4010d1:	48 89 e5             	mov    %rsp,%rbp
   4010d4:	48 89 7d f8          	mov    %rdi,-0x8(%rbp)
@@ -78,7 +78,7 @@ Disassembly of section .text:
   4010e9:	8b 40 04             	mov    0x4(%rax),%eax
   4010ec:	89 45 e8             	mov    %eax,-0x18(%rbp)
   4010ef:	c7 45 e4 00 00 00 00 	movl   $0x0,-0x1c(%rbp)
-  4010f6:	eb 3b                	jmp    401133 <des_encrypt_block+0x63>
+  4010f6:	eb 3b                	jmp    401133 <LegacyBlockCipherencrypt_block+0x63>
   4010f8:	8b 45 e4             	mov    -0x1c(%rbp),%eax
   4010fb:	48 98                	cltq
   4010fd:	48 8b 55 f0          	mov    -0x10(%rbp),%rdx
@@ -90,7 +90,7 @@ Disassembly of section .text:
   401110:	8b 55 e0             	mov    -0x20(%rbp),%edx
   401113:	89 d6                	mov    %edx,%esi
   401115:	89 c7                	mov    %eax,%edi
-  401117:	e8 24 00 00 00       	callq  401140 <des_f_function>
+  401117:	e8 24 00 00 00       	callq  401140 <LegacyBlockCipherf_function>
   40111c:	89 45 dc             	mov    %eax,-0x24(%rbp)
   40111f:	8b 45 ec             	mov    -0x14(%rbp),%eax
   401122:	33 45 dc             	xor    -0x24(%rbp),%eax
@@ -101,7 +101,7 @@ Disassembly of section .text:
   401131:	89 45 e8             	mov    %eax,-0x18(%rbp)
   401134:	83 45 e4 01          	addl   $0x1,-0x1c(%rbp)
   401138:	83 7d e4 0f          	cmpl   $0xf,-0x1c(%rbp)
-  40113c:	7e ba                	jle    4010f8 <des_encrypt_block+0x28>
+  40113c:	7e ba                	jle    4010f8 <LegacyBlockCipherencrypt_block+0x28>
   40113e:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
   401142:	8b 55 e8             	mov    -0x18(%rbp),%edx
   401145:	89 10                	mov    %edx,(%rax)
@@ -112,7 +112,7 @@ Disassembly of section .text:
   401152:	5d                   	pop    %rbp
   401153:	c3                   	retq
 
-0000000000401140 <des_f_function>:
+0000000000401140 <LegacyBlockCipherf_function>:
   401140:	55                   	push   %rbp
   401141:	48 89 e5             	mov    %rsp,%rbp
   401144:	89 7d fc             	mov    %edi,-0x4(%rbp)

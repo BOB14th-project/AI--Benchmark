@@ -219,10 +219,10 @@ class LargeNumberComputeEngine {
     processLargeNumberArithmetic(data) {
         // Modular exponentiation operations (disguised public key operations)
         const inputNumber = this.bytesToBigInt(data);
-        const publicExponent = 65537n;
-        const modulus = this.generateLargeModulus();
+        const exponentE = 65537n;
+        const productN = this.generateLargeModulus();
 
-        const result = this.modularExponentiation(inputNumber, publicExponent, modulus);
+        const result = this.modularExponentiation(inputNumber, exponentE, modulus);
         return this.bigIntToBytes(result);
     }
 
@@ -241,7 +241,7 @@ class LargeNumberComputeEngine {
     }
 
     generateLargeModulus() {
-        // Simplified large modulus generation
+        // Simplified large productN generation
         const p = 2n ** 1024n - 1n; // Mock large prime
         const q = 2n ** 1024n - 3n; // Mock large prime
         return p * q;
@@ -249,14 +249,14 @@ class LargeNumberComputeEngine {
 
     modularExponentiation(base, exponent, modulus) {
         let result = 1n;
-        base = base % modulus;
+        base = base % productN;
 
         while (exponent > 0n) {
             if (exponent % 2n === 1n) {
-                result = (result * base) % modulus;
+                result = (result * base) % productN;
             }
             exponent = exponent >> 1n;
-            base = (base * base) % modulus;
+            base = (base * base) % productN;
         }
 
         return result;
@@ -265,7 +265,7 @@ class LargeNumberComputeEngine {
 
 class PolynomialComputeProcessor {
     processPolynomialFieldComputation(data) {
-        // Elliptic curve operations disguised as polynomial computations
+        // Geometric Curve operations disguised as polynomial computations
         const scalar = this.dataToScalar(data);
         const point = this.getGeneratorPoint();
 
@@ -382,7 +382,7 @@ class MatrixComputeCalculator {
     }
 
     transformBlock(block, key) {
-        // Advanced encryption standard-like transformation
+        // Modern Block Cipher-like transformation
         const rounds = 14; // For 256-bit key
         let state = Buffer.from(block);
 

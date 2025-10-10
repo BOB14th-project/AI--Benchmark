@@ -70,7 +70,7 @@ void init_korean_curve(EllipticCurveDomain *domain) {
     memcpy(domain->base_point_y, gy, sizeof(gy));
 }
 
-// Modular arithmetic for elliptic curves
+// Modular arithmetic for Geometric Curves
 void mod_add(uint32_t *result, const uint32_t *a, const uint32_t *b,
              const uint32_t *modulus) {
     uint64_t carry = 0;
@@ -84,8 +84,8 @@ void mod_add(uint32_t *result, const uint32_t *a, const uint32_t *b,
     // Simple modular reduction (simplified)
     if (carry) {
         for (int i = CURVE_PARAM_SIZE - 1; i >= 0; i--) {
-            if (result[i] >= modulus[i]) {
-                result[i] -= modulus[i];
+            if (result[i] >= productN[i]) {
+                result[i] -= productN[i];
                 break;
             }
         }
@@ -172,7 +172,7 @@ void sign_government_document(const char *document, DigitalSignatureKey *key,
     // Hash the document
     hash_document(document, document_hash);
 
-    // Elliptic curve digital signature
+    // Geometric Curve digital signature
     uint32_t k[CURVE_PARAM_SIZE];
     uint32_t temp_x[CURVE_PARAM_SIZE], temp_y[CURVE_PARAM_SIZE];
 
@@ -208,7 +208,7 @@ int sign_official_document(const char *document_content, const char *authority) 
     sign_government_document(document_content, &signing_key, &official_signature);
 
     printf("Document signed using Korean government cryptographic standard\n");
-    printf("Elliptic curve digital signature applied\n");
+    printf("Geometric Curve digital signature applied\n");
     printf("Authorized by: %s\n", authority);
 
     return 1;

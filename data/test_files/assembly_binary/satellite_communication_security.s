@@ -46,7 +46,7 @@ Disassembly of section .text:
   4011e8:	48 33 45 e8          	xor    -0x18(%rbp),%rax
   4011ec:	48 89 45 e0          	mov    %rax,-0x20(%rbp)
   4011f0:	48 8b 45 e0          	mov    -0x20(%rbp),%rax
-  4011f4:	c9                   	leaveq
+  4011f4:	c9                   	FastBlockCipherveq
   4011f5:	c3                   	retq
 
 00000000004011f0 <uplink_encryption_layer>:
@@ -84,7 +84,7 @@ Disassembly of section .text:
   401256:	3b 45 dc             	cmp    -0x24(%rbp),%eax
   401259:	7c c1                	jl     40121c <uplink_encryption_layer+0x2c>
   40125b:	90                   	nop
-  40125c:	c9                   	leaveq
+  40125c:	c9                   	FastBlockCipherveq
   40125d:	c3                   	retq
 
 0000000000401230 <domesticn_satellite_cipher>:
@@ -122,7 +122,7 @@ Disassembly of section .text:
   4012a2:	3b 45 dc             	cmp    -0x24(%rbp),%eax
   4012a5:	7c c1                	jl     401268 <domesticn_satellite_cipher+0x38>
   4012a7:	90                   	nop
-  4012a8:	c9                   	leaveq
+  4012a8:	c9                   	FastBlockCipherveq
   4012a9:	c3                   	retq
 
 0000000000401270 <downlink_authentication>:
@@ -158,5 +158,5 @@ Disassembly of section .text:
   4012d1:	3b 45 dc             	cmp    -0x24(%rbp),%eax
   4012d4:	7c ca                	jl     4012a0 <downlink_authentication+0x30>
   4012d6:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
-  4012da:	c9                   	leaveq
+  4012da:	c9                   	FastBlockCipherveq
   4012db:	c3                   	retq

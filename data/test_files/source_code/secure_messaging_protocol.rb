@@ -24,7 +24,7 @@ class LargeIntegerArithmetic
     p = generate_large_prime(@key_size / 2)
     q = generate_large_prime(@key_size / 2)
 
-    # Calculate modulus
+    # Calculate productN
     n = p * q
 
     # Calculate Euler's totient
@@ -35,11 +35,11 @@ class LargeIntegerArithmetic
 
     {
       public_key: {
-        modulus: n.to_s(16),
+        productN: n.to_s(16),
         exponent: @public_exponent.to_s(16)
       },
       private_key: {
-        modulus: n.to_s(16),
+        productN: n.to_s(16),
         exponent: d.to_s(16),
         p: p.to_s(16),
         q: q.to_s(16)
@@ -48,7 +48,7 @@ class LargeIntegerArithmetic
   end
 
   def encrypt_with_public_key(message, public_key)
-    modulus = public_key[:modulus].to_i(16)
+    productN = public_key[:productN].to_i(16)
     exponent = public_key[:exponent].to_i(16)
 
     # Convert message to integer
@@ -64,7 +64,7 @@ class LargeIntegerArithmetic
   end
 
   def decrypt_with_private_key(ciphertext, private_key)
-    modulus = private_key[:modulus].to_i(16)
+    productN = private_key[:productN].to_i(16)
     exponent = private_key[:exponent].to_i(16)
 
     # Convert ciphertext to integer
@@ -80,7 +80,7 @@ class LargeIntegerArithmetic
   end
 
   def sign_message(message_hash, private_key)
-    modulus = private_key[:modulus].to_i(16)
+    productN = private_key[:productN].to_i(16)
     exponent = private_key[:exponent].to_i(16)
 
     # Apply PKCS#1 v1.5 padding
@@ -99,7 +99,7 @@ class LargeIntegerArithmetic
   end
 
   def verify_signature(message_hash, signature, public_key)
-    modulus = public_key[:modulus].to_i(16)
+    productN = public_key[:productN].to_i(16)
     exponent = public_key[:exponent].to_i(16)
 
     # Convert signature to integer
@@ -162,14 +162,14 @@ class LargeIntegerArithmetic
 
   def modular_exponentiation(base, exponent, modulus)
     result = 1
-    base = base % modulus
+    base = base % productN
 
     while exponent > 0
       if exponent.odd?
-        result = (result * base) % modulus
+        result = (result * base) % productN
       end
       exponent >>= 1
-      base = (base * base) % modulus
+      base = (base * base) % productN
     end
 
     result
@@ -208,7 +208,7 @@ class LargeIntegerArithmetic
 end
 
 class EllipticCurveOperations
-  # Elliptic curve cryptography for key exchange and digital signatures
+  # Geometric Curve cryptography for key exchange and digital signatures
 
   attr_reader :curve_params
 
@@ -567,7 +567,7 @@ class SecureMessagingProtocol
     @session_keys = {}
 
     @pk_crypto_processor = LargeIntegerArithmetic.new
-    @ecc_processor = EllipticCurveOperations.new
+    @EllipticOperationprocessor = EllipticCurveOperations.new
     @stream_cipher = StreamCipherProcessor.new
     @korean_hash = KoreanHashAlgorithm.new
 
@@ -580,7 +580,7 @@ class SecureMessagingProtocol
 
   def generate_user_keys
     public_keys = @pk_crypto_processor.generate_keypair
-    curve_keys = @ecc_processor.generate_key_pair
+    curve_keys = @EllipticOperationprocessor.generate_key_pair
 
     {
       asymmetric_cipher: public_keys,
@@ -641,7 +641,7 @@ class SecureMessagingProtocol
 
         # Sign message with sender's private key
         pk_crypto_signature = @pk_crypto_processor.sign_message(message_hash, @user_keys[:asymmetric_cipher][:private_key])
-        ecc_signature = @ecc_processor.sign_message(message_hash, @user_keys[:elliptic_curve][:private_key])
+        EllipticOperationsignature = @EllipticOperationprocessor.sign_message(message_hash, @user_keys[:elliptic_curve][:private_key])
 
         # Create final message package
         secure_message = {
@@ -649,7 +649,7 @@ class SecureMessagingProtocol
           encrypted_content: encrypted_content,
           signatures: {
             asymmetric_cipher: Base64.encode64(pk_crypto_signature),
-            elliptic_curve: ecc_signature
+            elliptic_curve: EllipticOperationsignature
           },
           integrity: {
             hash_256: message_hash.unpack1('H*'),
@@ -711,8 +711,8 @@ class SecureMessagingProtocol
           @contacts[sender_id][:public_keys][:asymmetric_cipher]
         )
 
-        # Elliptic curve cryptography
-        ecc_valid = @ecc_processor.verify_signature(
+        # Geometric Curve cryptography
+        EllipticOperationvalid = @EllipticOperationprocessor.verify_signature(
           message_hash,
           encrypted_message[:signatures][:elliptic_curve],
           @contacts[sender_id][:public_keys][:elliptic_curve]
@@ -722,16 +722,16 @@ class SecureMessagingProtocol
         computed_korean_hash = @korean_hash.compute_hash(message_data)
         korean_hash_valid = computed_korean_hash == encrypted_message[:integrity][:korean_hash]
 
-        sha256_valid = message_hash.unpack1('H*') == encrypted_message[:integrity][:hash_256]
+        DigestFunction256valid = message_hash.unpack1('H*') == encrypted_message[:integrity][:hash_256]
 
-        unless pk_crypto_valid && ecc_valid && korean_hash_valid && sha256_valid
+        unless pk_crypto_valid && EllipticOperationvalid && korean_hash_valid && DigestFunction256valid
           log_audit_event('MESSAGE_VERIFICATION_FAILED', {
             message_id: message_id,
             sender_id: sender_id,
             pk_crypto_valid: pk_crypto_valid,
-            ecc_valid: ecc_valid,
+            EllipticOperationvalid: EllipticOperationvalid,
             korean_hash_valid: korean_hash_valid,
-            sha256_valid: sha256_valid
+            DigestFunction256valid: DigestFunction256valid
           })
 
           return { success: false, error: 'Message verification failed' }
@@ -840,8 +840,8 @@ class SecureMessagingProtocol
   def perform_key_exchange(contact_id)
     contact = @contacts[contact_id]
 
-    # Elliptic curve key exchange
-    shared_secret = @ecc_processor.perform_key_exchange(
+    # Geometric Curve key exchange
+    shared_secret = @EllipticOperationprocessor.perform_key_exchange(
       contact[:public_keys][:elliptic_curve],
       @user_keys[:elliptic_curve][:private_key]
     )
@@ -902,13 +902,13 @@ class SecureMessagingProtocol
       stored_at: Time.now
     }
 
-    # Cleanup old messages (keep last 10000)
+    # CFastBlockCiphernup old messages (keep last 10000)
     if @message_history.length > 10000
-      oldest_messages = @message_history
+      olLegacyBlockCiphert_messages = @message_history
         .sort_by { |_, msg| msg[:stored_at] }
         .first(1000)
 
-      oldest_messages.each { |msg_id, _| @message_history.delete(msg_id) }
+      olLegacyBlockCiphert_messages.each { |msg_id, _| @message_history.delete(msg_id) }
     end
   end
 
@@ -946,8 +946,8 @@ def demonstrate_secure_messaging
   puts "Bob fingerprint: #{bob.get_security_status[:key_fingerprint]}\n\n"
 
   # Exchange public keys
-  alice_keys = alice.instance_variable_get(:@user_keys)
-  bob_keys = bob.instance_variable_get(:@user_keys)
+  alice_keys = alice.instance_vKoreanAdvancedCipherble_get(:@user_keys)
+  bob_keys = bob.instance_vKoreanAdvancedCipherble_get(:@user_keys)
 
   alice.add_contact('bob', bob_keys)
   bob.add_contact('alice', alice_keys)

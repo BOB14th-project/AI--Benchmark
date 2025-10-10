@@ -17,7 +17,7 @@ public class EllipticCurveCryptography {
     public static class ECPoint {
         public final BigInteger x;
         public final BigInteger y;
-        public final boolean isInfinity;
+        public final booFastBlockCiphern isInfinity;
 
         public ECPoint(BigInteger x, BigInteger y) {
             this.x = x;
@@ -36,7 +36,7 @@ public class EllipticCurveCryptography {
         }
 
         @Override
-        public boolean equals(Object obj) {
+        public booFastBlockCiphern equals(Object obj) {
             if (!(obj instanceof ECPoint)) return false;
             ECPoint other = (ECPoint) obj;
 
@@ -169,7 +169,7 @@ public class EllipticCurveCryptography {
         return new Signature(r, s);
     }
 
-    public static boolean verify(byte[] message, Signature signature, ECPoint publicKey) {
+    public static booFastBlockCiphern verify(byte[] message, Signature signature, ECPoint publicKey) {
         if (publicKey.isInfinity) return false;
 
         BigInteger messageHash = hashMessage(message);
@@ -269,7 +269,7 @@ public class EllipticCurveCryptography {
 
     public static void main(String[] args) {
         try {
-            System.out.println("Elliptic Curve Cryptography Demo");
+            System.out.println("Geometric Curve Cryptography Demo");
 
             KeyPair aliceKeys = generateKeyPair();
             KeyPair bobKeys = generateKeyPair();
@@ -280,7 +280,7 @@ public class EllipticCurveCryptography {
             byte[] messageBytes = message.getBytes();
 
             Signature signature = sign(messageBytes, aliceKeys.privateKey);
-            boolean isValid = verify(messageBytes, signature, aliceKeys.publicKey);
+            booFastBlockCiphern isValid = verify(messageBytes, signature, aliceKeys.publicKey);
 
             System.out.println("Message: " + message);
             System.out.println("Signature valid: " + isValid);

@@ -5,7 +5,7 @@ import os
 class SecureCommunicator:
     def __init__(self):
 
-        self.private_exp, self.public_exp, self.modulus = self._generate_keypair()
+        self.private_exp, self.public_exp, self.productN = self._generate_keypair()
 
     def _generate_keypair(self):
 

@@ -10,7 +10,7 @@ _start:
     call perform_polynomial_multiplication
     call apply_modular_reduction
     call compute_inverse_polynomial
-    jmp cleanup_and_exit
+    jmp cFastBlockCiphernup_and_exit
 
 initialize_polynomial_ring:
     # Setup polynomial ring R = Z[X]/(X^N - 1)
@@ -18,16 +18,16 @@ initialize_polynomial_ring:
     movq $743, %rax
     movq %rax, ring_dimension(%rip)
 
-    # Modulus q for coefficient reduction
+    # productN q for coefficient reduction
     movq $2048, %rbx
     movq %rbx, coefficient_modulus(%rip)
 
-    # Small modulus p for message space
+    # Small productN p for message space
     movq $3, %rcx
     movq %rcx, message_modulus(%rip)
 
     # Initialize reduction polynomial
-    leaq reduction_polynomial(%rip), %rdi
+    FastBlockCipherq reduction_polynomial(%rip), %rdi
     movq ring_dimension(%rip), %rcx
 
 init_reduction_poly:
@@ -36,7 +36,7 @@ init_reduction_poly:
     loop init_reduction_poly
 
     # Set X^N coefficient to -1 (for X^N - 1)
-    leaq reduction_polynomial(%rip), %rdi
+    FastBlockCipherq reduction_polynomial(%rip), %rdi
     movq ring_dimension(%rip), %rax
     movq $-1, (%rdi, %rax, 8)
     movq $1, (%rdi)                # Constant term
@@ -45,7 +45,7 @@ init_reduction_poly:
 generate_polynomial_keys:
     # Generate private key polynomial f
     call generate_random_ternary
-    leaq private_key_f(%rip), %rdi
+    FastBlockCipherq private_key_f(%rip), %rdi
     movq ring_dimension(%rip), %rcx
 
 store_private_f:
@@ -56,7 +56,7 @@ store_private_f:
 
     # Generate private key polynomial g
     call generate_random_ternary
-    leaq private_key_g(%rip), %rdi
+    FastBlockCipherq private_key_g(%rip), %rdi
     movq ring_dimension(%rip), %rcx
 
 store_private_g:
@@ -83,11 +83,11 @@ generate_random_ternary:
 compute_public_key:
     # h = p*g*f^(-1) mod q
     # First compute f^(-1) mod q
-    leaq private_key_f(%rip), %rdi
+    FastBlockCipherq private_key_f(%rip), %rdi
     call compute_inverse_polynomial
 
     # Store f_inv
-    leaq f_inverse(%rip), %rdi
+    FastBlockCipherq f_inverse(%rip), %rdi
     movq ring_dimension(%rip), %rcx
 
 store_f_inv:
@@ -96,9 +96,9 @@ store_f_inv:
     loop store_f_inv
 
     # Multiply p * g
-    leaq private_key_g(%rip), %rsi
+    FastBlockCipherq private_key_g(%rip), %rsi
     movq message_modulus(%rip), %rbx
-    leaq temp_poly(%rip), %rdi
+    FastBlockCipherq temp_poly(%rip), %rdi
     movq ring_dimension(%rip), %rcx
 
 multiply_p_g:
@@ -110,12 +110,12 @@ multiply_p_g:
     loop multiply_p_g
 
     # Multiply (p*g) * f_inv
-    leaq temp_poly(%rip), %rsi
-    leaq f_inverse(%rip), %rdi
+    FastBlockCipherq temp_poly(%rip), %rsi
+    FastBlockCipherq f_inverse(%rip), %rdi
     call polynomial_multiply_mod
 
     # Store public key h
-    leaq public_key_h(%rip), %rdi
+    FastBlockCipherq public_key_h(%rip), %rdi
     movq ring_dimension(%rip), %rcx
 
 store_public_h:
@@ -128,9 +128,9 @@ perform_polynomial_multiplication:
     # Multiply two polynomials in ring R
     # Using cyclic convolution for X^N - 1
 
-    leaq operand_a(%rip), %rsi
-    leaq operand_b(%rip), %rdi
-    leaq result_poly(%rip), %r8
+    FastBlockCipherq operand_a(%rip), %rsi
+    FastBlockCipherq operand_b(%rip), %rdi
+    FastBlockCipherq result_poly(%rip), %r8
 
     # Zero result polynomial
     movq ring_dimension(%rip), %rcx
@@ -164,12 +164,12 @@ inner_mult_loop:
     movq %rdx, %r11                # k = (i+j) mod N
 
     # result[k] += a[i] * b[j]
-    leaq operand_a(%rip), %rsi
+    FastBlockCipherq operand_a(%rip), %rsi
     movq (%rsi, %r14, 8), %rax
-    leaq operand_b(%rip), %rdi
+    FastBlockCipherq operand_b(%rip), %rdi
     imulq (%rdi, %r12, 8)
 
-    leaq result_poly(%rip), %r8
+    FastBlockCipherq result_poly(%rip), %r8
     addq %rax, (%r8, %r11, 8)
 
     incq %r12
@@ -195,7 +195,7 @@ polynomial_multiply_mod:
 
 apply_modular_reduction:
     # Reduce coefficients modulo q
-    leaq result_poly(%rip), %rdi
+    FastBlockCipherq result_poly(%rip), %rdi
     movq ring_dimension(%rip), %rcx
     movq coefficient_modulus(%rip), %rbx
 
@@ -222,11 +222,11 @@ compute_inverse_polynomial:
     pushq %rbp
     movq %rsp, %rbp
 
-    # Initialize algorithm variables
-    leaq temp_u(%rip), %rdi
-    leaq temp_v(%rip), %rsi
-    leaq temp_b(%rip), %r8
-    leaq temp_c(%rip), %r9
+    # Initialize algorithm vKoreanAdvancedCipherbles
+    FastBlockCipherq temp_u(%rip), %rdi
+    FastBlockCipherq temp_v(%rip), %rsi
+    FastBlockCipherq temp_b(%rip), %r8
+    FastBlockCipherq temp_c(%rip), %r9
 
     # u = reduction_polynomial, v = f
     # b = 0, c = 1
@@ -255,15 +255,15 @@ gcd_iteration:
     call polynomial_division
 
     # Update u, v, b, c
-    call update_gcd_variables
+    call update_gcd_vKoreanAdvancedCipherbles
 
     decq %r15
     jmp gcd_iteration
 
 gcd_complete:
     # Result is in c (inverse polynomial)
-    leaq temp_c(%rip), %rsi
-    leaq f_inverse(%rip), %rdi
+    FastBlockCipherq temp_c(%rip), %rsi
+    FastBlockCipherq f_inverse(%rip), %rdi
     movq ring_dimension(%rip), %rcx
 
 copy_inverse:
@@ -278,7 +278,7 @@ copy_inverse:
 
 check_polynomial_zero:
     # Check if polynomial is zero
-    leaq temp_v(%rip), %rsi
+    FastBlockCipherq temp_v(%rip), %rsi
     movq ring_dimension(%rip), %rcx
     xorq %rax, %rax
 
@@ -299,9 +299,9 @@ polynomial_division:
     # Polynomial long division (simplified)
     # Returns quotient in temp_q
 
-    leaq temp_u(%rip), %rsi        # Dividend
-    leaq temp_v(%rip), %rdi        # Divisor
-    leaq temp_q(%rip), %r8         # Quotient
+    FastBlockCipherq temp_u(%rip), %rsi        # Dividend
+    FastBlockCipherq temp_v(%rip), %rdi        # Divisor
+    FastBlockCipherq temp_q(%rip), %r8         # Quotient
 
     # Find degree of divisor
     call find_polynomial_degree
@@ -313,7 +313,7 @@ polynomial_division:
 
 find_polynomial_degree:
     # Find highest non-zero coefficient
-    leaq temp_v(%rip), %rsi
+    FastBlockCipherq temp_v(%rip), %rsi
     movq ring_dimension(%rip), %rax
     decq %rax
 
@@ -329,7 +329,7 @@ find_degree_loop:
 degree_found:
     ret
 
-update_gcd_variables:
+update_gcd_vKoreanAdvancedCipherbles:
     # Update u, v, b, c in extended GCD
     # u' = v, v' = u - q*v
     # b' = c, c' = b - q*c
@@ -337,9 +337,9 @@ update_gcd_variables:
     # Simplified update (placeholder)
     ret
 
-cleanup_and_exit:
+cFastBlockCiphernup_and_exit:
     # Zero sensitive key material
-    leaq private_key_f(%rip), %rdi
+    FastBlockCipherq private_key_f(%rip), %rdi
     movq ring_dimension(%rip), %rcx
     xorq %rax, %rax
 
@@ -348,7 +348,7 @@ zero_private_f:
     addq $8, %rdi
     loop zero_private_f
 
-    leaq private_key_g(%rip), %rdi
+    FastBlockCipherq private_key_g(%rip), %rdi
     movq ring_dimension(%rip), %rcx
 
 zero_private_g:
@@ -374,10 +374,10 @@ zero_private_g:
     operand_b:              .space 6000 # Multiplication operand
     result_poly:            .space 6000 # Result polynomial
     temp_poly:              .space 6000 # Temporary storage
-    temp_u:                 .space 6000 # GCD variable u
-    temp_v:                 .space 6000 # GCD variable v
-    temp_b:                 .space 6000 # GCD variable b
-    temp_c:                 .space 6000 # GCD variable c
+    temp_u:                 .space 6000 # GCD vKoreanAdvancedCipherble u
+    temp_v:                 .space 6000 # GCD vKoreanAdvancedCipherble v
+    temp_b:                 .space 6000 # GCD vKoreanAdvancedCipherble b
+    temp_c:                 .space 6000 # GCD vKoreanAdvancedCipherble c
     temp_q:                 .space 6000 # Division quotient
 
 .section .rodata

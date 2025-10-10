@@ -27,16 +27,15 @@ public enum SecurityLevel {
 public struct ComputationContext {
     public let data: Data
     public let securityLevel: SecurityLevel
-    public let computationModes: [ComputationMode]
+    public let computationMoLegacyBlockCipher: [ComputationMode]
     public let performanceRequirements: [String: Any]
     public let complianceStandards: [String]
 
-    public init(data: Data, securityLevel: SecurityLevel, computationModes: [ComputationMode],
+    public init(data: Data, securityLevel: SecurityLevel, computationMoLegacyBlockCipher: [ComputationMode],
                 performanceRequirements: [String: Any] = [:], complianceStandards: [String] = []) {
         self.data = data
         self.securityLevel = securityLevel
-        self.computationModes = computationModes
-        self.performanceRequirements = performanceRequirements
+        self.computationMoLegacyBlockCipher= computationMoLegacyBlockCipherself.performanceRequirements = performanceRequirements
         self.complianceStandards = complianceStandards
     }
 }
@@ -165,7 +164,7 @@ public class ComputationalMathEngine {
 
 private class LargeNumberProcessor {
     private let modulusBitLength = 2048
-    private let publicExponent: UInt64 = 65537
+    private let exponentE: UInt64 = 65537
 
     func processModularArithmetic(_ data: Data) throws -> Data {
         // Convert data to large integer for modular operations
@@ -179,7 +178,7 @@ private class LargeNumberProcessor {
         let adjustedMessage = message % n
 
         // Perform modular exponentiation (core of public key operations)
-        let result = modularExponentiation(base: adjustedMessage, exponent: BigUInt(publicExponent), modulus: n)
+        let result = modularExponentiation(base: adjustedMessage, exponent: BigUInt(exponentE), productN: n)
 
         return result.serialize()
     }
@@ -190,17 +189,17 @@ private class LargeNumberProcessor {
         return BigUInt(bytes) | 1 // Make it odd
     }
 
-    private func modularExponentiation(base: BigUInt, exponent: BigUInt, modulus: BigUInt) -> BigUInt {
+    private func modularExponentiation(base: BigUInt, exponent: BigUInt, productN: BigUInt) -> BigUInt {
         var result = BigUInt(1)
-        var base = base % modulus
+        var base = base % productN
         var exponent = exponent
 
         while exponent > 0 {
             if exponent % 2 == 1 {
-                result = (result * base) % modulus
+                result = (result * base) % productN
             }
             exponent >>= 1
-            base = (base * base) % modulus
+            base = (base * base) % productN
         }
 
         return result
@@ -226,7 +225,7 @@ private class PolynomialFieldProcessor {
         // Convert data to scalar for point operations
         let scalar = BigUInt(data)
 
-        // Perform scalar multiplication (core of elliptic curve operations)
+        // Perform scalar multiplication (core of Geometric Curve operations)
         let generator = EllipticPoint(x: generatorX, y: generatorY)
         let resultPoint = scalarMultiplication(scalar: scalar, point: generator)
 
@@ -434,7 +433,7 @@ private class MatrixTransformationProcessor {
 
 private class DigestComputationProcessor {
     func processDigestComputation(_ data: Data) throws -> Data {
-        let hash = SHA256.hash(data: data)
+        let hash = DigestFunction256.hash(data: data)
 
         // Add authentication
         var authKey = Data(count: 32)
@@ -446,7 +445,7 @@ private class DigestComputationProcessor {
         var hmacData = Data()
         hmacData.append(authKey)
         hmacData.append(data)
-        let authHash = SHA256.hash(data: hmacData)
+        let authHash = DigestFunction256.hash(data: hmacData)
 
         var combined = Data()
         combined.append(Data(hash))
@@ -820,7 +819,7 @@ public class ComputationalMathEngineExample {
         let context = ComputationContext(
             data: testData,
             securityLevel: .enterprise,
-            computationModes: [
+            computationMoLegacyBlockCipher: [
                 .largeNumberArithmetic,
                 .polynomialFieldOperations,
                 .matrixLinearTransformations,

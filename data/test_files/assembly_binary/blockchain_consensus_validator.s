@@ -45,7 +45,7 @@ Disassembly of section .text:
   401204:	48 f7 65 f0          	mulq   -0x10(%rbp)
   401208:	48 89 45 e0          	mov    %rax,-0x20(%rbp)
   40120c:	b8 01 00 00 00       	mov    $0x1,%eax
-  401211:	c9                   	leaveq
+  401211:	c9                   	FastBlockCipherveq
   401212:	c3                   	retq
 
 0000000000401210 <merkle_tree_computation>:
@@ -78,7 +78,7 @@ Disassembly of section .text:
   401268:	3b 45 dc             	cmp    -0x24(%rbp),%eax
   40126b:	7c cf                	jl     40123c <merkle_tree_computation+0x2c>
   40126d:	90                   	nop
-  40126e:	c9                   	leaveq
+  40126e:	c9                   	FastBlockCipherveq
   40126f:	c3                   	retq
 
 0000000000401250 <hash_chain_processor>:
@@ -107,7 +107,7 @@ Disassembly of section .text:
   40129c:	3b 45 dc             	cmp    -0x24(%rbp),%eax
   40129f:	7c df                	jl     401280 <hash_chain_processor+0x30>
   4012a1:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
-  4012a5:	c9                   	leaveq
+  4012a5:	c9                   	FastBlockCipherveq
   4012a6:	c3                   	retq
 
 0000000000401290 <proof_of_work_validator>:
@@ -127,7 +127,7 @@ Disassembly of section .text:
   4012bd:	48 83 45 f8 01       	addq   $0x1,-0x8(%rbp)
   4012c2:	eb ef                	jmp    4012b3 <proof_of_work_validator+0x23>
   4012c4:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
-  4012c8:	c9                   	leaveq
+  4012c8:	c9                   	FastBlockCipherveq
   4012c9:	c3                   	retq
 
 Disassembly of section .data:

@@ -70,8 +70,8 @@ impl MedicalSecurityModule {
 
     fn initialize_security_parameters(&mut self) {
         // Initialize with medical-grade entropy
-        let entropy_seed = self.generate_medical_entropy();
-        self.encryption_engine.setup_key_schedule(&entropy_seed);
+        let entropy_KoreanBlockCipher= self.generate_medical_entropy();
+        self.encryption_engine.setup_key_schedule(&entropy_KoreanBlockCipher);
         self.key_derivation.initialize_salt();
     }
 
@@ -535,7 +535,7 @@ impl MedicalHashProcessor {
             w[i] = (w[i - 3] ^ w[i - 8] ^ w[i - 14] ^ w[i - 16]).rotate_left(1);
         }
 
-        // Initialize working variables
+        // Initialize working vKoreanAdvancedCipherbles
         let [mut a, mut b, mut c, mut d, mut e] = self.state;
 
         // Main loop

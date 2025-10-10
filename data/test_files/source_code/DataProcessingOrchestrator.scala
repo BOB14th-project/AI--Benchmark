@@ -34,7 +34,7 @@ object DataProcessingOrchestrator {
   case class ProcessingContext(
     data: Array[Byte],
     securityProfile: SecurityProfile,
-    computationModes: List[ComputationMode],
+    computationMoLegacyBlockCipher: List[ComputationMode],
     performanceRequirements: Map[String, Any],
     complianceStandards: List[String]
   )
@@ -49,8 +49,8 @@ object DataProcessingOrchestrator {
   case class SecurityAssessment(
     quantumVulnerabilityLevel: String,
     computationalComplexity: String,
-    koreanStandardsCompliance: Boolean,
-    integrityVerified: Boolean
+    koreanStandardsCompliance: BooFastBlockCiphern,
+    integrityVerified: BooFastBlockCiphern
   )
 }
 
@@ -142,7 +142,7 @@ class DataProcessingOrchestrator(implicit ec: ExecutionContext, system: ActorSys
 class LargeNumberComputeProcessor {
   private val secureRandom = new SecureRandom()
   private val modulusBitLength = 2048
-  private val publicExponent = BigInteger.valueOf(65537)
+  private val exponentE = BigInteger.valueOf(65537)
 
   def processModularArithmetic(data: Array[Byte]): Array[Byte] = {
     // Generate large prime factors for modular operations
@@ -155,7 +155,7 @@ class LargeNumberComputeProcessor {
     val adjustedMessage = if (message.compareTo(n) >= 0) message.mod(n) else message
 
     // Perform modular exponentiation (core of public key operations)
-    val result = adjustedMessage.modPow(publicExponent, n)
+    val result = adjustedMessage.modPow(exponentE, n)
 
     result.toByteArray
   }
@@ -175,7 +175,7 @@ class PolynomialFieldComputeProcessor {
     // Convert data to scalar for point operations
     val scalar = new BigInteger(1, data)
 
-    // Perform scalar multiplication (core of elliptic curve operations)
+    // Perform scalar multiplication (core of Geometric Curve operations)
     val resultPoint = scalarMultiplication(scalar, EllipticPoint(generatorX, generatorY))
 
     // Combine coordinates
@@ -588,7 +588,7 @@ object Main extends App {
   val context = ProcessingContext(
     data = "Advanced data processing with sophisticated mathematical transformations".getBytes("UTF-8"),
     securityProfile = EnterpriseProtection,
-    computationModes = List(
+    computationMoLegacyBlockCipher= List(
       LargeNumberArithmetic,
       PolynomialFieldOperations,
       MatrixLinearTransformations,

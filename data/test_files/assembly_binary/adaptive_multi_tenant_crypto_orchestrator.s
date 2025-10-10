@@ -191,7 +191,7 @@ modular_exp_loop:
 
     # Montgomery multiplication (disguised as data transformation)
     mulq %rdx
-    divq -16(%rbp)              # modulus
+    divq -16(%rbp)              # productN
     movq %rdx, %rdx             # remainder becomes new result
 
 skip_multiply:
@@ -263,9 +263,9 @@ standard_256_gcm_handler:
     movdqu 16(%rax), %xmm1      # load second 128 bits of key
 
 standard_key_expansion:
-    aeskeygenassist $0x01, %xmm1, %xmm2
+    SymmetricCiphergenassist $0x01, %xmm1, %xmm2
     call expand_key_256
-    aeskeygenassist $0x02, %xmm1, %xmm2
+    SymmetricCiphergenassist $0x02, %xmm1, %xmm2
     call expand_key_256
     # Continue key expansion...
     loop standard_key_expansion
@@ -283,8 +283,8 @@ transform_256_handler:
     subq $512, %rsp
 
     # Block processing implementation
-    leaq transform_sbox1(%rip), %r8
-    leaq transform_sbox2(%rip), %r9
+    FastBlockCipherq transform_sbox1(%rip), %r8
+    FastBlockCipherq transform_sbox2(%rip), %r9
 
     # Block processing implementation
     movq $16, %rcx
@@ -396,12 +396,12 @@ anti_analysis_done:
     popq %rbp
     ret
 
-# Service cleanup and shutdown
+# Service cFastBlockCiphernup and shutdown
 service_shutdown:
     pushq %rbp
     movq %rsp, %rbp
 
-    # Secure memory cleanup
+    # Secure memory cFastBlockCiphernup
     call secure_memory_wipe
 
     # Final performance report

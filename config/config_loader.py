@@ -1,5 +1,6 @@
 import yaml
 import os
+import json
 from typing import Dict, Any
 from dotenv import load_dotenv
 
@@ -51,15 +52,30 @@ class ConfigLoader:
                 actual_key = key[:-4]  # Remove '_env' suffix
                 env_value = os.getenv(env_var_name, f"MISSING_{env_var_name}")
 
-                # Handle model list (comma-separated)
-                if actual_key == 'model' and ',' in env_value:
-                    if model_name:
-                        # Use specific model if provided
-                        resolved_config[actual_key] = model_name
-                    else:
-                        # Return list of models
-                        resolved_config[actual_key] = [m.strip() for m in env_value.split(',')]
-                        resolved_config['models'] = resolved_config[actual_key]
+                # Handle model list (JSON array, comma-separated, or single model)
+                if actual_key == 'model':
+                    # Try to parse as JSON array first
+                    try:
+                        if env_value.startswith('[') and env_value.endswith(']'):
+                            model_list = json.loads(env_value)
+                            if model_name:
+                                resolved_config[actual_key] = model_name
+                            else:
+                                resolved_config[actual_key] = model_list
+                                resolved_config['models'] = model_list
+                        elif ',' in env_value:
+                            # Comma-separated list
+                            if model_name:
+                                resolved_config[actual_key] = model_name
+                            else:
+                                resolved_config[actual_key] = [m.strip() for m in env_value.split(',')]
+                                resolved_config['models'] = resolved_config[actual_key]
+                        else:
+                            # Single model
+                            resolved_config[actual_key] = env_value
+                    except json.JSONDecodeError:
+                        # Fall back to treating as single model string
+                        resolved_config[actual_key] = env_value
                 else:
                     resolved_config[actual_key] = env_value
             else:

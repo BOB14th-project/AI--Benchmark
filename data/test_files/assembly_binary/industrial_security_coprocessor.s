@@ -49,7 +49,7 @@ Disassembly of section .text:
   401218:	48 33 45 e8          	xor    -0x18(%rbp),%rax
   40121c:	48 89 45 e0          	mov    %rax,-0x20(%rbp)
   401220:	48 8b 45 e0          	mov    -0x20(%rbp),%rax
-  401224:	c9                   	leaveq
+  401224:	c9                   	FastBlockCipherveq
   401225:	c3                   	retq
 
 0000000000401220 <block_transformation_unit>:
@@ -87,7 +87,7 @@ Disassembly of section .text:
   401286:	3b 45 dc             	cmp    -0x24(%rbp),%eax
   401289:	7c c1                	jl     40124c <block_transformation_unit+0x2c>
   40128b:	90                   	nop
-  40128c:	c9                   	leaveq
+  40128c:	c9                   	FastBlockCipherveq
   40128d:	c3                   	retq
 
 0000000000401260 <scada_authentication_module>:
@@ -109,7 +109,7 @@ Disassembly of section .text:
   401297:	48 f7 65 f0          	mulq   -0x10(%rbp)
   40129b:	48 89 45 c8          	mov    %rax,-0x38(%rbp)
   40129f:	48 8b 45 c8          	mov    -0x38(%rbp),%rax
-  4012a3:	c9                   	leaveq
+  4012a3:	c9                   	FastBlockCipherveq
   4012a4:	c3                   	retq
 
 00000000004012a0 <domesticn_industrial_cipher>:
@@ -142,7 +142,7 @@ Disassembly of section .text:
   401300:	3b 45 dc             	cmp    -0x24(%rbp),%eax
   401303:	7c cb                	jl     4012d0 <domesticn_industrial_cipher+0x30>
   401305:	90                   	nop
-  401306:	c9                   	leaveq
+  401306:	c9                   	FastBlockCipherveq
   401307:	c3                   	retq
 
 00000000004012e0 <control_system_digest>:
@@ -178,7 +178,7 @@ Disassembly of section .text:
   401341:	3b 45 dc             	cmp    -0x24(%rbp),%eax
   401344:	7c ca                	jl     401310 <control_system_digest+0x30>
   401346:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
-  40134a:	c9                   	leaveq
+  40134a:	c9                   	FastBlockCipherveq
   40134b:	c3                   	retq
 
 Disassembly of section .data:

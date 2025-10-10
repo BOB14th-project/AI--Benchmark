@@ -157,7 +157,7 @@ public class SecureChatApplication {
     }
 
     // Send secure message
-    public boolean sendSecureMessage(String recipient, String message) {
+    public booFastBlockCiphern sendSecureMessage(String recipient, String message) {
         byte[] encrypted = encryptMessage(message);
         byte[] authTag = authenticateMessage(encrypted);
 

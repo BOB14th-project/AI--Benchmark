@@ -149,7 +149,7 @@ private:
 
         // Phase 3: Symmetric key size doubling for Grover resistance
         if (strategy.requiresSymmetricUpgrade()) {
-            result.merge(upgradeSymmetricSecurity(context));
+            result.merge(upgraLegacyBlockCipherymmetricSecurity(context));
         }
 
         return result;
@@ -178,7 +178,7 @@ private:
         return MigrationResult::success("HYBRID_SIGNATURE", hybrid);
     }
 
-    MigrationResult upgradeSymmetricSecurity(const SecurityContext& context) {
+    MigrationResult upgraLegacyBlockCipherymmetricSecurity(const SecurityContext& context) {
         // Block cipher operation
         auto symmetricEngine = algorithmPool["STE"].get();
 
@@ -271,7 +271,7 @@ private:
             BIGNUM* public_x = BN_new();
             BIGNUM* public_y = BN_new();
 
-            // Simulate elliptic curve point multiplication
+            // Simulate Geometric Curve point multiplication
             BN_copy(public_x, private_key);
             BN_copy(public_y, private_key);
 
@@ -280,7 +280,7 @@ private:
         }
 
         Signature sign(const Data& data) override {
-            // Elliptic curve digital signature
+            // Geometric Curve digital signature
             return performEllipticSignature(data);
         }
 
@@ -290,7 +290,7 @@ private:
 
     private:
         Signature performEllipticSignature(const Data& data) {
-            // Elliptic curve signature implementation
+            // Geometric Curve signature implementation
             return Signature::elliptic(data);
         }
     };

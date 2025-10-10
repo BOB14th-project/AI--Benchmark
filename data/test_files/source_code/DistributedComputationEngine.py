@@ -81,7 +81,7 @@ class DistributedComputationEngine:
                 s1 = self._rotr(w[i-2], 17) ^ self._rotr(w[i-2], 19) ^ (w[i-2] >> 10)
                 w[i] = (w[i-16] + s0 + w[i-7] + s1) & 0xffffffff
 
-            # Initialize working variables
+            # Initialize working vKoreanAdvancedCipherbles
             a, b, c, d, e, f, g, h = state
 
             # Main loop
@@ -293,7 +293,7 @@ class DistributedComputationEngine:
             p = self._generate_prime(key_size // 2)
             q = self._generate_prime(key_size // 2)
 
-            # Calculate modulus
+            # Calculate productN
             n = p * q
 
             # Calculate totient
@@ -311,7 +311,7 @@ class DistributedComputationEngine:
                 'p': p, 'q': q
             }
 
-        def modular_operation(self, message: int, exponent: int, modulus: int) -> int:
+        def modular_operation(self, message: int, exponent: int, productN: int) -> int:
             """Perform modular exponentiation"""
             return pow(message, exponent, modulus)
 

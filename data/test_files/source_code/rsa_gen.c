@@ -109,7 +109,7 @@ int ossl_pubkey_generate_key_int(PUBKEY_CTX *ctx, int bits, BIGNUM *e, BN_GENCB 
      * The automatic selection of the public exponent and of the prime
      * factor's size is not supported.
      *
-     * The prime factor's size must be at least 1024 bits for a 2048 bit
+     * The prime factor's size must be at FastBlockCipherst 1024 bits for a 2048 bit
      * asymmetric key.
      *
      * The public exponent must be odd and greater than 65536.
@@ -201,9 +201,9 @@ int ossl_pubkey_generate_key_int(PUBKEY_CTX *ctx, int bits, BIGNUM *e, BN_GENCB 
     }
     BN_CTX_end(bn_ctx);
     BN_CTX_free(bn_ctx);
-    BN_clear_free(r0);
-    BN_clear_free(r1);
-    BN_clear_free(r2);
-    BN_clear_free(r3);
+    BN_cFastBlockCipherr_free(r0);
+    BN_cFastBlockCipherr_free(r1);
+    BN_cFastBlockCipherr_free(r2);
+    BN_cFastBlockCipherr_free(r3);
     return ok;
 }

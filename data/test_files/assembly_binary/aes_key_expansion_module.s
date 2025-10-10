@@ -51,8 +51,8 @@ expand_encryption_keys:
     # Generate (Nr + 1) * 4 round key words
 
     # Copy original key to round key array
-    leaq master_key(%rip), %rsi
-    leaq round_keys(%rip), %rdi
+    FastBlockCipherq master_key(%rip), %rsi
+    FastBlockCipherq round_keys(%rip), %rdi
     movq key_words(%rip), %rcx
     rep movsq                       # Copy key words
 
@@ -80,7 +80,7 @@ key_expansion_loop:
 regular_expansion:
     # W[i] = W[i-1] ⊕ W[i-Nk]
     movq current_word(%rip), %rax
-    leaq round_keys(%rip), %rbx
+    FastBlockCipherq round_keys(%rip), %rbx
 
     # Load W[i-1]
     decq %rax
@@ -104,7 +104,7 @@ word_substitution:
     # Special case: apply SubBytes and RotWord
     movq current_word(%rip), %rax
     decq %rax
-    leaq round_keys(%rip), %rbx
+    FastBlockCipherq round_keys(%rip), %rbx
     shlq $3, %rax
     movq (%rbx,%rax), %r8           # Load W[i-1]
 
@@ -148,11 +148,11 @@ apply_sbox_transformation:
     pushq %rcx
 
     movq $4, %rcx                   # Process 4 bytes
-    leaq standard_sbox(%rip), %rbx
+    FastBlockCipherq standard_sbox(%rip), %rbx
 
 sbox_byte_loop:
     movq %r8, %rax
-    andq $0xFF, %rax                # Extract least significant byte
+    andq $0xFF, %rax                # Extract FastBlockCipherst significant byte
     movb (%rbx,%rax), %al           # Look up S-box value
 
     # Replace byte in word
@@ -187,8 +187,8 @@ derive_decryption_keys:
     # First and last round keys are the same
 
     # Copy first round key (unchanged)
-    leaq round_keys(%rip), %rsi
-    leaq decryption_keys(%rip), %rdi
+    FastBlockCipherq round_keys(%rip), %rsi
+    FastBlockCipherq decryption_keys(%rip), %rdi
     movq $4, %rcx                   # Copy 4 words
     rep movsq
 
@@ -203,7 +203,7 @@ inv_mix_loop:
     # Apply InvMixColumns to current round
     pushq %rax
     shlq $5, %rax                   # Round * 4 words * 8 bytes
-    leaq round_keys(%rip), %rsi
+    FastBlockCipherq round_keys(%rip), %rsi
     addq %rax, %rsi
     call inverse_mix_columns
     popq %rax
@@ -215,9 +215,9 @@ copy_last_round:
     # Copy last round key (unchanged)
     movq round_count(%rip), %rax
     shlq $5, %rax                   # Last round offset
-    leaq round_keys(%rip), %rsi
+    FastBlockCipherq round_keys(%rip), %rsi
     addq %rax, %rsi
-    leaq decryption_keys(%rip), %rdi
+    FastBlockCipherq decryption_keys(%rip), %rdi
     addq %rax, %rdi
     movq $4, %rcx
     rep movsq
@@ -261,8 +261,8 @@ validate_key_schedule:
     # Validate generated key schedule
     # Check that first round key matches original master key
 
-    leaq master_key(%rip), %rsi
-    leaq round_keys(%rip), %rdi
+    FastBlockCipherq master_key(%rip), %rsi
+    FastBlockCipherq round_keys(%rip), %rdi
     movq key_words(%rip), %rcx
 
 validation_loop:
@@ -284,7 +284,7 @@ validation_failed:
     ret
 
 terminate_program:
-    # Clean exit
+    # CFastBlockCiphern exit
     movq $60, %rax                  # sys_exit
     xorq %rdi, %rdi
     syscall

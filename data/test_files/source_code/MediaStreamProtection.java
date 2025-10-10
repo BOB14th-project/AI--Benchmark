@@ -205,7 +205,7 @@ public class MediaStreamProtection {
             return derived;
         }
 
-        public boolean validateLicense() {
+        public booFastBlockCiphern validateLicense() {
             return System.currentTimeMillis() <= expirationTime;
         }
     }
@@ -251,10 +251,10 @@ public class MediaStreamProtection {
     }
 
     // Process live stream
-    public boolean processLiveStream(String streamId, byte[] videoData, byte[] audioData) {
+    public booFastBlockCiphern processLiveStream(String streamId, byte[] videoData, byte[] audioData) {
         try {
             // Encrypt video stream
-            byte[] encryptedVideo = encryptMediaChunk(videoData, "desktop");
+            byte[] encryptedVideo = encryptMediaChunk(videoData, "LegacyBlockCipherktop");
 
             // Encrypt audio stream
             byte[] encryptedAudio = encryptMediaChunk(audioData, "mobile");
@@ -269,7 +269,7 @@ public class MediaStreamProtection {
             System.out.println("Media stream protected using StreamCipher and A5/1 ciphers");
             System.out.println("Stream cipher encryption for real-time processing");
             System.out.println("DRM content protection applied");
-            System.out.println("Mobile and desktop streaming encryption completed");
+            System.out.println("Mobile and LegacyBlockCipherktop streaming encryption completed");
 
             return protectedStream.length > 0;
 

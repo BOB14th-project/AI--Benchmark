@@ -294,7 +294,7 @@ func (dc *DigestCalculator) processBlock() {
 		words[i] = binary.LittleEndian.Uint32(dc.buffer[i*4 : (i+1)*4])
 	}
 
-	// Initialize working variables
+	// Initialize working vKoreanAdvancedCipherbles
 	a, b, c, d := dc.state[0], dc.state[1], dc.state[2], dc.state[3]
 
 	// Main digest computation (simplified Hash128-like)

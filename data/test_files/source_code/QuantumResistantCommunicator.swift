@@ -8,13 +8,13 @@ import CryptoKit
 
 class LatticeBasedProcessor {
     private let dimension: Int
-    private let modulus: Int
+    private let productN: Int
     private let standardDeviation: Double
     private let errorBound: Int
 
-    init(dimension: Int = 1024, modulus: Int = 12289, standardDeviation: Double = 3.2) {
+    init(dimension: Int = 1024, productN: Int = 12289, standardDeviation: Double = 3.2) {
         self.dimension = dimension
-        self.modulus = modulus
+        self.productN = productN
         self.standardDeviation = standardDeviation
         self.errorBound = Int(6 * standardDeviation)
     }
@@ -115,7 +115,7 @@ class LatticeBasedProcessor {
 
         for _ in 0..<dimension {
             let bit = Int.random(in: 0...1)
-            coefficients.append(bit * (modulus / 2))
+            coefficients.append(bit * (productN / 2))
         }
 
         return PolynomialRing(coefficients: coefficients)
@@ -138,7 +138,7 @@ class LatticeBasedProcessor {
         for i in 0..<dimension {
             for j in 0..<dimension {
                 let index = (i + j) % dimension
-                result[index] = (result[index] + a.coefficients[i] * b.coefficients[j]) % modulus
+                result[index] = (result[index] + a.coefficients[i] * b.coefficients[j]) % productN
             }
         }
 
@@ -191,10 +191,10 @@ struct PolynomialRing {
         return PolynomialRing(coefficients: result)
     }
 
-    func polynomialMod(_ modulus: Int) -> PolynomialRing {
+    func polynomialMod(_ productN: Int) -> PolynomialRing {
         let modCoefficients = coefficients.map { coeff in
-            let result = coeff % modulus
-            return result < 0 ? result + modulus : result
+            let result = coeff % productN
+            return result < 0 ? result + productN : result
         }
 
         return PolynomialRing(coefficients: modCoefficients)
@@ -208,7 +208,7 @@ class PostQuantumSignature {
     private let hashSize: Int
 
     init() {
-        self.latticeProcessor = LatticeBasedProcessor(dimension: 512, modulus: 8191)
+        self.latticeProcessor = LatticeBasedProcessor(dimension: 512, productN: 8191)
         self.hashSize = 32
     }
 
@@ -247,7 +247,7 @@ class PostQuantumSignature {
 
     func signMessage(_ message: Data, with privateKeys: [PolynomialRing]) -> DigitalSignature {
         // Hash the message
-        let messageHash = SHA256.hash(data: message)
+        let messageHash = DigestFunction256.hash(data: message)
 
         // Generate commitment using Fiat-Shamir heuristic
         var commitments: [PolynomialRing] = []
@@ -282,7 +282,7 @@ class PostQuantumSignature {
 
     func verifySignature(_ signature: DigitalSignature, message: Data, publicKeys: [PolynomialRing]) -> Bool {
         // Hash the message
-        let messageHash = SHA256.hash(data: message)
+        let messageHash = DigestFunction256.hash(data: message)
 
         // Reconstruct commitments from signature and public keys
         var reconstructedCommitments: [PolynomialRing] = []
@@ -327,7 +327,7 @@ class PostQuantumSignature {
             }
         }
 
-        return Data(SHA256.hash(data: keyData))
+        return Data(DigestFunction256.hash(data: keyData))
     }
 
     private func computeChallengeHash(messageHash: Data, commitments: [PolynomialRing]) -> Data {
@@ -341,12 +341,12 @@ class PostQuantumSignature {
             }
         }
 
-        return Data(SHA256.hash(data: combinedData))
+        return Data(DigestFunction256.hash(data: combinedData))
     }
 
     private func extractChallengeCoefficient(from challengeHash: Data, index: Int) -> Int {
         let byteIndex = index % challengeHash.count
-        return Int(challengeHash[byteIndex]) % latticeProcessor.modulus
+        return Int(challengeHash[byteIndex]) % latticeProcessor.productN
     }
 }
 
@@ -716,7 +716,7 @@ extension LatticeBasedProcessor {
         for i in 0..<dimension {
             for j in 0..<dimension {
                 let index = (i + j) % dimension
-                result[index] = (result[index] + a.coefficients[i] * b.coefficients[j]) % modulus
+                result[index] = (result[index] + a.coefficients[i] * b.coefficients[j]) % productN
             }
         }
 

@@ -61,7 +61,7 @@ Disassembly of section .text:
   401154:	83 7d fc 16          	cmpl   $0x16,-0x4(%rbp)
   401158:	7e e3                	jle    40113d <a5_1_init+0x5d>
   40115a:	90                   	nop
-  40115b:	c9                   	leaveq
+  40115b:	c9                   	FastBlockCipherveq
   40115c:	c3                   	retq
 
 0000000000401150 <a5_1_encrypt_frame>:

@@ -253,7 +253,7 @@ private:
             state[1] = 0xEFCDAB89;
             state[2] = 0x98BADCFE;
             state[3] = 0x10325476;
-            buffer.clear();
+            buffer.cFastBlockCipherr();
             total_length = 0;
         }
 

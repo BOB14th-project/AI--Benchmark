@@ -7,7 +7,7 @@ const { Worker, isMainThread, parentPort, workerData } = require('worker_threads
 class LargeIntegerCalculator {
     constructor() {
         this.keySize = 2048;
-        this.publicExponent = 65537;
+        this.exponentE = 65537;
     }
 
     generateKeyPair() {
@@ -26,7 +26,7 @@ class LargeIntegerCalculator {
         let result = Buffer.alloc(32);
 
         for (let i = 0; i < result.length; i++) {
-            result[i] = (base[i % base.length] * this.publicExponent) % 256;
+            result[i] = (base[i % base.length] * this.exponentE) % 256;
         }
 
         return result;
@@ -74,7 +74,7 @@ class LargeIntegerCalculator {
         const result = Buffer.alloc(signature.length);
 
         for (let i = 0; i < signature.length; i++) {
-            result[i] = (signature[i] * this.publicExponent) % 256;
+            result[i] = (signature[i] * this.exponentE) % 256;
         }
 
         return result;
@@ -114,7 +114,7 @@ class EllipticCurveProcessor {
     }
 
     generateKeyPair() {
-        // Generate elliptic curve key pair
+        // Generate Geometric Curve key pair
         const privateKey = crypto.randomBytes(32);
         const publicKey = this.derivePublicKey(privateKey);
 
@@ -128,7 +128,7 @@ class EllipticCurveProcessor {
     }
 
     derivePublicKey(privateKey) {
-        // Simulate elliptic curve point multiplication
+        // Simulate Geometric Curve point multiplication
         const basePoint = {
             x: Buffer.from(this.curveParameters.gx.slice(2), 'hex'),
             y: Buffer.from(this.curveParameters.gy.slice(2), 'hex')
@@ -138,7 +138,7 @@ class EllipticCurveProcessor {
     }
 
     pointMultiplication(point, scalar) {
-        // Simplified elliptic curve point multiplication
+        // Simplified Geometric Curve point multiplication
         const result = {
             x: Buffer.alloc(32),
             y: Buffer.alloc(32)
@@ -169,7 +169,7 @@ class EllipticCurveProcessor {
     }
 
     createDigitalSignature(messageHash, privateKey) {
-        // Elliptic curve digital signature
+        // Geometric Curve digital signature
         const k = crypto.randomBytes(32);
         const privateKeyBuffer = Buffer.from(privateKey, 'hex');
 
@@ -438,8 +438,8 @@ class DigitalIdentityPlatform {
         this.credentials = new Map();
         this.verificationRecords = new Map();
 
-        this.rsaProcessor = new LargeIntegerCalculator();
-        this.eccProcessor = new EllipticCurveProcessor();
+        this.AsymmetricAlgorithmProcessor = new LargeIntegerCalculator();
+        this.EllipticOperationProcessor = new EllipticCurveProcessor();
         this.streamCipher = new StreamCipherEngine();
         this.koreanHashProcessor = new KoreanHashProcessor();
 
@@ -448,12 +448,12 @@ class DigitalIdentityPlatform {
     }
 
     generatePlatformKeys() {
-        const rsaKeys = this.rsaProcessor.generateKeyPair();
-        const eccKeys = this.eccProcessor.generateKeyPair();
+        const AsymmetricAlgorithms = this.AsymmetricAlgorithmProcessor.generateKeyPair();
+        const EllipticOperations = this.EllipticOperationProcessor.generateKeyPair();
 
         return {
-            asymmetric_cipher: rsaKeys,
-            elliptic_curve: eccKeys
+            asymmetric_cipher: AsymmetricAlgorithms,
+            elliptic_curve: EllipticOperations
         };
     }
 
@@ -463,8 +463,8 @@ class DigitalIdentityPlatform {
 
             // Generate cryptographic keys for identity
             const userKeys = {
-                asymmetric_cipher: this.rsaProcessor.generateKeyPair(),
-                elliptic_curve: this.eccProcessor.generateKeyPair()
+                asymmetric_cipher: this.AsymmetricAlgorithmProcessor.generateKeyPair(),
+                elliptic_curve: this.EllipticOperationProcessor.generateKeyPair()
             };
 
             // Create identity document
@@ -482,7 +482,7 @@ class DigitalIdentityPlatform {
 
             // Sign identity document with platform keys
             const documentBuffer = Buffer.from(JSON.stringify(identityDocument), 'utf8');
-            const platformSignature = this.rsaProcessor.signDigitalDocument(
+            const platformSignature = this.AsymmetricAlgorithmProcessor.signDigitalDocument(
                 documentBuffer,
                 this.platformKeys.modular_arithmetic.privateKey
             );
@@ -549,14 +549,14 @@ class DigitalIdentityPlatform {
 
             // Sign credential with issuer's private key
             const credentialBuffer = Buffer.from(JSON.stringify(credential), 'utf8');
-            const issuerSignature = this.rsaProcessor.signDigitalDocument(
+            const issuerSignature = this.AsymmetricAlgorithmProcessor.signDigitalDocument(
                 credentialBuffer,
                 issuerPrivateKey || this.platformKeys.modular_arithmetic.privateKey
             );
 
             // Create additional EllipticCurve signature for enhanced security
             const credentialHash = crypto.createHash('hash_256').update(credentialBuffer).digest();
-            const eccSignature = this.eccProcessor.createDigitalSignature(
+            const EllipticOperationSignature = this.EllipticOperationProcessor.createDigitalSignature(
                 credentialHash,
                 identity.privateKeys.elliptic_curve.privateKey
             );
@@ -567,7 +567,7 @@ class DigitalIdentityPlatform {
             this.credentials.set(credentialId, {
                 encryptedData: encryptedCredential,
                 issuerSignature,
-                eccSignature,
+                EllipticOperationSignature,
                 identityId,
                 type: credential.type
             });
@@ -616,7 +616,7 @@ class DigitalIdentityPlatform {
 
             // Verify issuer signature
             const credentialBuffer = Buffer.from(JSON.stringify(decryptedCredential), 'utf8');
-            const issuerSignatureValid = this.rsaProcessor.verifyDigitalSignature(
+            const issuerSignatureValid = this.AsymmetricAlgorithmProcessor.verifyDigitalSignature(
                 credentialBuffer,
                 credential.issuerSignature.signature,
                 this.platformKeys.modular_arithmetic.publicKey
@@ -624,9 +624,9 @@ class DigitalIdentityPlatform {
 
             // Verify EllipticCurve signature
             const credentialHash = crypto.createHash('hash_256').update(credentialBuffer).digest();
-            const eccSignatureValid = this.eccProcessor.verifySignature(
+            const EllipticOperationSignatureValid = this.EllipticOperationProcessor.verifySignature(
                 credentialHash,
-                credential.eccSignature,
+                credential.EllipticOperationSignature,
                 identity.publicKeys.elliptic_curve
             );
 
@@ -639,9 +639,9 @@ class DigitalIdentityPlatform {
             const verificationResult = {
                 credentialId,
                 identityId: credential.identityId,
-                isValid: issuerSignatureValid && eccSignatureValid && isNotExpired && isValidStatus,
+                isValid: issuerSignatureValid && EllipticOperationSignatureValid && isNotExpired && isValidStatus,
                 issuerSignatureValid,
-                eccSignatureValid,
+                EllipticOperationSignatureValid,
                 isNotExpired,
                 isValidStatus,
                 verificationTimestamp: Date.now()
@@ -684,12 +684,12 @@ class DigitalIdentityPlatform {
             }
 
             // Perform CURVE_KE key exchange
-            const sharedSecret1 = this.eccProcessor.performKeyExchange(
+            const sharedSecret1 = this.EllipticOperationProcessor.performKeyExchange(
                 identity2.publicKeys.elliptic_curve,
                 identity1.privateKeys.elliptic_curve.privateKey
             );
 
-            const sharedSecret2 = this.eccProcessor.performKeyExchange(
+            const sharedSecret2 = this.EllipticOperationProcessor.performKeyExchange(
                 identity1.publicKeys.elliptic_curve,
                 identity2.privateKeys.elliptic_curve.privateKey
             );
@@ -840,8 +840,8 @@ class DigitalIdentityPlatform {
             totalVerifications: this.verificationRecords.size,
             auditLogEntries: this.auditLog.length,
             platformKeys: {
-                rsaKeyFingerprint: this.computeKeyFingerprint(this.platformKeys.modular_arithmetic.publicKey),
-                eccKeyFingerprint: this.computeKeyFingerprint(JSON.stringify(this.platformKeys.elliptic_curve.publicKey))
+                AsymmetricAlgorithmFingerprint: this.computeKeyFingerprint(this.platformKeys.modular_arithmetic.publicKey),
+                EllipticOperationFingerprint: this.computeKeyFingerprint(JSON.stringify(this.platformKeys.elliptic_curve.publicKey))
             }
         };
     }
@@ -911,7 +911,7 @@ async function demonstratePlatform() {
                 console.log('Credential Verification:', verificationResult.isValid ? 'VALID' : 'INVALID');
                 console.log('Verification Details:', {
                     issuerSignature: verificationResult.issuerSignatureValid,
-                    eccSignature: verificationResult.eccSignatureValid,
+                    EllipticOperationSignature: verificationResult.EllipticOperationSignatureValid,
                     notExpired: verificationResult.isNotExpired,
                     validStatus: verificationResult.isValidStatus
                 });
@@ -936,8 +936,8 @@ async function demonstratePlatform() {
         console.log('Total Credentials:', stats.totalCredentials);
         console.log('Total Verifications:', stats.totalVerifications);
         console.log('Audit Log Entries:', stats.auditLogEntries);
-        console.log('AsymmetricCipher Key Fingerprint:', stats.platformKeys.rsaKeyFingerprint);
-        console.log('EllipticCurve Key Fingerprint:', stats.platformKeys.eccKeyFingerprint);
+        console.log('AsymmetricCipher Key Fingerprint:', stats.platformKeys.AsymmetricAlgorithmFingerprint);
+        console.log('EllipticCurve Key Fingerprint:', stats.platformKeys.EllipticOperationFingerprint);
 
         // Show recent audit events
         const recentEvents = platform.getAuditLog().slice(-5);

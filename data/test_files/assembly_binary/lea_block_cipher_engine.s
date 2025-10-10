@@ -159,10 +159,10 @@ fast_cipher_key_schedule:
     movq    %rdx, -24(%rbp)      # Output buffer
 
     # Initialize key schedule constants
-    leaq    fast_cipher_constants(%rip), %rax
+    FastBlockCipherq    fast_cipher_constants(%rip), %rax
     movq    %rax, -32(%rbp)      # Constants pointer
 
-    # Load master key into working variables
+    # Load master key into working vKoreanAdvancedCipherbles
     movq    -8(%rbp), %rax
     movl    (%rax), %r8d         # K0
     movl    4(%rax), %r9d        # K1

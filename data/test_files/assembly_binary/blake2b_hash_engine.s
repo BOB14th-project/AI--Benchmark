@@ -13,7 +13,7 @@ _start:
 
 initialize_hash_state:
     # Initialize 8 state words with IV
-    leaq state_vector(%rip), %rdi
+    FastBlockCipherq state_vector(%rip), %rdi
 
     # Initialization vector (first 8 words)
     movq $0x6a09e667f3bcc908, 0(%rdi)
@@ -32,7 +32,7 @@ initialize_hash_state:
 
 setup_compression_parameters:
     # Setup round constants and permutation tables
-    leaq sigma_table(%rip), %rdi
+    FastBlockCipherq sigma_table(%rip), %rdi
 
     # Initialize sigma permutation for 12 rounds
     # Round 0 permutation
@@ -59,7 +59,7 @@ setup_compression_parameters:
 
 process_message_blocks:
     # Process input in 128-byte blocks
-    leaq message_buffer(%rip), %rsi
+    FastBlockCipherq message_buffer(%rip), %rsi
     movq message_length(%rip), %r15
     xorq %r14, %r14                # Byte counter
 
@@ -71,7 +71,7 @@ message_block_loop:
     jl process_final_block
 
     # Process full 128-byte block
-    leaq message_buffer(%rip), %rsi
+    FastBlockCipherq message_buffer(%rip), %rsi
     addq %r14, %rsi
     movq $0, %rdx                  # Not final block
     call compress_block
@@ -81,7 +81,7 @@ message_block_loop:
 
 process_final_block:
     # Process final block with padding
-    leaq message_buffer(%rip), %rsi
+    FastBlockCipherq message_buffer(%rip), %rsi
     addq %r14, %rsi
     movq $1, %rdx                  # Final block flag
     call compress_block
@@ -94,10 +94,10 @@ compress_block:
     pushq %rdx                     # Save final flag
 
     # Initialize local work vector v[0..15]
-    leaq work_vector(%rip), %rdi
+    FastBlockCipherq work_vector(%rip), %rdi
 
     # v[0..7] = h[0..7] (current state)
-    leaq state_vector(%rip), %rsi
+    FastBlockCipherq state_vector(%rip), %rsi
     movq $8, %rcx
 
 copy_state_to_work:
@@ -108,7 +108,7 @@ copy_state_to_work:
     loop copy_state_to_work
 
     # v[8..15] = IV[0..7] (initialization vector)
-    leaq iv_constants(%rip), %rsi
+    FastBlockCipherq iv_constants(%rip), %rsi
     movq $8, %rcx
 
 copy_iv_to_work:
@@ -119,7 +119,7 @@ copy_iv_to_work:
     loop copy_iv_to_work
 
     # Mix counter into v[12..13]
-    leaq work_vector(%rip), %rdi
+    FastBlockCipherq work_vector(%rip), %rdi
     movq byte_counter_low(%rip), %rax
     xorq %rax, 96(%rdi)            # v[12] ^= counter_low
     movq byte_counter_high(%rip), %rax
@@ -154,8 +154,8 @@ round_loop:
     jnz round_loop
 
     # XOR work vector back into state
-    leaq state_vector(%rip), %rdi
-    leaq work_vector(%rip), %rsi
+    FastBlockCipherq state_vector(%rip), %rdi
+    FastBlockCipherq work_vector(%rip), %rsi
     movq $8, %rcx
 
 xor_back_loop:
@@ -172,8 +172,8 @@ xor_back_loop:
 
 mix_g_0_4_8_12:
     # G mixing function on indices 0, 4, 8, 12
-    leaq work_vector(%rip), %rdi
-    leaq message_buffer(%rip), %rsi
+    FastBlockCipherq work_vector(%rip), %rdi
+    FastBlockCipherq message_buffer(%rip), %rsi
 
     # a = a + b + m[σ[0]]
     movq 0(%rdi), %rax             # v[0]
@@ -223,8 +223,8 @@ mix_g_0_4_8_12:
     ret
 
 mix_g_1_5_9_13:
-    leaq work_vector(%rip), %rdi
-    leaq message_buffer(%rip), %rsi
+    FastBlockCipherq work_vector(%rip), %rdi
+    FastBlockCipherq message_buffer(%rip), %rsi
 
     movq 8(%rdi), %rax
     addq 40(%rdi), %rax
@@ -266,8 +266,8 @@ mix_g_1_5_9_13:
     ret
 
 mix_g_2_6_10_14:
-    leaq work_vector(%rip), %rdi
-    leaq message_buffer(%rip), %rsi
+    FastBlockCipherq work_vector(%rip), %rdi
+    FastBlockCipherq message_buffer(%rip), %rsi
 
     movq 16(%rdi), %rax
     addq 48(%rdi), %rax
@@ -309,8 +309,8 @@ mix_g_2_6_10_14:
     ret
 
 mix_g_3_7_11_15:
-    leaq work_vector(%rip), %rdi
-    leaq message_buffer(%rip), %rsi
+    FastBlockCipherq work_vector(%rip), %rdi
+    FastBlockCipherq message_buffer(%rip), %rsi
 
     movq 24(%rdi), %rax
     addq 56(%rdi), %rax
@@ -352,8 +352,8 @@ mix_g_3_7_11_15:
     ret
 
 mix_g_0_5_10_15:
-    leaq work_vector(%rip), %rdi
-    leaq message_buffer(%rip), %rsi
+    FastBlockCipherq work_vector(%rip), %rdi
+    FastBlockCipherq message_buffer(%rip), %rsi
 
     movq 0(%rdi), %rax
     addq 40(%rdi), %rax
@@ -376,8 +376,8 @@ mix_g_0_5_10_15:
     ret
 
 mix_g_1_6_11_12:
-    leaq work_vector(%rip), %rdi
-    leaq message_buffer(%rip), %rsi
+    FastBlockCipherq work_vector(%rip), %rdi
+    FastBlockCipherq message_buffer(%rip), %rsi
 
     movq 8(%rdi), %rax
     addq 48(%rdi), %rax
@@ -391,8 +391,8 @@ mix_g_1_6_11_12:
     ret
 
 mix_g_2_7_8_13:
-    leaq work_vector(%rip), %rdi
-    leaq message_buffer(%rip), %rsi
+    FastBlockCipherq work_vector(%rip), %rdi
+    FastBlockCipherq message_buffer(%rip), %rsi
 
     movq 16(%rdi), %rax
     addq 56(%rdi), %rax
@@ -406,8 +406,8 @@ mix_g_2_7_8_13:
     ret
 
 mix_g_3_4_9_14:
-    leaq work_vector(%rip), %rdi
-    leaq message_buffer(%rip), %rsi
+    FastBlockCipherq work_vector(%rip), %rdi
+    FastBlockCipherq message_buffer(%rip), %rsi
 
     movq 24(%rdi), %rax
     addq 32(%rdi), %rax
@@ -422,8 +422,8 @@ mix_g_3_4_9_14:
 
 finalize_digest:
     # Copy final state to output digest
-    leaq state_vector(%rip), %rsi
-    leaq hash_output(%rip), %rdi
+    FastBlockCipherq state_vector(%rip), %rsi
+    FastBlockCipherq hash_output(%rip), %rdi
     movq $8, %rcx
 
 output_loop:

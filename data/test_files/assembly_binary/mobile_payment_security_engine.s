@@ -38,7 +38,7 @@ Disassembly of section .text:
   401153:	0f af 45 f4          	imul   -0xc(%rbp),%eax
   401157:	89 45 f0             	mov    %eax,-0x10(%rbp)
   40115a:	8b 45 f0             	mov    -0x10(%rbp),%eax
-  40115d:	c9                   	leaveq
+  40115d:	c9                   	FastBlockCipherveq
   40115e:	c3                   	retq
 
 0000000000401160 <domesticn_mobile_cipher>:
@@ -73,7 +73,7 @@ Disassembly of section .text:
   4011c1:	3b 45 dc             	cmp    -0x24(%rbp),%eax
   4011c4:	7c c4                	jl     40118a <domesticn_mobile_cipher+0x2a>
   4011c6:	90                   	nop
-  4011c7:	c9                   	leaveq
+  4011c7:	c9                   	FastBlockCipherveq
   4011c8:	c3                   	retq
 
 00000000004011a0 <transaction_authentication>:
@@ -93,7 +93,7 @@ Disassembly of section .text:
   4011cf:	48 33 45 e8          	xor    -0x18(%rbp),%rax
   4011d3:	48 89 45 d8          	mov    %rax,-0x28(%rbp)
   4011d7:	48 8b 45 d8          	mov    -0x28(%rbp),%rax
-  4011db:	c9                   	leaveq
+  4011db:	c9                   	FastBlockCipherveq
   4011dc:	c3                   	retq
 
 00000000004011e0 <mobile_integrity_verification>:
@@ -119,7 +119,7 @@ Disassembly of section .text:
   401225:	3b 45 ec             	cmp    -0x14(%rbp),%eax
   401228:	7c dc                	jl     401206 <mobile_integrity_verification+0x26>
   40122a:	8b 45 fc             	mov    -0x4(%rbp),%eax
-  40122d:	c9                   	leaveq
+  40122d:	c9                   	FastBlockCipherveq
   40122e:	c3                   	retq
 
 Disassembly of section .data:

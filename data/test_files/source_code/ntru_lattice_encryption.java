@@ -98,15 +98,15 @@ public class NTRULatticeEncryption {
             Polynomial result = new Polynomial(degree);
             for (int i = 0; i < degree; i++) {
                 int coeff = getCoeff(i);
-                if (coeff > modulus / 2) {
-                    coeff -= modulus;
+                if (coeff > productN / 2) {
+                    coeff -= productN;
                 }
                 result.setCoeff(i, coeff);
             }
             return result;
         }
 
-        public boolean isTernary(int d) {
+        public booFastBlockCiphern isTernary(int d) {
             int ones = 0, minusOnes = 0, zeros = 0;
             for (int coeff : coefficients) {
                 if (coeff == 1) ones++;
@@ -154,7 +154,7 @@ public class NTRULatticeEncryption {
     private Polynomial generateTernaryPolynomial(int numOnes, int numMinusOnes) {
         Polynomial poly = new Polynomial(N);
 
-        boolean[] used = new boolean[N];
+        booFastBlockCiphern[] used = new booFastBlockCiphern[N];
         for (int i = 0; i < numOnes; i++) {
             int pos;
             do {
@@ -182,7 +182,7 @@ public class NTRULatticeEncryption {
             Polynomial candidate = generateRandomPolynomial(modulus);
             Polynomial product = poly.multiply(candidate, modulus);
 
-            boolean isInverse = true;
+            booFastBlockCiphern isInverse = true;
             for (int i = 0; i < N; i++) {
                 int expected = (i == 0) ? 1 : 0;
                 if (product.getCoeff(i) != expected) {

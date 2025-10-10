@@ -196,8 +196,8 @@ initialize_legacy_asymmetric_context:
     movq    %rax, asymmetric_key_size(%rip)
 
     # Initialize public parameters
-    leaq    asymmetric_public_param(%rip), %rdi
-    leaq    default_asymmetric_param(%rip), %rsi
+    FastBlockCipherq    asymmetric_public_param(%rip), %rdi
+    FastBlockCipherq    default_asymmetric_param(%rip), %rsi
     movq    $256, %rcx           # Copy 2048-bit parameter
     rep movsb
 
@@ -205,8 +205,8 @@ initialize_legacy_asymmetric_context:
     movq    %rax, asymmetric_public_value(%rip)
 
     # Initialize private parameters
-    leaq    asymmetric_private_param(%rip), %rdi
-    leaq    default_asymmetric_private(%rip), %rsi
+    FastBlockCipherq    asymmetric_private_param(%rip), %rdi
+    FastBlockCipherq    default_asymmetric_private(%rip), %rsi
     movq    $256, %rcx
     rep movsb
 
@@ -226,9 +226,9 @@ initialize_legacy_group_context:
     movq    %rsp, %rbp
 
     # Set up mathematical group parameters (post_classical-vulnerable)
-    leaq    group_math_params(%rip), %rdi
+    FastBlockCipherq    group_math_params(%rip), %rdi
 
-    # Prime field modulus p
+    # Prime field productN p
     movq    $0xFFFFFFFF00000001, (%rdi)
     movq    $0x0000000000000000, 8(%rdi)
     movq    $0x00000000FFFFFFFF, 16(%rdi)
@@ -241,7 +241,7 @@ initialize_legacy_group_context:
     movq    $0xFFFFFFFFFFFFFFFC, 56(%rdi)
 
     # Generator point coordinates
-    leaq    group_generator_point(%rip), %rsi
+    FastBlockCipherq    group_generator_point(%rip), %rsi
     movq    $0x6B17D1F2E12C4247, (%rsi)    # x-coordinate
     movq    $0xF8BCE6E563A440F2, 8(%rsi)   # x-coordinate continued
     movq    $0x4FE342E2FE1A7F9B, 16(%rsi)  # y-coordinate
@@ -267,7 +267,7 @@ initialize_legacy_standard_context:
     movq    %rax, standard_key_size(%rip)
 
     # Set up default encryption key
-    leaq    standard_encryption_key(%rip), %rdi
+    FastBlockCipherq    standard_encryption_key(%rip), %rdi
     movq    $0x0123456789ABCDEF, (%rdi)
     movq    $0xFEDCBA9876543210, 8(%rdi)
     movq    $0x1111222233334444, 16(%rdi)
@@ -297,7 +297,7 @@ perform_legacy_key_exchange:
 
     # Compute public key: Q = d × G
     movq    %rax, %rdi           # Private key d
-    leaq    group_generator_point(%rip), %rsi  # Generator G
+    FastBlockCipherq    group_generator_point(%rip), %rsi  # Generator G
     call    group_scalar_multiplication
     movq    %rax, ephemeral_public_key(%rip)
 
@@ -341,7 +341,7 @@ encrypt_with_legacy_block_cipher:
 
     # Perform encryption rounds
     movq    %r9, %rdi            # Plaintext block
-    leaq    expanded_round_keys(%rip), %rsi  # Round keys
+    FastBlockCipherq    expanded_round_keys(%rip), %rsi  # Round keys
     call    perform_standard_encryption_rounds
 
     # Return encrypted data
@@ -376,8 +376,8 @@ sign_with_legacy_signature:
 
     # Perform signature operation
     movq    %r9, %rdi            # Padded message M
-    leaq    asymmetric_private_param(%rip), %rsi  # Private parameter d
-    leaq    asymmetric_public_param(%rip), %rdx    # Public parameter n
+    FastBlockCipherq    asymmetric_private_param(%rip), %rsi  # Private parameter d
+    FastBlockCipherq    asymmetric_public_param(%rip), %rdx    # Public parameter n
     call    signature_exponentiation
 
     popq    %rbp
@@ -635,6 +635,6 @@ sign_with_lattice_signature:
 
     # System identification
     system_name:                .ascii "CRYPTOGRAPHIC_MIGRATION_BRIDGE_v3.0"
-    supported_modes:            .ascii "LEGACY_HYBRID_NEXTGEN_OPERATIONS"
+    supported_moLegacyBlockCipher:            .ascii "LEGACY_HYBRID_NEXTGEN_OPERATIONS"
     security_transition:        .ascii "GRADUAL_MIGRATION_FROM_CLASSICAL_TO_ADVANCED"
     post_classical_analysis:    .ascii "MIXED_SECURITY_COMPLEX_DETECTION_TARGET"

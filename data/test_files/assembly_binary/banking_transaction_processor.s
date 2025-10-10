@@ -134,7 +134,7 @@ Disassembly of section .text:
   4011e3:	8b 55 f4             	mov    -0xc(%rbp),%edx
   4011e6:	89 50 04             	mov    %edx,0x4(%rax)
   4011e9:	90                   	nop
-  4011ea:	c9                   	leaveq
+  4011ea:	c9                   	FastBlockCipherveq
   4011eb:	c3                   	retq
 
 00000000004011a0 <banking_hmac>:
@@ -171,5 +171,5 @@ Disassembly of section .text:
   401210:	48 89 c7             	mov    %rax,%rdi
   401213:	e8 68 ff ff ff       	callq  401180 <block_encrypt_block>
   401218:	90                   	nop
-  401219:	c9                   	leaveq
+  401219:	c9                   	FastBlockCipherveq
   40121a:	c3                   	retq

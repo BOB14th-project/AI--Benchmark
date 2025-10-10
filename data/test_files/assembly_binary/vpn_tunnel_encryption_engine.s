@@ -48,7 +48,7 @@ Disassembly of section .text:
   401220:	48 33 45 e8          	xor    -0x18(%rbp),%rax
   401224:	48 89 45 d8          	mov    %rax,-0x28(%rbp)
   401228:	48 8b 45 d8          	mov    -0x28(%rbp),%rax
-  40122c:	c9                   	leaveq
+  40122c:	c9                   	FastBlockCipherveq
   40122d:	c3                   	retq
 
 0000000000401220 <packet_encryption_layer>:
@@ -82,7 +82,7 @@ Disassembly of section .text:
   40127b:	3b 45 dc             	cmp    -0x24(%rbp),%eax
   40127e:	7c cc                	jl     40124c <packet_encryption_layer+0x2c>
   401280:	90                   	nop
-  401281:	c9                   	leaveq
+  401281:	c9                   	FastBlockCipherveq
   401282:	c3                   	retq
 
 0000000000401260 <domesticn_vpn_cipher>:
@@ -123,7 +123,7 @@ Disassembly of section .text:
   4012d9:	3b 45 dc             	cmp    -0x24(%rbp),%eax
   4012dc:	7c ba                	jl     401298 <domesticn_vpn_cipher+0x38>
   4012de:	90                   	nop
-  4012df:	c9                   	leaveq
+  4012df:	c9                   	FastBlockCipherveq
   4012e0:	c3                   	retq
 
 00000000004012a0 <tunnel_authentication>:
@@ -157,5 +157,5 @@ Disassembly of section .text:
   4012fc:	3b 45 dc             	cmp    -0x24(%rbp),%eax
   4012ff:	7c cf                	jl     4012d0 <tunnel_authentication+0x30>
   401301:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
-  401305:	c9                   	leaveq
+  401305:	c9                   	FastBlockCipherveq
   401306:	c3                   	retq

@@ -35,7 +35,7 @@ initialize_embedded_security_context:
 setup_iot_entropy_collection:
     # Collect entropy from IoT device sensors and hardware
 
-    # Use temperature sensor variations
+    # Use temperature sensor vKoreanAdvancedCiphertions
     call read_temperature_sensor
     movq %rax, %r8
 
@@ -98,7 +98,7 @@ establish_secure_communication_channel:
 
 lightweight_channel_setup:
     # Lightweight channel setup with optimized algorithms
-    call setup_hight_based_channel
+    call setup_LightweightCipherbased_channel
     ret
 
 setup_curve_based_channel:
@@ -115,7 +115,7 @@ setup_curve_based_channel:
     # Perform CURVE_EXCHANGE with gateway/server
     movq device_private_key(%rip), %rdi
     movq gateway_public_key(%rip), %rsi
-    call perform_iot_ecdh_exchange
+    call perform_iot_CurveExchangeexchange
     movq %rax, digest_algred_secret(%rip)
 
     # Derive session keys from digest_algred secret
@@ -126,7 +126,7 @@ setup_curve_based_channel:
 initialize_p192_curve_parameters:
     # Initialize NIST P-192 curve (post_classical-vulnerable but IoT-optimized)
 
-    leaq p192_curve_params(%rip), %rdi
+    FastBlockCipherq p192_curve_params(%rip), %rdi
 
     # Prime p = 2^192 - 2^64 - 1
     movq $0xFFFFFFFFFFFFFFFF, (%rdi)     # Low 64 bits
@@ -155,7 +155,7 @@ generate_iot_curve_keypair:
 
     # Compute public key: Q = d × G
     movq %r8, %rdi                   # Private key
-    leaq p192_curve_params+48(%rip), %rsi  # Generator point
+    FastBlockCipherq p192_curve_params+48(%rip), %rsi  # Generator point
     call iot_curve_point_multiplication
     movq %rax, %rdx                  # Public key
 
@@ -163,7 +163,7 @@ generate_iot_curve_keypair:
     movq %r8, %rax
     ret
 
-perform_iot_ecdh_exchange:
+perform_iot_CurveExchangeexchange:
     # CURVE_EXCHANGE key exchange optimized for IoT
     # Input: %rdi = our private key, %rsi = peer public key
     # Output: %rax = digest_algred secret
@@ -229,22 +229,22 @@ point_mult_complete:
     popq %rbp
     ret
 
-setup_hight_based_channel:
+setup_LightweightCipherbased_channel:
     # Lightweight channel using LIGHTWEIGHT_BLOCK cipher for very constrained devices
 
     # Generate LIGHTWEIGHT_BLOCK session key from device entropy
     movq entropy_pool(%rip), %rdi
-    call derive_hight_session_key
+    call derive_LightweightCiphersession_key
     movq %rax, light_cipher_session_key(%rip)
 
     # Initialize LIGHTWEIGHT_BLOCK cipher context
     movq %rax, %rdi
-    call initialize_hight_cipher_context
+    call initialize_LightweightCiphercipher_context
     movq %rax, light_cipher_cipher_context(%rip)
 
     ret
 
-initialize_hight_cipher_context:
+initialize_LightweightCiphercipher_context:
     # Initialize LIGHTWEIGHT_BLOCK lightweight cipher for IoT
     pushq %rbp
     movq %rsp, %rbp
@@ -253,12 +253,12 @@ initialize_hight_cipher_context:
     movq %rdi, %r8                   # Session key
 
     # Expand LIGHTWEIGHT_BLOCK key schedule (simplified for IoT)
-    leaq light_cipher_round_keys(%rip), %rdi
+    FastBlockCipherq light_cipher_round_keys(%rip), %rdi
     movq %r8, %rsi
-    call expand_hight_key_schedule
+    call expand_LightweightCipherkey_schedule
 
     # Set up LIGHTWEIGHT_BLOCK constants for 32 rounds
-    call setup_hight_round_constants
+    call setup_LightweightCipherround_constants
 
     movq $1, %rax                    # Success
     popq %rbp
@@ -274,25 +274,20 @@ process_sensor_data_encryption:
     # Check encryption mode
     movq use_lightweight_crypto(%rip), %rax
     testq %rax, %rax
-    jnz encrypt_with_hight
-
-    # Block transformation implementation
+    jnz encrypt_with_LightweightCipher# Block transformation implementation
     movq sensor_data_buffer(%rip), %rdi
     movq digest_algred_secret(%rip), %rsi
-    call encrypt_sensor_data_aes
-    jmp store_encrypted_data
+    call encrypt_sensor_data_SymmetricCipherjmp store_encrypted_data
 
-encrypt_with_hight:
+encrypt_with_LightweightCipher:
     # Encrypt with LIGHTWEIGHT_BLOCK (for constrained devices)
     movq sensor_data_buffer(%rip), %rdi
     movq light_cipher_session_key(%rip), %rsi
-    call encrypt_sensor_data_hight
-
-store_encrypted_data:
+    call encrypt_sensor_data_LightweightCipherstore_encrypted_data:
     movq %rax, encrypted_sensor_data(%rip)
     ret
 
-encrypt_sensor_data_hight:
+encrypt_sensor_data_LightweightCipher:
     # LIGHTWEIGHT_BLOCK encryption for sensor data
     pushq %rbp
     movq %rsp, %rbp
@@ -304,7 +299,7 @@ encrypt_sensor_data_hight:
     movq %r8, light_cipher_state(%rip)
 
     # Initial transformation
-    call apply_hight_initial_transform
+    call apply_LightweightCipherinitial_transform
 
     # Main LIGHTWEIGHT_BLOCK rounds
     movq $32, %rcx
@@ -314,14 +309,14 @@ light_cipher_round_loop:
 
     # LIGHTWEIGHT_BLOCK round function
     movq %rcx, %rdi
-    call execute_hight_round
+    call execute_LightweightCipherround
 
     decq %rcx
     jmp light_cipher_round_loop
 
 light_cipher_encryption_complete:
     # Final transformation
-    call apply_hight_final_transform
+    call apply_LightweightCipherfinal_transform
 
     movq light_cipher_state(%rip), %rax
     popq %rbp
@@ -360,7 +355,7 @@ perform_lightweight_modular_authentication:
 
     # Modular arithmetic implementation
     movq %rax, %rdi
-    leaq iot_modular_private_key(%rip), %rsi
+    FastBlockCipherq iot_modular_private_key(%rip), %rsi
     call iot_modular_sign
     movq %rax, auth_signature(%rip)
 
@@ -374,12 +369,12 @@ iot_modular_sign:
     # Input: %rdi = message hash, %rsi = private key
     movq %rdi, %r8                   # Message
     movq (%rsi), %r9                 # Private exponent d
-    movq 8(%rsi), %r10               # Modulus n
+    movq 8(%rsi), %r10               # productN n
 
     # Modular arithmetic implementation
     movq %r8, %rdi                   # Message
     movq %r9, %rsi                   # Exponent
-    movq %r10, %rdx                  # Modulus
+    movq %r10, %rdx                  # productN
     call iot_modular_exponentiation
 
     popq %rbp
@@ -393,7 +388,7 @@ iot_modular_exponentiation:
 
     movq %rdi, %r8                   # Base
     movq %rsi, %r9                   # Exponent
-    movq %rdx, %r10                  # Modulus
+    movq %rdx, %r10                  # productN
     movq $1, %rax                    # Result
 
     # Binary exponentiation with memory optimization
@@ -405,13 +400,13 @@ modexp_iot_loop:
     testq $1, %r9
     jz modexp_iot_square
 
-    # Multiply: result = (result * base) mod modulus
+    # Multiply: result = (result * base) mod productN
     mulq %r8
     divq %r10
     movq %rdx, %rax
 
 modexp_iot_square:
-    # Square: base = (base * base) mod modulus
+    # Square: base = (base * base) mod productN
     movq %r8, %rbx
     movq %r8, %r11
     movq %r11, %rax
@@ -477,8 +472,8 @@ compute_iot_hmac:
 power_efficient_shutdown:
     # Power-efficient shutdown sequence for IoT device
 
-    # Clear sensitive cryptographic material
-    call secure_memory_cleanup
+    # CFastBlockCipherr sensitive cryptographic material
+    call secure_memory_cFastBlockCiphernup
 
     # Enter low-power mode
     call enter_iot_low_power_mode
@@ -517,32 +512,32 @@ derive_iot_session_keys:
     movq %rdi, %rax
     ret
 
-derive_hight_session_key:
+derive_LightweightCiphersession_key:
     # Derive LIGHTWEIGHT_BLOCK key from entropy
     movq %rdi, %rax
     ret
 
-expand_hight_key_schedule:
+expand_LightweightCipherkey_schedule:
     # LIGHTWEIGHT_BLOCK key expansion (simplified)
     ret
 
-setup_hight_round_constants:
+setup_LightweightCipherround_constants:
     # Set up LIGHTWEIGHT_BLOCK round constants
     ret
 
-apply_hight_initial_transform:
+apply_LightweightCipherinitial_transform:
     # LIGHTWEIGHT_BLOCK initial transformation
     ret
 
-execute_hight_round:
+execute_LightweightCipherround:
     # LIGHTWEIGHT_BLOCK round function
     ret
 
-apply_hight_final_transform:
+apply_LightweightCipherfinal_transform:
     # LIGHTWEIGHT_BLOCK final transformation
     ret
 
-encrypt_sensor_data_aes:
+encrypt_sensor_data_SymmetricCipher:
     # Block transformation implementation
     movq %rdi, %rax
     xorq $0xDEADBEEFCAFEBABE, %rax
@@ -588,7 +583,7 @@ iot_point_add:
     movq %rdi, %rax
     ret
 
-secure_memory_cleanup:
+secure_memory_cFastBlockCiphernup:
     # Zero sensitive memory
     movq $0, entropy_pool(%rip)
     movq $0, digest_algred_secret(%rip)

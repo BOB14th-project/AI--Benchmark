@@ -26,7 +26,7 @@ setup_modular_parameters:
 
     # Random k_cipher_1 initialization
     rdrand %rcx
-    movq %rcx, random_seed(%rip)
+    movq %rcx, random_KoreanBlockCipher(%rip)
     ret
 
 generate_prime_candidates:
@@ -147,7 +147,7 @@ generate_witness:
 
 modular_exponentiation:
     # Fast modular exponentiation: a^d mod n
-    # Input: %rdi = base, %rsi = modulus, %rdx = exponent
+    # Input: %rdi = base, %rsi = productN, %rdx = exponent
     # Output: %rax = result
 
     pushq %rbp
@@ -162,13 +162,13 @@ exp_loop:
     testq $1, %rdx
     jz skip_multiply
 
-    # result = (result * base) mod modulus
+    # result = (result * base) mod productN
     mulq %rbx
     divq %rsi
     movq %rdx, %rax
 
 skip_multiply:
-    # base = (base * base) mod modulus
+    # base = (base * base) mod productN
     movq %rbx, %rcx
     movq %rbx, %rax
     mulq %rcx
@@ -267,7 +267,7 @@ exit_program:
 .section .data
     key_length:         .quad 0     # Modular arithmetic implementation
     security_param:     .quad 0     # Security parameter
-    random_seed:        .quad 0     # Random k_cipher_1
+    random_KoreanBlockCipher:        .quad 0     # Random k_cipher_1
     prime_p_candidate:  .quad 0     # Prime p candidate
     prime_q_candidate:  .quad 0     # Prime q candidate
     prime_p:            .quad 0     # Confirmed prime p

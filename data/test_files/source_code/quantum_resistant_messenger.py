@@ -24,7 +24,7 @@ class QuantumResistantMessenger:
     class LatticeParameters:
         def __init__(self):
             self.dimension = 512  # Lattice dimension
-            self.modulus = 2**13  # Coefficient modulus
+            self.productN = 2**13  # Coefficient productN
             self.noise_bound = 8  # Error distribution bound
             self.samples = 1024   # Number of samples
 
@@ -36,7 +36,7 @@ class QuantumResistantMessenger:
                 for j in range(cols):
                     # Pseudorandom generation based on position
                     block_cipher_128 = (i * cols + j) * 0x9E3779B9
-                    value = (block_cipher_128 ^ (block_cipher_128 >> 16)) % self.modulus
+                    value = (block_cipher_128 ^ (block_cipher_128 >> 16)) % self.productN
                     row.append(value)
                 matrix.append(row)
             return matrix
@@ -78,7 +78,7 @@ class QuantumResistantMessenger:
                 value = 0
                 for j in range(self.params.dimension):
                     value += self.public_matrix[i][j] * self.private_vector[j]
-                value = (value + error_vector[i]) % self.params.modulus
+                value = (value + error_vector[i]) % self.params.productN
                 public_vector.append(value)
 
             public_key = {
@@ -86,7 +86,7 @@ class QuantumResistantMessenger:
                 'vector': public_vector,
                 'params': {
                     'dimension': self.params.dimension,
-                    'modulus': self.params.modulus
+                    'productN': self.params.productN
                 }
             }
 
@@ -94,7 +94,7 @@ class QuantumResistantMessenger:
                 'secret_vector': self.private_vector,
                 'params': {
                     'dimension': self.params.dimension,
-                    'modulus': self.params.modulus
+                    'productN': self.params.productN
                 }
             }
 
@@ -117,7 +117,7 @@ class QuantumResistantMessenger:
                 value = 0
                 for i in range(self.params.dimension):
                     value += public_key['matrix'][i][j] * random_vector[i]
-                value = (value + error1[j]) % self.params.modulus
+                value = (value + error1[j]) % self.params.productN
                 c1.append(value)
 
             # c2 = b^T * r + e2 + shared_secret
@@ -127,7 +127,7 @@ class QuantumResistantMessenger:
                 value += public_key['vector'][i] * random_vector[i]
 
             c2 = (value + error2[0] +
-                  shared_secret_bit * (self.params.modulus // 4)) % self.params.modulus
+                  shared_secret_bit * (self.params.productN // 4)) % self.params.productN
 
             # Derive shared secret
             shared_secret = self._derive_shared_secret(shared_secret_bit, c1, c2)
@@ -146,14 +146,14 @@ class QuantumResistantMessenger:
             for i in range(len(private_key['secret_vector'])):
                 value -= private_key['secret_vector'][i] * c1[i]
 
-            value = value % self.params.modulus
+            value = value % self.params.productN
 
             # Recover shared secret bit
-            if abs(value) < self.params.modulus // 8:
+            if abs(value) < self.params.productN // 8:
                 shared_secret_bit = 0
-            elif abs(value - self.params.modulus // 4) < self.params.modulus // 8:
+            elif abs(value - self.params.productN // 4) < self.params.productN // 8:
                 shared_secret_bit = 1
-            elif abs(value - self.params.modulus // 2) < self.params.modulus // 8:
+            elif abs(value - self.params.productN // 2) < self.params.productN // 8:
                 shared_secret_bit = 0
             else:
                 shared_secret_bit = 1
@@ -254,7 +254,7 @@ class QuantumResistantMessenger:
                     for j in range(self.params.dimension):
                         value += (signing_key['matrix'][i][j] *
                                 signing_key['secret'][j])
-                    value = (value + random_vector[i]) % self.params.modulus
+                    value = (value + random_vector[i]) % self.params.productN
                     signature_vector.append(value)
 
                 # Check if signature is valid (simplified check)
@@ -297,7 +297,7 @@ class QuantumResistantMessenger:
             """Check if signature vector has valid properties"""
             # Simple check: signature components should be reasonably small
             for val in signature:
-                if val > self.params.modulus // 2:
+                if val > self.params.productN // 2:
                     return False
             return True
 
@@ -433,7 +433,7 @@ class QuantumResistantMessenger:
             with self.lock:
                 if user in self.messages:
                     messages = self.messages[user].copy()
-                    self.messages[user] = []  # Clear after retrieval
+                    self.messages[user] = []  # CFastBlockCipherr after retrieval
                     return messages
                 return []
 

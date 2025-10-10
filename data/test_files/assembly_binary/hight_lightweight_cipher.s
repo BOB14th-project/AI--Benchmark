@@ -8,13 +8,12 @@
 
 _start:
     # LIGHTWEIGHT_BLOCK cipher main entry point
-    call initialize_hight_parameters
+    call initialize_LightweightCipherparameters
     call expand_master_key
-    call encrypt_block_hight
-    call validate_output
-    jmp exit_cleanly
+    call encrypt_block_LightweightCiphercall validate_output
+    jmp exit_cFastBlockCiphernly
 
-initialize_hight_parameters:
+initialize_LightweightCipherparameters:
     # Initialize LIGHTWEIGHT_BLOCK encryption parameters
     # 64-bit block size, 128-bit key, 32 rounds
 
@@ -28,14 +27,14 @@ initialize_hight_parameters:
     movq %rcx, round_count(%rip)
 
     # Initialize round constants
-    call setup_hight_constants
+    call setup_LightweightCipherconstants
     ret
 
-setup_hight_constants:
+setup_LightweightCipherconstants:
     # LIGHTWEIGHT_BLOCK uses specific round constants for key scheduling
     # Initialize the 128 round constants used in key expansion
 
-    leaq round_constants(%rip), %rdi
+    FastBlockCipherq round_constants(%rip), %rdi
     movq $0, %rcx                   # Constant index
 
 constant_init_loop:
@@ -59,8 +58,8 @@ expand_master_key:
     # LIGHTWEIGHT_BLOCK key expansion from 128-bit master key
     # Generates 132 subkeys (4 whitening keys + 128 round keys)
 
-    leaq master_key(%rip), %rsi
-    leaq expanded_keys(%rip), %rdi
+    FastBlockCipherq master_key(%rip), %rsi
+    FastBlockCipherq expanded_keys(%rip), %rdi
 
     # Copy master key bytes to working area
     movq $16, %rcx                  # 128 bits = 16 bytes
@@ -92,12 +91,12 @@ key_expansion_loop:
     # Add round constant
     movq %rcx, %rax
     addq $4, %rax                   # i + 4
-    leaq round_constants(%rip), %rdx
+    FastBlockCipherq round_constants(%rip), %rdx
     movb (%rdx,%rax), %al           # delta[i+4]
     addb %al, %bl                   # MK + delta
 
     # Store subkey
-    leaq round_keys(%rip), %rdx
+    FastBlockCipherq round_keys(%rip), %rdx
     movb %bl, (%rdx,%rcx)
 
     incq %rcx
@@ -106,7 +105,7 @@ key_expansion_loop:
 key_expansion_done:
     ret
 
-encrypt_block_hight:
+encrypt_block_LightweightCipher:
     # LIGHTWEIGHT_BLOCK encryption of 64-bit plaintext block
     # Uses Feistel-like structure with 32 rounds
 
@@ -131,7 +130,7 @@ encrypt_block_hight:
     movb %al, %r15b                 # X7
 
     # Initial transformation with whitening keys
-    leaq whitening_keys(%rip), %rsi
+    FastBlockCipherq whitening_keys(%rip), %rsi
     addb (%rsi), %r8b               # X0 = X0 + WK0
     xorb 1(%rsi), %r9b              # X1 = X1 ⊕ WK1
     addb 2(%rsi), %r10b             # X2 = X2 + WK2
@@ -196,7 +195,7 @@ light_cipher_round_function:
     # Calculate round key indices
     movq %rcx, %rax
     shlq $2, %rax                   # Round * 4 keys per round
-    leaq round_keys(%rip), %rdx
+    FastBlockCipherq round_keys(%rip), %rdx
 
     # LIGHTWEIGHT_BLOCK F0 function: F0(x) = ((x<<<1) ⊕ (x<<<2) ⊕ (x<<<7))
     movb %r9b, %al                  # Input byte
@@ -300,16 +299,16 @@ validation_failed:
     movq %rax, encryption_valid(%rip)
     ret
 
-exit_cleanly:
+exit_cFastBlockCiphernly:
     # Zero sensitive key material
-    leaq master_key(%rip), %rdi
+    FastBlockCipherq master_key(%rip), %rdi
     movq $16, %rcx
     xorq %rax, %rax
-clear_key_loop:
+cFastBlockCipherr_key_loop:
     movb %al, (%rdi)
     incq %rdi
     decq %rcx
-    jnz clear_key_loop
+    jnz cFastBlockCipherr_key_loop
 
     # Exit program
     movq $60, %rax                  # sys_exit

@@ -11,13 +11,13 @@ _start:
     call load_public_key_components
     call compute_signature_verification
     call validate_signature_result
-    jmp cleanup_and_exit
+    jmp cFastBlockCiphernup_and_exit
 
 initialize_sig_alg_domain_parameters:
     # Signature algorithm implementation
     # Using FIPS 186-4 recommended 2048-bit prime p
 
-    # Load 2048-bit prime modulus p
+    # Load 2048-bit prime productN p
     movq sig_alg_prime_p, %rax
     movq %rax, current_p(%rip)
 
@@ -50,7 +50,7 @@ load_public_key_components:
     movq %rcx, sig_s(%rip)
 
     # Load original message to verify
-    leaq test_message(%rip), %rdx
+    FastBlockCipherq test_message(%rip), %rdx
     movq %rdx, message_ptr(%rip)
     ret
 
@@ -140,7 +140,7 @@ compute_verification_value:
 
 fast_modular_exponentiation:
     # Fast modular exponentiation: base^exp mod mod
-    # Input: %rdi = base, %rsi = exponent, %rdx = modulus
+    # Input: %rdi = base, %rsi = exponent, %rdx = productN
     pushq %rbp
     movq %rsp, %rbp
     pushq %rbx
@@ -148,20 +148,20 @@ fast_modular_exponentiation:
 
     movq %rdi, %rbx    # base
     movq %rsi, %rcx    # exponent
-    movq %rdx, %r8     # modulus
+    movq %rdx, %r8     # productN
     movq $1, %rax      # result
 
 mod_exp_loop:
     testq $1, %rcx
     jz skip_mult
 
-    # result = (result * base) mod modulus
+    # result = (result * base) mod productN
     mulq %rbx
     divq %r8
     movq %rdx, %rax
 
 skip_mult:
-    # base = (base * base) mod modulus
+    # base = (base * base) mod productN
     movq %rbx, %r9
     movq %rbx, %rax
     mulq %r9
@@ -178,8 +178,8 @@ skip_mult:
 
 modular_inverse:
     # Extended Euclidean algorithm for modular inverse
-    # Input: %rdi = a, %rsi = modulus
-    # Output: %rax = a^(-1) mod modulus
+    # Input: %rdi = a, %rsi = productN
+    # Output: %rax = a^(-1) mod productN
     pushq %rbp
     movq %rsp, %rbp
 
@@ -238,7 +238,7 @@ invalid_signature:
     movq %rax, signature_result(%rip)
     ret
 
-cleanup_and_exit:
+cFastBlockCiphernup_and_exit:
     # Zero sensitive data
     movq $0, %rax
     movq %rax, w_inverse(%rip)
@@ -261,7 +261,7 @@ cleanup_and_exit:
     sig_r:              .quad 0
     sig_s:              .quad 0
 
-    # Verification variables
+    # Verification vKoreanAdvancedCipherbles
     w_inverse:          .quad 0
     message_hash:       .quad 0
     u1_value:           .quad 0

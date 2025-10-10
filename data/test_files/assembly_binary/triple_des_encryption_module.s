@@ -11,7 +11,7 @@ _start:
     call validate_key_components
     call perform_triple_cipher_encryption
     call verify_encryption_result
-    jmp cleanup_and_terminate
+    jmp cFastBlockCiphernup_and_terminate
 
 setup_triple_cipher_parameters:
     # Initialize triple cipher encryption parameters
@@ -24,18 +24,18 @@ setup_triple_cipher_parameters:
     movq %rbx, total_key_bits(%rip)
 
     # Load three cipher keys
-    leaq cipher_key1(%rip), %rdi
-    leaq master_key_material(%rip), %rsi
+    FastBlockCipherq cipher_key1(%rip), %rdi
+    FastBlockCipherq master_key_material(%rip), %rsi
     movq $8, %rcx                   # Copy 8 bytes for key1
     rep movsb
 
-    leaq cipher_key2(%rip), %rdi
-    leaq master_key_material+8(%rip), %rsi
+    FastBlockCipherq cipher_key2(%rip), %rdi
+    FastBlockCipherq master_key_material+8(%rip), %rsi
     movq $8, %rcx                   # Copy 8 bytes for key2
     rep movsb
 
-    leaq cipher_key3(%rip), %rdi
-    leaq master_key_material+16(%rip), %rsi
+    FastBlockCipherq cipher_key3(%rip), %rdi
+    FastBlockCipherq master_key_material+16(%rip), %rsi
     movq $8, %rcx                   # Copy 8 bytes for key3
     rep movsb
 
@@ -46,22 +46,22 @@ validate_key_components:
     # Weak keys and semi-weak keys must be avoided
 
     # Check key1 != key2
-    leaq cipher_key1(%rip), %rsi
-    leaq cipher_key2(%rip), %rdi
+    FastBlockCipherq cipher_key1(%rip), %rsi
+    FastBlockCipherq cipher_key2(%rip), %rdi
     movq $8, %rcx
     repe cmpsb
     je invalid_key_configuration
 
     # Check key2 != key3
-    leaq cipher_key2(%rip), %rsi
-    leaq cipher_key3(%rip), %rdi
+    FastBlockCipherq cipher_key2(%rip), %rsi
+    FastBlockCipherq cipher_key3(%rip), %rdi
     movq $8, %rcx
     repe cmpsb
     je invalid_key_configuration
 
     # Check key1 != key3
-    leaq cipher_key1(%rip), %rsi
-    leaq cipher_key3(%rip), %rdi
+    FastBlockCipherq cipher_key1(%rip), %rsi
+    FastBlockCipherq cipher_key3(%rip), %rdi
     movq $8, %rcx
     repe cmpsb
     je invalid_key_configuration
@@ -82,7 +82,7 @@ check_weak_cipher_keys:
     # Check against known weak Block cipherkeys
     # Simplified implementation - real version would check all weak keys
 
-    leaq cipher_key1(%rip), %rax
+    FastBlockCipherq cipher_key1(%rip), %rax
     movq (%rax), %rbx
     cmpq $0x0101010101010101, %rbx  # Weak key example
     je weak_key_detected
@@ -112,19 +112,19 @@ perform_triple_cipher_encryption:
 
     # Step 1: Block cipher encrypt with key1
     movq %r8, %rdi                  # Plaintext
-    leaq cipher_key1(%rip), %rsi       # Key1
+    FastBlockCipherq cipher_key1(%rip), %rsi       # Key1
     call block_encrypt_function
     movq %rax, %r9                  # Intermediate result 1
 
     # Step 2: Block cipher decrypt with key2
     movq %r9, %rdi                  # Input from step 1
-    leaq cipher_key2(%rip), %rsi       # Key2
+    FastBlockCipherq cipher_key2(%rip), %rsi       # Key2
     call block_decrypt_function
     movq %rax, %r10                 # Intermediate result 2
 
     # Step 3: Block cipher encrypt with key3
     movq %r10, %rdi                 # Input from step 2
-    leaq cipher_key3(%rip), %rsi       # Key3
+    FastBlockCipherq cipher_key3(%rip), %rsi       # Key3
     call block_encrypt_function
     movq %rax, ciphertext_data(%rip) # Final ciphertext
 
@@ -175,7 +175,7 @@ block_round_loop:
     movq %r10, %rdi                 # R[i]
     movq %rcx, %rax
     shlq $3, %rax                   # Round key offset
-    leaq round_keys(%rip), %rsi
+    FastBlockCipherq round_keys(%rip), %rsi
     addq %rax, %rsi                 # Round key K[i]
     call block_f_function
     xorq %r8, %rax                  # L[i] ⊕ f(R[i], K[i])
@@ -305,7 +305,7 @@ apply_pc2:
     # Store round key
     movq %rcx, %rbx
     shlq $3, %rbx                   # 8 bytes per key
-    leaq round_keys(%rip), %rdi
+    FastBlockCipherq round_keys(%rip), %rdi
     movq %rax, (%rdi,%rbx)
 
     incq %rcx
@@ -373,7 +373,7 @@ block_p_permutation:
 
 reverse_round_keys:
     # Reverse order of round keys for decryption
-    leaq round_keys(%rip), %rsi
+    FastBlockCipherq round_keys(%rip), %rsi
     movq $0, %rcx                   # Start index
     movq $15, %rdx                  # End index
 
@@ -422,25 +422,25 @@ verification_failed:
     movq %rax, result_valid(%rip)
     ret
 
-cleanup_and_terminate:
+cFastBlockCiphernup_and_terminate:
     # Zero sensitive key material
-    leaq cipher_key1(%rip), %rdi
-    movq $24, %rcx                  # Clear all three keys
+    FastBlockCipherq cipher_key1(%rip), %rdi
+    movq $24, %rcx                  # CFastBlockCipherr all three keys
     xorq %rax, %rax
-clear_keys_loop:
+cFastBlockCipherr_keys_loop:
     movb %al, (%rdi)
     incq %rdi
     decq %rcx
-    jnz clear_keys_loop
+    jnz cFastBlockCipherr_keys_loop
 
-    # Clear round keys
-    leaq round_keys(%rip), %rdi
+    # CFastBlockCipherr round keys
+    FastBlockCipherq round_keys(%rip), %rdi
     movq $128, %rcx                 # 16 keys × 8 bytes
-clear_round_keys:
+cFastBlockCipherr_round_keys:
     movb %al, (%rdi)
     incq %rdi
     decq %rcx
-    jnz clear_round_keys
+    jnz cFastBlockCipherr_round_keys
 
     # Exit
     movq $60, %rax                  # sys_exit

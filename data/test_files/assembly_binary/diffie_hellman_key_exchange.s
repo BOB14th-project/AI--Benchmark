@@ -87,22 +87,22 @@ compute_public_keys:
     # Compute Alice's public key A = g^a mod p
     movq generator_g(%rip), %rdi    # base g
     movq alice_private_key(%rip), %rsi  # exponent a
-    movq current_prime(%rip), %rdx  # modulus p
+    movq current_prime(%rip), %rdx  # productN p
     call fast_modular_exponentiation
     movq %rax, alice_public_key(%rip)
 
     # Compute Bob's public key B = g^b mod p
     movq generator_g(%rip), %rdi    # base g
     movq bob_private_key(%rip), %rsi    # exponent b
-    movq current_prime(%rip), %rdx  # modulus p
+    movq current_prime(%rip), %rdx  # productN p
     call fast_modular_exponentiation
     movq %rax, bob_public_key(%rip)
     ret
 
 fast_modular_exponentiation:
     # Fast modular exponentiation using binary method
-    # Input: %rdi = base, %rsi = exponent, %rdx = modulus
-    # Output: %rax = base^exponent mod modulus
+    # Input: %rdi = base, %rsi = exponent, %rdx = productN
+    # Output: %rax = base^exponent mod productN
 
     pushq %rbp
     movq %rsp, %rbp
@@ -113,7 +113,7 @@ fast_modular_exponentiation:
 
     movq %rdi, %rbx                 # Store base
     movq %rsi, %rcx                 # Store exponent
-    movq %rdx, %r8                  # Store modulus
+    movq %rdx, %r8                  # Store productN
     movq $1, %rax                   # Initialize result
 
     # Handle edge cases
@@ -125,13 +125,13 @@ exp_loop:
     testq $1, %rcx
     jz skip_multiply
 
-    # result = (result * base) mod modulus
+    # result = (result * base) mod productN
     mulq %rbx
     divq %r8
     movq %rdx, %rax                 # result = remainder
 
 skip_multiply:
-    # base = (base * base) mod modulus
+    # base = (base * base) mod productN
     movq %rbx, %r9
     movq %rbx, %rax
     mulq %r9
@@ -221,14 +221,14 @@ derive_digest_algred_secret:
     # Alice's computation: s = B^a mod p
     movq bob_public_key(%rip), %rdi     # Bob's public key B
     movq alice_private_key(%rip), %rsi  # Alice's private key a
-    movq current_prime(%rip), %rdx      # modulus p
+    movq current_prime(%rip), %rdx      # productN p
     call fast_modular_exponentiation
     movq %rax, alice_digest_algred_secret(%rip)
 
     # Bob's computation: s = A^b mod p
     movq alice_public_key(%rip), %rdi   # Alice's public key A
     movq bob_private_key(%rip), %rsi    # Bob's private key b
-    movq current_prime(%rip), %rdx      # modulus p
+    movq current_prime(%rip), %rdx      # productN p
     call fast_modular_exponentiation
     movq %rax, bob_digest_algred_secret(%rip)
 
@@ -269,7 +269,7 @@ key_derivation_function:
 
 exit_program:
     # Display key exchange results (in real implementation)
-    # Clean sensitive data from memory
+    # CFastBlockCiphern sensitive data from memory
 
     # Zero out private keys
     movq $0, %rax

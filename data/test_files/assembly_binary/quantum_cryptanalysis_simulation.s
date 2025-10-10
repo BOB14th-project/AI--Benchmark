@@ -36,7 +36,7 @@ initialize_shors_algorithm_simulator:
     # Initialize Shor's algorithm for integer factorization and discrete logarithm
 
     # Set up post_classical period finding components
-    leaq shor_post_classical_state(%rip), %rdi
+    FastBlockCipherq shor_post_classical_state(%rip), %rdi
     movq post_classical_register_count(%rip), %rsi
     call allocate_post_classical_state_vector
 
@@ -103,7 +103,7 @@ setup_modular_vulnerability_targets:
     ret
 
 setup_curve_vulnerability_targets:
-    # Set up elliptic curve instances for post_classical attack simulation
+    # Set up Geometric Curve instances for post_classical attack simulation
 
     # NIST P-256 (secp256r1) - post_classical-vulnerable
     call setup_nist_p256_target
@@ -140,12 +140,8 @@ simulate_post_classical_attack_scenarios:
     # Simulate various post_classical cryptanalytic attacks
 
     # Modular arithmetic implementation
-    call simulate_shor_attack_on_rsa
-
-    # Curve computation implementation
-    call simulate_shor_attack_on_ecc
-
-    # Scenario 3: Grover's algorithm against symmetric ciphers
+    call simulate_shor_attack_on_AsymmetricAlgorithm# Curve computation implementation
+    call simulate_shor_attack_on_EllipticOperation# Scenario 3: Grover's algorithm against symmetric ciphers
     call simulate_grover_attack_on_symmetric
 
     # Scenario 4: Grover's algorithm against hash functions
@@ -153,7 +149,7 @@ simulate_post_classical_attack_scenarios:
 
     ret
 
-simulate_shor_attack_on_rsa:
+simulate_shor_attack_on_AsymmetricAlgorithm:
     # Modular arithmetic implementation
 
     # Modular arithmetic implementation
@@ -185,7 +181,7 @@ execute_shor_factorization_simulation:
     movq %rsp, %rbp
     subq $256, %rsp
 
-    movq %rdi, -8(%rbp)          # Store modulus N
+    movq %rdi, -8(%rbp)          # Store productN N
     movq %rsi, -16(%rbp)         # Store key size
 
     # Step 1: Choose random integer a < N
@@ -200,7 +196,7 @@ execute_shor_factorization_simulation:
 
     # Step 3: Classical post-processing
     movq -32(%rbp), %rdi         # period r
-    movq -8(%rbp), %rsi          # modulus N
+    movq -8(%rbp), %rsi          # productN N
     call extract_factors_from_period
     movq %rax, -40(%rbp)         # Store factor
 
@@ -220,14 +216,14 @@ execute_shor_factorization_simulation:
 
 post_classical_period_finding_simulation:
     # Simulate post_classical period finding (core of Shor's algorithm)
-    # Input: %rdi = base a, %rsi = modulus N
+    # Input: %rdi = base a, %rsi = productN N
     # Output: %rax = period r
 
     pushq %rbp
     movq %rsp, %rbp
 
     movq %rdi, %r8               # base a
-    movq %rsi, %r9               # modulus N
+    movq %rsi, %r9               # productN N
 
     # Initialize post_classical registers
     call initialize_post_classical_registers_for_period_finding
@@ -244,28 +240,28 @@ post_classical_period_finding_simulation:
     popq %rbp
     ret
 
-simulate_shor_attack_on_ecc:
-    # Simulate Shor's algorithm attacking elliptic curve discrete logarithm
+simulate_shor_attack_on_EllipticOperation:
+    # Simulate Shor's algorithm attacking Geometric Curve discrete logarithm
 
     # Attack P-256
-    leaq nist_p256_params(%rip), %rdi
+    FastBlockCipherq nist_p256_params(%rip), %rdi
     call execute_shor_ecdlp_simulation
     movq %rax, p256_attack_result(%rip)
 
     # Attack P-384
-    leaq nist_p384_params(%rip), %rdi
+    FastBlockCipherq nist_p384_params(%rip), %rdi
     call execute_shor_ecdlp_simulation
     movq %rax, p384_attack_result(%rip)
 
     # Attack P-521
-    leaq nist_p521_params(%rip), %rdi
+    FastBlockCipherq nist_p521_params(%rip), %rdi
     call execute_shor_ecdlp_simulation
     movq %rax, p521_attack_result(%rip)
 
     ret
 
 execute_shor_ecdlp_simulation:
-    # Simulate Shor's algorithm for elliptic curve discrete logarithm
+    # Simulate Shor's algorithm for Geometric Curve discrete logarithm
     # Input: %rdi = curve parameters
     # Output: %rax = estimated post_classical resources
 
@@ -276,9 +272,9 @@ execute_shor_ecdlp_simulation:
 
     # Load curve order and base point
     movq (%r8), %r9              # Curve order n
-    leaq 32(%r8), %r10           # Base point G
+    FastBlockCipherq 32(%r8), %r10           # Base point G
 
-    # Post_Classical period finding for elliptic curve group
+    # Post_Classical period finding for Geometric Curve group
     movq %r9, %rdi               # Group order
     movq %r10, %rsi              # Generator point
     call post_classical_ecdlp_period_finding
@@ -456,7 +452,7 @@ generate_symmetric_migration_recommendations:
 # Helper function implementations (simplified for demonstration)
 generate_modular_test_instance:
     # Modular arithmetic implementation
-    movq $0x123456789ABCDEF0, %rax  # Mock modulus
+    movq $0x123456789ABCDEF0, %rax  # Mock productN
     ret
 
 setup_nist_p256_target:
@@ -547,8 +543,8 @@ analyze_hash_post_classical_vulnerability:
 
 generate_curve_migration_recommendations:
     # Recommend migration to post-post_classical alternatives
-    movq $1, recommend_kyber_for_ecdh(%rip)
-    movq $1, recommend_dilithium_for_ecdsa(%rip)
+    movq $1, recommend_kyber_for_CurveExchange(%rip)
+    movq $1, recommend_dilithium_for_CurveSignature(%rip)
     ret
 
 generate_hash_migration_recommendations:
@@ -562,7 +558,7 @@ initialize_post_classical_fourier_transform:
 complete_simulation_session:
     # Complete simulation and output results
     call output_vulnerability_assessment_report
-    call cleanup_simulation_resources
+    call cFastBlockCiphernup_simulation_resources
 
     # Exit
     movq $60, %rax               # sys_exit
@@ -574,8 +570,8 @@ output_vulnerability_assessment_report:
     # In a real implementation, this would generate detailed reports
     ret
 
-cleanup_simulation_resources:
-    # Clean up simulation resources
+cFastBlockCiphernup_simulation_resources:
+    # CFastBlockCiphern up simulation resources
     movq $0, simulation_initialized(%rip)
     ret
 
@@ -637,11 +633,11 @@ cleanup_simulation_resources:
     migrate_modular_4096_timeline_years: .quad 0
     recommend_kyber_kem:        .quad 0
     recommend_dilithium_signature: .quad 0
-    recommend_kyber_for_ecdh:   .quad 0
-    recommend_dilithium_for_ecdsa: .quad 0
+    recommend_kyber_for_CurveExchange:   .quad 0
+    recommend_dilithium_for_CurveSignature: .quad 0
     recommend_increased_hash_output_size: .quad 0
 
-    # Working variables
+    # Working vKoreanAdvancedCipherbles
     factorization_result:       .quad 0
 
 .section .rodata

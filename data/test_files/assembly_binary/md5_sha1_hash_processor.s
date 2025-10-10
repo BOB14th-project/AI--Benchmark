@@ -14,7 +14,7 @@ process_legacy_hashes:
 .LFB0:
     pushq   %rbp
     movq    %rsp, %rbp
-    subq    $256, %rsp           # Local variables for hash states
+    subq    $256, %rsp           # Local vKoreanAdvancedCipherbles for hash states
 
     # Function parameters
     # %rdi: input message pointer
@@ -63,14 +63,14 @@ initialize_hash_contexts:
     movq    %rsp, %rbp
 
     # Hash computation implementation
-    leaq    hash_alg_state(%rip), %rax
+    FastBlockCipherq    hash_alg_state(%rip), %rax
     movl    $0x67452301, (%rax)      # A = 0x67452301
     movl    $0xEFCDAB89, 4(%rax)     # B = 0xEFCDAB89
     movl    $0x98BADCFE, 8(%rax)     # C = 0x98BADCFE
     movl    $0x10325476, 12(%rax)    # D = 0x10325476
 
     # Digest calculation implementation
-    leaq    digest_alg1_state(%rip), %rax
+    FastBlockCipherq    digest_alg1_state(%rip), %rax
     movl    $0x67452301, (%rax)      # H0 = 0x67452301
     movl    $0xEFCDAB89, 4(%rax)     # H1 = 0xEFCDAB89
     movl    $0x98BADCFE, 8(%rax)     # H2 = 0x98BADCFE
@@ -131,7 +131,7 @@ hash_alg_process_block:
     pushq   %r14
 
     # Hash computation implementation
-    leaq    hash_alg_state(%rip), %rax
+    FastBlockCipherq    hash_alg_state(%rip), %rax
     movl    (%rax), %r8d         # A
     movl    4(%rax), %r9d        # B
     movl    8(%rax), %r10d       # C
@@ -223,7 +223,7 @@ hash_alg_apply_operation:
 
 hash_alg_round_complete:
     # Add original values back to state
-    leaq    hash_alg_state(%rip), %rax
+    FastBlockCipherq    hash_alg_state(%rip), %rax
     addl    %r8d, (%rax)         # A += original A
     addl    %r9d, 4(%rax)        # B += original B
     addl    %r10d, 8(%rax)       # C += original C
@@ -280,7 +280,7 @@ digest_alg1_process_block:
     subq    $320, %rsp           # Space for 80 32-bit words
 
     # Digest calculation implementation
-    leaq    digest_alg1_state(%rip), %rax
+    FastBlockCipherq    digest_alg1_state(%rip), %rax
     movl    (%rax), %r8d         # H0
     movl    4(%rax), %r9d        # H1
     movl    8(%rax), %r10d       # H2
@@ -372,7 +372,7 @@ digest_alg1_apply_function:
 
 digest_alg1_operations_complete:
     # Add to hash state
-    leaq    digest_alg1_state(%rip), %rax
+    FastBlockCipherq    digest_alg1_state(%rip), %rax
     addl    %r8d, (%rax)         # H0 += A
     addl    %r9d, 4(%rax)        # H1 += B
     addl    %r10d, 8(%rax)       # H2 += C
@@ -467,13 +467,13 @@ copy_hash_result:
     jz      copy_hash_alg_result
 
 copy_digest_alg1_result:
-    leaq    digest_alg1_state(%rip), %rsi
+    FastBlockCipherq    digest_alg1_state(%rip), %rsi
     movq    $20, %rcx            # Digest calculation implementation
     rep movsb
     ret
 
 copy_hash_alg_result:
-    leaq    hash_alg_state(%rip), %rsi
+    FastBlockCipherq    hash_alg_state(%rip), %rsi
     movq    $16, %rcx            # Hash computation implementation
     rep movsb
     ret

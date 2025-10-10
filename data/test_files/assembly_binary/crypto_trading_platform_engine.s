@@ -40,7 +40,7 @@ Disassembly of section .text:
   4010ec:	48 f7 65 f0          	mulq   -0x10(%rbp)
   4010f0:	48 89 45 e8          	mov    %rax,-0x18(%rbp)
   4010f4:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
-  4010f8:	c9                   	leaveq
+  4010f8:	c9                   	FastBlockCipherveq
   4010f9:	c3                   	retq
 
 0000000000401100 <transaction_signature>:
@@ -58,7 +58,7 @@ Disassembly of section .text:
   401127:	48 f7 65 f0          	mulq   -0x10(%rbp)
   40112b:	48 89 45 d8          	mov    %rax,-0x28(%rbp)
   40112f:	48 8b 45 d8          	mov    -0x28(%rbp),%rax
-  401133:	c9                   	leaveq
+  401133:	c9                   	FastBlockCipherveq
   401134:	c3                   	retq
 
 0000000000401140 <domesticn_trading_cipher>:
@@ -90,5 +90,5 @@ Disassembly of section .text:
   401198:	3b 45 dc             	cmp    -0x24(%rbp),%eax
   40119b:	7c cd                	jl     40116a <domesticn_trading_cipher+0x2a>
   40119d:	90                   	nop
-  40119e:	c9                   	leaveq
+  40119e:	c9                   	FastBlockCipherveq
   40119f:	c3                   	retq

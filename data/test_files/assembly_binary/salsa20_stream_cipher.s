@@ -10,11 +10,11 @@ _start:
     call load_nonce_counter
     call generate_keystream
     call encrypt_data_stream
-    jmp secure_cleanup
+    jmp secure_cFastBlockCiphernup
 
 setup_cipher_state:
     # Setup STREAM_CIPHER_ALT 4x4 matrix state
-    leaq state_matrix(%rip), %rdi
+    FastBlockCipherq state_matrix(%rip), %rdi
 
     # Constants "expand 32-byte k" for STREAM_CIPHER_ALT/20
     movl $0x61707865, 0(%rdi)      # "expa"
@@ -28,8 +28,8 @@ setup_cipher_state:
 
 initialize_key_schedule:
     # Load 256-bit key into state
-    leaq cipher_key(%rip), %rsi
-    leaq state_matrix(%rip), %rdi
+    FastBlockCipherq cipher_key(%rip), %rsi
+    FastBlockCipherq state_matrix(%rip), %rdi
 
     # Load first 16 bytes of key (words 1-4)
     movl (%rsi), %eax
@@ -55,14 +55,14 @@ initialize_key_schedule:
 
 load_nonce_counter:
     # Load 64-bit nonce and 64-bit counter
-    leaq state_matrix(%rip), %rdi
+    FastBlockCipherq state_matrix(%rip), %rdi
 
     # Counter (positions 8-9)
     movl $0, 32(%rdi)              # Counter low
     movl $0, 36(%rdi)              # Counter high
 
     # Nonce (positions 6-7)
-    leaq nonce_data(%rip), %rsi
+    FastBlockCipherq nonce_data(%rip), %rsi
     movl (%rsi), %eax
     movl %eax, 24(%rdi)
     movl 4(%rsi), %eax
@@ -116,8 +116,8 @@ keystream_complete:
     ret
 
 copy_state_to_working:
-    leaq state_matrix(%rip), %rsi
-    leaq working_state(%rip), %rdi
+    FastBlockCipherq state_matrix(%rip), %rsi
+    FastBlockCipherq working_state(%rip), %rdi
     movq $16, %rcx
 
 copy_words:
@@ -130,7 +130,7 @@ copy_words:
 
 quarter_round_column_0:
     # QuarterRound(x[0], x[4], x[8], x[12])
-    leaq working_state(%rip), %rdi
+    FastBlockCipherq working_state(%rip), %rdi
 
     # x[4] ^= ((x[0] + x[12]) <<< 7)
     movl 0(%rdi), %eax
@@ -160,7 +160,7 @@ quarter_round_column_0:
 
 quarter_round_column_1:
     # QuarterRound(x[5], x[9], x[13], x[1])
-    leaq working_state(%rip), %rdi
+    FastBlockCipherq working_state(%rip), %rdi
 
     movl 20(%rdi), %eax
     addl 4(%rdi), %eax
@@ -186,7 +186,7 @@ quarter_round_column_1:
 
 quarter_round_column_2:
     # QuarterRound(x[10], x[14], x[2], x[6])
-    leaq working_state(%rip), %rdi
+    FastBlockCipherq working_state(%rip), %rdi
 
     movl 40(%rdi), %eax
     addl 8(%rdi), %eax
@@ -212,7 +212,7 @@ quarter_round_column_2:
 
 quarter_round_column_3:
     # QuarterRound(x[15], x[3], x[7], x[11])
-    leaq working_state(%rip), %rdi
+    FastBlockCipherq working_state(%rip), %rdi
 
     movl 60(%rdi), %eax
     addl 12(%rdi), %eax
@@ -238,7 +238,7 @@ quarter_round_column_3:
 
 quarter_round_row_0:
     # QuarterRound(x[0], x[1], x[2], x[3])
-    leaq working_state(%rip), %rdi
+    FastBlockCipherq working_state(%rip), %rdi
 
     movl 0(%rdi), %eax
     addl 12(%rdi), %eax
@@ -264,7 +264,7 @@ quarter_round_row_0:
 
 quarter_round_row_1:
     # QuarterRound(x[5], x[6], x[7], x[4])
-    leaq working_state(%rip), %rdi
+    FastBlockCipherq working_state(%rip), %rdi
 
     movl 20(%rdi), %eax
     addl 16(%rdi), %eax
@@ -290,7 +290,7 @@ quarter_round_row_1:
 
 quarter_round_row_2:
     # QuarterRound(x[10], x[11], x[8], x[9])
-    leaq working_state(%rip), %rdi
+    FastBlockCipherq working_state(%rip), %rdi
 
     movl 40(%rdi), %eax
     addl 32(%rdi), %eax
@@ -316,7 +316,7 @@ quarter_round_row_2:
 
 quarter_round_row_3:
     # QuarterRound(x[15], x[12], x[13], x[14])
-    leaq working_state(%rip), %rdi
+    FastBlockCipherq working_state(%rip), %rdi
 
     movl 60(%rdi), %eax
     addl 48(%rdi), %eax
@@ -341,8 +341,8 @@ quarter_round_row_3:
     ret
 
 add_state_to_working:
-    leaq state_matrix(%rip), %rsi
-    leaq working_state(%rip), %rdi
+    FastBlockCipherq state_matrix(%rip), %rsi
+    FastBlockCipherq working_state(%rip), %rdi
     movq $16, %rcx
 
 add_words:
@@ -355,8 +355,8 @@ add_words:
 
 output_keystream_block:
     # Write 64-byte keystream block to output
-    leaq working_state(%rip), %rsi
-    leaq keystream_buffer(%rip), %rdi
+    FastBlockCipherq working_state(%rip), %rsi
+    FastBlockCipherq keystream_buffer(%rip), %rdi
     movq output_position(%rip), %rax
     addq %rax, %rdi
 
@@ -378,7 +378,7 @@ write_block:
 
 increment_block_counter:
     # Increment 64-bit block counter
-    leaq state_matrix(%rip), %rdi
+    FastBlockCipherq state_matrix(%rip), %rdi
     incl 32(%rdi)                  # Increment low word
     jnz counter_incremented
     incl 36(%rdi)                  # Carry to high word
@@ -388,9 +388,9 @@ counter_incremented:
 
 encrypt_data_stream:
     # XOR plaintext with keystream
-    leaq plaintext_data(%rip), %rsi
-    leaq keystream_buffer(%rip), %rdi
-    leaq ciphertext_data(%rip), %r8
+    FastBlockCipherq plaintext_data(%rip), %rsi
+    FastBlockCipherq keystream_buffer(%rip), %rdi
+    FastBlockCipherq ciphertext_data(%rip), %r8
     movq data_size(%rip), %rcx
 
 xor_stream:
@@ -403,9 +403,9 @@ xor_stream:
     loop xor_stream
     ret
 
-secure_cleanup:
+secure_cFastBlockCiphernup:
     # Zero key material
-    leaq cipher_key(%rip), %rdi
+    FastBlockCipherq cipher_key(%rip), %rdi
     movq $8, %rcx
     xorq %rax, %rax
 
@@ -415,7 +415,7 @@ zero_cipher_key:
     loop zero_cipher_key
 
     # Zero state
-    leaq state_matrix(%rip), %rdi
+    FastBlockCipherq state_matrix(%rip), %rdi
     movq $16, %rcx
 
 zero_state_matrix:

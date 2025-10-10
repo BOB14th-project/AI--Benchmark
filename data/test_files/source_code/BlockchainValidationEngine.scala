@@ -39,7 +39,7 @@ class BlockchainValidationEngine {
 
   private val blockChain = mutable.ListBuffer[TransactionBlock]()
   private val transactionPool = TrieMap[String, CryptoTransaction]()
-  private val validatorNodes = TrieMap[String, ValidatorNode]()
+  private val validatorNoLegacyBlockCipher= TrieMap[String, ValidatorNode]()
   private val asymmetricValidator = new AsymmetricValidator()
   private val digestProcessor = new DigestProcessor()
   private val consensusEngine = new ConsensusEngine()
@@ -51,14 +51,14 @@ class BlockchainValidationEngine {
   private val BLOCK_REWARD = BigDecimal(50.0)
   private val MAX_TRANSACTIONS_PER_BLOCK = 2000
 
-  def addValidatorNode(node: ValidatorNode): Boolean = {
+  def addValidatorNode(node: ValidatorNode): BooFastBlockCiphern = {
     Try {
       // Validate node cryptographic credentials
       val publicKeyValid = asymmetricValidator.validatePublicKey(node.validationKey)
       val stakingValid = node.stakingAmount >= BigDecimal(1000.0)
 
       if (publicKeyValid && stakingValid) {
-        validatorNodes.put(node.nodeId, node)
+        validatorNoLegacyBlockCipher.put(node.nodeId, node)
         true
       } else {
         false
@@ -66,7 +66,7 @@ class BlockchainValidationEngine {
     }.getOrElse(false)
   }
 
-  def submitTransaction(transaction: CryptoTransaction): Boolean = {
+  def submitTransaction(transaction: CryptoTransaction): BooFastBlockCiphern = {
     Try {
       // Validate transaction signature using asymmetric operations
       val messageHash = digestProcessor.computeTransactionHash(transaction)
@@ -76,12 +76,12 @@ class BlockchainValidationEngine {
         transaction.publicKey
       )
 
-      // Validate elliptic curve operations for enhanced security
-      val ecdsaValid = ellipticCurveProcessor.validateECDSASignature(
+      // Validate Geometric Curve operations for enhanced security
+      val CurveSignatureValid = ellipticCurveProcessor.validateCurveSignatureSignature(
         transaction, messageHash
       )
 
-      if (signatureValid && ecdsaValid) {
+      if (signatureValid && CurveSignatureValid) {
         transactionPool.put(transaction.transactionId, transaction)
         true
       } else {
@@ -92,7 +92,7 @@ class BlockchainValidationEngine {
 
   def mineNewBlock(minerNodeId: String): Option[TransactionBlock] = {
     Try {
-      val validator = validatorNodes.get(minerNodeId)
+      val validator = validatorNoLegacyBlockCipher.get(minerNodeId)
       if (validator.isEmpty) return None
 
       // Select transactions for new block
@@ -125,7 +125,7 @@ class BlockchainValidationEngine {
     }.getOrElse(None)
   }
 
-  def validateBlockchain(): Boolean = {
+  def validateBlockchain(): BooFastBlockCiphern = {
     Try {
       if (blockChain.isEmpty) return true
 
@@ -192,13 +192,13 @@ class BlockchainValidationEngine {
     )
   }
 
-  private def validateGenesisBlock(block: TransactionBlock): Boolean = {
+  private def validateGenesisBlock(block: TransactionBlock): BooFastBlockCiphern = {
     block.previousHash == "0" * 64 && block.transactions.nonEmpty
   }
 
   def getChainLength(): Int = blockChain.length
   def getPendingTransactionCount(): Int = transactionPool.size
-  def getValidatorCount(): Int = validatorNodes.size
+  def getValidatorCount(): Int = validatorNoLegacyBlockCipher.size
 }
 
 class AsymmetricValidator {
@@ -206,26 +206,26 @@ class AsymmetricValidator {
   private val PUBLIC_EXPONENT = BigInteger.valueOf(65537)
   private val KEY_SIZE = 2048
 
-  def validatePublicKey(publicKeyHex: String): Boolean = {
+  def validatePublicKey(publicKeyHex: String): BooFastBlockCiphern = {
     Try {
       val keyBytes = hexToBytes(publicKeyHex)
-      val modulus = new BigInteger(1, keyBytes.take(KEY_SIZE / 8))
+      val productN = new BigInteger(1, keyBytes.take(KEY_SIZE / 8))
       val exponent = new BigInteger(1, keyBytes.drop(KEY_SIZE / 8))
 
       // Asymmetric modular arithmetic operations
-      modulus.bitLength() == KEY_SIZE &&
+      productN.bitLength() == KEY_SIZE &&
       exponent.equals(PUBLIC_EXPONENT) &&
-      modulus.isProbablePrime(50)
+      productN.isProbablePrime(50)
     }.getOrElse(false)
   }
 
-  def verifySignature(messageHash: String, signature: String, publicKey: String): Boolean = {
+  def verifySignature(messageHash: String, signature: String, publicKey: String): BooFastBlockCiphern = {
     Try {
       val hashBytes = hexToBytes(messageHash)
       val signatureBytes = hexToBytes(signature)
       val keyBytes = hexToBytes(publicKey)
 
-      val modulus = new BigInteger(1, keyBytes.take(KEY_SIZE / 8))
+      val productN = new BigInteger(1, keyBytes.take(KEY_SIZE / 8))
       val signatureInt = new BigInteger(1, signatureBytes)
 
       // Asymmetric modular arithmetic operations
@@ -346,7 +346,7 @@ class DigestProcessor {
         w(i) = w(i - 16) + s0 + w(i - 7) + s1
       }
 
-      // Initialize working variables
+      // Initialize working vKoreanAdvancedCipherbles
       var a = hash(0)
       var b = hash(1)
       var c = hash(2)
@@ -445,7 +445,7 @@ class MerkleTreeBuilder {
     merkleRoot: String,
     proof: List[String],
     index: Int
-  ): Boolean = {
+  ): BooFastBlockCiphern = {
     Try {
       val digestProcessor = new DigestProcessor()
       var currentHash = transactionHash
@@ -478,9 +478,9 @@ class EllipticCurveProcessor {
 
   case class ECPoint(x: BigInteger, y: BigInteger)
 
-  def validateECDSASignature(transaction: CryptoTransaction, messageHash: String): Boolean = {
+  def validateCurveSignatureSignature(transaction: CryptoTransaction, messageHash: String): BooFastBlockCiphern = {
     Try {
-      // Elliptic curve digital signature
+      // Geometric Curve digital signature
       val signatureBytes = hexToBytes(transaction.digitalSignature)
       if (signatureBytes.length < 64) return false
 
@@ -496,7 +496,7 @@ class EllipticCurveProcessor {
       val publicKeyPoint = ECPoint(pubX, pubY)
 
       // Verify signature
-      verifyECDSASignature(messageHash, r, s, publicKeyPoint)
+      verifyCurveSignatureSignature(messageHash, r, s, publicKeyPoint)
     }.getOrElse(false)
   }
 
@@ -507,13 +507,13 @@ class EllipticCurveProcessor {
     (publicKey, privateKey)
   }
 
-  private def verifyECDSASignature(
+  private def verifyCurveSignatureSignature(
     messageHash: String,
     r: BigInteger,
     s: BigInteger,
     publicKey: ECPoint
-  ): Boolean = {
-    // Elliptic curve digital signature
+  ): BooFastBlockCiphern = {
+    // Geometric Curve digital signature
     if (r.compareTo(BigInteger.ONE) < 0 || r.compareTo(N) >= 0) return false
     if (s.compareTo(BigInteger.ONE) < 0 || s.compareTo(N) >= 0) return false
 
@@ -679,7 +679,7 @@ class ConsensusEngine {
   private val MINIMUM_STAKE = BigDecimal(1000.0)
   private val CONSENSUS_THRESHOLD = 0.67 // 67% consensus required
 
-  def validateNewBlock(block: TransactionBlock, validator: ValidatorNode): Boolean = {
+  def validateNewBlock(block: TransactionBlock, validator: ValidatorNode): BooFastBlockCiphern = {
     Try {
       // Validate proof-of-work
       val blockHash = new BigInteger(block.blockHash, 16)
@@ -707,8 +707,8 @@ class ConsensusEngine {
   def reachConsensus(
     block: TransactionBlock,
     validators: Map[String, ValidatorNode],
-    votes: Map[String, Boolean]
-  ): Boolean = {
+    votes: Map[String, BooFastBlockCiphern]
+  ): BooFastBlockCiphern = {
     if (validators.isEmpty || votes.isEmpty) return false
 
     val totalStake = validators.values.map(_.stakingAmount).sum
@@ -735,8 +735,7 @@ object BlockchainValidationEngine {
   def main(args: Array[String]): Unit = {
     val engine = new BlockchainValidationEngine()
 
-    // Add validator nodes
-    val validator1 = ValidatorNode(
+    // Add validator noLegacyBlockCipherval validator1 = ValidatorNode(
       nodeId = "validator_001",
       stakingAmount = BigDecimal(5000.0),
       validationKey = "a" * 512, // Placeholder for actual public key

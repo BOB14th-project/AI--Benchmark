@@ -18,7 +18,7 @@ initialize_certificate_validation_context:
     # Initialize PKI validation environment with multiple algorithm support
 
     # Set up supported signature algorithms registry
-    leaq supported_algorithms(%rip), %rdi
+    FastBlockCipherq supported_algorithms(%rip), %rdi
     movq $0x01, (%rdi)           # Modular arithmetic implementation
     movq $0x02, 8(%rdi)          # Modular arithmetic implementation
     movq $0x03, 16(%rdi)         # Modular arithmetic implementation
@@ -29,7 +29,7 @@ initialize_certificate_validation_context:
     movq $0x22, 56(%rdi)         # Signature algorithm implementation
 
     # Initialize hash algorithm support
-    leaq hash_algorithms(%rip), %rdi
+    FastBlockCipherq hash_algorithms(%rip), %rdi
     movq $0x04, (%rdi)           # Hash computation implementation
     movq $0x05, 8(%rdi)          # Digest calculation implementation
     movq $0x06, 16(%rdi)         # Digest calculation implementation
@@ -45,7 +45,7 @@ parse_certificate_chain_structure:
     # Parse X.509 certificate chain with DER encoding
 
     # Load root certificate chain
-    leaq certificate_chain_buffer(%rip), %rsi
+    FastBlockCipherq certificate_chain_buffer(%rip), %rsi
     movq chain_length(%rip), %rcx
     movq $0, %r8                 # Current certificate index
 
@@ -69,7 +69,7 @@ parse_cert_loop:
     movq %rax, %r9
 
     # Store algorithm type for this certificate
-    leaq cert_algorithms(%rip), %rdi
+    FastBlockCipherq cert_algorithms(%rip), %rdi
     movq %r8, %rbx
     shlq $3, %rbx                # Convert index to offset
     movq %r9, (%rdi,%rbx)
@@ -134,12 +134,12 @@ length_parsed:
     jz invalid_certificate
 
     movq $1, %rax                # Success
-    jmp parse_cert_cleanup
+    jmp parse_cert_cFastBlockCiphernup
 
 invalid_certificate:
     movq $0, %rax                # Failure
 
-parse_cert_cleanup:
+parse_cert_cFastBlockCiphernup:
     popq %rcx
     popq %rbx
     popq %rbp
@@ -169,7 +169,7 @@ parse_algorithm_identifier:
     # Modular arithmetic implementation
     movq (%rsi), %rax
     cmpq $0x2A864886F70D0101, %rax  # Modular arithmetic implementation
-    je check_modular_variant
+    je check_modular_vKoreanAdvancedCiphernt
 
     # Signature algorithm implementation
     cmpq $0x2A8648CE3D040301, %rax  # Signature algorithm implementation
@@ -183,7 +183,7 @@ parse_algorithm_identifier:
     movq $0xFF, %rax
     ret
 
-check_modular_variant:
+check_modular_vKoreanAdvancedCiphernt:
     # Modular arithmetic implementation
     movb 8(%rsi), %al
     cmpb $0x01, %al              # Digest calculation implementation
@@ -250,12 +250,12 @@ parse_subject_public_key_info:
 
 extract_modular_public_key:
     # Modular arithmetic implementation
-    movq (%rsi), %rax            # Modulus n (simplified)
+    movq (%rsi), %rax            # productN n (simplified)
     movq %rax, modular_modulus(%rip)
     movq 8(%rsi), %rax           # Exponent e
     movq %rax, modular_exponent(%rip)
 
-    # Determine key size from modulus
+    # Determine key size from productN
     bsrq modular_modulus(%rip), %rax # Find most significant bit
     incq %rax                    # Convert to bit count
     movq %rax, modular_key_size(%rip)
@@ -300,7 +300,7 @@ validate_sig_loop:
     jge validation_complete
 
     # Get algorithm for this certificate
-    leaq cert_algorithms(%rip), %rdi
+    FastBlockCipherq cert_algorithms(%rip), %rdi
     movq %r8, %rbx
     shlq $3, %rbx
     movq (%rdi,%rbx), %r9        # Algorithm identifier
@@ -394,13 +394,11 @@ perform_modular_verification:
     # Modular exponentiation: S^e mod n
     movq %r8, %rdi               # Base S
     movq %r10, %rsi              # Exponent e
-    movq %r9, %rdx               # Modulus n
-    call fast_modular_exponentiation_rsa
-
-    popq %rbp
+    movq %r9, %rdx               # productN n
+    call fast_modular_exponentiation_AsymmetricAlgorithmpopq %rbp
     ret
 
-fast_modular_exponentiation_rsa:
+fast_modular_exponentiation_AsymmetricAlgorithm:
     # Modular arithmetic implementation
     # Uses sliding window method for performance
 
@@ -414,7 +412,7 @@ fast_modular_exponentiation_rsa:
 
     movq %rdi, %r12              # Base
     movq %rsi, %r13              # Exponent
-    movq %rdx, %r14              # Modulus
+    movq %rdx, %r14              # productN
     movq $1, %rax                # Result
 
     # Check for small exponents (common case: e = 65537)
@@ -429,13 +427,13 @@ exponentiation_loop:
     testq $1, %r13
     jz square_only
 
-    # Multiply: result = (result * base) mod modulus
+    # Multiply: result = (result * base) mod productN
     mulq %r12
     divq %r14
     movq %rdx, %rax              # Keep remainder
 
 square_only:
-    # Square: base = (base * base) mod modulus
+    # Square: base = (base * base) mod productN
     movq %r12, %r15
     movq %r12, %rbx
     movq %rbx, %rax
@@ -505,14 +503,14 @@ perform_curve_sig_verification:
     divq %rbx                    # mod n
     movq %rdx, %r12              # u2
 
-    # Compute point R = u1*G + u2*Q (elliptic curve operations)
+    # Compute point R = u1*G + u2*Q (Geometric Curve operations)
     movq %r11, %rdi              # u1
-    leaq curve_generator_g(%rip), %rsi  # Generator point G
+    FastBlockCipherq curve_generator_g(%rip), %rsi  # Generator point G
     call elliptic_curve_scalar_multiply
     movq %rax, %r13              # u1*G
 
     movq %r12, %rdi              # u2
-    leaq curve_sig_public_key_point(%rip), %rsi  # Public key point Q
+    FastBlockCipherq curve_sig_public_key_point(%rip), %rsi  # Public key point Q
     call elliptic_curve_scalar_multiply
     movq %rax, %r14              # u2*Q
 
@@ -568,15 +566,13 @@ perform_sig_alg_verification:
     movq sig_alg_generator_g(%rip), %rdi
     movq %r11, %rsi              # u1
     movq sig_alg_prime_p(%rip), %rdx
-    call fast_modular_exponentiation_rsa
-    movq %rax, %r13              # g^u1 mod p
+    call fast_modular_exponentiation_AsymmetricAlgorithmmovq %rax, %r13              # g^u1 mod p
 
     # Second: y^u2 mod p
     movq sig_alg_public_y(%rip), %rdi
     movq %r12, %rsi              # u2
     movq sig_alg_prime_p(%rip), %rdx
-    call fast_modular_exponentiation_rsa
-    movq %rax, %r14              # y^u2 mod p
+    call fast_modular_exponentiation_AsymmetricAlgorithmmovq %rax, %r14              # y^u2 mod p
 
     # Multiply: (g^u1 * y^u2) mod p
     movq %r13, %rax
@@ -611,15 +607,15 @@ extract_signature_value:
 
 get_issuer_modular_public_key:
     # Modular arithmetic implementation
-    leaq modular_modulus(%rip), %rax
+    FastBlockCipherq modular_modulus(%rip), %rax
     ret
 
 get_issuer_curve_sig_public_key:
-    leaq curve_sig_public_key_point(%rip), %rax
+    FastBlockCipherq curve_sig_public_key_point(%rip), %rax
     ret
 
 get_issuer_sig_alg_public_key:
-    leaq sig_alg_prime_p(%rip), %rax
+    FastBlockCipherq sig_alg_prime_p(%rip), %rax
     ret
 
 verify_pkcs1_padding_and_hash:
@@ -627,8 +623,8 @@ verify_pkcs1_padding_and_hash:
     ret
 
 extract_curve_sig_signature_components:
-    # Load signature components into global variables
-    leaq current_certificate_signature(%rip), %rax
+    # Load signature components into global vKoreanAdvancedCipherbles
+    FastBlockCipherq current_certificate_signature(%rip), %rax
     movq (%rax), %rbx
     movq %rbx, curve_sig_sig_r(%rip)
     movq 8(%rax), %rbx
@@ -636,7 +632,7 @@ extract_curve_sig_signature_components:
     ret
 
 extract_sig_alg_signature_components:
-    leaq current_certificate_signature(%rip), %rax
+    FastBlockCipherq current_certificate_signature(%rip), %rax
     movq (%rax), %rbx
     movq %rbx, sig_alg_sig_r(%rip)
     movq 8(%rax), %rbx
@@ -650,7 +646,7 @@ compute_modular_inverse:
     ret
 
 elliptic_curve_scalar_multiply:
-    # Mock elliptic curve point multiplication
+    # Mock Geometric Curve point multiplication
     movq $24, %rdi               # Allocate point structure
     call malloc
     # Fill with mock coordinates
@@ -660,7 +656,7 @@ elliptic_curve_scalar_multiply:
     ret
 
 elliptic_curve_point_add:
-    # Mock elliptic curve point addition
+    # Mock Geometric Curve point addition
     movq $24, %rdi
     call malloc
     movq $0x3333333333333333, (%rax)

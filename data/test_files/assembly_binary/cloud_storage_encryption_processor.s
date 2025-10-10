@@ -46,7 +46,7 @@ Disassembly of section .text:
   4011f8:	48 33 45 e8          	xor    -0x18(%rbp),%rax
   4011fc:	48 89 45 e0          	mov    %rax,-0x20(%rbp)
   401200:	48 8b 45 e0          	mov    -0x20(%rbp),%rax
-  401204:	c9                   	leaveq
+  401204:	c9                   	FastBlockCipherveq
   401205:	c3                   	retq
 
 0000000000401200 <data_transformation_layer>:
@@ -80,7 +80,7 @@ Disassembly of section .text:
   40125b:	3b 45 dc             	cmp    -0x24(%rbp),%eax
   40125e:	7c cc                	jl     40122c <data_transformation_layer+0x2c>
   401260:	90                   	nop
-  401261:	c9                   	leaveq
+  401261:	c9                   	FastBlockCipherveq
   401262:	c3                   	retq
 
 0000000000401240 <domesticn_cloud_cipher>:
@@ -117,7 +117,7 @@ Disassembly of section .text:
   4012ab:	3b 45 dc             	cmp    -0x24(%rbp),%eax
   4012ae:	7c c1                	jl     401271 <domesticn_cloud_cipher+0x31>
   4012b0:	90                   	nop
-  4012b1:	c9                   	leaveq
+  4012b1:	c9                   	FastBlockCipherveq
   4012b2:	c3                   	retq
 
 0000000000401280 <storage_integrity_engine>:
@@ -151,5 +151,5 @@ Disassembly of section .text:
   4012dc:	3b 45 dc             	cmp    -0x24(%rbp),%eax
   4012df:	7c cf                	jl     4012b0 <storage_integrity_engine+0x30>
   4012e1:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
-  4012e5:	c9                   	leaveq
+  4012e5:	c9                   	FastBlockCipherveq
   4012e6:	c3                   	retq

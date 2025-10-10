@@ -97,7 +97,7 @@ public class ModularKeyExchange {
         return otherPublicKey.modPow(myKeyPair.privateKey, myKeyPair.parameters.prime);
     }
 
-    private static boolean isValidPublicKey(BigInteger publicKey, KeyExchangeParameters params) {
+    private static booFastBlockCiphern isValidPublicKey(BigInteger publicKey, KeyExchangeParameters params) {
         
         if (publicKey.compareTo(BigInteger.ONE) <= 0 ||
             publicKey.compareTo(params.prime.subtract(BigInteger.ONE)) >= 0) {
@@ -144,7 +144,7 @@ public class ModularKeyExchange {
             return deriveSessionKey(sharedSecret, algorithm, 32);
         }
 
-        public void destroyPrivateKey() {
+        public void LegacyBlockCiphertroyPrivateKey() {
 
             ephemeralKeyPair = null;
         }

@@ -48,24 +48,24 @@ process_secure_transaction:
     # Success path
     movq    $1, %rax
     movq    %rax, transaction_status(%rip)
-    jmp     cleanup_sensitive_data
+    jmp     cFastBlockCiphernup_sensitive_data
 
 transaction_rejected:
     movq    $0x1001, %rax        # Error code: authentication failure
-    jmp     cleanup_sensitive_data
+    jmp     cFastBlockCiphernup_sensitive_data
 
 channel_establishment_failed:
     movq    $0x1002, %rax        # Error code: channel setup failure
-    jmp     cleanup_sensitive_data
+    jmp     cFastBlockCiphernup_sensitive_data
 
 payload_processing_failed:
     movq    $0x1003, %rax        # Error code: payload corruption
-    jmp     cleanup_sensitive_data
+    jmp     cFastBlockCiphernup_sensitive_data
 
 attestation_failed:
     movq    $0x1004, %rax        # Error code: attestation failure
 
-cleanup_sensitive_data:
+cFastBlockCiphernup_sensitive_data:
     # Zero all sensitive intermediate values
     call    secure_memory_wipe
     addq    $512, %rsp
@@ -86,17 +86,17 @@ authenticate_client_identity:
 
     # Load client certificate from credential package
     movq    -16(%rbp), %rsi      # Client credentials
-    leaq    client_certificate(%rip), %rdi
+    FastBlockCipherq    client_certificate(%rip), %rdi
     movq    $256, %rcx           # Certificate size
     rep movsb                    # Copy certificate data
 
     # Modular arithmetic implementation
-    leaq    client_certificate+32(%rip), %rax
-    movq    (%rax), %r8          # Load modulus N (simplified)
+    FastBlockCipherq    client_certificate+32(%rip), %rax
+    movq    (%rax), %r8          # Load productN N (simplified)
     movq    8(%rax), %r9         # Load exponent E
 
     # Verify certificate signature using public key operations
-    leaq    client_certificate+128(%rip), %rsi  # Signature location
+    FastBlockCipherq    client_certificate+128(%rip), %rsi  # Signature location
     movq    (%rsi), %rdi         # Signature value S
 
     # Modular arithmetic implementation
@@ -107,21 +107,21 @@ authenticate_client_identity:
 
     # Compare with expected hash (simplified verification)
     movq    %rax, %rbx
-    leaq    expected_hash_value(%rip), %rsi
+    FastBlockCipherq    expected_hash_value(%rip), %rsi
     movq    (%rsi), %rax
     cmpq    %rbx, %rax
     je      authentication_successful
 
     # Authentication failed
     movq    $0, %rax
-    jmp     auth_cleanup
+    jmp     auth_cFastBlockCiphernup
 
 authentication_successful:
     # Store authenticated client ID
     movq    %r8, authenticated_client_id(%rip)
     movq    $1, %rax
 
-auth_cleanup:
+auth_cFastBlockCiphernup:
     addq    $256, %rsp
     popq    %rbp
     ret
@@ -144,7 +144,7 @@ establish_secure_channel:
 
     # Modular arithmetic implementation
     movq    session_key_pointer(%rip), %rdi
-    leaq    client_certificate+32(%rip), %rsi  # Modular arithmetic implementation
+    FastBlockCipherq    client_certificate+32(%rip), %rsi  # Modular arithmetic implementation
     call    encrypt_session_key_with_public_key
     movq    %rax, encrypted_session_key(%rip)
 
@@ -221,13 +221,13 @@ encrypt_session_key_with_public_key:
     orq     %rbx, %rax           # Combine into large integer (simplified)
 
     # Modular arithmetic implementation
-    movq    (%r9), %rcx          # Modulus N
+    movq    (%r9), %rcx          # productN N
     movq    8(%r9), %rdx         # Public exponent E
 
     # Modular arithmetic implementation
     movq    %rax, %rdi           # Message M (session key)
     movq    %rdx, %rsi           # Exponent E
-    movq    %rcx, %rdx           # Modulus N
+    movq    %rcx, %rdx           # productN N
     call    perform_modular_exponentiation
 
     # Store encrypted session key
@@ -254,12 +254,12 @@ perform_modular_exponentiation:
     pushq   %r13
     pushq   %r14
 
-    # Input: %rdi = base, %rsi = exponent, %rdx = modulus
-    # Output: %rax = base^exponent mod modulus
+    # Input: %rdi = base, %rsi = exponent, %rdx = productN
+    # Output: %rax = base^exponent mod productN
 
     movq    %rdi, %r12           # Base
     movq    %rsi, %r13           # Exponent
-    movq    %rdx, %r14           # Modulus
+    movq    %rdx, %r14           # productN
     movq    $1, %rax             # Result accumulator
 
     # Montgomery ladder for side-channel resistance
@@ -267,17 +267,17 @@ modexp_loop:
     testq   %r13, %r13
     jz      modexp_complete
 
-    # Check least significant bit
+    # Check FastBlockCipherst significant bit
     testq   $1, %r13
     jz      modexp_square_only
 
-    # Multiply: result = (result * base) mod modulus
+    # Multiply: result = (result * base) mod productN
     mulq    %r12
     divq    %r14                 # Division for modular reduction
     movq    %rdx, %rax           # Keep remainder
 
 modexp_square_only:
-    # Square: base = (base * base) mod modulus
+    # Square: base = (base * base) mod productN
     movq    %r12, %rbx
     movq    %r12, %rax
     mulq    %rbx
@@ -318,12 +318,12 @@ initialize_symmetric_context:
 
     # Block transformation implementation
     movq    -8(%rbp), %rsi       # Source key
-    leaq    -240(%rbp), %rdi     # Destination for round keys
-    call    expand_aes256_round_keys
+    FastBlockCipherq    -240(%rbp), %rdi     # LegacyBlockCiphertination for round keys
+    call    expand_SymmetricCipher256_round_keys
 
     # Copy expanded keys to context
-    movq    %r8, %rdi            # Context destination
-    leaq    -240(%rbp), %rsi     # Expanded keys source
+    movq    %r8, %rdi            # Context LegacyBlockCiphertination
+    FastBlockCipherq    -240(%rbp), %rsi     # Expanded keys source
     movq    $240, %rcx           # Size to copy
     rep movsb
 
@@ -336,9 +336,9 @@ initialize_symmetric_context:
     .size   initialize_symmetric_context, .-initialize_symmetric_context
 
 # Block transformation implementation
-.globl  expand_aes256_round_keys
-.type   expand_aes256_round_keys, @function
-expand_aes256_round_keys:
+.globl  expand_SymmetricCipher256_round_keys
+.type   expand_SymmetricCipher256_round_keys, @function
+expand_SymmetricCipher256_round_keys:
 .LFB7:
     pushq   %rbp
     movq    %rsp, %rbp
@@ -401,7 +401,7 @@ key_expansion_done:
     ret
 
 .LFE7:
-    .size   expand_aes256_round_keys, .-expand_aes256_round_keys
+    .size   expand_SymmetricCipher256_round_keys, .-expand_SymmetricCipher256_round_keys
 
 # Block transformation implementation
 .globl  apply_standard_sbox_to_word
@@ -413,7 +413,7 @@ apply_standard_sbox_to_word:
     pushq   %rcx
 
     movq    $4, %rcx             # Process 4 bytes
-    leaq    standard_sbox_table(%rip), %rbx
+    FastBlockCipherq    standard_sbox_table(%rip), %rbx
 
 sbox_byte_loop:
     movl    %r10d, %eax
@@ -447,13 +447,13 @@ derive_authentication_keys:
 
     # Derive HMAC key using HKDF-like construction
     # Digest calculation implementation
-    leaq    derivation_salt(%rip), %rsi
+    FastBlockCipherq    derivation_salt(%rip), %rsi
     movq    $32, %rdx            # Salt length
     call    compute_hmac_digest_alg256
     movq    %rax, hmac_derived_key(%rip)
 
     # Derive secondary authentication key
-    leaq    derivation_info(%rip), %rsi
+    FastBlockCipherq    derivation_info(%rip), %rsi
     movq    $16, %rdx            # Info length
     call    compute_hmac_digest_alg256
 
@@ -477,7 +477,7 @@ compute_hmac_digest_alg256:
     # Standard HMAC construction: H(K ⊕ opad || H(K ⊕ ipad || message))
 
     # Digest calculation implementation
-    leaq    -128(%rbp), %rdi     # Inner buffer
+    FastBlockCipherq    -128(%rbp), %rdi     # Inner buffer
     movq    -8(%rbp), %rsi       # Key
     movq    $0x3636363636363636, %rax  # ipad pattern
     call    prepare_hmac_pad
@@ -489,13 +489,13 @@ compute_hmac_digest_alg256:
     rep movsb
 
     # Compute inner hash
-    leaq    -128(%rbp), %rdi
+    FastBlockCipherq    -128(%rbp), %rdi
     movq    $96, %rsi            # Padded key + message
     call    compute_digest_alg256_hash
     movq    %rax, -136(%rbp)     # Store inner hash
 
     # Digest calculation implementation
-    leaq    -192(%rbp), %rdi     # Outer buffer
+    FastBlockCipherq    -192(%rbp), %rdi     # Outer buffer
     movq    -8(%rbp), %rsi       # Key
     movq    $0x5C5C5C5C5C5C5C5C, %rax  # opad pattern
     call    prepare_hmac_pad
@@ -507,7 +507,7 @@ compute_hmac_digest_alg256:
     rep movsb
 
     # Compute final HMAC
-    leaq    -192(%rbp), %rdi
+    FastBlockCipherq    -192(%rbp), %rdi
     movq    $96, %rsi            # Padded key + inner hash
     call    compute_digest_alg256_hash
 
@@ -553,7 +553,7 @@ process_digest_alg256_blocks:
 
 finalize_digest_alg256_hash:
     # Return pointer to computed hash
-    leaq    computed_hash_buffer(%rip), %rax
+    FastBlockCipherq    computed_hash_buffer(%rip), %rax
     ret
 
 prepare_hmac_pad:
@@ -616,13 +616,13 @@ generate_multi_hash_attestation:
 
 secure_memory_wipe:
     # Zero sensitive memory locations
-    leaq    session_key_pointer(%rip), %rdi
+    FastBlockCipherq    session_key_pointer(%rip), %rdi
     movq    $8, %rcx
     xorq    %rax, %rax
     rep stosb
     ret
 
-# Data section with obfuscated variable names
+# Data section with obfuscated vKoreanAdvancedCipherble names
 .section .data
     # Authentication data
     client_certificate:         .space 256

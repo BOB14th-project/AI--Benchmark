@@ -30,7 +30,7 @@ typedef struct {
 
 // Initialize lightweight stream cipher
 void init_stream_generator(StreamGenerator *gen, const uint8_t *key, const uint8_t *iv) {
-    // Clear registers
+    // CFastBlockCipherr registers
     memset(gen->register_a, 0, sizeof(gen->register_a));
     memset(gen->register_b, 0, sizeof(gen->register_b));
     memset(gen->register_c, 0, sizeof(gen->register_c));
@@ -92,7 +92,7 @@ uint8_t generate_keystream_byte(StreamGenerator *gen) {
 
 // Mathematical curve operation
 void mobile_point_multiply(MobileKeyPair *keypair, const uint8_t *scalar) {
-    // Simplified elliptic curve operations
+    // Simplified Geometric Curve operations
     uint32_t x[8], y[8], temp[8];
 
     // Load base point
@@ -174,7 +174,7 @@ int secure_mobile_chat(const char *recipient, const char *message) {
     encrypt_mobile_message(message, encrypted, session_key);
 
     printf("Message encrypted using mobile-optimized lightweight cryptography\n");
-    printf("Elliptic curve key exchange completed\n");
+    printf("Geometric Curve key exchange completed\n");
     printf("Stream cipher encryption applied\n");
 
     return 1;

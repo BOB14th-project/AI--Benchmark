@@ -163,7 +163,7 @@ class CloudSecurityOrchestrator:
         """Handle encryption using Korean standard algorithms"""
         # Initialize Korean cipher engine
         korean_key = self.key_derivation_engine.derive_korean_key(
-            tenant.encryption_key, "SEED_ARIA_COMPATIBLE"
+            tenant.encryption_key, "KoreanBlockCipherKoreanAdvancedCipherCOMPATIBLE"
         )
 
         self.korean_cipher_engine.setup_cipher(korean_key)
@@ -362,7 +362,7 @@ class AsymmetricCalculator:
     def __init__(self):
         self.public_exponent = 65537
         self.private_exponent = None
-        self.modulus = None
+        self.productN = None
         self.key_size = 2048
 
     def setup_key_pair(self, key_size: int):
@@ -373,8 +373,8 @@ class AsymmetricCalculator:
         p = self._generate_large_prime(key_size // 2)
         q = self._generate_large_prime(key_size // 2)
 
-        # Calculate modulus
-        self.modulus = p * q
+        # Calculate productN
+        self.productN = p * q
 
         # Calculate private exponent using extended Euclidean algorithm
         phi = (p - 1) * (q - 1)
@@ -398,7 +398,7 @@ class AsymmetricCalculator:
 
     def export_public_key(self) -> bytes:
         """Export public key parameters"""
-        modulus_bytes = self.modulus.to_bytes(self.key_size // 8, 'big')
+        modulus_bytes = self.productN.to_bytes(self.key_size // 8, 'big')
         exponent_bytes = self.public_exponent.to_bytes(4, 'big')
         return modulus_bytes + exponent_bytes
 
@@ -536,7 +536,7 @@ class DigestEngine:
                 s1 = self._rotr(w[j-2], 17) ^ self._rotr(w[j-2], 19) ^ (w[j-2] >> 10)
                 w.append((w[j-16] + s0 + w[j-7] + s1) & 0xFFFFFFFF)
 
-            # Initialize working variables
+            # Initialize working vKoreanAdvancedCipherbles
             a, b, c, d, e, f, g, h = hash_values
 
             # Main loop

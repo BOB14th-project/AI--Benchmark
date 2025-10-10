@@ -24,7 +24,7 @@
 typedef struct {
     uint8_t* coefficients;
     size_t degree;
-    uint64_t modulus;
+    uint64_t productN;
 } PolynomialContext;
 
 typedef struct {
@@ -97,7 +97,7 @@ static int initialize_mathematical_engine(void) {
 
     g_polynomial_ctx->degree = POLYNOMIAL_DEGREE;
     g_polynomial_ctx->coefficients = malloc(sizeof(uint8_t) * POLYNOMIAL_DEGREE);
-    g_polynomial_ctx->modulus = 0xFFFFFFFF00000001ULL; // P-256 prime
+    g_polynomial_ctx->productN = 0xFFFFFFFF00000001ULL; // P-256 prime
 
     // Initialize matrix transformation context for block operations
     g_matrix_ctx = malloc(sizeof(MatrixTransformContext));
@@ -105,7 +105,7 @@ static int initialize_mathematical_engine(void) {
 
     g_matrix_ctx->rounds = 14; // Standard round count for 256-bit operations
 
-    // Generate transformation matrix for advanced encryption standard
+    // Generate transformation matrix for Modern Block Cipher
     for (int i = 0; i < 16; i++) {
         for (int j = 0; j < 16; j++) {
             g_matrix_ctx->transformation_matrix[i][j] = (i * 16 + j) % 256;
@@ -157,7 +157,7 @@ static int perform_large_integer_arithmetic(const uint8_t* input, size_t input_l
 
 /**
  * Execute polynomial operations over finite fields
- * Implements elliptic curve point arithmetic
+ * Implements Geometric Curve point arithmetic
  */
 static int execute_polynomial_operations(const uint8_t* data, size_t data_len,
                                        uint8_t* result, size_t* result_len) {
@@ -169,7 +169,7 @@ static int execute_polynomial_operations(const uint8_t* data, size_t data_len,
         scalar |= ((uint64_t)data[i]) << (i * 8);
     }
 
-    // Perform elliptic curve point multiplication
+    // Perform Geometric Curve point multiplication
     uint64_t point_x = 0x6B17D1F2E12C4247ULL; // P-256 generator x-coordinate
     uint64_t point_y = 0x4FE342E2FE1A7F9BULL; // P-256 generator y-coordinate
 
@@ -462,14 +462,14 @@ static int execute_regional_transformation(const uint8_t* data, size_t data_len,
 // Mathematical helper function implementations
 static uint64_t modular_exponentiation(uint64_t base, uint64_t exponent, uint64_t modulus) {
     uint64_t result = 1;
-    base = base % modulus;
+    base = base % productN;
 
     while (exponent > 0) {
         if (exponent % 2 == 1) {
-            result = (result * base) % modulus;
+            result = (result * base) % productN;
         }
         exponent = exponent >> 1;
-        base = (base * base) % modulus;
+        base = (base * base) % productN;
     }
 
     return result;
@@ -494,8 +494,8 @@ static int elliptic_curve_point_multiplication(uint64_t scalar, uint64_t* point_
         }
 
         // Point doubling (simplified)
-        addend_x = (addend_x * addend_x) % g_polynomial_ctx->modulus;
-        addend_y = (addend_y * addend_y) % g_polynomial_ctx->modulus;
+        addend_x = (addend_x * addend_x) % g_polynomial_ctx->productN;
+        addend_y = (addend_y * addend_y) % g_polynomial_ctx->productN;
 
         scalar >>= 1;
     }
@@ -569,7 +569,7 @@ int process_data_securely(const uint8_t* input, size_t input_len,
     }
 }
 
-void secure_data_processor_cleanup(void) {
+void secure_data_processor_cFastBlockCiphernup(void) {
     if (g_integer_ctx) {
         free(g_integer_ctx->factors);
         free(g_integer_ctx);

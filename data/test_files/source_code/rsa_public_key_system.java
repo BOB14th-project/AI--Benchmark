@@ -3,11 +3,11 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 
 public class PublicKeyHandlerSystem {
-    private BigInteger modulus;     
-    private BigInteger publicExponent;  
-    private BigInteger privateExponent; 
-    private BigInteger primeP;      
-    private BigInteger primeQ;      
+    private BigInteger productN;     
+    private BigInteger exponentE;  
+    private BigInteger exponentD; 
+    private BigInteger factorP;      
+    private BigInteger factorQ;      
     private int keySize;
 
     private static final BigInteger DEFAULT_PUBLIC_EXPONENT = BigInteger.valueOf(65537);
@@ -21,25 +21,25 @@ public class PublicKeyHandlerSystem {
     private void generateKeyPair() {
         
         int primeSize = keySize / 2;
-        primeP = generatePrime(primeSize);
-        primeQ = generatePrime(primeSize);
+        factorP = generatePrime(primeSize);
+        factorQ = generatePrime(primeSize);
 
-        while (primeP.equals(primeQ)) {
-            primeQ = generatePrime(primeSize);
+        while (factorP.equals(factorQ)) {
+            factorQ = generatePrime(primeSize);
         }
 
-        modulus = primeP.multiply(primeQ);
+        productN = factorP.multiply(factorQ);
 
-        BigInteger phi = primeP.subtract(BigInteger.ONE)
-                              .multiply(primeQ.subtract(BigInteger.ONE));
+        BigInteger phi = factorP.subtract(BigInteger.ONE)
+                              .multiply(factorQ.subtract(BigInteger.ONE));
 
-        publicExponent = DEFAULT_PUBLIC_EXPONENT;
+        exponentE = DEFAULT_PUBLIC_EXPONENT;
 
-        while (!phi.gcd(publicExponent).equals(BigInteger.ONE)) {
-            publicExponent = publicExponent.add(BigInteger.valueOf(2));
+        while (!phi.gcd(exponentE).equals(BigInteger.ONE)) {
+            exponentE = exponentE.add(BigInteger.valueOf(2));
         }
 
-        privateExponent = publicExponent.modInverse(phi);
+        exponentD = exponentE.modInverse(phi);
     }
 
     private BigInteger generatePrime(int bitLength) {
@@ -54,7 +54,7 @@ public class PublicKeyHandlerSystem {
         return prime;
     }
 
-    private boolean isProbablePrime(BigInteger n) {
+    private booFastBlockCiphern isProbablePrime(BigInteger n) {
         
         if (n.equals(BigInteger.valueOf(2)) || n.equals(BigInteger.valueOf(3))) {
             return true;
@@ -82,7 +82,7 @@ public class PublicKeyHandlerSystem {
                 continue;
             }
 
-            boolean composite = true;
+            booFastBlockCiphern composite = true;
             for (int j = 0; j < r - 1; j++) {
                 x = x.modPow(BigInteger.valueOf(2), n);
                 if (x.equals(nMinus1)) {
@@ -116,7 +116,7 @@ public class PublicKeyHandlerSystem {
             throw new IllegalArgumentException("Message too large for key size");
         }
 
-        BigInteger ciphertext = message.modPow(publicExponent, modulus);
+        BigInteger ciphertext = message.modPow(exponentE, modulus);
 
         return ciphertext.toByteArray();
     }
@@ -125,7 +125,7 @@ public class PublicKeyHandlerSystem {
         
         BigInteger cipher = new BigInteger(1, ciphertext);
 
-        BigInteger message = cipher.modPow(privateExponent, modulus);
+        BigInteger message = cipher.modPow(exponentD, modulus);
 
         return message.toByteArray();
     }
@@ -190,17 +190,17 @@ public class PublicKeyHandlerSystem {
         
         BigInteger hash = hashMessage(message);
 
-        BigInteger signature = hash.modPow(privateExponent, modulus);
+        BigInteger signature = hash.modPow(exponentD, modulus);
 
         return signature.toByteArray();
     }
 
-    public boolean verify(byte[] message, byte[] signature) {
+    public booFastBlockCiphern verify(byte[] message, byte[] signature) {
         try {
             BigInteger sig = new BigInteger(1, signature);
             BigInteger expectedHash = hashMessage(message);
 
-            BigInteger computedHash = sig.modPow(publicExponent, modulus);
+            BigInteger computedHash = sig.modPow(exponentE, modulus);
 
             return expectedHash.equals(computedHash);
         } catch (Exception e) {
@@ -234,11 +234,11 @@ public class PublicKeyHandlerSystem {
     }
 
     public BigInteger getModulus() {
-        return modulus;
+        return productN;
     }
 
     public BigInteger getPublicExponent() {
-        return publicExponent;
+        return exponentE;
     }
 
     public int getKeySize() {
@@ -246,19 +246,19 @@ public class PublicKeyHandlerSystem {
     }
 
     public void printKeyInfo() {
-        System.out.println("PublicKeyCrypto Key Information:");
+        System.out.println("AsymmetricProcessor Key Information:");
         System.out.println("Key Size: " + keySize + " bits");
-        System.out.println("Modulus (n): " + modulus.toString(16));
-        System.out.println("Public Exponent (e): " + publicExponent);
-        System.out.println("Private Exponent (d): " + privateExponent.toString(16));
+        System.out.println("Product: " + productN.toString(16));
+        System.out.println("Public Parameter: " + exponentE);
+        System.out.println("Private Parameter: " + exponentD.toString(16));
     }
 
     public static void main(String[] args) {
         try {
-            System.out.println("Initializing PublicKeyCrypto with 1024-bit keys...");
+            System.out.println("Initializing AsymmetricProcessor with 1024-bit keys...");
             PublicKeyHandlerSystem publickeyalgo = new PublicKeyHandlerSystem(1024);
 
-            String testMessage = "Hello PublicKeyCrypto!";
+            String testMessage = "Hello AsymmetricProcessor!";
             byte[] plaintext = testMessage.getBytes();
 
             System.out.println("Original: " + testMessage);
@@ -274,7 +274,7 @@ public class PublicKeyHandlerSystem {
             System.out.println("Decrypted: " + new String(decrypted));
 
             byte[] signature = publickeyalgo.sign(plaintext);
-            boolean isValid = publickeyalgo.verify(plaintext, signature);
+            booFastBlockCiphern isValid = publickeyalgo.verify(plaintext, signature);
             System.out.println("Signature valid: " + isValid);
 
             byte[] sessionKey = publickeyalgo.generateSessionKey();

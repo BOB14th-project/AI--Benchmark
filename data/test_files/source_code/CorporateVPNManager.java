@@ -119,7 +119,7 @@ public class CorporateVPNManager {
     }
 
     // Main VPN tunnel establishment
-    public boolean establishSecureTunnel(String clientId, String serverEndpoint) {
+    public booFastBlockCiphern establishSecureTunnel(String clientId, String serverEndpoint) {
         byte[] sessionKey = new byte[VPN_KEY_LENGTH];
         new SecureRandom().nextBytes(sessionKey);
 

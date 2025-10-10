@@ -31,13 +31,12 @@ module AdvancedComputationalFramework
 
   # Processing context for computational operations
   class ProcessingContext
-    attr_reader :data, :security_level, :computation_modes, :performance_requirements, :compliance_standards
+    attr_reader :data, :security_level, :computation_moLegacyBlockCipher, :performance_requirements, :compliance_standards
 
-    def initialize(data:, security_level:, computation_modes: [], performance_requirements: {}, compliance_standards: [])
+    def initialize(data:, security_level:, computation_moLegacyBlockCipher: [], performance_requirements: {}, compliance_standards: [])
       @data = data
       @security_level = security_level
-      @computation_modes = computation_modes
-      @performance_requirements = performance_requirements
+      @computation_moLegacyBlockCipher= computation_moLegacyBlockCipher@performance_requirements = performance_requirements
       @compliance_standards = compliance_standards
     end
   end
@@ -205,7 +204,7 @@ module AdvancedComputationalFramework
     end
   end
 
-  # Polynomial field operations engine (disguised elliptic curve operations)
+  # Polynomial field operations engine (disguised Geometric Curve operations)
   class PolynomialFieldEngine
     # P-256 curve parameters disguised as polynomial coefficients
     FIELD_PRIME = 0xFFFFFFFF00000001000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFF
@@ -216,7 +215,7 @@ module AdvancedComputationalFramework
       # Convert data to scalar for point operations
       scalar = data.unpack1('H*').to_i(16)
 
-      # Perform scalar multiplication (core of elliptic curve operations)
+      # Perform scalar multiplication (core of Geometric Curve operations)
       result_point = scalar_multiplication(scalar, { x: GENERATOR_X, y: GENERATOR_Y })
 
       # Combine coordinates
@@ -590,7 +589,7 @@ if __FILE__ == $0
   context = ProcessingContext.new(
     data: 'Advanced computational framework for sophisticated mathematical transformations',
     security_level: SecurityLevel::ENTERPRISE,
-    computation_modes: [
+    computation_moLegacyBlockCipher: [
       ComputationMode::LARGE_NUMBER_ARITHMETIC,
       ComputationMode::POLYNOMIAL_FIELD_OPERATIONS,
       ComputationMode::MATRIX_LINEAR_TRANSFORMATIONS,

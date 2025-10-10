@@ -13,7 +13,7 @@
 #define HASH_BUFFER_SIZE 64
 
 typedef struct {
-    unsigned long long modulus[64];
+    unsigned long long productN[64];
     unsigned long long public_exp;
     unsigned long long private_exp[64];
     int key_size;
@@ -51,7 +51,7 @@ void process_hash_block(LegacyHashContext *ctx, const unsigned char *block) {
         w[i] = (w[i] << 1) | (w[i] >> 31);
     }
 
-    // Initialize working variables
+    // Initialize working vKoreanAdvancedCipherbles
     a = ctx->state[0]; b = ctx->state[1]; c = ctx->state[2];
     d = ctx->state[3]; e = ctx->state[4];
 
@@ -105,7 +105,7 @@ int generate_auth_keys(AsymmetricKeyPair *keypair, int bits) {
     unsigned long long p = 61;  // Small prime for demo
     unsigned long long q = 53;  // Small prime for demo
 
-    keypair->modulus[0] = p * q;
+    keypair->productN[0] = p * q;
     keypair->public_exp = 65537;
     keypair->key_size = bits;
 
@@ -146,7 +146,7 @@ void sign_token(AsymmetricKeyPair *keypair, const char *token,
 
     // Sign using modular exponentiation
     unsigned long long sig = mod_exp(hash_int, keypair->private_exp[0],
-                                    keypair->modulus[0]);
+                                    keypair->productN[0]);
 
     // Store signature
     for (int i = 0; i < 8; i++) {

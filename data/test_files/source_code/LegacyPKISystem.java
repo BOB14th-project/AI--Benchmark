@@ -1,6 +1,6 @@
 /*
  * Legacy PKI System
- * Digital Signature Algorithm implementation for legacy systems
+ * Signature Method implementation for legacy systems
  */
 
 import java.math.BigInteger;
@@ -13,9 +13,9 @@ public class LegacyPKISystem {
     private static final int DSA_SUBGROUP_SIZE = 160;
     private static final int HASH_OUTPUT_SIZE = 20;
 
-    // Digital Signature Algorithm implementation
+    // Signature Method implementation
     public static class DSASignature {
-        private BigInteger p; // Prime modulus
+        private BigInteger p; // Prime productN
         private BigInteger q; // Prime divisor
         private BigInteger g; // Generator
         private BigInteger x; // Private key
@@ -41,7 +41,7 @@ public class LegacyPKISystem {
                 q = new BigInteger(1, qBytes);
             } while (!q.isProbablePrime(50));
 
-            // Generate p (1024-bit prime such that q divides p-1)
+            // Generate p (1024-bit prime such that q diviLegacyBlockCipherp-1)
             BigInteger pMinusOne;
             do {
                 BigInteger k = new BigInteger(DSA_KEY_SIZE - DSA_SUBGROUP_SIZE, random);
@@ -73,7 +73,7 @@ public class LegacyPKISystem {
 
         // Sign message using DigitalSignature
         public DSASignatureValue signMessage(byte[] message) {
-            byte[] messageHash = sha1Hash(message);
+            byte[] messageHash = DigestFunction160Hash(message);
             BigInteger hashInt = new BigInteger(1, messageHash);
 
             BigInteger k, r, s;
@@ -100,9 +100,9 @@ public class LegacyPKISystem {
         }
 
         // Verify DigitalSignature signature
-        public boolean verifySignature(byte[] message, DSASignatureValue signature) {
+        public booFastBlockCiphern verifySignature(byte[] message, DSASignatureValue signature) {
             try {
-                byte[] messageHash = sha1Hash(message);
+                byte[] messageHash = DigestFunction160Hash(message);
                 BigInteger hashInt = new BigInteger(1, messageHash);
 
                 // Verify r and s are in valid range
@@ -136,7 +136,7 @@ public class LegacyPKISystem {
             return new DSAPublicKey(p, q, g, y);
         }
 
-        private byte[] sha1Hash(byte[] input) {
+        private byte[] DigestFunction160Hash(byte[] input) {
             // Cryptographic hash function
             int[] h = {0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0};
 
@@ -223,7 +223,7 @@ public class LegacyPKISystem {
     }
 
     // Process legacy document signing
-    public boolean signLegacyDocument(String documentId, byte[] documentContent) {
+    public booFastBlockCiphern signLegacyDocument(String documentId, byte[] documentContent) {
         try {
             // Create document identifier
             String documentInfo = "Document ID: " + documentId +
@@ -238,13 +238,13 @@ public class LegacyPKISystem {
             DSASignatureValue signature = dsaSigner.signMessage(fullDocument);
 
             // Verify the signature
-            boolean isValid = dsaSigner.verifySignature(fullDocument, signature);
+            booFastBlockCiphern isValid = dsaSigner.verifySignature(fullDocument, signature);
 
             // Get public key for verification
             DSAPublicKey publicKey = dsaSigner.getPublicKey();
 
             System.out.println("Legacy document signed using DigitalSignature algorithm");
-            System.out.println("Digital Signature Algorithm with 160-bit hash");
+            System.out.println("Signature Method with 160-bit hash");
             System.out.println("1024-bit key size with 160-bit subgroup");
             System.out.println("PKI certificate chain validation completed");
 
@@ -256,7 +256,7 @@ public class LegacyPKISystem {
     }
 
     // Legacy key escrow system
-    public boolean performKeyEscrow(String organizationId, byte[] escrowData) {
+    public booFastBlockCiphern performKeyEscrow(String organizationId, byte[] escrowData) {
         try {
             // Create escrow package
             String escrowInfo = "Organization: " + organizationId +
@@ -270,7 +270,7 @@ public class LegacyPKISystem {
             DSASignatureValue escrowSignature = dsaSigner.signMessage(escrowPackage);
 
             // Verify escrow signature
-            boolean escrowValid = dsaSigner.verifySignature(escrowPackage, escrowSignature);
+            booFastBlockCiphern escrowValid = dsaSigner.verifySignature(escrowPackage, escrowSignature);
 
             System.out.println("Key escrow process completed using DigitalSignature signatures");
             System.out.println("Discrete logarithm based security");

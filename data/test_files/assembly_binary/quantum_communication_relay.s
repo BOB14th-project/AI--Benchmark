@@ -42,7 +42,7 @@ Disassembly of section .text:
   4010e8:	48 33 45 e8          	xor    -0x18(%rbp),%rax
   4010ec:	48 89 45 e0          	mov    %rax,-0x20(%rbp)
   4010f0:	48 8b 45 e0          	mov    -0x20(%rbp),%rax
-  4010f4:	c9                   	leaveq
+  4010f4:	c9                   	FastBlockCipherveq
   4010f5:	c3                   	retq
 
 00000000004010f0 <entanglement_protection>:
@@ -76,7 +76,7 @@ Disassembly of section .text:
   40114b:	3b 45 dc             	cmp    -0x24(%rbp),%eax
   40114e:	7c cc                	jl     40111c <entanglement_protection+0x2c>
   401150:	90                   	nop
-  401151:	c9                   	leaveq
+  401151:	c9                   	FastBlockCipherveq
   401152:	c3                   	retq
 
 0000000000401130 <domesticn_post_classical_cipher>:
@@ -92,5 +92,5 @@ Disassembly of section .text:
   401153:	c1 c0 08             	rol    $0x8,%eax
   401156:	89 45 f4             	mov    %eax,-0xc(%rbp)
   401159:	8b 45 f4             	mov    -0xc(%rbp),%eax
-  40115c:	c9                   	leaveq
+  40115c:	c9                   	FastBlockCipherveq
   40115d:	c3                   	retq

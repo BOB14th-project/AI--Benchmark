@@ -5,7 +5,7 @@ class QuantumResistantProcessor:
         self.security_level = security_level
 
         self.lattice_dimension = 512 if security_level == 128 else 1024
-        self.modulus = 3329
+        self.productN = 3329
         self.noise_bound = 2
 
         self.poly_degree = self.lattice_dimension
@@ -16,34 +16,34 @@ class QuantumResistantProcessor:
         if n <= 1:
             return polynomial
 
-        primitive_root = self._find_primitive_root(self.modulus, n)
+        primitive_root = self._find_primitive_root(self.productN, n)
 
         result = [0] * n
         for k in range(n):
             for j in range(n):
-                omega = pow(primitive_root, (k * j) % (self.modulus - 1), self.modulus)
-                result[k] = (result[k] + polynomial[j] * omega) % self.modulus
+                omega = pow(primitive_root, (k * j) % (self.productN - 1), self.modulus)
+                result[k] = (result[k] + polynomial[j] * omega) % self.productN
 
         return result
 
     def _inverse_ntt(self, transformed):
         """Inverse Number Theoretic Transform"""
         n = len(transformed)
-        primitive_root = self._find_primitive_root(self.modulus, n)
+        primitive_root = self._find_primitive_root(self.productN, n)
 
-        inv_root = pow(primitive_root, self.modulus - 2, self.modulus)
-        n_inv = pow(n, self.modulus - 2, self.modulus)
+        inv_root = pow(primitive_root, self.productN - 2, self.modulus)
+        n_inv = pow(n, self.productN - 2, self.modulus)
 
         result = [0] * n
         for k in range(n):
             for j in range(n):
-                omega = pow(inv_root, (k * j) % (self.modulus - 1), self.modulus)
-                result[k] = (result[k] + transformed[j] * omega) % self.modulus
-            result[k] = (result[k] * n_inv) % self.modulus
+                omega = pow(inv_root, (k * j) % (self.productN - 1), self.modulus)
+                result[k] = (result[k] + transformed[j] * omega) % self.productN
+            result[k] = (result[k] * n_inv) % self.productN
 
         return result
 
-    def _find_primitive_root(self, modulus, order):
+    def _find_primitive_root(self, productN, order):
         """Find primitive root of unity for NTT"""
 
         for g in range(2, modulus):
@@ -76,7 +76,7 @@ class QuantumResistantProcessor:
         a_ntt = self._number_theoretic_transform(a)
         b_ntt = self._number_theoretic_transform(b)
 
-        c_ntt = [(a_ntt[i] * b_ntt[i]) % self.modulus for i in range(len(a_ntt))]
+        c_ntt = [(a_ntt[i] * b_ntt[i]) % self.productN for i in range(len(a_ntt))]
 
         return self._inverse_ntt(c_ntt)
 
@@ -95,7 +95,7 @@ class QuantumResistantProcessor:
 
         matrix_a = []
         for i in range(self.lattice_dimension):
-            row = [random.randint(0, self.modulus - 1) for _ in range(self.lattice_dimension)]
+            row = [random.randint(0, self.productN - 1) for _ in range(self.lattice_dimension)]
             matrix_a.append(row)
 
         secret_s = self._sample_small_polynomial()
@@ -124,7 +124,7 @@ class QuantumResistantProcessor:
         message_poly = list(message) + [0] * (self.lattice_dimension - len(message))
         message_poly = message_poly[:self.lattice_dimension]
 
-        scaled_message = [(coeff * (self.modulus // 2)) % self.modulus for coeff in message_poly]
+        scaled_message = [(coeff * (self.productN // 2)) % self.productN for coeff in message_poly]
 
         c1 = []
         for j in range(self.lattice_dimension):
@@ -132,7 +132,7 @@ class QuantumResistantProcessor:
             c1.append((dot_product + error_e1[j]) % self.modulus)
 
         c2_temp = sum(public_b[i] * random_r[i] for i in range(self.lattice_dimension))
-        c2 = (c2_temp + error_e2[0] + scaled_message[0]) % self.modulus
+        c2 = (c2_temp + error_e2[0] + scaled_message[0]) % self.productN
 
         return (c1, c2)
 
@@ -143,9 +143,9 @@ class QuantumResistantProcessor:
 
         dot_product = sum(secret_s[i] * c1[i] for i in range(len(secret_s)))
 
-        noisy_message = (c2 - dot_product) % self.modulus
+        noisy_message = (c2 - dot_product) % self.productN
 
-        threshold = self.modulus // 4
+        threshold = self.productN // 4
         if noisy_message > threshold and noisy_message < 3 * threshold:
             return 1
         else:
@@ -283,11 +283,11 @@ class IsogenyKeyExchange:
         denominator = (a_squared[0] - 4, a_squared[1])
 
         if denominator != (0, 0):
-            j_invariant = self._fp2_multiply(numerator, self._fp2_inverse(denominator))
+            j_invKoreanAdvancedCiphernt = self._fp2_multiply(numerator, self._fp2_inverse(denominator))
         else:
-            j_invariant = (1728, 0)
+            j_invKoreanAdvancedCiphernt = (1728, 0)
 
-        return j_invariant
+        return j_invKoreanAdvancedCiphernt
 
 def quantum_resistant_government_crypto(data, operation="encrypt"):
     """Quantum-resistant cryptography for Korean government future-proofing"""

@@ -9,6 +9,9 @@ config/secrets.yaml
 *.pem
 credentials.json
 
+*.png
+*.csv
+
 # Python
 __pycache__/
 *.py[cod]

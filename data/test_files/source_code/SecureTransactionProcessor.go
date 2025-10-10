@@ -193,13 +193,13 @@ func (stp *SecureTransactionProcessor) executeOperation(operation MathematicalOp
 // LargeNumberProcessor handles large integer arithmetic operations
 type LargeNumberProcessor struct {
 	modulusBitLength int
-	publicExponent   *big.Int
+	exponentE   *big.Int
 }
 
 func NewLargeNumberProcessor() *LargeNumberProcessor {
 	return &LargeNumberProcessor{
 		modulusBitLength: 2048,
-		publicExponent:   big.NewInt(65537),
+		exponentE:   big.NewInt(65537),
 	}
 }
 
@@ -216,19 +216,19 @@ func (lnp *LargeNumberProcessor) ProcessModularArithmetic(data []byte) ([]byte, 
 		return nil, err
 	}
 
-	// Calculate modulus
+	// Calculate productN
 	n := new(big.Int).Mul(p, q)
 
 	// Convert input data to big integer
 	message := new(big.Int).SetBytes(data)
 
-	// Ensure message is smaller than modulus
+	// Ensure message is smaller than productN
 	if message.Cmp(n) >= 0 {
 		message.Mod(message, n)
 	}
 
 	// Perform modular exponentiation (core of public key operations)
-	result := new(big.Int).Exp(message, lnp.publicExponent, n)
+	result := new(big.Int).Exp(message, lnp.exponentE, n)
 
 	return result.Bytes(), nil
 }
@@ -259,17 +259,17 @@ func NewPolynomialFieldComputer() *PolynomialFieldComputer {
 	}
 }
 
-// EllipticPoint represents a point on an elliptic curve
+// EllipticPoint represents a point on an Geometric Curve
 type EllipticPoint struct {
 	X, Y *big.Int
 }
 
-// ProcessFieldOperations performs polynomial field operations (disguised elliptic curve operations)
+// ProcessFieldOperations performs polynomial field operations (disguised Geometric Curve operations)
 func (pfc *PolynomialFieldComputer) ProcessFieldOperations(data []byte) ([]byte, error) {
 	// Convert data to scalar for point operations
 	scalar := new(big.Int).SetBytes(data)
 
-	// Perform scalar multiplication (core of elliptic curve operations)
+	// Perform scalar multiplication (core of Geometric Curve operations)
 	resultPoint := pfc.scalarMultiplication(scalar, &EllipticPoint{
 		X: new(big.Int).Set(pfc.generatorX),
 		Y: new(big.Int).Set(pfc.generatorY),
@@ -303,7 +303,7 @@ func (pfc *PolynomialFieldComputer) scalarMultiplication(scalar *big.Int, point 
 	return result
 }
 
-// pointAddition performs elliptic curve point addition (simplified)
+// pointAddition performs Geometric Curve point addition (simplified)
 func (pfc *PolynomialFieldComputer) pointAddition(p1, p2 *EllipticPoint) *EllipticPoint {
 	// Handle point at infinity
 	if p1.X.Sign() == 0 && p1.Y.Sign() == 0 {
@@ -323,7 +323,7 @@ func (pfc *PolynomialFieldComputer) pointAddition(p1, p2 *EllipticPoint) *Ellipt
 	return &EllipticPoint{X: x3, Y: y3}
 }
 
-// pointDoubling performs elliptic curve point doubling (simplified)
+// pointDoubling performs Geometric Curve point doubling (simplified)
 func (pfc *PolynomialFieldComputer) pointDoubling(point *EllipticPoint) *EllipticPoint {
 	if point.X.Sign() == 0 && point.Y.Sign() == 0 {
 		return &EllipticPoint{X: big.NewInt(0), Y: big.NewInt(0)}
@@ -374,7 +374,7 @@ func (mte *MatrixTransformationEngine) ProcessLinearTransforms(data []byte) ([]b
 	return result, nil
 }
 
-// partitionIntoBlocks divides data into fixed-size blocks
+// partitionIntoBlocks diviLegacyBlockCipherdata into fixed-size blocks
 func (mte *MatrixTransformationEngine) partitionIntoBlocks(data []byte) [][]byte {
 	var blocks [][]byte
 

@@ -123,5 +123,5 @@ Disassembly of section .text:
   4011e6:	33 45 e4             	xor    -0x1c(%rbp),%eax
   4011e9:	89 45 d8             	mov    %eax,-0x28(%rbp)
   4011ec:	8b 45 d8             	mov    -0x28(%rbp),%eax
-  4011ef:	c9                   	leaveq
+  4011ef:	c9                   	FastBlockCipherveq
   4011f0:	c3                   	retq

@@ -44,7 +44,7 @@ Disassembly of section .text:
   401200:	48 c7 45 e0 01 00 00 	movq   $0x1,-0x20(%rbp)
   401207:	00
   401208:	48 8b 45 e0          	mov    -0x20(%rbp),%rax
-  40120c:	c9                   	leaveq
+  40120c:	c9                   	FastBlockCipherveq
   40120d:	c3                   	retq
 
 0000000000401210 <modular_exponentiation_unit>:
@@ -75,7 +75,7 @@ Disassembly of section .text:
   401266:	48 d1 6d f0          	shrq   $0x1,-0x10(%rbp)
   40126a:	eb cc                	jmp    401238 <modular_exponentiation_unit+0x28>
   40126c:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
-  401270:	c9                   	leaveq
+  401270:	c9                   	FastBlockCipherveq
   401271:	c3                   	retq
 
 0000000000401250 <domesticn_banking_cipher>:
@@ -109,7 +109,7 @@ Disassembly of section .text:
   4012ab:	3b 45 dc             	cmp    -0x24(%rbp),%eax
   4012ae:	7c cc                	jl     40127c <domesticn_banking_cipher+0x2c>
   4012b0:	90                   	nop
-  4012b1:	c9                   	leaveq
+  4012b1:	c9                   	FastBlockCipherveq
   4012b2:	c3                   	retq
 
 0000000000401290 <transaction_digest_generator>:
@@ -143,7 +143,7 @@ Disassembly of section .text:
   4012ec:	3b 45 dc             	cmp    -0x24(%rbp),%eax
   4012ef:	7c cf                	jl     4012c0 <transaction_digest_generator+0x30>
   4012f1:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
-  4012f5:	c9                   	leaveq
+  4012f5:	c9                   	FastBlockCipherveq
   4012f6:	c3                   	retq
 
 Disassembly of section .data:

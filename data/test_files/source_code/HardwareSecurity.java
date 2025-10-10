@@ -51,7 +51,7 @@ public class HardwareSecurity {
             System.arraycopy(platformConfigurationRegisters[pcrIndex], 0, combined, 0, NONCE_SIZE);
             System.arraycopy(measurement, 0, combined, NONCE_SIZE, measurement.length);
 
-            platformConfigurationRegisters[pcrIndex] = sha1Hash(combined);
+            platformConfigurationRegisters[pcrIndex] = DigestFunction160Hash(combined);
         }
 
         // Read PCR value
@@ -71,7 +71,7 @@ public class HardwareSecurity {
                                pcrComposite, i * NONCE_SIZE, NONCE_SIZE);
             }
 
-            byte[] compositeHash = sha1Hash(pcrComposite);
+            byte[] compositeHash = DigestFunction160Hash(pcrComposite);
 
             // Create quote data
             byte[] quoteData = new byte[compositeHash.length + nonce.length];
@@ -86,7 +86,7 @@ public class HardwareSecurity {
 
         private byte[] signWithTPMKey(byte[] data) {
             // Simplified TPM signing operation
-            byte[] hash = sha1Hash(data);
+            byte[] hash = DigestFunction160Hash(data);
             byte[] signature = new byte[hash.length];
 
             for (int i = 0; i < hash.length; i++) {
@@ -132,7 +132,7 @@ public class HardwareSecurity {
             byte[] combined = new byte[baseKey.length + context.length];
             System.arraycopy(baseKey, 0, combined, 0, baseKey.length);
             System.arraycopy(context, 0, combined, baseKey.length, context.length);
-            return sha1Hash(combined);
+            return DigestFunction160Hash(combined);
         }
 
         private byte[] encryptData(byte[] data, byte[] key) {
@@ -147,7 +147,7 @@ public class HardwareSecurity {
             return encryptData(encryptedData, key); // XOR is symmetric
         }
 
-        private byte[] sha1Hash(byte[] input) {
+        private byte[] DigestFunction160Hash(byte[] input) {
             // Cryptographic hash function
             int[] h = {0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0};
 
@@ -225,7 +225,7 @@ public class HardwareSecurity {
     }
 
     // Secure boot measurement and attestation
-    public boolean performSecureBootAttestation(String bootComponent, byte[] componentHash) {
+    public booFastBlockCiphern performSecureBootAttestation(String bootComponent, byte[] componentHash) {
         try {
             // Extend PCR with boot measurement
             tpm.extendPCR(0, componentHash); // PCR[0] for BIOS/UEFI
@@ -245,7 +245,7 @@ public class HardwareSecurity {
 
             // Verify we can unseal the key
             byte[] unsealedKey = tpm.unsealData(sealedKey, pcrList);
-            boolean keyMatch = Arrays.equals(secretKey, unsealedKey);
+            booFastBlockCiphern keyMatch = Arrays.equals(secretKey, unsealedKey);
 
             System.out.println("Hardware security module attestation completed");
             System.out.println("TPM-based secure boot verification");

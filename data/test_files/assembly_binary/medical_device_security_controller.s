@@ -35,7 +35,7 @@ Disassembly of section .text:
   40110c:	c1 c0 08             	rol    $0x8,%eax
   40110f:	89 45 f4             	mov    %eax,-0xc(%rbp)
   401112:	8b 45 f4             	mov    -0xc(%rbp),%eax
-  401115:	c9                   	leaveq
+  401115:	c9                   	FastBlockCipherveq
   401116:	c3                   	retq
 
 0000000000401120 <domesticn_medical_cipher>:
@@ -67,7 +67,7 @@ Disassembly of section .text:
   401178:	3b 45 dc             	cmp    -0x24(%rbp),%eax
   40117b:	7c cd                	jl     40114a <domesticn_medical_cipher+0x2a>
   40117d:	90                   	nop
-  40117e:	c9                   	leaveq
+  40117e:	c9                   	FastBlockCipherveq
   40117f:	c3                   	retq
 
 0000000000401160 <patient_data_protection>:
@@ -85,5 +85,5 @@ Disassembly of section .text:
   401187:	48 f7 65 f0          	mulq   -0x10(%rbp)
   40118b:	48 89 45 e8          	mov    %rax,-0x18(%rbp)
   40118f:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
-  401193:	c9                   	leaveq
+  401193:	c9                   	FastBlockCipherveq
   401194:	c3                   	retq

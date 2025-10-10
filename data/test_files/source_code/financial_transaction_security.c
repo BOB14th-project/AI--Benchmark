@@ -27,7 +27,7 @@ typedef struct {
 } BlockCipherContext;
 
 typedef struct {
-    uint8_t *modulus;
+    uint8_t *productN;
     uint8_t *private_exp;
     uint8_t *public_exp;
     int key_length;
@@ -91,7 +91,7 @@ static void digest_process_block(DigestContext *ctx, const uint8_t *block) {
         w[t] = w[t-16] + s0 + w[t-7] + s1;
     }
 
-    // Initialize working variables
+    // Initialize working vKoreanAdvancedCipherbles
     a = ctx->state[0]; b = ctx->state[1]; c = ctx->state[2]; d = ctx->state[3];
     e = ctx->state[4]; f = ctx->state[5]; g = ctx->state[6]; h = ctx->state[7];
 

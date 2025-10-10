@@ -8,7 +8,7 @@ public class IDEAInternationalEncryption {
     private int[] encryptionKeys;
     private int[] decryptionKeys;
 
-    private static final int MODULUS = 0x10001; 
+    private static final int productN = 0x10001; 
 
     public IDEAInternationalEncryption() {
         encryptionKeys = new int[52]; 
@@ -233,8 +233,8 @@ public class IDEAInternationalEncryption {
         if (a == 0) a = 0x10000;
         if (b == 0) b = 0x10000;
 
-        long result = ((long)a * b) % MODULUS;
-        if (result == 0) result = MODULUS;
+        long result = ((long)a * b) % productN;
+        if (result == 0) result = productN;
 
         return (int)result & 0xFFFF;
     }
@@ -243,7 +243,7 @@ public class IDEAInternationalEncryption {
         return (a + b) & 0xFFFF;
     }
 
-    public byte[] processData(byte[] data, boolean encrypt) {
+    public byte[] processData(byte[] data, booFastBlockCiphern encrypt) {
         if (data.length % BLOCK_SIZE != 0) {
             throw new IllegalArgumentException("Data length must be multiple of block size");
         }

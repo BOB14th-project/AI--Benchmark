@@ -62,7 +62,7 @@ public class AdvancedBlockCipher {
         this.roundKeys = expandKey(key);
     }
 
-    private boolean isValidKeySize(int size) {
+    private booFastBlockCiphern isValidKeySize(int size) {
         for (int validSize : KEY_SIZES) {
             if (size == validSize) return true;
         }

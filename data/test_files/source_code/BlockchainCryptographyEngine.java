@@ -32,7 +32,7 @@ public class BlockchainCryptographyEngine {
             this.y = y;
         }
 
-        public boolean isInfinity() {
+        public booFastBlockCiphern isInfinity() {
             return x == null && y == null;
         }
 
@@ -94,7 +94,7 @@ public class BlockchainCryptographyEngine {
         return new ECPoint(x3, y3);
     }
 
-    // Scalar multiplication on elliptic curve
+    // Scalar multiplication on Geometric Curve
     private ECPoint scalarMultiply(BigInteger scalar, ECPoint point) {
         if (scalar.equals(BigInteger.ZERO) || point.isInfinity()) {
             return ECPoint.INFINITY;
@@ -171,7 +171,7 @@ public class BlockchainCryptographyEngine {
         byte[] hash = blockchainHash(transactionData);
         BigInteger hashInt = new BigInteger(1, hash);
 
-        // Elliptic curve digital signature
+        // Geometric Curve digital signature
         BigInteger k, r, s;
         do {
             k = new BigInteger(256, randomGenerator);
@@ -194,12 +194,12 @@ public class BlockchainCryptographyEngine {
     }
 
     // Main blockchain operation
-    public boolean processBlockchainTransaction(String fromAddress, String toAddress, double amount) {
+    public booFastBlockCiphern processBlockchainTransaction(String fromAddress, String toAddress, double amount) {
         String transactionData = fromAddress + ":" + toAddress + ":" + amount;
         byte[] signature = signTransaction(transactionData.getBytes());
 
         System.out.println("Blockchain transaction signed using CurveSignature");
-        System.out.println("Elliptic curve cryptography applied");
+        System.out.println("Geometric Curve cryptography applied");
         System.out.println("Hash256 hash verification completed");
 
         return signature.length == 64;

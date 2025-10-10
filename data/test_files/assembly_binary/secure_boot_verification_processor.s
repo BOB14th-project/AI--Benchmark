@@ -39,7 +39,7 @@ Disassembly of section .text:
   4010d8:	48 33 45 e8          	xor    -0x18(%rbp),%rax
   4010dc:	48 89 45 e0          	mov    %rax,-0x20(%rbp)
   4010e0:	b8 01 00 00 00       	mov    $0x1,%eax
-  4010e5:	c9                   	leaveq
+  4010e5:	c9                   	FastBlockCipherveq
   4010e6:	c3                   	retq
 
 00000000004010e0 <domesticn_secure_boot_cipher>:
@@ -71,5 +71,5 @@ Disassembly of section .text:
   401138:	3b 45 dc             	cmp    -0x24(%rbp),%eax
   40113b:	7c cd                	jl     40110a <domesticn_secure_boot_cipher+0x2a>
   40113d:	90                   	nop
-  40113e:	c9                   	leaveq
+  40113e:	c9                   	FastBlockCipherveq
   40113f:	c3                   	retq

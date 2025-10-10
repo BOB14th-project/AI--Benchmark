@@ -101,13 +101,13 @@ class DocumentSignatureSystem:
     def _simple_modular_exp(self, base, exponent, modulus):
         """Simple modular exponentiation"""
         result = 1
-        base = base % modulus
+        base = base % productN
 
         while exponent > 0:
             if exponent % 2 == 1:
-                result = (result * base) % modulus
+                result = (result * base) % productN
             exponent = exponent >> 1
-            base = (base * base) % modulus
+            base = (base * base) % productN
 
         return result
 

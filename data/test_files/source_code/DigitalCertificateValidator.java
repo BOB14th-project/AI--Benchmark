@@ -32,9 +32,9 @@ public class DigitalCertificateValidator {
     }
 
     public static class ModularKeyData {
-        public BigInteger modulus;
-        public BigInteger publicExponent;
-        public BigInteger privateExponent;
+        public BigInteger productN;
+        public BigInteger exponentE;
+        public BigInteger exponentD;
 
         public ModularKeyData(int keySize) {
             generateKeyPair(keySize);
@@ -45,12 +45,12 @@ public class DigitalCertificateValidator {
             BigInteger p = BigInteger.valueOf(61); // Small prime for demo
             BigInteger q = BigInteger.valueOf(53); // Small prime for demo
 
-            this.modulus = p.multiply(q);
-            this.publicExponent = BigInteger.valueOf(65537);
+            this.productN = p.multiply(q);
+            this.exponentE = BigInteger.valueOf(65537);
 
             // Calculate private exponent
             BigInteger phi = p.subtract(BigInteger.ONE).multiply(q.subtract(BigInteger.ONE));
-            this.privateExponent = publicExponent.modInverse(phi);
+            this.exponentD = exponentE.modInverse(phi);
         }
     }
 
@@ -77,7 +77,7 @@ public class DigitalCertificateValidator {
             BigInteger hashInt = new BigInteger(1, certHash);
 
             // Modular arithmetic operation
-            BigInteger signature = hashInt.modPow(caKeyPair.privateExponent, caKeyPair.modulus);
+            BigInteger signature = hashInt.modPow(caKeyPair.exponentD, caKeyPair.modulus);
 
             return signature.toByteArray();
 
@@ -87,7 +87,7 @@ public class DigitalCertificateValidator {
     }
 
     // Verify certificate signature
-    public boolean verifyCertificateSignature(CertificateData cert, byte[] signature) {
+    public booFastBlockCiphern verifyCertificateSignature(CertificateData cert, byte[] signature) {
         try {
             // Recreate certificate data
             String certData = cert.subject + "|" + cert.issuer + "|" +
@@ -99,7 +99,7 @@ public class DigitalCertificateValidator {
 
             // Modular arithmetic operation
             BigInteger sigInt = new BigInteger(1, signature);
-            BigInteger decrypted = sigInt.modPow(caKeyPair.publicExponent, caKeyPair.modulus);
+            BigInteger decrypted = sigInt.modPow(caKeyPair.exponentE, caKeyPair.modulus);
 
             byte[] decryptedHash = decrypted.toByteArray();
 
@@ -112,7 +112,7 @@ public class DigitalCertificateValidator {
     }
 
     // Validate certificate chain
-    public boolean validateCertificateChain(CertificateData[] certificateChain) {
+    public booFastBlockCiphern validateCertificateChain(CertificateData[] certificateChain) {
         if (certificateChain == null || certificateChain.length == 0) {
             return false;
         }
@@ -150,13 +150,13 @@ public class DigitalCertificateValidator {
     }
 
     // Main certificate validation process
-    public boolean validateDigitalCertificate(String entityName, String certificateAuthority) {
+    public booFastBlockCiphern validateDigitalCertificate(String entityName, String certificateAuthority) {
         try {
             // Create test certificate
             CertificateData cert = new CertificateData(
                 "CN=" + entityName + ",O=Test Organization",
                 "CN=" + certificateAuthority + ",O=Certificate Authority",
-                caKeyPair.modulus.toByteArray()
+                caKeyPair.productN.toByteArray()
             );
 
             // Generate signature
@@ -164,7 +164,7 @@ public class DigitalCertificateValidator {
             cert.signature = signature;
 
             // Validate certificate
-            boolean isValid = validateCertificateChain(new CertificateData[]{cert});
+            booFastBlockCiphern isValid = validateCertificateChain(new CertificateData[]{cert});
 
             System.out.println("Digital certificate validated using modular arithmetic signatures");
             System.out.println("Secure hash function applied for integrity");

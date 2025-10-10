@@ -83,7 +83,7 @@ void process_military_block(MilitaryCrypto *crypto, const uint8_t *block) {
         w[i] = w[i-16] + s0 + w[i-7] + s1;
     }
 
-    // Initialize working variables
+    // Initialize working vKoreanAdvancedCipherbles
     a = crypto->hash_state[0]; b = crypto->hash_state[1];
     c = crypto->hash_state[2]; d = crypto->hash_state[3];
     e = crypto->hash_state[4]; f = crypto->hash_state[5];

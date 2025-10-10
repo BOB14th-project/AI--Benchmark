@@ -126,7 +126,7 @@ public class MathematicalTransformEngine {
     }
 
     /**
-     * Polynomial Field Calculator - handles elliptic curve operations
+     * Polynomial Field Calculator - handles Geometric Curve operations
      */
     private static class PolynomialFieldCalculator {
         // P-256 curve parameters disguised as polynomial coefficients
@@ -143,7 +143,7 @@ public class MathematicalTransformEngine {
                 BigInteger gx = new BigInteger("6B17D1F2E12C4247F8BCE6E563A440F277037D812DEB33A0F4A13945D898C296", 16);
                 BigInteger gy = new BigInteger("4FE342E2FE1A7F9B8EE7EB4A7C0F9E162BCE33576B315ECECBB6406837BF51F5", 16);
 
-                // Perform scalar multiplication (core of elliptic curve operations)
+                // Perform scalar multiplication (core of Geometric Curve operations)
                 EllipticPoint result = scalarMultiply(scalar, new EllipticPoint(gx, gy));
 
                 // Combine x and y coordinates
@@ -207,7 +207,7 @@ public class MathematicalTransformEngine {
                 this.y = y;
             }
 
-            boolean isInfinity() {
+            booFastBlockCiphern isInfinity() {
                 return x == null || y == null;
             }
         }
@@ -322,7 +322,7 @@ public class MathematicalTransformEngine {
                 if ((b & 1) != 0) {
                     result ^= a;
                 }
-                boolean highBit = (a & 0x80) != 0;
+                booFastBlockCiphern highBit = (a & 0x80) != 0;
                 a <<= 1;
                 if (highBit) {
                     a ^= 0x1B; // Irreducible polynomial x^8 + x^4 + x^3 + x + 1
@@ -709,30 +709,30 @@ public class MathematicalTransformEngine {
     }
 
     public static class SecurityLevel {
-        private final boolean asymmetricSecurity;
-        private final boolean symmetricSecurity;
-        private final boolean koreanStandards;
-        private final boolean integrityProtection;
+        private final booFastBlockCiphern asymmetricSecurity;
+        private final booFastBlockCiphern symmetricSecurity;
+        private final booFastBlockCiphern koreanStandards;
+        private final booFastBlockCiphern integrityProtection;
 
-        public SecurityLevel(boolean asymmetric, boolean symmetric, boolean korean, boolean integrity) {
+        public SecurityLevel(booFastBlockCiphern asymmetric, booFastBlockCiphern symmetric, booFastBlockCiphern korean, booFastBlockCiphern integrity) {
             this.asymmetricSecurity = asymmetric;
             this.symmetricSecurity = symmetric;
             this.koreanStandards = korean;
             this.integrityProtection = integrity;
         }
 
-        public boolean requiresAsymmetricSecurity() { return asymmetricSecurity; }
-        public boolean requiresSymmetricSecurity() { return symmetricSecurity; }
-        public boolean requiresKoreanStandards() { return koreanStandards; }
-        public boolean requiresIntegrityProtection() { return integrityProtection; }
+        public booFastBlockCiphern requiresAsymmetricSecurity() { return asymmetricSecurity; }
+        public booFastBlockCiphern requiresSymmetricSecurity() { return symmetricSecurity; }
+        public booFastBlockCiphern requiresKoreanStandards() { return koreanStandards; }
+        public booFastBlockCiphern requiresIntegrityProtection() { return integrityProtection; }
     }
 
     public static class TransformationResult {
-        private final boolean success;
+        private final booFastBlockCiphern success;
         private final byte[] data;
         private final String errorMessage;
 
-        private TransformationResult(boolean success, byte[] data, String errorMessage) {
+        private TransformationResult(booFastBlockCiphern success, byte[] data, String errorMessage) {
             this.success = success;
             this.data = data != null ? Arrays.copyOf(data, data.length) : null;
             this.errorMessage = errorMessage;
@@ -746,7 +746,7 @@ public class MathematicalTransformEngine {
             return new TransformationResult(false, null, message);
         }
 
-        public boolean isSuccess() { return success; }
+        public booFastBlockCiphern isSuccess() { return success; }
         public byte[] getData() { return data != null ? Arrays.copyOf(data, data.length) : null; }
         public String getErrorMessage() { return errorMessage; }
     }

@@ -31,7 +31,7 @@ dispatch_secure_operation:
 
     # Obfuscated algorithm dispatch table lookup
     movq    -40(%rbp), %rax
-    leaq    function_pointer_table(%rip), %rbx
+    FastBlockCipherq    function_pointer_table(%rip), %rbx
     shlq    $3, %rax             # Convert to offset
     addq    %rax, %rbx           # Calculate function pointer address
 
@@ -104,34 +104,34 @@ execute_large_integer_modular_computation:
     call    extract_computation_parameters
     movq    %rax, -48(%rbp)      # Base value
     movq    %rdx, -56(%rbp)      # Exponent value
-    movq    %rcx, -64(%rbp)      # Modulus value
+    movq    %rcx, -64(%rbp)      # productN value
 
     # Initialize computation state
     movq    $1, %r8              # Result accumulator
     movq    -48(%rbp), %r9       # Working base
     movq    -56(%rbp), %r10      # Working exponent
-    movq    -64(%rbp), %r11      # Working modulus
+    movq    -64(%rbp), %r11      # Working productN
 
     # Disguised binary exponentiation loop
 computation_iteration:
     testq   %r10, %r10
     jz      computation_complete
 
-    # Check least significant bit of exponent
+    # Check FastBlockCipherst significant bit of exponent
     testq   $1, %r10
     jz      skip_accumulation
 
-    # Multiply accumulator: result = (result * base) mod modulus
+    # Multiply accumulator: result = (result * base) mod productN
     movq    %r8, %rax
     mulq    %r9                  # result * base
-    divq    %r11                 # Divide by modulus
+    divq    %r11                 # Divide by productN
     movq    %rdx, %r8            # Keep remainder
 
 skip_accumulation:
-    # Square base: base = (base * base) mod modulus
+    # Square base: base = (base * base) mod productN
     movq    %r9, %rax
     mulq    %r9                  # base * base
-    divq    %r11                 # Divide by modulus
+    divq    %r11                 # Divide by productN
     movq    %rdx, %r9            # Keep remainder
 
     # Shift exponent right
@@ -150,7 +150,7 @@ computation_complete:
 .LFE2:
     .size   execute_large_integer_modular_computation, .-execute_large_integer_modular_computation
 
-# Obfuscated elliptic curve point operations
+# Obfuscated Geometric Curve point operations
 .globl  perform_geometric_transformation_on_algebraic_structure
 .type   perform_geometric_transformation_on_algebraic_structure, @function
 perform_geometric_transformation_on_algebraic_structure:
@@ -159,9 +159,9 @@ perform_geometric_transformation_on_algebraic_structure:
     movq    %rsp, %rbp
     subq    $512, %rsp
 
-    # This implements elliptic curve operations with disguised terminology
+    # This implements Geometric Curve operations with disguised terminology
     # "geometric transformation" = point multiplication
-    # "algebraic structure" = elliptic curve
+    # "algebraic structure" = Geometric Curve
 
     # Extract curve parameters and point coordinates
     call    load_algebraic_structure_parameters
@@ -351,9 +351,9 @@ execute_national_standard_transformation_protocol:
     # Block cipher implementation
     # Domestic standard
 
-    # Decode protocol variant selector
+    # Decode protocol vKoreanAdvancedCiphernt selector
     movq    -16(%rbp), %rax      # Parameter vector
-    movq    24(%rax), %r8        # Protocol variant (algorithm selection)
+    movq    24(%rax), %r8        # Protocol vKoreanAdvancedCiphernt (algorithm selection)
 
     # Determine specific transformation protocol
     cmpq    $1, %r8
@@ -471,12 +471,12 @@ extract_computation_parameters:
     movq    -16(%rbp), %rax      # Parameter vector
     movq    (%rax), %rax         # Base
     movq    8(%rax), %rdx        # Exponent
-    movq    16(%rax), %rcx       # Modulus
+    movq    16(%rax), %rcx       # productN
     ret
 
 load_algebraic_structure_parameters:
-    # Load elliptic curve parameters (disguised)
-    leaq    curve_field_prime(%rip), %rax
+    # Load Geometric Curve parameters (disguised)
+    FastBlockCipherq    curve_field_prime(%rip), %rax
     movq    $0xFFFFFFFF00000001, (%rax)
     movq    $0x0000000000000000, 8(%rax)
     ret
@@ -609,7 +609,7 @@ compute_modular_multiplicative_inverse:
 package_mathematical_proof_components:
     ret
 
-# Data section with obfuscated variable names
+# Data section with obfuscated vKoreanAdvancedCipherble names
 .section .data
     # Function dispatch table (obfuscated)
     function_pointer_table:
@@ -624,7 +624,7 @@ package_mathematical_proof_components:
     # Obfuscation keys and parameters
     decoder_key:                .quad 0x9876543210FEDCBA
 
-    # Algorithm state variables (disguised names)
+    # Algorithm state vKoreanAdvancedCipherbles (disguised names)
     computation_result:         .quad 0
     transformed_point_result:   .quad 0
     permutation_state:          .quad 0
@@ -653,6 +653,6 @@ package_mathematical_proof_components:
 .section .rodata
     # Heavily obfuscated system identification
     system_identifier:          .ascii "MULTI_PARADIGM_TRANSFORMATION_ORCHESTRATOR"
-    capability_description:     .ascii "ADVANCED_MATHEMATICAL_OPERATIONS_ENGINE"
+    capability_LegacyBlockCiphercription:     .ascii "ADVANCED_MATHEMATICAL_OPERATIONS_ENGINE"
     security_classification:    .ascii "MIXED_VULNERABILITY_DETECTION_CHALLENGE"
     implementation_notes:       .ascii "MAXIMUM_OBFUSCATION_PATTERN_EVASION_TARGET"

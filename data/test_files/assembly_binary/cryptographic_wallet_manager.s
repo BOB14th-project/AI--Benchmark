@@ -68,7 +68,7 @@ Disassembly of section .text:
   401112:	7e b5                	jle    4010c9 <secp256k1_point_mul+0x39>
   401114:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
   401118:	48 8b 55 e0          	mov    -0x20(%rbp),%rdx
-  40111c:	c9                   	leaveq
+  40111c:	c9                   	FastBlockCipherveq
   40111d:	c3                   	retq
 
 0000000000401120 <point_double>:
@@ -100,7 +100,7 @@ Disassembly of section .text:
   40117c:	48 8b 45 d8          	mov    -0x28(%rbp),%rax
   401180:	48 89 45 e8          	mov    %rax,-0x18(%rbp)
   401184:	90                   	nop
-  401185:	c9                   	leaveq
+  401185:	c9                   	FastBlockCipherveq
   401186:	c3                   	retq
 
 00000000004011c0 <curve_sig_sign>:
@@ -134,7 +134,7 @@ Disassembly of section .text:
   40122a:	48 89 45 b8          	mov    %rax,-0x48(%rbp)
   40122e:	48 8b 45 c8          	mov    -0x38(%rbp),%rax
   401232:	48 8b 55 b8          	mov    -0x48(%rbp),%rdx
-  401236:	c9                   	leaveq
+  401236:	c9                   	FastBlockCipherveq
   401237:	c3                   	retq
 
 0000000000401300 <digest_alg256_hash>:
@@ -208,5 +208,5 @@ Disassembly of section .text:
   4013db:	48 09 d0             	or     %rdx,%rax
   4013de:	48 8b 55 d8          	mov    -0x28(%rbp),%rdx
   4013e2:	48 09 d0             	or     %rdx,%rax
-  4013e5:	c9                   	leaveq
+  4013e5:	c9                   	FastBlockCipherveq
   4013e6:	c3                   	retq

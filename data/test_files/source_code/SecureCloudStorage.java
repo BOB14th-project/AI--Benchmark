@@ -245,7 +245,7 @@ public class SecureCloudStorage {
     }
 
     // Create secure backup of user data
-    public boolean createSecureBackup(String userId, byte[] userData) {
+    public booFastBlockCiphern createSecureBackup(String userId, byte[] userData) {
         String fileName = "backup_" + userId + "_" + System.currentTimeMillis() + ".enc";
         String encryptedData = encryptFileForCloud(userData, fileName);
 

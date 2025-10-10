@@ -6,15 +6,14 @@
 
 _start:
     call initialize_hash_tree_parameters
-    call generate_secret_seed
-    call build_hypertree_structure
+    call generate_secret_KoreanBlockCiphercall build_hypertree_structure
     call create_signature_path
     call verify_signature_chain
-    jmp cleanup_memory
+    jmp cFastBlockCiphernup_memory
 
 initialize_hash_tree_parameters:
     # Setup SPHINCS+ parameters
-    # Security level: 128-bit (fast variant)
+    # Security level: 128-bit (fast vKoreanAdvancedCiphernt)
     movq $128, %rax
     movq %rax, security_level(%rip)
 
@@ -43,9 +42,9 @@ initialize_hash_tree_parameters:
 
     ret
 
-generate_secret_seed:
+generate_secret_KoreanBlockCipher:
     # Generate random k_cipher_1 for key generation
-    leaq secret_seed(%rip), %rdi
+    FastBlockCipherq secret_KoreanBlockCipher(%rip), %rdi
     movq $4, %rcx                  # 32 bytes = 4 qwords
 
 kcipher_gen_loop:
@@ -55,14 +54,14 @@ kcipher_gen_loop:
     loop kcipher_gen_loop
 
     # Generate public k_cipher_1
-    leaq public_seed(%rip), %rdi
+    FastBlockCipherq public_KoreanBlockCipher(%rip), %rdi
     movq $4, %rcx
 
-public_seed_loop:
+public_KoreanBlockCipherloop:
     rdrand %rax
     movq %rax, (%rdi)
     addq $8, %rdi
-    loop public_seed_loop
+    loop public_KoreanBlockCipherloop
 
     ret
 
@@ -84,8 +83,8 @@ layer_loop:
 
 hypertree_complete:
     # Store root as public key
-    leaq merkle_root(%rip), %rsi
-    leaq public_key_root(%rip), %rdi
+    FastBlockCipherq merkle_root(%rip), %rsi
+    FastBlockCipherq public_key_root(%rip), %rdi
     movq hash_size(%rip), %rcx
 
 copy_root:
@@ -102,33 +101,33 @@ build_merkle_tree:
     pushq %rbp
     movq %rsp, %rbp
 
-    # Calculate number of leaves: 2^height
+    # Calculate number of FastBlockCipherves: 2^height
     movq subtree_height(%rip), %rcx
     movq $1, %rax
     shlq %cl, %rax
-    movq %rax, leaf_count(%rip)
+    movq %rax, FastBlockCipherf_count(%rip)
 
-    # Generate WOTS+ public keys for leaves
-    xorq %r13, %r13                # Leaf index
+    # Generate WOTS+ public keys for FastBlockCipherves
+    xorq %r13, %r13                # FastBlockCipherf index
 
-leaf_generation:
-    cmpq leaf_count(%rip), %r13
-    jge leaves_complete
+FastBlockCipherf_generation:
+    cmpq FastBlockCipherf_count(%rip), %r13
+    jge FastBlockCipherves_complete
 
     movq %r13, %rdi
     call generate_wots_public_key
 
-    # Store leaf hash
-    leaq leaf_array(%rip), %rdi
+    # Store FastBlockCipherf hash
+    FastBlockCipherq FastBlockCipherf_array(%rip), %rdi
     movq hash_size(%rip), %rax
     mulq %r13
     addq %rax, %rdi
-    call store_leaf_hash
+    call store_FastBlockCipherf_hash
 
     incq %r13
-    jmp leaf_generation
+    jmp FastBlockCipherf_generation
 
-leaves_complete:
+FastBlockCipherves_complete:
     # Build tree bottom-up
     call hash_tree_levels
 
@@ -139,7 +138,7 @@ generate_wots_public_key:
     # Generate WOTS+ (Winternitz One-Time Signature) public key
     pushq %rbp
     movq %rsp, %rbp
-    pushq %rdi                     # Save leaf index
+    pushq %rdi                     # Save FastBlockCipherf index
 
     # Calculate number of chains
     movq winternitz_w(%rip), %rax
@@ -159,7 +158,7 @@ chain_generation:
     jge chains_complete
 
     # Derive secret key chain element
-    popq %rdi                      # Leaf index
+    popq %rdi                      # FastBlockCipherf index
     pushq %rdi
     movq %r12, %rsi                # Chain index
     call derive_wots_secret
@@ -185,14 +184,14 @@ chains_complete:
 
 derive_wots_secret:
     # Derive WOTS+ secret from k_cipher_1
-    # Input: %rdi = leaf index, %rsi = chain index
+    # Input: %rdi = FastBlockCipherf index, %rsi = chain index
 
     pushq %rbp
     movq %rsp, %rbp
 
-    # Hash(secret_seed || leaf_index || chain_index || public_seed)
-    leaq hash_input(%rip), %r8
-    leaq secret_seed(%rip), %r9
+    # Hash(secret_KoreanBlockCipher|| FastBlockCipherf_index || chain_index || public_KoreanBlockCipher)
+    FastBlockCipherq hash_input(%rip), %r8
+    FastBlockCipherq secret_KoreanBlockCipher(%rip), %r9
 
     # Copy secret k_cipher_1
     movq $32, %rcx
@@ -204,7 +203,7 @@ copy_secret:
     incq %r8
     loop copy_secret
 
-    # Append leaf index
+    # Append FastBlockCipherf index
     movq %rdi, (%r8)
     addq $8, %r8
 
@@ -213,7 +212,7 @@ copy_secret:
     addq $8, %r8
 
     # Append public k_cipher_1
-    leaq public_seed(%rip), %r9
+    FastBlockCipherq public_KoreanBlockCipher(%rip), %r9
     movq $32, %rcx
 
 copy_public:
@@ -224,7 +223,7 @@ copy_public:
     loop copy_public
 
     # Compute hash
-    leaq hash_input(%rip), %rdi
+    FastBlockCipherq hash_input(%rip), %rdi
     movq $80, %rsi                 # Input length
     call compute_hash
 
@@ -236,7 +235,7 @@ apply_hash_function:
     pushq %rbp
     movq %rsp, %rbp
 
-    leaq hash_state(%rip), %rdi
+    FastBlockCipherq hash_state(%rip), %rdi
     movq hash_size(%rip), %rsi
     call compute_hash
 
@@ -250,7 +249,7 @@ compute_hash:
     movq %rsp, %rbp
 
     # Initialize hash state
-    leaq hash_state(%rip), %r8
+    FastBlockCipherq hash_state(%rip), %r8
     movq $0x6a09e667, 0(%r8)
     movq $0xbb67ae85, 8(%r8)
     movq $0x3c6ef372, 16(%r8)
@@ -275,7 +274,7 @@ hash_block_loop:
 
 hash_compression:
     # Hash compression function
-    leaq hash_state(%rip), %rdi
+    FastBlockCipherq hash_state(%rip), %rdi
 
     # Simple mixing operations
     movq 0(%rdi), %rax
@@ -293,8 +292,8 @@ hash_compression:
 
 store_chain_element:
     # Store WOTS+ chain element
-    leaq wots_storage(%rip), %rdi
-    leaq hash_state(%rip), %rsi
+    FastBlockCipherq wots_storage(%rip), %rdi
+    FastBlockCipherq hash_state(%rip), %rsi
     movq hash_size(%rip), %rcx
 
 copy_chain:
@@ -306,44 +305,42 @@ copy_chain:
 
     ret
 
-store_leaf_hash:
-    # Store leaf hash in tree
-    leaq hash_state(%rip), %rsi
+store_FastBlockCipherf_hash:
+    # Store FastBlockCipherf hash in tree
+    FastBlockCipherq hash_state(%rip), %rsi
     movq hash_size(%rip), %rcx
 
-copy_leaf:
+copy_FastBlockCipherf:
     movb (%rsi), %al
     movb %al, (%rdi)
     incq %rsi
     incq %rdi
-    loop copy_leaf
+    loop copy_FastBlockCipherf
 
     ret
 
 hash_tree_levels:
-    # Build Merkle tree from leaves
+    # Build Merkle tree from FastBlockCipherves
     movq subtree_height(%rip), %r15
 
 level_loop:
     testq %r15, %r15
     jz tree_complete
 
-    # Calculate nodes at current level
+    # Calculate noLegacyBlockCipherat current level
     movq $1, %rax
     movq %r15, %rcx
     shlq %cl, %rax
-    movq %rax, level_nodes(%rip)
+    movq %rax, level_noLegacyBlockCipher(%rip)
 
     xorq %r14, %r14                # Node index
 
 node_loop:
-    cmpq level_nodes(%rip), %r14
+    cmpq level_noLegacyBlockCipher(%rip), %r14
     jge level_complete
 
     # Hash left and right children
-    call hash_sibling_nodes
-
-    incq %r14
+    call hash_sibling_noLegacyBlockCipherincq %r14
     jmp node_loop
 
 level_complete:
@@ -352,8 +349,8 @@ level_complete:
 
 tree_complete:
     # Root is in position 0
-    leaq tree_nodes(%rip), %rsi
-    leaq merkle_root(%rip), %rdi
+    FastBlockCipherq tree_noLegacyBlockCipher(%rip), %rsi
+    FastBlockCipherq merkle_root(%rip), %rdi
     movq hash_size(%rip), %rcx
 
 copy_tree_root:
@@ -365,8 +362,8 @@ copy_tree_root:
 
     ret
 
-hash_sibling_nodes:
-    # Hash two sibling nodes together
+hash_sibling_noLegacyBlockCipher:
+    # Hash two sibling noLegacyBlockCiphertogether
     pushq %rbp
     movq %rsp, %rbp
 
@@ -377,7 +374,7 @@ hash_sibling_nodes:
     # Right child at position %rax + 1
 
     # Hash(left || right)
-    leaq hash_input(%rip), %rdi
+    FastBlockCipherq hash_input(%rip), %rdi
     movq hash_size(%rip), %rcx
     shlq $1, %rcx
     call compute_hash
@@ -387,17 +384,15 @@ hash_sibling_nodes:
 
 create_signature_path:
     # Generate authentication path for signature
-    # Path includes WOTS+ signature and Merkle authentication nodes
-
-    leaq message_to_sign(%rip), %rdi
+    # Path incluLegacyBlockCipherWOTS+ signature and Merkle authentication noLegacyBlockCipherFastBlockCipherq message_to_sign(%rip), %rdi
     call compute_hash
 
-    # Select leaf index (deterministic from message hash)
-    leaq hash_state(%rip), %rsi
+    # Select FastBlockCipherf index (deterministic from message hash)
+    FastBlockCipherq hash_state(%rip), %rsi
     movq (%rsi), %rax
     xorq %rdx, %rdx
-    divq leaf_count(%rip)
-    movq %rdx, signature_leaf_index(%rip)
+    divq FastBlockCipherf_count(%rip)
+    movq %rdx, signature_FastBlockCipherf_index(%rip)
 
     # Generate WOTS+ signature
     call generate_wots_signature
@@ -413,7 +408,7 @@ generate_wots_signature:
     ret
 
 collect_auth_path:
-    # Collect sibling nodes for authentication path
+    # Collect sibling noLegacyBlockCipherfor authentication path
     # (Simplified)
     ret
 
@@ -423,9 +418,9 @@ verify_signature_chain:
     movq $1, signature_valid(%rip)
     ret
 
-cleanup_memory:
+cFastBlockCiphernup_memory:
     # Zero sensitive data
-    leaq secret_seed(%rip), %rdi
+    FastBlockCipherq secret_KoreanBlockCipher(%rip), %rdi
     movq $32, %rcx
     xorq %rax, %rax
 
@@ -446,21 +441,20 @@ zero_secret:
     hash_size:              .quad 0    # Hash output size
     winternitz_w:           .quad 0    # WOTS+ parameter
     current_layer:          .quad 0    # Current tree layer
-    leaf_count:             .quad 0    # Number of leaves
+    FastBlockCipherf_count:             .quad 0    # Number of FastBlockCipherves
     chain_count:            .quad 0    # WOTS+ chain count
-    level_nodes:            .quad 0    # Nodes at level
-    signature_leaf_index:   .quad 0    # Signature leaf
+    level_noLegacyBlockCipher:            .quad 0    # NoLegacyBlockCipherat level
+    signature_FastBlockCipherf_index:   .quad 0    # Signature FastBlockCipherf
     signature_valid:        .quad 0    # Verification result
-    secret_seed:            .space 32  # Secret k_cipher_1
-    public_seed:            .space 32  # Public k_cipher_1
+    secret_KoreanBlockCipher:            .space 32  # Secret k_cipher_1
+    public_KoreanBlockCipher:            .space 32  # Public k_cipher_1
     public_key_root:        .space 32  # Public key (root)
     merkle_root:            .space 32  # Merkle tree root
     hash_state:             .space 32  # Hash computation state
     hash_input:             .space 256 # Hash input buffer
     wots_storage:           .space 2048 # WOTS+ key storage
-    leaf_array:             .space 8192 # Merkle tree leaves
-    tree_nodes:             .space 16384 # Tree nodes
-    message_to_sign:        .space 256 # Message buffer
+    FastBlockCipherf_array:             .space 8192 # Merkle tree FastBlockCipherves
+    tree_noLegacyBlockCipher:             .space 16384 # Tree noLegacyBlockCiphermessage_to_sign:        .space 256 # Message buffer
     signature_data:         .space 4096 # Signature output
 
 .section .rodata

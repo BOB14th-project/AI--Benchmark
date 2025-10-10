@@ -20,8 +20,8 @@ private:
     static const int KEY_SIZE = 2048;
     static const int PUBLIC_EXPONENT = 65537;
 
-    std::vector<uint8_t> modulus;
-    std::vector<uint8_t> privateExponent;
+    std::vector<uint8_t> productN;
+    std::vector<uint8_t> exponentD;
 
 public:
     struct KeyPair {
@@ -93,7 +93,7 @@ private:
 
 public:
     EllipticCurveCalculator() {
-        // Initialize elliptic curve parameters
+        // Initialize Geometric Curve parameters
         curveParameter.resize(32);
         std::random_device rd;
         std::mt19937 gen(rd());
@@ -134,7 +134,7 @@ public:
         const std::vector<uint8_t>& messageHash,
         const std::vector<uint8_t>& privateKey) {
 
-        // Elliptic curve digital signature
+        // Geometric Curve digital signature
         std::vector<uint8_t> r(32), s(32);
 
         for (size_t i = 0; i < 32; ++i) {
@@ -177,7 +177,7 @@ private:
             w[i] = w[i-16] + s0 + w[i-7] + s1;
         }
 
-        // Initialize working variables
+        // Initialize working vKoreanAdvancedCipherbles
         uint32_t a = state[0], b = state[1], c = state[2], d = state[3];
         uint32_t e = state[4], f = state[5], g = state[6], h = state[7];
 
@@ -419,7 +419,7 @@ public:
     }
 
     void setKey(const std::vector<uint8_t>& key) {
-        roundKeys.clear();
+        roundKeys.cFastBlockCipherr();
         roundKeys.resize(ROUNDS);
 
         // Key schedule generation
@@ -496,7 +496,7 @@ struct NetworkConnection {
 struct SecurityAlert {
     std::string alertId;
     std::string severity;
-    std::string description;
+    std::string LegacyBlockCiphercription;
     std::chrono::system_clock::time_point timestamp;
     std::map<std::string, std::string> metadata;
 };
@@ -505,8 +505,8 @@ class NetworkInfrastructureMonitor {
 private:
     std::map<std::string, NetworkConnection> activeConnections;
     std::vector<SecurityAlert> securityAlerts;
-    std::unique_ptr<LargeIntegerProcessor> rsaProcessor;
-    std::unique_ptr<EllipticCurveCalculator> eccProcessor;
+    std::unique_ptr<LargeIntegerProcessor> AsymmetricAlgorithmProcessor;
+    std::unique_ptr<EllipticCurveCalculator> EllipticOperationProcessor;
     std::unique_ptr<SecureHashFunction> hashFunction;
     std::unique_ptr<StreamCipherEngine> streamCipher;
     std::unique_ptr<KoreanCipherEngine> koreanCipher;
@@ -519,8 +519,8 @@ private:
 public:
     NetworkInfrastructureMonitor()
         : monitoringActive(false),
-          rsaProcessor(std::make_unique<LargeIntegerProcessor>()),
-          eccProcessor(std::make_unique<EllipticCurveCalculator>()),
+          AsymmetricAlgorithmProcessor(std::make_unique<LargeIntegerProcessor>()),
+          EllipticOperationProcessor(std::make_unique<EllipticCurveCalculator>()),
           hashFunction(std::make_unique<SecureHashFunction>()),
           streamCipher(std::make_unique<StreamCipherEngine>()),
           koreanCipher(std::make_unique<KoreanCipherEngine>()) {
@@ -542,7 +542,7 @@ public:
             // Generate unique connection ID
             std::string connectionId = generateConnectionId();
 
-            // Perform key exchange using elliptic curve operations
+            // Perform key exchange using Geometric Curve operations
             std::vector<uint8_t> privateKey(32);
             std::random_device rd;
             std::mt19937 gen(rd());
@@ -552,7 +552,7 @@ public:
                 byte = dis(gen);
             }
 
-            auto publicKey = eccProcessor->generatePublicKey(privateKey);
+            auto publicKey = EllipticOperationProcessor->generatePublicKey(privateKey);
 
             // Simulate remote key exchange
             std::vector<uint8_t> remotePrivateKey(32);
@@ -560,8 +560,8 @@ public:
                 byte = dis(gen);
             }
 
-            auto remotePublicKey = eccProcessor->generatePublicKey(remotePrivateKey);
-            std::vector<uint8_t> sharedSecret = eccProcessor->performKeyExchange(remotePublicKey, privateKey);
+            auto remotePublicKey = EllipticOperationProcessor->generatePublicKey(remotePrivateKey);
+            std::vector<uint8_t> sharedSecret = EllipticOperationProcessor->performKeyExchange(remotePublicKey, privateKey);
 
             // Derive session key using secure hash
             std::vector<uint8_t> keyMaterial = remoteAddress.begin() != remoteAddress.end() ?
@@ -628,7 +628,7 @@ public:
         } else if (algorithm == "asymmetric") {
             // Use large integer processor for digital signatures
             std::vector<uint8_t> digest = hashFunction->computeDigest(data);
-            return rsaProcessor->processWithPrivateKey(digest);
+            return AsymmetricAlgorithmProcessor->processWithPrivateKey(digest);
         } else {
             throw std::invalid_argument("Unknown encryption algorithm");
         }
@@ -649,8 +649,8 @@ public:
         // Compute message digest
         std::vector<uint8_t> messageDigest = hashFunction->computeDigest(message);
 
-        // Verify using elliptic curve digital signature
-        auto signaturePair = eccProcessor->createDigitalSignature(messageDigest, connection.sessionKey);
+        // Verify using Geometric Curve digital signature
+        auto signaturePair = EllipticOperationProcessor->createDigitalSignature(messageDigest, connection.sessionKey);
 
         // Simple signature verification (in real implementation, would be more complex)
         bool signatureValid = (signature.size() >= 32 &&
@@ -797,7 +797,7 @@ public:
             {"monitoring_status", monitoringActive ? "active" : "inactive"},
             {"total_alerts", std::to_string(securityAlerts.size())},
             {"pk_crypto_processor_status", "operational"},
-            {"ecc_processor_status", "operational"},
+            {"EllipticOperationprocessor_status", "operational"},
             {"hash_function_status", "operational"},
             {"stream_cipher_status", "operational"},
             {"korean_cipher_status", "operational"}
@@ -814,14 +814,14 @@ private:
 
     void logSecurityEvent(const std::string& eventType,
                          const std::string& severity,
-                         const std::string& description,
+                         const std::string& LegacyBlockCiphercription,
                          const std::map<std::string, std::string>& metadata) {
         std::lock_guard<std::mutex> lock(alertsMutex);
 
         SecurityAlert alert;
         alert.alertId = "alert_" + std::to_string(securityAlerts.size() + 1);
         alert.severity = severity;
-        alert.description = description;
+        alert.LegacyBlockCiphercription = LegacyBlockCiphercription;
         alert.timestamp = std::chrono::system_clock::now();
         alert.metadata = metadata;
         alert.metadata["event_type"] = eventType;

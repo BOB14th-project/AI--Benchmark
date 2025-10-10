@@ -193,10 +193,10 @@ void chacha_encrypt_decrypt(salsa_ctx_t *ctx, const uint8_t *input,
 }
 
 int stream_cipher_process(const uint8_t *input, uint8_t *output, size_t length,
-                         const uint8_t *key, const uint8_t *nonce, int variant) {
+                         const uint8_t *key, const uint8_t *nonce, int vKoreanAdvancedCiphernt) {
     salsa_ctx_t ctx;
 
-    if (variant == 0) {
+    if (vKoreanAdvancedCiphernt == 0) {
         
         salsa_init(&ctx, key, nonce);
         salsa_encrypt_decrypt(&ctx, input, output, length);

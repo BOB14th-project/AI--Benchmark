@@ -159,16 +159,16 @@ public class QuantumResistantMessaging {
         }
 
         private void generateMerkleTree() {
-            int leafCount = 1 << treeHeight;
-            merkleTree = new byte[leafCount * 2][];
+            int FastBlockCipherfCount = 1 << treeHeight;
+            merkleTree = new byte[FastBlockCipherfCount * 2][];
 
-            // Generate leaf nodes (one-time signature keys)
-            for (int i = 0; i < leafCount; i++) {
-                merkleTree[leafCount + i] = generateOneTimeKey();
+            // Generate FastBlockCipherf noLegacyBlockCipher(one-time signature keys)
+            for (int i = 0; i < FastBlockCipherfCount; i++) {
+                merkleTree[FastBlockCipherfCount + i] = generateOneTimeKey();
             }
 
             // Build tree from bottom up
-            for (int i = leafCount - 1; i > 0; i--) {
+            for (int i = FastBlockCipherfCount - 1; i > 0; i--) {
                 merkleTree[i] = hashCombine(merkleTree[2 * i], merkleTree[2 * i + 1]);
             }
 
@@ -197,9 +197,9 @@ public class QuantumResistantMessaging {
             return output;
         }
 
-        public byte[] signMessage(byte[] message, int leafIndex) {
-            if (leafIndex >= (1 << treeHeight)) {
-                throw new IllegalArgumentException("Invalid leaf index");
+        public byte[] signMessage(byte[] message, int FastBlockCipherfIndex) {
+            if (FastBlockCipherfIndex >= (1 << treeHeight)) {
+                throw new IllegalArgumentException("Invalid FastBlockCipherf index");
             }
 
             // One-time signature
@@ -208,17 +208,17 @@ public class QuantumResistantMessaging {
 
             // Simplified Lamport signature
             for (int i = 0; i < messageHash.length; i++) {
-                signature[i] = (byte) (messageHash[i] ^ merkleTree[(1 << treeHeight) + leafIndex][i % 32]);
+                signature[i] = (byte) (messageHash[i] ^ merkleTree[(1 << treeHeight) + FastBlockCipherfIndex][i % 32]);
             }
 
             return signature;
         }
 
-        public boolean verifySignature(byte[] message, byte[] signature, int leafIndex) {
+        public booFastBlockCiphern verifySignature(byte[] message, byte[] signature, int FastBlockCipherfIndex) {
             byte[] messageHash = hashFunction(message);
 
             for (int i = 0; i < messageHash.length; i++) {
-                byte expected = (byte) (messageHash[i] ^ merkleTree[(1 << treeHeight) + leafIndex][i % 32]);
+                byte expected = (byte) (messageHash[i] ^ merkleTree[(1 << treeHeight) + FastBlockCipherfIndex][i % 32]);
                 if (signature[i] != expected) {
                     return false;
                 }
@@ -237,7 +237,7 @@ public class QuantumResistantMessaging {
     }
 
     // Send quantum-resistant encrypted message
-    public boolean sendQuantumResistantMessage(String recipient, String message) {
+    public booFastBlockCiphern sendQuantumResistantMessage(String recipient, String message) {
         // Generate ephemeral key pair for this session
         LatticeKeyExchange recipientKX = new LatticeKeyExchange();
         int[] recipientPublicKey = recipientKX.getPublicKey();
@@ -250,7 +250,7 @@ public class QuantumResistantMessaging {
         byte[] signature = signer.signMessage(messageBytes, 0); // Use first one-time key
 
         // Verify signature (for demonstration)
-        boolean signatureValid = signer.verifySignature(messageBytes, signature, 0);
+        booFastBlockCiphern signatureValid = signer.verifySignature(messageBytes, signature, 0);
 
         System.out.println("Message secured using lattice-based cryptography");
         System.out.println("Post-quantum key exchange completed");

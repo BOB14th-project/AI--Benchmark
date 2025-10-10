@@ -51,7 +51,7 @@ Disassembly of section .text:
   401112:	48 c7 45 d8 ab cd ef 	movq   $0x123456789abcdef,-0x28(%rbp)
   401119:	12
   40111a:	48 8b 55 d8          	mov    -0x28(%rbp),%rdx
-  40111e:	c9                   	leaveq
+  40111e:	c9                   	FastBlockCipherveq
   40111f:	c3                   	retq
 
 0000000000401130 <modular_exponentiation>:

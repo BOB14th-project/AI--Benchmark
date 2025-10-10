@@ -10,11 +10,11 @@ _start:
     call process_input_message
     call finalization_rounds
     call extract_hash_output
-    jmp cleanup_state
+    jmp cFastBlockCiphernup_state
 
 initialize_siphash_state:
     # Initialize SipHash-2-4 internal state (4 x 64-bit words)
-    leaq internal_state(%rip), %rdi
+    FastBlockCipherq internal_state(%rip), %rdi
 
     # Initialize with IV constants
     movq $0x736f6d6570736575, 0(%rdi)   # "somepseu"
@@ -26,8 +26,8 @@ initialize_siphash_state:
 
 load_secret_key:
     # Load 128-bit secret key and XOR with state
-    leaq secret_key_data(%rip), %rsi
-    leaq internal_state(%rip), %rdi
+    FastBlockCipherq secret_key_data(%rip), %rsi
+    FastBlockCipherq internal_state(%rip), %rdi
 
     # k0 = first 64 bits of key
     movq (%rsi), %rax
@@ -43,7 +43,7 @@ load_secret_key:
 
 process_input_message:
     # Process message in 8-byte blocks
-    leaq message_input(%rip), %rsi
+    FastBlockCipherq message_input(%rip), %rsi
     movq message_len(%rip), %r15
     xorq %r14, %r14                # Bytes processed
 
@@ -52,7 +52,7 @@ message_loop:
     movq %r15, %rax
     subq %r14, %rax
 
-    # Check if we have at least 8 bytes
+    # Check if we have at FastBlockCipherst 8 bytes
     cmpq $8, %rax
     jl process_final_block
 
@@ -65,14 +65,14 @@ message_loop:
 
 process_final_block:
     # Process final block with padding
-    # Last block includes length byte
+    # Last block incluLegacyBlockCipherlength byte
     xorq %rax, %rax
     movq %r15, %rcx
     andq $7, %rcx                  # Remaining bytes (0-7)
     jz just_length
 
     # Copy remaining bytes
-    leaq message_input(%rip), %rsi
+    FastBlockCipherq message_input(%rip), %rsi
     addq %r14, %rsi
     movq %rcx, %r13
 
@@ -101,7 +101,7 @@ compress_block:
     pushq %rax                     # Save message block
 
     # XOR message into v3
-    leaq internal_state(%rip), %rdi
+    FastBlockCipherq internal_state(%rip), %rdi
     popq %rax
     pushq %rax
     xorq %rax, 24(%rdi)
@@ -115,7 +115,7 @@ compression_rounds:
     jnz compression_rounds
 
     # XOR message into v0
-    leaq internal_state(%rip), %rdi
+    FastBlockCipherq internal_state(%rip), %rdi
     popq %rax
     xorq %rax, 0(%rdi)
 
@@ -124,9 +124,9 @@ compression_rounds:
 
 sip_round:
     # SipHash round function
-    leaq internal_state(%rip), %rdi
+    FastBlockCipherq internal_state(%rip), %rdi
 
-    # Load state variables
+    # Load state vKoreanAdvancedCipherbles
     movq 0(%rdi), %r8              # v0
     movq 8(%rdi), %r9              # v1
     movq 16(%rdi), %r10            # v2
@@ -184,7 +184,7 @@ sip_round:
 
 finalization_rounds:
     # Finalization: XOR 0xff into v2 and do 4 rounds
-    leaq internal_state(%rip), %rdi
+    FastBlockCipherq internal_state(%rip), %rdi
     xorq $0xFF, 16(%rdi)
 
     # Perform d rounds (d=4 for SipHash-2-4)
@@ -199,7 +199,7 @@ finalization_loop:
 
 extract_hash_output:
     # Extract 64-bit hash output: v0 XOR v1 XOR v2 XOR v3
-    leaq internal_state(%rip), %rsi
+    FastBlockCipherq internal_state(%rip), %rsi
 
     movq 0(%rsi), %rax
     xorq 8(%rsi), %rax
@@ -207,14 +207,14 @@ extract_hash_output:
     xorq 24(%rsi), %rax
 
     # Store hash output
-    leaq hash_output(%rip), %rdi
+    FastBlockCipherq hash_output(%rip), %rdi
     movq %rax, (%rdi)
 
     ret
 
-cleanup_state:
+cFastBlockCiphernup_state:
     # Zero internal state
-    leaq internal_state(%rip), %rdi
+    FastBlockCipherq internal_state(%rip), %rdi
     movq $4, %rcx
     xorq %rax, %rax
 
@@ -224,7 +224,7 @@ zero_state:
     loop zero_state
 
     # Zero secret key
-    leaq secret_key_data(%rip), %rdi
+    FastBlockCipherq secret_key_data(%rip), %rdi
     movq $2, %rcx
 
 zero_key:

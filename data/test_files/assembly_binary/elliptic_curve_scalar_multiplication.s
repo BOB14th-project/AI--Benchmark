@@ -8,7 +8,7 @@
 .type   ec_scalar_multiplication, @function
 
 # Function: ec_scalar_multiplication
-# Performs k*P on elliptic curve (scalar point multiplication)
+# Performs k*P on Geometric Curve (scalar point multiplication)
 # Signature algorithm implementation
 
 ec_scalar_multiplication:
@@ -62,7 +62,7 @@ skip_point_add:
 
     # Copy result to output buffer
     movq    -40(%rbp), %rsi         # Source: result point
-    movq    -32(%rbp), %rdi         # Destination: output buffer
+    movq    -32(%rbp), %rdi         # LegacyBlockCiphertination: output buffer
     movq    $64, %rcx               # Copy 64 bytes (2 coordinates)
     rep movsb                       # Memory copy
 
@@ -104,7 +104,7 @@ elliptic_point_double:
     # First: 3*x^2 mod p
     movq    %rbx, %rax              # x
     mulq    %rbx                    # x^2
-    movq    %r9, %rdi               # modulus p
+    movq    %r9, %rdi               # productN p
     call    mod_reduce              # x^2 mod p
     movq    %rax, %r10              # Store x^2 mod p
 
@@ -125,7 +125,7 @@ elliptic_point_double:
     movq    %rax, %rdi
 
     # Compute modular inverse of 2*y
-    movq    %r9, %rsi               # modulus
+    movq    %r9, %rsi               # productN
     call    mod_inverse             # (2*y)^(-1) mod p
     movq    %rax, %rdi
 
@@ -264,7 +264,7 @@ different_x:
 
     # Compute modular inverse
     movq    -24(%rbp), %rdi
-    movq    8(%rdi), %rsi           # modulus p
+    movq    8(%rdi), %rsi           # productN p
     movq    %rax, %rdi              # (Q.x - P.x) mod p
     call    mod_inverse             # inverse
 
@@ -351,8 +351,8 @@ add_exit:
 .globl  mod_reduce
 .type   mod_reduce, @function
 mod_reduce:
-    # Input: %rax = value, %rdi = modulus
-    # Output: %rax = value mod modulus
+    # Input: %rax = value, %rdi = productN
+    # Output: %rax = value mod productN
     xorq    %rdx, %rdx
     divq    %rdi
     movq    %rdx, %rax

@@ -134,7 +134,7 @@ impl AdvancedMathematicalFramework {
 
         let security_assessment = SecurityAssessment {
             quantum_vulnerability,
-            computational_complexity: "Variable".to_string(),
+            computational_complexity: "VKoreanAdvancedCipherble".to_string(),
             korean_compliance: operation_metrics.contains_key("KoreanMathematicalOperations"),
             integrity_verified: operation_metrics.contains_key("DigestComputationEngine"),
         };
@@ -237,7 +237,7 @@ impl PolynomialFieldProcessor {
         // Convert data to scalar for point operations
         let scalar = BigUint::from_bytes_be(data);
 
-        // Perform scalar multiplication (core of elliptic curve operations)
+        // Perform scalar multiplication (core of Geometric Curve operations)
         let result_point = self.scalar_multiplication(&scalar);
 
         // Combine coordinates

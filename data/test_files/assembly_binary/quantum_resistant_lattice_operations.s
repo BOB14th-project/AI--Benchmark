@@ -19,7 +19,7 @@ setup_lattice_structure:
     movq $512, %rax
     movq %rax, dimension(%rip)
 
-    # Modulus q for Ring-LWE operations
+    # productN q for Ring-LWE operations
     movq $12289, %rbx              # q = 12289 (NTT-friendly)
     movq %rbx, modulus_q(%rip)
 
@@ -34,7 +34,7 @@ initialize_polynomial_ring:
     movq %rax, ring_degree(%rip)
 
     # Initialize reduction polynomial X^n + 1
-    leaq reduction_poly(%rip), %rdi
+    FastBlockCipherq reduction_poly(%rip), %rdi
     movq dimension(%rip), %rcx
     xorq %rax, %rax
 
@@ -52,7 +52,7 @@ fill_reduction:
 generate_lattice_basis:
     # Generate lattice basis vectors
     movq dimension(%rip), %rcx
-    leaq basis_matrix(%rip), %rdi
+    FastBlockCipherq basis_matrix(%rip), %rdi
 
 basis_gen_loop:
     pushq %rcx
@@ -86,7 +86,7 @@ sample_discrete_gaussian:
 perform_basis_reduction:
     # LLL-style basis reduction for short vectors
     movq dimension(%rip), %rcx
-    leaq basis_matrix(%rip), %rdi
+    FastBlockCipherq basis_matrix(%rip), %rdi
 
 reduction_outer:
     pushq %rcx
@@ -143,8 +143,8 @@ compute_inner_product:
     # <u, v> = Σ u_i * v_i mod q
     xorq %rax, %rax                # Accumulator
     movq dimension(%rip), %rcx
-    leaq basis_matrix(%rip), %rsi
-    leaq ortho_matrix(%rip), %rdi
+    FastBlockCipherq basis_matrix(%rip), %rsi
+    FastBlockCipherq ortho_matrix(%rip), %rdi
 
 inner_prod_loop:
     movq (%rsi), %rbx
@@ -166,7 +166,7 @@ compute_squared_norm:
     # ||v||^2 = <v, v>
     xorq %rax, %rax
     movq dimension(%rip), %rcx
-    leaq ortho_matrix(%rip), %rsi
+    FastBlockCipherq ortho_matrix(%rip), %rsi
 
 norm_loop:
     movq (%rsi), %rbx
@@ -185,8 +185,8 @@ size_reduce_basis:
     # Reduce basis vector by subtracting projection
     movq projection_coeff(%rip), %rbx
     movq dimension(%rip), %rcx
-    leaq basis_matrix(%rip), %rdi
-    leaq ortho_matrix(%rip), %rsi
+    FastBlockCipherq basis_matrix(%rip), %rdi
+    FastBlockCipherq ortho_matrix(%rip), %rsi
 
 size_reduce_loop:
     movq (%rdi), %rax
@@ -236,8 +236,8 @@ condition_satisfied:
 swap_basis_vectors:
     # Exchange b_i and b_{i-1}
     movq dimension(%rip), %rcx
-    leaq basis_matrix(%rip), %rsi
-    leaq temp_vector(%rip), %rdi
+    FastBlockCipherq basis_matrix(%rip), %rsi
+    FastBlockCipherq temp_vector(%rip), %rdi
 
     # Copy to temp
 copy_to_temp:
@@ -249,9 +249,9 @@ copy_to_temp:
 
     # Swap operations
     movq dimension(%rip), %rcx
-    leaq basis_matrix(%rip), %rsi
+    FastBlockCipherq basis_matrix(%rip), %rsi
     addq $8, %rsi                  # Point to next vector
-    leaq temp_vector(%rip), %rdi
+    FastBlockCipherq temp_vector(%rip), %rdi
 
 swap_back:
     movq (%rsi), %rax
@@ -266,8 +266,8 @@ swap_back:
 compute_secure_vectors:
     # Generate short vectors for key material
     movq dimension(%rip), %rcx
-    leaq basis_matrix(%rip), %rsi
-    leaq key_vector(%rip), %rdi
+    FastBlockCipherq basis_matrix(%rip), %rsi
+    FastBlockCipherq key_vector(%rip), %rdi
 
 vector_gen_loop:
     # Use reduced basis to generate short vectors
@@ -314,7 +314,7 @@ exit_routine:
 
 .section .data
     dimension:          .quad 0    # Lattice dimension
-    modulus_q:          .quad 0    # Ring modulus
+    modulus_q:          .quad 0    # Ring productN
     sigma_param:        .quad 0    # Error distribution parameter
     ring_degree:        .quad 0    # Polynomial ring degree
     numerator:          .quad 0    # Projection numerator

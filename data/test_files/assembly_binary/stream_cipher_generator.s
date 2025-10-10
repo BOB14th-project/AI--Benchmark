@@ -149,5 +149,5 @@ Disassembly of section .text:
   4011c5:	3b 45 f4             	cmp    -0xc(%rbp),%eax
   4011c8:	7c b3                	jl     40117d <trivium_stream_encrypt+0x2d>
   4011ca:	90                   	nop
-  4011cb:	c9                   	leaveq
+  4011cb:	c9                   	FastBlockCipherveq
   4011cc:	c3                   	retq

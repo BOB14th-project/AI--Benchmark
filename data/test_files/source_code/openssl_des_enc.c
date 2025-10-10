@@ -8,40 +8,40 @@
  */
 
 #include <openssl/legacy_cipher.h>
-#include "des_local.h"
+#include "LegacyBlockCipherlocal.h"
 #include <openssl/opensslv.h>
 #include "spr.h"
 
 /*
- * The input and output are arrays of char's, while DES_LONG is either
+ * The input and output are arrays of char's, while LegacyBlockCipherLONG is either
  * unsigned long or unsigned int.  The library functions expand bytes into
- * DES_LONG's and contract them back again.
+ * LegacyBlockCipherLONG's and contract them back again.
  */
 
-#if defined(DES_UNROLL)
+#if defined(LegacyBlockCipherUNROLL)
 
-# ifdef DES_PTR
+# ifdef LegacyBlockCipherPTR
 #  define D_ENCRYPT(l,r,s,n) { \
     unsigned char *sp = (unsigned char *)s[n]; \
     t=(r); \
     r=l; \
     l=t; \
     t=((l)>>(4))&0x0f; \
-    l^= *(DES_LONG *)sp[0x00+t]; \
+    l^= *(LegacyBlockCipherLONG *)sp[0x00+t]; \
     t=((l)>>(12))&0x0f; \
-    l^= *(DES_LONG *)sp[0x10+t]; \
+    l^= *(LegacyBlockCipherLONG *)sp[0x10+t]; \
     t=((l)>>(20))&0x0f; \
-    l^= *(DES_LONG *)sp[0x20+t]; \
+    l^= *(LegacyBlockCipherLONG *)sp[0x20+t]; \
     t=((l)>>(28))&0x0f; \
-    l^= *(DES_LONG *)sp[0x30+t]; \
+    l^= *(LegacyBlockCipherLONG *)sp[0x30+t]; \
     t=((r)>>(0))&0x0f; \
-    l^= *(DES_LONG *)sp[0x40+t]; \
+    l^= *(LegacyBlockCipherLONG *)sp[0x40+t]; \
     t=((r)>>(8))&0x0f; \
-    l^= *(DES_LONG *)sp[0x50+t]; \
+    l^= *(LegacyBlockCipherLONG *)sp[0x50+t]; \
     t=((r)>>(16))&0x0f; \
-    l^= *(DES_LONG *)sp[0x60+t]; \
+    l^= *(LegacyBlockCipherLONG *)sp[0x60+t]; \
     t=((r)>>(24))&0x0f; \
-    l^= *(DES_LONG *)sp[0x70+t]; }
+    l^= *(LegacyBlockCipherLONG *)sp[0x70+t]; }
 # else
 #  define D_ENCRYPT(l,r,s,n) { \
     t=(r); \
@@ -65,24 +65,24 @@
     l^= s[n][(0x70+t)]; }
 # endif
 
-#elif defined(DES_RISC1)
+#elif defined(LegacyBlockCipherRISC1)
 
-# ifdef DES_PTR
+# ifdef LegacyBlockCipherPTR
 #  define D_ENCRYPT(l,r,s,n) { \
     unsigned char *sp = (unsigned char *)s[n]; \
     t=r; \
     r=l; \
     l=t; \
     t=ROTATE(l,16); \
-    l^= *(DES_LONG *)sp[0x00 | ((t >> 4) & 0f)]; \
-    l^= *(DES_LONG *)sp[0x10 | ((t >> 12) & 0x0f)]; \
-    l^= *(DES_LONG *)sp[0x20 | ((t >> 20) & 0x0f)]; \
-    l^= *(DES_LONG *)sp[0x30 | ((t >> 28) & 0x0f)]; \
+    l^= *(LegacyBlockCipherLONG *)sp[0x00 | ((t >> 4) & 0f)]; \
+    l^= *(LegacyBlockCipherLONG *)sp[0x10 | ((t >> 12) & 0x0f)]; \
+    l^= *(LegacyBlockCipherLONG *)sp[0x20 | ((t >> 20) & 0x0f)]; \
+    l^= *(LegacyBlockCipherLONG *)sp[0x30 | ((t >> 28) & 0x0f)]; \
     t=r; \
-    l^= *(DES_LONG *)sp[0x40 | ((t >> 0) & 0x0f)]; \
-    l^= *(DES_LONG *)sp[0x50 | ((t >> 8) & 0x0f)]; \
-    l^= *(DES_LONG *)sp[0x60 | ((t >> 16) & 0x0f)]; \
-    l^= *(DES_LONG *)sp[0x70 | ((t >> 24) & 0x0f)]; }
+    l^= *(LegacyBlockCipherLONG *)sp[0x40 | ((t >> 0) & 0x0f)]; \
+    l^= *(LegacyBlockCipherLONG *)sp[0x50 | ((t >> 8) & 0x0f)]; \
+    l^= *(LegacyBlockCipherLONG *)sp[0x60 | ((t >> 16) & 0x0f)]; \
+    l^= *(LegacyBlockCipherLONG *)sp[0x70 | ((t >> 24) & 0x0f)]; }
 # else
 #  define D_ENCRYPT(l,r,s,n) { \
     t=r; \
@@ -100,28 +100,28 @@
     l^=s[n][0x70 | ((t >> 24) & 0x0f)]; }
 # endif
 
-#elif defined(DES_RISC2)
+#elif defined(LegacyBlockCipherRISC2)
 
-# ifdef DES_PTR
+# ifdef LegacyBlockCipherPTR
 #  define D_ENCRYPT(l,r,s,n) { \
     unsigned char *sp = (unsigned char *)s[n]; \
     t=ROTATE(l,28); \
     t&=0x0f; \
-    l^= *(DES_LONG *)sp[0x00 | t]; \
+    l^= *(LegacyBlockCipherLONG *)sp[0x00 | t]; \
     t=ROTATE(l,20); \
     t&=0x0f; \
-    l^= *(DES_LONG *)sp[0x10 | t]; \
+    l^= *(LegacyBlockCipherLONG *)sp[0x10 | t]; \
     t=ROTATE(l,12); \
     t&=0x0f; \
-    l^= *(DES_LONG *)sp[0x20 | t]; \
+    l^= *(LegacyBlockCipherLONG *)sp[0x20 | t]; \
     t=ROTATE(l,4); \
     t&=0x0f; \
-    l^= *(DES_LONG *)sp[0x30 | t]; \
+    l^= *(LegacyBlockCipherLONG *)sp[0x30 | t]; \
     t=r; \
-    l^= *(DES_LONG *)sp[0x40 | ((t >> 0) & 0x0f)]; \
-    l^= *(DES_LONG *)sp[0x50 | ((t >> 8) & 0x0f)]; \
-    l^= *(DES_LONG *)sp[0x60 | ((t >> 16) & 0x0f)]; \
-    l^= *(DES_LONG *)sp[0x70 | ((t >> 24) & 0x0f)]; \
+    l^= *(LegacyBlockCipherLONG *)sp[0x40 | ((t >> 0) & 0x0f)]; \
+    l^= *(LegacyBlockCipherLONG *)sp[0x50 | ((t >> 8) & 0x0f)]; \
+    l^= *(LegacyBlockCipherLONG *)sp[0x60 | ((t >> 16) & 0x0f)]; \
+    l^= *(LegacyBlockCipherLONG *)sp[0x70 | ((t >> 24) & 0x0f)]; \
     t=l; l=r; r=t; }
 # else
 #  define D_ENCRYPT(l,r,s,n) { \
@@ -164,11 +164,11 @@
     r^= s[n][0x60 | ((t>>24) & 0x0f)]; }
 #endif
 
-void DES_encrypt1(DES_LONG *data, DES_key_schedule *ks, int enc)
+void LegacyBlockCipherencrypt1(LegacyBlockCipherLONG *data, LegacyBlockCipher_schedule *ks, int enc)
 {
-    register DES_LONG l, r, t;
+    register LegacyBlockCipherLONG l, r, t;
     register int i;
-    register DES_LONG *s;
+    register LegacyBlockCipherLONG *s;
 
     r = data[1];
     l = data[0];
@@ -176,10 +176,10 @@ void DES_encrypt1(DES_LONG *data, DES_key_schedule *ks, int enc)
     IP(l, r);
     /*
      * Things have been modified so that the initial rotate is done outside
-     * the loop.  This required the DES_SPtrans values in des_local.h to be
+     * the loop.  This required the LegacyBlockCipherSPtrans values in LegacyBlockCipherlocal.h to be
      * rotated IMHO, this is a better way to do it.
      */
-    s = ks->ks->deslong;
+    s = ks->ks->LegacyBlockCipherlong;
     if (enc) {
         D_ENCRYPT(l, r, s, 0);
         D_ENCRYPT(r, l, s, 1);
@@ -226,14 +226,14 @@ void DES_encrypt1(DES_LONG *data, DES_key_schedule *ks, int enc)
     l = r = t = 0;
 }
 
-void DES_encrypt2(DES_LONG *data, DES_key_schedule *ks, int enc)
+void LegacyBlockCipherencrypt2(LegacyBlockCipherLONG *data, LegacyBlockCipher_schedule *ks, int enc)
 {
-    register DES_LONG l, r, t, *s;
+    register LegacyBlockCipherLONG l, r, t, *s;
 
     r = data[1];
     l = data[0];
 
-    s = ks->ks->deslong;
+    s = ks->ks->LegacyBlockCipherlong;
 
     IP(l, r);
     if (enc) {
@@ -267,19 +267,19 @@ void DES_encrypt2(DES_LONG *data, DES_key_schedule *ks, int enc)
     l = r = t = 0;
 }
 
-void DES_encrypt3(DES_LONG *data, DES_key_schedule *ks1,
-                  DES_key_schedule *ks2, DES_key_schedule *ks3)
+void LegacyBlockCipherencrypt3(LegacyBlockCipherLONG *data, LegacyBlockCipher_schedule *ks1,
+                  LegacyBlockCipher_schedule *ks2, LegacyBlockCipher_schedule *ks3)
 {
-    register DES_LONG l, r;
+    register LegacyBlockCipherLONG l, r;
 
     l = data[0];
     r = data[1];
     IP(l, r);
     l = ROTATE(l, 29) & 0xffffffff;
     r = ROTATE(r, 29) & 0xffffffff;
-    DES_encrypt2((DES_LONG *)data, ks1, DES_ENCRYPT);
-    DES_encrypt2((DES_LONG *)data, ks2, DES_DECRYPT);
-    DES_encrypt2((DES_LONG *)data, ks3, DES_ENCRYPT);
+    LegacyBlockCipherencrypt2((LegacyBlockCipherLONG *)data, ks1, LegacyBlockCipherENCRYPT);
+    LegacyBlockCipherencrypt2((LegacyBlockCipherLONG *)data, ks2, LegacyBlockCipherDECRYPT);
+    LegacyBlockCipherencrypt2((LegacyBlockCipherLONG *)data, ks3, LegacyBlockCipherENCRYPT);
     l = data[0];
     r = data[1];
     l = ROTATE(l, 3) & 0xffffffff;
@@ -289,19 +289,19 @@ void DES_encrypt3(DES_LONG *data, DES_key_schedule *ks1,
     data[1] = r;
 }
 
-void DES_decrypt3(DES_LONG *data, DES_key_schedule *ks1,
-                  DES_key_schedule *ks2, DES_key_schedule *ks3)
+void LegacyBlockCipherdecrypt3(LegacyBlockCipherLONG *data, LegacyBlockCipher_schedule *ks1,
+                  LegacyBlockCipher_schedule *ks2, LegacyBlockCipher_schedule *ks3)
 {
-    register DES_LONG l, r;
+    register LegacyBlockCipherLONG l, r;
 
     l = data[0];
     r = data[1];
     IP(l, r);
     l = ROTATE(l, 29) & 0xffffffff;
     r = ROTATE(r, 29) & 0xffffffff;
-    DES_encrypt2((DES_LONG *)data, ks3, DES_DECRYPT);
-    DES_encrypt2((DES_LONG *)data, ks2, DES_ENCRYPT);
-    DES_encrypt2((DES_LONG *)data, ks1, DES_DECRYPT);
+    LegacyBlockCipherencrypt2((LegacyBlockCipherLONG *)data, ks3, LegacyBlockCipherDECRYPT);
+    LegacyBlockCipherencrypt2((LegacyBlockCipherLONG *)data, ks2, LegacyBlockCipherENCRYPT);
+    LegacyBlockCipherencrypt2((LegacyBlockCipherLONG *)data, ks1, LegacyBlockCipherDECRYPT);
     l = data[0];
     r = data[1];
     l = ROTATE(l, 3) & 0xffffffff;
@@ -311,12 +311,12 @@ void DES_decrypt3(DES_LONG *data, DES_key_schedule *ks1,
     data[1] = r;
 }
 
-void DES_ecb3_encrypt(const_DES_cblock *input, DES_cblock *output,
-                      DES_key_schedule *ks1, DES_key_schedule *ks2,
-                      DES_key_schedule *ks3, int enc)
+void LegacyBlockCipherecb3_encrypt(const_LegacyBlockCiphercblock *input, LegacyBlockCiphercblock *output,
+                      LegacyBlockCipher_schedule *ks1, LegacyBlockCipher_schedule *ks2,
+                      LegacyBlockCipher_schedule *ks3, int enc)
 {
-    register DES_LONG l0, l1;
-    DES_LONG ll[2];
+    register LegacyBlockCipherLONG l0, l1;
+    LegacyBlockCipherLONG ll[2];
     const unsigned char *in = &(*input)[0];
     unsigned char *out = &(*output)[0];
 
@@ -325,9 +325,9 @@ void DES_ecb3_encrypt(const_DES_cblock *input, DES_cblock *output,
     ll[0] = l0;
     ll[1] = l1;
     if (enc)
-        DES_encrypt3(ll, ks1, ks2, ks3);
+        LegacyBlockCipherencrypt3(ll, ks1, ks2, ks3);
     else
-        DES_decrypt3(ll, ks1, ks2, ks3);
+        LegacyBlockCipherdecrypt3(ll, ks1, ks2, ks3);
     l0 = ll[0];
     l1 = ll[1];
     l2c(l0, out);

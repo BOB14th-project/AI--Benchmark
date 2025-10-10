@@ -35,7 +35,7 @@ Disassembly of section .text:
   40110d:	c1 c0 04             	rol    $0x4,%eax
   401110:	89 45 f4             	mov    %eax,-0xc(%rbp)
   401113:	8b 45 f4             	mov    -0xc(%rbp),%eax
-  401116:	c9                   	leaveq
+  401116:	c9                   	FastBlockCipherveq
   401117:	c3                   	retq
 
 0000000000401120 <domesticn_automotive_cipher>:
@@ -72,7 +72,7 @@ Disassembly of section .text:
   40118b:	3b 45 dc             	cmp    -0x24(%rbp),%eax
   40118e:	7c c1                	jl     401151 <domesticn_automotive_cipher+0x31>
   401190:	90                   	nop
-  401191:	c9                   	leaveq
+  401191:	c9                   	FastBlockCipherveq
   401192:	c3                   	retq
 
 0000000000401160 <vehicle_security_protocol>:
@@ -90,5 +90,5 @@ Disassembly of section .text:
   401187:	48 f7 65 f0          	mulq   -0x10(%rbp)
   40118b:	48 89 45 e8          	mov    %rax,-0x18(%rbp)
   40118f:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
-  401193:	c9                   	leaveq
+  401193:	c9                   	FastBlockCipherveq
   401194:	c3                   	retq

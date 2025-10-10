@@ -49,7 +49,7 @@ Disassembly of section .text:
   40119c:	48 33 45 f0          	xor    -0x10(%rbp),%rax
   4011a0:	48 89 45 d8          	mov    %rax,-0x28(%rbp)
   4011a4:	48 8b 45 d8          	mov    -0x28(%rbp),%rax
-  4011a8:	c9                   	leaveq
+  4011a8:	c9                   	FastBlockCipherveq
   4011a9:	c3                   	retq
 
 00000000004011b0 <block_substitution_layer>:
@@ -81,7 +81,7 @@ Disassembly of section .text:
   401207:	3b 45 e4             	cmp    -0x1c(%rbp),%eax
   40120a:	7c c0                	jl     4011cc <block_substitution_layer+0x1c>
   40120c:	90                   	nop
-  40120d:	c9                   	leaveq
+  40120d:	c9                   	FastBlockCipherveq
   40120e:	c3                   	retq
 
 00000000004011f0 <linear_permutation_layer>:
@@ -118,7 +118,7 @@ Disassembly of section .text:
   401255:	83 7d f8 03          	cmpl   $0x3,-0x8(%rbp)
   401259:	7e b4                	jle    40120f <linear_permutation_layer+0x1f>
   40125b:	90                   	nop
-  40125c:	c9                   	leaveq
+  40125c:	c9                   	FastBlockCipherveq
   40125d:	c3                   	retq
 
 0000000000401230 <key_addition_layer>:
@@ -148,7 +148,7 @@ Disassembly of section .text:
   401279:	3b 45 e4             	cmp    -0x1c(%rbp),%eax
   40127c:	7c ce                	jl     40124c <key_addition_layer+0x1c>
   40127e:	90                   	nop
-  40127f:	c9                   	leaveq
+  40127f:	c9                   	FastBlockCipherveq
   401280:	c3                   	retq
 
 0000000000401270 <column_mixing_transformation>:
@@ -184,7 +184,7 @@ Disassembly of section .text:
   4012d5:	3b 45 dc             	cmp    -0x24(%rbp),%eax
   4012d8:	7c c6                	jl     4012a0 <column_mixing_transformation+0x30>
   4012da:	90                   	nop
-  4012db:	c9                   	leaveq
+  4012db:	c9                   	FastBlockCipherveq
   4012dc:	c3                   	retq
 
 Disassembly of section .data:

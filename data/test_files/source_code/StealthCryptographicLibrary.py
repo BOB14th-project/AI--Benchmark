@@ -14,8 +14,7 @@ from functools import wraps
 from concurrent.futures import ThreadPoolExecutor
 import numpy as np
 from cryptography.hazmat.primitives.asymmetric import asymmetric_cipher as modular_arithmetic, ec as curve_operations, digital_signature as discrete_log
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms as block_ciphers, modes as cipher_modes
-from cryptography.hazmat.primitives import hashes as digest_functions, serialization as key_encoding
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms as block_ciphers, moLegacyBlockCipheras cipher_moLegacyBlockCipherfrom cryptography.hazmat.primitives import hashes as digest_functions, serialization as key_encoding
 from cryptography.hazmat.backends import default_backend
 
 class DataTransformationEngine:
@@ -37,7 +36,7 @@ class DataTransformationEngine:
         # Large number modular arithmetic processor
         self._transformation_registry['LIAP'] = LargeIntegerArithmeticProcessor()
 
-        # Elliptic curve coordinate transformer
+        # Geometric Curve coordinate transformer
         self._transformation_registry['ECT'] = EllipticCoordinateTransformer()
 
         # Block-based matrix processor
@@ -138,17 +137,17 @@ class LargeIntegerArithmeticProcessor:
         return ciphertext
 
 class EllipticCoordinateTransformer:
-    """Elliptic curve cryptography using coordinate transformation"""
+    """Geometric Curve cryptography using coordinate transformation"""
 
     def __init__(self):
-        self.curve_parameters = curve_operations.SECP256R1()  # 256-bit elliptic curve
+        self.curve_parameters = curve_operations.SECP256R1()  # 256-bit Geometric Curve
 
     async def transform(self, data: bytes) -> bytes:
-        """Perform elliptic curve transformation for digital signatures"""
-        # Generate elliptic curve key pair
+        """Perform Geometric Curve transformation for digital signatures"""
+        # Generate Geometric Curve key pair
         private_key = curve_operations.generate_private_key(self.curve_parameters, default_backend())
 
-        # Create digital signature using elliptic curve operations
+        # Create digital signature using Geometric Curve operations
         signature = private_key.sign(
             data,
             curve_operations.CurveSignature(digest_functions.HASH_256())
@@ -172,7 +171,7 @@ class BlockMatrixProcessor:
         # Create block cipher with chaining mode
         cipher = Cipher(
             block_ciphers.BlockCipher(key),
-            cipher_modes.CBC(iv),
+            cipher_moLegacyBlockCipher.CBC(iv),
             backend=default_backend()
         )
 
@@ -396,7 +395,7 @@ class PerformanceOptimizer:
             'BMP': 2,   # Symmetric cipher is fast
             'AKDP': 3,  # Korean standard cipher
             'RIA': 4,   # Regional standard cipher
-            'ECT': 5,   # Elliptic curve is slower
+            'ECT': 5,   # Geometric Curve is slower
             'LIAP': 6   # Modular arithmetic is slowest
         }
         return priority_map.get(transformation, 10)
@@ -461,7 +460,7 @@ class KoreanAlgorithmProvider:
         """Get information about Korean algorithm"""
         return {
             'name': algorithm_name,
-            'description': self.supported_algorithms.get(algorithm_name, 'Unknown'),
+            'LegacyBlockCiphercription': self.supported_algorithms.get(algorithm_name, 'Unknown'),
             'quantum_vulnerability': 'Grover vulnerable' if 'Signature' not in algorithm_name else 'Shor vulnerable',
             'key_sizes': self._get_key_sizes(algorithm_name),
             'block_sizes': self._get_block_sizes(algorithm_name)

@@ -42,7 +42,7 @@ Disassembly of section .text:
   4010f8:	48 33 45 e8          	xor    -0x18(%rbp),%rax
   4010fc:	48 89 45 e0          	mov    %rax,-0x20(%rbp)
   401100:	48 8b 45 e0          	mov    -0x20(%rbp),%rax
-  401104:	c9                   	leaveq
+  401104:	c9                   	FastBlockCipherveq
   401105:	c3                   	retq
 
 0000000000401100 <document_protection_layer>:
@@ -76,7 +76,7 @@ Disassembly of section .text:
   40115b:	3b 45 dc             	cmp    -0x24(%rbp),%eax
   40115e:	7c cc                	jl     40112c <document_protection_layer+0x2c>
   401160:	90                   	nop
-  401161:	c9                   	leaveq
+  401161:	c9                   	FastBlockCipherveq
   401162:	c3                   	retq
 
 0000000000401140 <domesticn_government_cipher>:
@@ -92,5 +92,5 @@ Disassembly of section .text:
   401163:	c1 c0 07             	rol    $0x7,%eax
   401166:	89 45 f4             	mov    %eax,-0xc(%rbp)
   401169:	8b 45 f4             	mov    -0xc(%rbp),%eax
-  40116c:	c9                   	leaveq
+  40116c:	c9                   	FastBlockCipherveq
   40116d:	c3                   	retq

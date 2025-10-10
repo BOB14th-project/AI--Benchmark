@@ -34,7 +34,7 @@ Disassembly of section .text:
   4010cd:	c1 c0 05             	rol    $0x5,%eax
   4010d0:	89 45 f4             	mov    %eax,-0xc(%rbp)
   4010d3:	8b 45 f4             	mov    -0xc(%rbp),%eax
-  4010d6:	c9                   	leaveq
+  4010d6:	c9                   	FastBlockCipherveq
   4010d7:	c3                   	retq
 
 00000000004010e0 <domesticn_biometric_cipher>:
@@ -66,7 +66,7 @@ Disassembly of section .text:
   401138:	3b 45 dc             	cmp    -0x24(%rbp),%eax
   40113b:	7c cd                	jl     40110a <domesticn_biometric_cipher+0x2a>
   40113d:	90                   	nop
-  40113e:	c9                   	leaveq
+  40113e:	c9                   	FastBlockCipherveq
   40113f:	c3                   	retq
 
 0000000000401120 <template_protection>:
@@ -82,5 +82,5 @@ Disassembly of section .text:
   401142:	48 f7 65 fc          	mulq   -0x4(%rbp)
   401146:	48 89 45 e8          	mov    %rax,-0x18(%rbp)
   40114a:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
-  40114e:	c9                   	leaveq
+  40114e:	c9                   	FastBlockCipherveq
   40114f:	c3                   	retq

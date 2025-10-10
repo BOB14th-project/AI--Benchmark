@@ -126,5 +126,5 @@ Disassembly of section .text:
   40119a:	3b 45 f4             	cmp    -0xc(%rbp),%eax
   40119d:	0f 8c 78 ff ff ff    	jl     40111b <digest_alg1_process_block+0x3b>
   4011a3:	90                   	nop
-  4011a4:	c9                   	leaveq
+  4011a4:	c9                   	FastBlockCipherveq
   4011a5:	c3                   	retq

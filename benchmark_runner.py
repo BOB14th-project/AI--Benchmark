@@ -58,23 +58,36 @@ class BenchmarkRunner:
 
         # Ollama 모델 가용성 확인
         try:
-            ollama_client = OllamaClient()
-            if ollama_client.is_available():
-                available_ollama = ollama_client.list_available_models()
-                ollama_config = self.config_loader.get_llm_config('ollama')
-                configured_models = ollama_config.get('model', [])
+            # 먼저 config에서 설정 읽기
+            ollama_config = self.config_loader.get_llm_config('ollama')
+            configured_models = ollama_config.get('model', [])
 
-                if isinstance(configured_models, str):
-                    configured_models = [configured_models]
+            if isinstance(configured_models, str):
+                configured_models = [configured_models]
 
+            # Base URL 가져오기
+            base_url = ollama_config.get('base_url', 'http://localhost:11434')
+
+            # Ollama 클라이언트로 서버 체크
+            ollama_client = OllamaClient(base_url=base_url)
+            available_ollama = ollama_client.list_available_models()
+
+            if available_ollama:
+                # 사용 가능한 모델만 필터링
                 models['ollama'] = [m for m in configured_models if m in available_ollama]
                 print(f"✅ Ollama 사용 가능한 모델: {models['ollama']}")
+
+                if not models['ollama']:
+                    print(f"⚠️  설정된 모델 {configured_models}이 Ollama에 없습니다.")
+                    print(f"   사용 가능: {available_ollama}")
             else:
                 models['ollama'] = []
                 print("❌ Ollama 서버가 실행되지 않거나 모델이 없습니다.")
         except Exception as e:
             models['ollama'] = []
             print(f"❌ Ollama 확인 실패: {e}")
+            import traceback
+            traceback.print_exc()
 
         return models
 
@@ -337,6 +350,7 @@ class BenchmarkRunner:
     def _run_sequential_tests(self, test_combinations: List) -> List[Dict[str, Any]]:
         """순차 테스트 실행"""
         results = []
+        backup_interval = 10  # 10개 테스트마다 백업
 
         for i, (provider, model, agent_type, test_case) in enumerate(test_combinations, 1):
             print(f"\n📋 테스트 {i}/{len(test_combinations)}: {provider}/{model}/{agent_type}")
@@ -368,11 +382,41 @@ class BenchmarkRunner:
                 else:
                     print(f"    ❌ 실패: {result.get('error', 'Unknown error')}")
 
+            # 주기적 백업 (Google Drive)
+            if i % backup_interval == 0:
+                self._backup_intermediate_results(results, i, len(test_combinations))
+
             # API 제한 방지를 위한 딜레이
             if provider != 'ollama' and i < len(test_combinations):
                 time.sleep(1)
 
         return results
+
+    def _backup_intermediate_results(self, results: List[Dict[str, Any]], current: int, total: int):
+        """중간 결과 백업 (Google Drive)"""
+        gdrive_dir = os.environ.get('GDRIVE_RESULTS_DIR')
+        if not gdrive_dir or not os.path.exists(gdrive_dir):
+            return
+
+        try:
+            timestamp = int(time.time())
+            backup_filename = f"backup_progress_{current}of{total}_{timestamp}.json"
+            backup_path = os.path.join(gdrive_dir, backup_filename)
+
+            backup_data = {
+                'progress': f"{current}/{total}",
+                'timestamp': timestamp,
+                'completed_tests': current,
+                'total_tests': total,
+                'results': results
+            }
+
+            with open(backup_path, 'w', encoding='utf-8') as f:
+                json.dump(backup_data, f, indent=2, ensure_ascii=False)
+
+            print(f"    💾 중간 백업 완료: {backup_filename}")
+        except Exception as e:
+            print(f"    ⚠️  중간 백업 실패: {e}")
 
     def _run_parallel_tests(self, test_combinations: List) -> List[Dict[str, Any]]:
         """병렬 테스트 실행"""
@@ -498,6 +542,24 @@ class BenchmarkRunner:
         print(f"💾 결과가 저장되었습니다:")
         print(f"   JSON: {json_filepath}")
         print(f"   CSV: {csv_filepath}")
+
+        # Google Drive 자동 백업 (환경 변수가 설정된 경우)
+        gdrive_dir = os.environ.get('GDRIVE_RESULTS_DIR')
+        if gdrive_dir and os.path.exists(gdrive_dir):
+            try:
+                import shutil
+                gdrive_json = os.path.join(gdrive_dir, json_filename)
+                gdrive_csv = os.path.join(gdrive_dir, csv_filename)
+
+                shutil.copy2(json_filepath, gdrive_json)
+                shutil.copy2(csv_filepath, gdrive_csv)
+
+                print(f"☁️  Google Drive 백업 완료:")
+                print(f"   JSON: {gdrive_json}")
+                print(f"   CSV: {gdrive_csv}")
+            except Exception as e:
+                print(f"⚠️  Google Drive 백업 실패: {e}")
+
         return str(json_filepath)
 
     def _save_csv_results(self, filepath: Path):

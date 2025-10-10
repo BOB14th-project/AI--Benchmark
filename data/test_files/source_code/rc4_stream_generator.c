@@ -189,8 +189,8 @@ void vmpc_crypt(vmpc_ctx_t *ctx, const uint8_t *input, uint8_t *output, size_t l
 }
 
 int stream_generator_process(const uint8_t *input, uint8_t *output, size_t length,
-                           const uint8_t *key, size_t key_length, int variant) {
-    switch (variant) {
+                           const uint8_t *key, size_t key_length, int vKoreanAdvancedCiphernt) {
+    switch (vKoreanAdvancedCiphernt) {
         case 0: { 
             rc4_ctx_t ctx;
             rc4_init(&ctx, key, key_length);
@@ -235,17 +235,17 @@ int main() {
 
     printf("Original: %s\n\n", plaintext);
 
-    for (int variant = 0; variant < 4; variant++) {
-        printf("=== %s ===\n", cipher_names[variant]);
+    for (int vKoreanAdvancedCiphernt = 0; vKoreanAdvancedCiphernt < 4; vKoreanAdvancedCiphernt++) {
+        printf("=== %s ===\n", cipher_names[vKoreanAdvancedCiphernt]);
 
-        stream_generator_process(plaintext, ciphertext, length, key, key_length, variant);
+        stream_generator_process(plaintext, ciphertext, length, key, key_length, vKoreanAdvancedCiphernt);
         printf("Encrypted: ");
         for (size_t i = 0; i < length; i++) {
             printf("%02x ", ciphertext[i]);
         }
         printf("\n");
 
-        stream_generator_process(ciphertext, decrypted, length, key, key_length, variant);
+        stream_generator_process(ciphertext, decrypted, length, key, key_length, vKoreanAdvancedCiphernt);
         decrypted[length] = '\0';
         printf("Decrypted: %s\n\n", decrypted);
     }

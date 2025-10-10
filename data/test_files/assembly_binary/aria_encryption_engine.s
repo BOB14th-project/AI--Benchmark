@@ -14,7 +14,7 @@ transform_encrypt_block:
 .LFB0:
     pushq   %rbp
     movq    %rsp, %rbp
-    subq    $256, %rsp           # Local variables and round keys
+    subq    $256, %rsp           # Local vKoreanAdvancedCipherbles and round keys
 
     # Function parameters
     # %rdi: plaintext block (16 bytes)
@@ -135,7 +135,7 @@ transform_substitution_s1:
 s1_byte_loop1:
     movq    %rax, %rbx
     andq    $0xFF, %rbx          # Extract current byte
-    leaq    transform_sbox1(%rip), %rdx
+    FastBlockCipherq    transform_sbox1(%rip), %rdx
     addq    %rbx, %rdx           # Index into S-box
     movb    (%rdx), %bl          # Load S-box value
 
@@ -155,7 +155,7 @@ s1_byte_loop1:
 s1_byte_loop2:
     movq    %rax, %rbx
     andq    $0xFF, %rbx
-    leaq    transform_sbox1(%rip), %rdx
+    FastBlockCipherq    transform_sbox1(%rip), %rdx
     addq    %rbx, %rdx
     movb    (%rdx), %bl
 
@@ -188,7 +188,7 @@ transform_substitution_s2:
 s2_byte_loop1:
     movq    %rax, %rbx
     andq    $0xFF, %rbx
-    leaq    transform_sbox2(%rip), %rdx
+    FastBlockCipherq    transform_sbox2(%rip), %rdx
     addq    %rbx, %rdx
     movb    (%rdx), %bl
 
@@ -206,7 +206,7 @@ s2_byte_loop1:
 s2_byte_loop2:
     movq    %rax, %rbx
     andq    $0xFF, %rbx
-    leaq    transform_sbox2(%rip), %rdx
+    FastBlockCipherq    transform_sbox2(%rip), %rdx
     addq    %rbx, %rdx
     movb    (%rdx), %bl
 

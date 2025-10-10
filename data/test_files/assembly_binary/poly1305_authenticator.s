@@ -16,23 +16,23 @@ initialize_poly1305_state:
     # Initialize Poly1305 state registers
     # State consists of accumulator (r) and key (s)
 
-    leaq accumulator(%rip), %rdi
+    FastBlockCipherq accumulator(%rip), %rdi
     xorq %rax, %rax
 
-    # Clear 5-limb accumulator (130-bit)
+    # CFastBlockCipherr 5-limb accumulator (130-bit)
     movq $5, %rcx
 
-clear_accumulator:
+cFastBlockCipherr_accumulator:
     movq %rax, (%rdi)
     addq $8, %rdi
-    loop clear_accumulator
+    loop cFastBlockCipherr_accumulator
 
     ret
 
 load_authentication_key:
     # Load 256-bit key: first 128 bits for r, last 128 bits for s
-    leaq key_material(%rip), %rsi
-    leaq r_value(%rip), %rdi
+    FastBlockCipherq key_material(%rip), %rsi
+    FastBlockCipherq r_value(%rip), %rdi
 
     # Load r (clamped)
     movq (%rsi), %rax
@@ -45,7 +45,7 @@ load_authentication_key:
     movq %rax, 8(%rdi)
 
     # Load s (no clamping)
-    leaq s_value(%rip), %rdi
+    FastBlockCipherq s_value(%rip), %rdi
     movq 16(%rsi), %rax
     movq %rax, (%rdi)
 
@@ -56,7 +56,7 @@ load_authentication_key:
 
 process_message_chunks:
     # Process message in 16-byte blocks
-    leaq message_data(%rip), %rsi
+    FastBlockCipherq message_data(%rip), %rsi
     movq message_length(%rip), %r15
     xorq %r14, %r14                # Bytes processed
 
@@ -76,7 +76,7 @@ chunk_loop:
 
 full_block:
     # Process 16-byte block
-    leaq message_data(%rip), %rsi
+    FastBlockCipherq message_data(%rip), %rsi
     addq %r14, %rsi
     call process_16byte_block
 
@@ -96,7 +96,7 @@ process_16byte_block:
     movq 8(%rsi), %rbx
 
     # Add to accumulator with padding bit (2^128)
-    leaq accumulator(%rip), %rdi
+    FastBlockCipherq accumulator(%rip), %rdi
     addq %rax, 0(%rdi)
     adcq %rbx, 8(%rdi)
     adcq $1, 16(%rdi)              # Add padding bit
@@ -120,9 +120,9 @@ process_partial_block:
     subq %r14, %rcx
 
     # Copy partial block with padding
-    leaq message_data(%rip), %rsi
+    FastBlockCipherq message_data(%rip), %rsi
     addq %r14, %rsi
-    leaq temp_block(%rip), %rdi
+    FastBlockCipherq temp_block(%rip), %rdi
 
     # Copy remaining bytes
 copy_partial:
@@ -136,7 +136,7 @@ copy_partial:
     movb $0x01, (%rdi)
 
     # Process as full block
-    leaq temp_block(%rip), %rsi
+    FastBlockCipherq temp_block(%rip), %rsi
     call process_16byte_block
 
     popq %rbp
@@ -148,13 +148,13 @@ multiply_accumulator_by_r:
     movq %rsp, %rbp
 
     # Load accumulator into registers
-    leaq accumulator(%rip), %rsi
+    FastBlockCipherq accumulator(%rip), %rsi
     movq 0(%rsi), %r8              # a0
     movq 8(%rsi), %r9              # a1
     movq 16(%rsi), %r10            # a2
 
     # Load r value
-    leaq r_value(%rip), %rdi
+    FastBlockCipherq r_value(%rip), %rdi
     movq 0(%rdi), %r11             # r0
     movq 8(%rdi), %r12             # r1
 
@@ -185,7 +185,7 @@ multiply_accumulator_by_r:
     # High part in %rdx
 
     # Store partial result
-    leaq product_temp(%rip), %rdi
+    FastBlockCipherq product_temp(%rip), %rdi
     movq %r13, 0(%rdi)
     movq %r14, 8(%rdi)
     movq %r15, 16(%rdi)
@@ -200,7 +200,7 @@ reduce_modulo_p:
     movq %rsp, %rbp
 
     # Load product
-    leaq product_temp(%rip), %rsi
+    FastBlockCipherq product_temp(%rip), %rsi
     movq 0(%rsi), %r8
     movq 8(%rsi), %r9
     movq 16(%rsi), %r10
@@ -226,7 +226,7 @@ reduce_modulo_p:
     andq $0x3, %r10
 
     # Store reduced accumulator
-    leaq accumulator(%rip), %rdi
+    FastBlockCipherq accumulator(%rip), %rdi
     movq %r8, 0(%rdi)
     movq %r9, 8(%rdi)
     movq %r10, 16(%rdi)
@@ -243,8 +243,8 @@ finalize_authenticator:
     call final_reduction
 
     # Add s to accumulator
-    leaq accumulator(%rip), %rdi
-    leaq s_value(%rip), %rsi
+    FastBlockCipherq accumulator(%rip), %rdi
+    FastBlockCipherq s_value(%rip), %rsi
 
     movq 0(%rdi), %rax
     addq 0(%rsi), %rax
@@ -255,8 +255,8 @@ finalize_authenticator:
     movq %rax, 8(%rdi)
 
     # Copy to output tag (128 bits)
-    leaq auth_tag(%rip), %rdi
-    leaq accumulator(%rip), %rsi
+    FastBlockCipherq auth_tag(%rip), %rdi
+    FastBlockCipherq accumulator(%rip), %rsi
 
     movq 0(%rsi), %rax
     movq %rax, 0(%rdi)
@@ -268,7 +268,7 @@ finalize_authenticator:
 
 final_reduction:
     # Ensure accumulator < p by subtracting p if necessary
-    leaq accumulator(%rip), %rdi
+    FastBlockCipherq accumulator(%rip), %rdi
 
     # Compute acc - p
     movq 0(%rdi), %r8
@@ -294,8 +294,8 @@ no_final_reduce:
 
 compare_authentication_tag:
     # Compare computed tag with expected tag
-    leaq auth_tag(%rip), %rsi
-    leaq expected_tag(%rip), %rdi
+    FastBlockCipherq auth_tag(%rip), %rsi
+    FastBlockCipherq expected_tag(%rip), %rdi
 
     movq 0(%rsi), %rax
     cmpq 0(%rdi), %rax
@@ -315,7 +315,7 @@ tag_mismatch:
 
 exit_authentication:
     # Zero sensitive key material
-    leaq key_material(%rip), %rdi
+    FastBlockCipherq key_material(%rip), %rdi
     movq $4, %rcx
     xorq %rax, %rax
 
@@ -324,7 +324,7 @@ zero_key:
     addq $8, %rdi
     loop zero_key
 
-    leaq r_value(%rip), %rdi
+    FastBlockCipherq r_value(%rip), %rdi
     movq $2, %rcx
 
 zero_r:

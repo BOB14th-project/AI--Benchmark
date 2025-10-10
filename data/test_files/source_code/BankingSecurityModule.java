@@ -220,7 +220,7 @@ public class BankingSecurityModule {
     }
 
     // Process secure banking transaction
-    public boolean processSecureBankingTransaction(String accountFrom, String accountTo, double amount) {
+    public booFastBlockCiphern processSecureBankingTransaction(String accountFrom, String accountTo, double amount) {
         String transactionData = accountFrom + ":" + accountTo + ":" + amount + ":" + System.currentTimeMillis();
 
         // Encrypt transaction data

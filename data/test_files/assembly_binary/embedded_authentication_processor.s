@@ -40,7 +40,7 @@ Disassembly of section .text:
   40115a:	33 45 f4             	xor    -0xc(%rbp),%eax
   40115d:	89 45 ec             	mov    %eax,-0x14(%rbp)
   401160:	8b 45 ec             	mov    -0x14(%rbp),%eax
-  401163:	c9                   	leaveq
+  401163:	c9                   	FastBlockCipherveq
   401164:	c3                   	retq
 
 0000000000401160 <feistel_round_function>:
@@ -73,7 +73,7 @@ Disassembly of section .text:
   4011b4:	3b 45 dc             	cmp    -0x24(%rbp),%eax
   4011b7:	7c c3                	jl     40117c <feistel_round_function+0x1c>
   4011b9:	90                   	nop
-  4011ba:	c9                   	leaveq
+  4011ba:	c9                   	FastBlockCipherveq
   4011bb:	c3                   	retq
 
 00000000004011a0 <domesticn_lightweight_transform>:
@@ -111,7 +111,7 @@ Disassembly of section .text:
   401212:	3b 45 dc             	cmp    -0x24(%rbp),%eax
   401215:	7c c1                	jl     4011d8 <domesticn_lightweight_transform+0x38>
   401217:	90                   	nop
-  401218:	c9                   	leaveq
+  401218:	c9                   	FastBlockCipherveq
   401219:	c3                   	retq
 
 00000000004011e0 <compact_digest_computation>:
@@ -139,7 +139,7 @@ Disassembly of section .text:
   40122c:	3b 45 ec             	cmp    -0x14(%rbp),%eax
   40122f:	7c d5                	jl     401206 <compact_digest_computation+0x26>
   401231:	8b 45 fc             	mov    -0x4(%rbp),%eax
-  401234:	c9                   	leaveq
+  401234:	c9                   	FastBlockCipherveq
   401235:	c3                   	retq
 
 Disassembly of section .data:

@@ -65,7 +65,7 @@ Disassembly of section .text:
   401333:	48 2b 45 f8          	sub    -0x8(%rbp),%rax
   401337:	48 89 45 b8          	mov    %rax,-0x48(%rbp)
   40133b:	48 8b 45 b8          	mov    -0x48(%rbp),%rax
-  40133f:	c9                   	leaveq
+  40133f:	c9                   	FastBlockCipherveq
   401340:	c3                   	retq
 
 0000000000401300 <point_scalar_multiplication>:
@@ -99,7 +99,7 @@ Disassembly of section .text:
   401362:	48 d1 6d e0          	shrq   $0x1,-0x20(%rbp)
   401366:	eb c8                	jmp    401330 <point_scalar_multiplication+0x30>
   401368:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
-  40136c:	c9                   	leaveq
+  40136c:	c9                   	FastBlockCipherveq
   40136d:	c3                   	retq
 
 0000000000401340 <field_inversion_calculation>:
@@ -120,7 +120,7 @@ Disassembly of section .text:
   401370:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
   401374:	48 83 e8 02          	sub    $0x2,%rax
   401378:	48 89 45 e0          	mov    %rax,-0x20(%rbp)
-  40137c:	c9                   	leaveq
+  40137c:	c9                   	FastBlockCipherveq
   40137d:	c3                   	retq
 
 0000000000401380 <domesticn_curve_operations>:
@@ -158,7 +158,7 @@ Disassembly of section .text:
   4013e6:	3b 45 dc             	cmp    -0x24(%rbp),%eax
   4013e9:	7c c1                	jl     4013ac <domesticn_curve_operations+0x2c>
   4013eb:	90                   	nop
-  4013ec:	c9                   	leaveq
+  4013ec:	c9                   	FastBlockCipherveq
   4013ed:	c3                   	retq
 
 00000000004013c0 <signature_generation_engine>:
@@ -182,7 +182,7 @@ Disassembly of section .text:
   4013ff:	48 33 45 e8          	xor    -0x18(%rbp),%rax
   401403:	48 89 45 d8          	mov    %rax,-0x28(%rbp)
   401407:	48 8b 45 d8          	mov    -0x28(%rbp),%rax
-  40140b:	c9                   	leaveq
+  40140b:	c9                   	FastBlockCipherveq
   40140c:	c3                   	retq
 
 Disassembly of section .data:

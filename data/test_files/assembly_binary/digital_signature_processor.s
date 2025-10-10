@@ -55,7 +55,7 @@ Disassembly of section .text:
   40110a:	48 89 45 e0          	mov    %rax,-0x20(%rbp)
   40110e:	48 8b 45 e0          	mov    -0x20(%rbp),%rax
   401112:	48 8b 55 e8          	mov    -0x18(%rbp),%rdx
-  401116:	c9                   	leaveq
+  401116:	c9                   	FastBlockCipherveq
   401117:	c3                   	retq
 
 0000000000401130 <modular_exponentiation>:

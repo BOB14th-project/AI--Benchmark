@@ -26,7 +26,7 @@
 ## 🧪 테스트 모델
 
 ### 상용 API 모델
-1. **Google Gemini**: `gemini-2.0-flash-exp`
+1. **Google Gemini**: `gemini-2.5-flash`
 2. **OpenAI GPT**: `gpt-4.1`
 3. **xAI Grok**: `grok-3-mini`
 
@@ -70,7 +70,7 @@ llm_providers:
 
   google:
     api_key: "your_google_api_key_here"
-    model: "gemini-2.0-flash-exp"
+    model: "gemini-2.5-flash"
     base_url: "https://generativelanguage.googleapis.com/v1beta"
 
   xai:
@@ -116,8 +116,7 @@ python run_benchmark.py
 
 ```bash
 # Google Gemini 테스트
-python test_model.py --provider google --model gemini-2.0-flash-exp
-
+python test_model.py --provider google --model gemini-2.0-flash
 # OpenAI GPT 테스트
 python test_model.py --provider openai --model gpt-4.1
 
@@ -132,15 +131,13 @@ python test_model.py --provider ollama --model llama3:8b
 python test_agent.py --agent source_code --all-models
 
 # Assembly Agent만 테스트
-python test_agent.py --agent assembly_binary --model gemini-2.0-flash-exp
-```
+python test_agent.py --agent assembly_binary --model gemini-2.0-flash```
 
 ### 4. 단일 파일 테스트
 
 ```bash
 # 특정 파일만 테스트
-python test_single_file.py --file data/test_files/source_code/rsa_public_key_system.java --model gemini-2.0-flash-exp
-```
+python test_single_file.py --file data/test_files/source_code/rsa_public_key_system.java --model gemini-2.0-flash```
 
 ## 📈 평가 지표
 
@@ -291,7 +288,7 @@ export PARALLEL_REQUESTS=true
 
 | 모델 | F1 Score | 응답시간 | 토큰효율성 | 특징 |
 |------|----------|----------|------------|------|
-| gemini-2.0-flash-exp | 0.85-0.90 | 10-15초 | 높음 | 높은 정확도, 상세한 분석 |
+| gemini-2.5-flash | 0.85-0.90 | 8-12초 | 높음 | 높은 정확도, 빠른 응답 |
 | gpt-4.1 | 0.80-0.85 | 8-12초 | 중간 | 균형잡힌 성능 |
 | grok-3-mini | 0.75-0.80 | 5-8초 | 높음 | 빠른 응답, 경량화 |
 | llama3:8b | 0.70-0.75 | 3-5초 | 매우높음 | 로컬 실행, 빠름 |

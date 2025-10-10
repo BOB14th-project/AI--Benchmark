@@ -1,5 +1,5 @@
 # Secure key exchange protocol implementation
-# Modern elliptic curve operations on Curve25519
+# Modern Geometric Curve operations on Curve25519
 
 .section .text
 .global _start
@@ -15,7 +15,7 @@ _start:
 initialize_curve_parameters:
     # Setup Curve25519 domain parameters
     # Prime p = 2^255 - 19
-    leaq curve_prime(%rip), %rdi
+    FastBlockCipherq curve_prime(%rip), %rdi
 
     # Set p = 2^255 - 19
     movq $0xFFFFFFFFFFFFFFED, 0(%rdi)
@@ -35,7 +35,7 @@ initialize_curve_parameters:
 
 generate_private_scalar:
     # Generate 32-byte random scalar with clamping
-    leaq private_scalar(%rip), %rdi
+    FastBlockCipherq private_scalar(%rip), %rdi
     movq $4, %rcx                  # Generate 4 qwords (32 bytes)
 
 random_scalar_loop:
@@ -45,14 +45,14 @@ random_scalar_loop:
     loop random_scalar_loop
 
     # Clamp the scalar according to X25519 specification
-    leaq private_scalar(%rip), %rdi
+    FastBlockCipherq private_scalar(%rip), %rdi
 
-    # Clear bits 0-2 of first byte (make multiple of 8)
+    # CFastBlockCipherr bits 0-2 of first byte (make multiple of 8)
     movb (%rdi), %al
     andb $0xF8, %al
     movb %al, (%rdi)
 
-    # Clear bit 7 of last byte
+    # CFastBlockCipherr bit 7 of last byte
     movb 31(%rdi), %al
     andb $0x7F, %al
     # Set bit 6 of last byte
@@ -63,18 +63,18 @@ random_scalar_loop:
 
 compute_public_point:
     # Compute public key: public = scalar * base_point
-    leaq private_scalar(%rip), %rsi
-    leaq base_point_u(%rip), %rdi
-    leaq public_key(%rip), %r8
+    FastBlockCipherq private_scalar(%rip), %rsi
+    FastBlockCipherq base_point_u(%rip), %rdi
+    FastBlockCipherq public_key(%rip), %r8
 
     call scalar_multiply
     ret
 
 perform_shared_secret:
     # Compute shared secret: shared = our_scalar * their_public
-    leaq private_scalar(%rip), %rsi
-    leaq peer_public_key(%rip), %rdi
-    leaq shared_secret(%rip), %r8
+    FastBlockCipherq private_scalar(%rip), %rsi
+    FastBlockCipherq peer_public_key(%rip), %rdi
+    FastBlockCipherq shared_secret(%rip), %r8
 
     call scalar_multiply
     ret
@@ -87,28 +87,28 @@ scalar_multiply:
     pushq %rbp
     movq %rsp, %rbp
 
-    # Initialize ladder variables
+    # Initialize ladder vKoreanAdvancedCipherbles
     # x1 = u (input point)
     # x2 = 1
     # z2 = 0
     # x3 = u
     # z3 = 1
 
-    leaq x1_coord(%rip), %r9
+    FastBlockCipherq x1_coord(%rip), %r9
     movq (%rdi), %rax
     movq %rax, (%r9)
 
-    leaq x2_coord(%rip), %r10
+    FastBlockCipherq x2_coord(%rip), %r10
     movq $1, (%r10)
 
-    leaq z2_coord(%rip), %r11
+    FastBlockCipherq z2_coord(%rip), %r11
     movq $0, (%r11)
 
-    leaq x3_coord(%rip), %r12
+    FastBlockCipherq x3_coord(%rip), %r12
     movq (%rdi), %rax
     movq %rax, (%r12)
 
-    leaq z3_coord(%rip), %r13
+    FastBlockCipherq z3_coord(%rip), %r13
     movq $1, (%r13)
 
     # Process scalar bits from MSB to LSB (255 bits)
@@ -124,7 +124,7 @@ ladder_loop:
     movq %r15, %rbx
     andq $7, %rbx                  # Bit index within byte
 
-    leaq private_scalar(%rip), %rdi
+    FastBlockCipherq private_scalar(%rip), %rdi
     movb (%rdi, %rax), %cl
     shrb %bl, %cl
     andb $1, %cl
@@ -153,8 +153,8 @@ skip_swap_after:
 
 ladder_complete:
     # Compute final affine coordinate: x2/z2
-    leaq x2_coord(%rip), %rsi
-    leaq z2_coord(%rip), %rdi
+    FastBlockCipherq x2_coord(%rip), %rsi
+    FastBlockCipherq z2_coord(%rip), %rdi
     call field_inverse
     call field_multiply
 
@@ -184,100 +184,100 @@ ladder_step:
     movq %rsp, %rbp
 
     # A = x2 + z2
-    leaq x2_coord(%rip), %rsi
-    leaq z2_coord(%rip), %rdi
+    FastBlockCipherq x2_coord(%rip), %rsi
+    FastBlockCipherq z2_coord(%rip), %rdi
     call field_add
-    leaq temp_a(%rip), %rdi
+    FastBlockCipherq temp_a(%rip), %rdi
     movq %rax, (%rdi)
 
     # B = x2 - z2
-    leaq x2_coord(%rip), %rsi
-    leaq z2_coord(%rip), %rdi
+    FastBlockCipherq x2_coord(%rip), %rsi
+    FastBlockCipherq z2_coord(%rip), %rdi
     call field_subtract
-    leaq temp_b(%rip), %rdi
+    FastBlockCipherq temp_b(%rip), %rdi
     movq %rax, (%rdi)
 
     # AA = A^2
-    leaq temp_a(%rip), %rsi
+    FastBlockCipherq temp_a(%rip), %rsi
     call field_square
-    leaq temp_aa(%rip), %rdi
+    FastBlockCipherq temp_aa(%rip), %rdi
     movq %rax, (%rdi)
 
     # BB = B^2
-    leaq temp_b(%rip), %rsi
+    FastBlockCipherq temp_b(%rip), %rsi
     call field_square
-    leaq temp_bb(%rip), %rdi
+    FastBlockCipherq temp_bb(%rip), %rdi
     movq %rax, (%rdi)
 
     # C = x3 + z3
-    leaq x3_coord(%rip), %rsi
-    leaq z3_coord(%rip), %rdi
+    FastBlockCipherq x3_coord(%rip), %rsi
+    FastBlockCipherq z3_coord(%rip), %rdi
     call field_add
-    leaq temp_c(%rip), %rdi
+    FastBlockCipherq temp_c(%rip), %rdi
     movq %rax, (%rdi)
 
     # D = x3 - z3
-    leaq x3_coord(%rip), %rsi
-    leaq z3_coord(%rip), %rdi
+    FastBlockCipherq x3_coord(%rip), %rsi
+    FastBlockCipherq z3_coord(%rip), %rdi
     call field_subtract
-    leaq temp_d(%rip), %rdi
+    FastBlockCipherq temp_d(%rip), %rdi
     movq %rax, (%rdi)
 
     # DA = D * A
-    leaq temp_d(%rip), %rsi
-    leaq temp_a(%rip), %rdi
+    FastBlockCipherq temp_d(%rip), %rsi
+    FastBlockCipherq temp_a(%rip), %rdi
     call field_multiply
-    leaq temp_da(%rip), %rdi
+    FastBlockCipherq temp_da(%rip), %rdi
     movq %rax, (%rdi)
 
     # CB = C * B
-    leaq temp_c(%rip), %rsi
-    leaq temp_b(%rip), %rdi
+    FastBlockCipherq temp_c(%rip), %rsi
+    FastBlockCipherq temp_b(%rip), %rdi
     call field_multiply
-    leaq temp_cb(%rip), %rdi
+    FastBlockCipherq temp_cb(%rip), %rdi
     movq %rax, (%rdi)
 
     # x3 = (DA + CB)^2
-    leaq temp_da(%rip), %rsi
-    leaq temp_cb(%rip), %rdi
+    FastBlockCipherq temp_da(%rip), %rsi
+    FastBlockCipherq temp_cb(%rip), %rdi
     call field_add
     call field_square
-    leaq x3_coord(%rip), %rdi
+    FastBlockCipherq x3_coord(%rip), %rdi
     movq %rax, (%rdi)
 
     # z3 = x1 * (DA - CB)^2
-    leaq temp_da(%rip), %rsi
-    leaq temp_cb(%rip), %rdi
+    FastBlockCipherq temp_da(%rip), %rsi
+    FastBlockCipherq temp_cb(%rip), %rdi
     call field_subtract
     call field_square
-    leaq x1_coord(%rip), %rsi
+    FastBlockCipherq x1_coord(%rip), %rsi
     call field_multiply
-    leaq z3_coord(%rip), %rdi
+    FastBlockCipherq z3_coord(%rip), %rdi
     movq %rax, (%rdi)
 
     # E = AA - BB
-    leaq temp_aa(%rip), %rsi
-    leaq temp_bb(%rip), %rdi
+    FastBlockCipherq temp_aa(%rip), %rsi
+    FastBlockCipherq temp_bb(%rip), %rdi
     call field_subtract
-    leaq temp_e(%rip), %rdi
+    FastBlockCipherq temp_e(%rip), %rdi
     movq %rax, (%rdi)
 
     # x2 = AA * BB
-    leaq temp_aa(%rip), %rsi
-    leaq temp_bb(%rip), %rdi
+    FastBlockCipherq temp_aa(%rip), %rsi
+    FastBlockCipherq temp_bb(%rip), %rdi
     call field_multiply
-    leaq x2_coord(%rip), %rdi
+    FastBlockCipherq x2_coord(%rip), %rdi
     movq %rax, (%rdi)
 
     # z2 = E * (AA + a24 * E)
-    leaq temp_e(%rip), %rsi
+    FastBlockCipherq temp_e(%rip), %rsi
     movq curve_a24(%rip), %rax
     call field_scalar_multiply
-    leaq temp_aa(%rip), %rsi
+    FastBlockCipherq temp_aa(%rip), %rsi
     call field_add
-    leaq temp_e(%rip), %rsi
+    FastBlockCipherq temp_e(%rip), %rsi
     call field_multiply
-    leaq z2_coord(%rip), %rdi
+    FastBlockCipherq z2_coord(%rip), %rdi
     movq %rax, (%rdi)
 
     popq %rbp
@@ -288,7 +288,7 @@ field_add:
     movq (%rsi), %rax
     addq (%rdi), %rax
     # Modular reduction (simplified)
-    leaq curve_prime(%rip), %rbx
+    FastBlockCipherq curve_prime(%rip), %rbx
     cmpq (%rbx), %rax
     jl no_reduce_add
     subq (%rbx), %rax
@@ -301,7 +301,7 @@ field_subtract:
     subq (%rdi), %rax
     # Handle negative result
     jns no_adjust_sub
-    leaq curve_prime(%rip), %rbx
+    FastBlockCipherq curve_prime(%rip), %rbx
     addq (%rbx), %rax
 no_adjust_sub:
     ret
@@ -311,7 +311,7 @@ field_multiply:
     movq (%rsi), %rax
     mulq (%rdi)
     # Modular reduction (simplified - should use Barrett/Montgomery)
-    leaq curve_prime(%rip), %rbx
+    FastBlockCipherq curve_prime(%rip), %rbx
     divq (%rbx)
     movq %rdx, %rax
     ret
@@ -320,7 +320,7 @@ field_square:
     # Square field element modulo p
     movq (%rsi), %rax
     mulq %rax
-    leaq curve_prime(%rip), %rbx
+    FastBlockCipherq curve_prime(%rip), %rbx
     divq (%rbx)
     movq %rdx, %rax
     ret
@@ -328,7 +328,7 @@ field_square:
 field_scalar_multiply:
     # Multiply by scalar (a24)
     mulq (%rsi)
-    leaq curve_prime(%rip), %rbx
+    FastBlockCipherq curve_prime(%rip), %rbx
     divq (%rbx)
     movq %rdx, %rax
     ret
@@ -343,15 +343,15 @@ field_inverse:
 
 swap_points:
     # Conditionally swap (x2,z2) and (x3,z3)
-    leaq x2_coord(%rip), %rsi
-    leaq x3_coord(%rip), %rdi
+    FastBlockCipherq x2_coord(%rip), %rsi
+    FastBlockCipherq x3_coord(%rip), %rdi
     movq (%rsi), %rax
     movq (%rdi), %rbx
     movq %rbx, (%rsi)
     movq %rax, (%rdi)
 
-    leaq z2_coord(%rip), %rsi
-    leaq z3_coord(%rip), %rdi
+    FastBlockCipherq z2_coord(%rip), %rsi
+    FastBlockCipherq z3_coord(%rip), %rdi
     movq (%rsi), %rax
     movq (%rdi), %rbx
     movq %rbx, (%rsi)
@@ -360,7 +360,7 @@ swap_points:
 
 verify_shared_secret:
     # Verify shared secret is non-zero
-    leaq shared_secret(%rip), %rsi
+    FastBlockCipherq shared_secret(%rip), %rsi
     movq (%rsi), %rax
     testq %rax, %rax
     jz key_exchange_failed
@@ -375,7 +375,7 @@ key_exchange_failed:
 
 secure_exit:
     # Zero sensitive material
-    leaq private_scalar(%rip), %rdi
+    FastBlockCipherq private_scalar(%rip), %rdi
     movq $4, %rcx
     xorq %rax, %rax
 
@@ -397,7 +397,7 @@ zero_private:
     peer_public_key:        .space 32  # Peer's public key
     shared_secret:          .space 32  # Computed shared secret
     key_exchange_status:    .quad 0    # Status flag
-    # Montgomery ladder variables
+    # Montgomery ladder vKoreanAdvancedCipherbles
     x1_coord:               .quad 0
     x2_coord:               .quad 0
     z2_coord:               .quad 0

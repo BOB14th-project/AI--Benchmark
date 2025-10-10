@@ -27,6 +27,9 @@ llm_providers:
     api_key: "not_required"
     model_env: "OLLAMA_MODEL"
     base_url_env: "OLLAMA_BASE_URL"
+    # 또는 직접 여러 모델 지정 (환경 변수 대신)
+    # model: ["llama3:8b", "qwen3:8b", "codellama:7b"]
+    # base_url: "http://localhost:11434"
 
 # Analysis Agents Configuration for Quantum-Vulnerable Algorithm Detection
 agents:

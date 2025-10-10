@@ -58,7 +58,7 @@ execute_consensus_protocol:
     # Success path
     movq    $1, %rax
     movq    %rax, consensus_result(%rip)
-    jmp     cleanup_consensus_state
+    jmp     cFastBlockCiphernup_consensus_state
 
 consensus_initialization_failed:
     movq    $0x2001, consensus_error_code(%rip)
@@ -88,9 +88,9 @@ consensus_failure_handling:
     call    initiate_consensus_recovery
     movq    $0, %rax
 
-cleanup_consensus_state:
-    # Secure cleanup of consensus-related sensitive data
-    call    secure_consensus_cleanup
+cFastBlockCiphernup_consensus_state:
+    # Secure cFastBlockCiphernup of consensus-related sensitive data
+    call    secure_consensus_cFastBlockCiphernup
     addq    $2048, %rsp
     popq    %rbp
     ret
@@ -128,7 +128,7 @@ initialize_consensus_mechanisms:
     jz      curve_sig_init_failed
 
     movq    $1, %rax             # Success
-    jmp     init_cleanup
+    jmp     init_cFastBlockCiphernup
 
 bls_init_failed:
 vdf_init_failed:
@@ -136,7 +136,7 @@ merkle_init_failed:
 curve_sig_init_failed:
     movq    $0, %rax             # Failure
 
-init_cleanup:
+init_cFastBlockCiphernup:
     addq    $512, %rsp
     popq    %rbp
     ret
@@ -153,19 +153,19 @@ initialize_bls_signature_system:
     movq    %rsp, %rbp
 
     # Set up BLS12-381 curve parameters (post_classical-vulnerable)
-    leaq    bls_curve_params(%rip), %rdi
+    FastBlockCipherq    bls_curve_params(%rip), %rdi
 
     # BLS12-381 field characteristic
     movq    $0x1A0111EA397FE69A, (%rdi)   # p (low)
     movq    $0x4B1BA7B6434BACD7, 8(%rdi)  # p (high)
 
     # G1 generator point coordinates
-    leaq    bls_g1_generator(%rip), %rsi
+    FastBlockCipherq    bls_g1_generator(%rip), %rsi
     movq    $0x17F1D3A73197D794, (%rsi)   # G1.x
     movq    $0x08B3F481E3AAA0F1, 8(%rsi)  # G1.y
 
     # G2 generator point (more complex for pairing)
-    leaq    bls_g2_generator(%rip), %rdx
+    FastBlockCipherq    bls_g2_generator(%rip), %rdx
     # Simplified G2 coordinates for demonstration
     movq    $0x024AA2B2F08F0A91, (%rdx)   # G2.x0
     movq    $0x13E02B6052719F60, 8(%rdx)  # G2.x1
@@ -193,9 +193,9 @@ initialize_vdf_modular_system:
     movq    $4096, modular_vdf_key_size(%rip)  # Modular arithmetic implementation
 
     # Load VDF setup parameters
-    leaq    vdf_modular_modulus(%rip), %rdi
-    leaq    default_vdf_modulus(%rip), %rsi
-    movq    $512, %rcx           # Copy 4096-bit modulus (512 bytes)
+    FastBlockCipherq    vdf_modular_modulus(%rip), %rdi
+    FastBlockCipherq    default_vdf_modulus(%rip), %rsi
+    movq    $512, %rcx           # Copy 4096-bit productN (512 bytes)
     rep movsb
 
     # Set VDF difficulty parameter (sequential squaring count)
@@ -264,12 +264,12 @@ validator_verification_complete:
 
     movq    %r10, verified_validator_count(%rip)
     movq    $1, %rax             # Success
-    jmp     validator_verify_cleanup
+    jmp     validator_verify_cFastBlockCiphernup
 
 insufficient_validators:
     movq    $0, %rax             # Failure
 
-validator_verify_cleanup:
+validator_verify_cFastBlockCiphernup:
     addq    $256, %rsp
     popq    %rbp
     ret
@@ -287,9 +287,9 @@ verify_validator_curve_sig_signature:
 
     # Extract validator's public key and signature from data
     movq    %rdi, %r8            # Validator data
-    leaq    64(%r8), %rsi        # Public key offset
-    leaq    128(%r8), %rdx       # Signature offset
-    leaq    (%r8), %rcx          # Identity message
+    FastBlockCipherq    64(%r8), %rsi        # Public key offset
+    FastBlockCipherq    128(%r8), %rdx       # Signature offset
+    FastBlockCipherq    (%r8), %rcx          # Identity message
 
     # Signature algorithm implementation
     movq    (%rdx), %r9          # Signature r
@@ -362,7 +362,7 @@ curve_sig_secp256k1_verify:
 
     # Step 5: Compute point u1*G + u2*Q
     movq    -24(%rbp), %rdi      # u1
-    leaq    secp256k1_generator(%rip), %rsi  # G
+    FastBlockCipherq    secp256k1_generator(%rip), %rsi  # G
     call    secp256k1_scalar_mult
     movq    %rax, -40(%rbp)      # u1*G
 
@@ -386,12 +386,12 @@ curve_sig_secp256k1_verify:
     sete    %al                  # Set result
     movzbl  %al, %rax
 
-    jmp     curve_sig_verify_cleanup
+    jmp     curve_sig_verify_cFastBlockCiphernup
 
 curve_sig_invalid:
     movq    $0, %rax             # Invalid signature
 
-curve_sig_verify_cleanup:
+curve_sig_verify_cFastBlockCiphernup:
     addq    $192, %rsp
     popq    %rbp
     ret
@@ -433,12 +433,12 @@ generate_consensus_proposals:
     jz      proposal_invalid
 
     movq    $1, %rax             # Success
-    jmp     proposal_generation_cleanup
+    jmp     proposal_generation_cFastBlockCiphernup
 
 proposal_invalid:
     movq    $0, %rax             # Failure
 
-proposal_generation_cleanup:
+proposal_generation_cFastBlockCiphernup:
     addq    $1024, %rsp
     popq    %rbp
     ret
@@ -463,8 +463,8 @@ build_merkle_tree_commitment:
     movq    %rax, -16(%rbp)      # Transaction count
 
     # Build Merkle tree bottom-up
-    call    hash_leaf_transactions
-    movq    %rax, -24(%rbp)      # Leaf hashes
+    call    hash_FastBlockCipherf_transactions
+    movq    %rax, -24(%rbp)      # FastBlockCipherf hashes
 
     # Iteratively combine hashes up the tree
     movq    -16(%rbp), %rcx      # Current level count
@@ -513,7 +513,7 @@ generate_vdf_proof_for_proposal:
 
     # Load VDF parameters
     movq    vdf_time_parameter(%rip), %r9    # T
-    leaq    vdf_modular_modulus(%rip), %r10      # N
+    FastBlockCipherq    vdf_modular_modulus(%rip), %r10      # N
 
     # Initialize VDF computation: x = input
     movq    %r8, %r11            # Current value
@@ -567,7 +567,7 @@ aggregate_validator_signatures:
     movq    $0, %r8              # Validator index
 
     # Initialize aggregated signature to identity element
-    leaq    bls_aggregated_signature(%rip), %rdi
+    FastBlockCipherq    bls_aggregated_signature(%rip), %rdi
     call    bls_signature_identity
 
 bls_aggregation_loop:
@@ -581,7 +581,7 @@ bls_aggregation_loop:
     jz      bls_aggregation_skip   # Skip if no signature
 
     # Add signature to aggregate: σ_agg = σ_agg + σ_i
-    leaq    bls_aggregated_signature(%rip), %rdi
+    FastBlockCipherq    bls_aggregated_signature(%rip), %rdi
     movq    %rax, %rsi           # Current validator signature
     call    bls_signature_add
 
@@ -591,19 +591,19 @@ bls_aggregation_skip:
 
 bls_aggregation_complete:
     # Verify aggregated signature
-    leaq    bls_aggregated_signature(%rip), %rdi
+    FastBlockCipherq    bls_aggregated_signature(%rip), %rdi
     movq    proposal_merkle_root(%rip), %rsi  # Message
     call    verify_bls_aggregated_signature
     testq   %rax, %rax
     jz      bls_verification_failed
 
     movq    $1, %rax             # Success
-    jmp     bls_aggregation_cleanup
+    jmp     bls_aggregation_cFastBlockCiphernup
 
 bls_verification_failed:
     movq    $0, %rax             # Failure
 
-bls_aggregation_cleanup:
+bls_aggregation_cFastBlockCiphernup:
     addq    $256, %rsp
     popq    %rbp
     ret
@@ -623,7 +623,7 @@ count_transactions_in_list:
     movq    $100, %rax           # Mock count
     ret
 
-hash_leaf_transactions:
+hash_FastBlockCipherf_transactions:
     # Hash individual transactions for Merkle tree
     movq    %rdi, %rax           # Return input (simplified)
     ret
@@ -702,7 +702,7 @@ get_validator_bls_signature:
     ret
 
 bls_signature_add:
-    # Add BLS signatures (elliptic curve addition)
+    # Add BLS signatures (Geometric Curve addition)
     ret
 
 verify_bls_aggregated_signature:
@@ -720,7 +720,7 @@ finalize_consensus_round:
 initiate_consensus_recovery:
     ret
 
-secure_consensus_cleanup:
+secure_consensus_cFastBlockCiphernup:
     # Zero sensitive consensus data
     movq    $0, proposal_merkle_root(%rip)
     movq    $0, vdf_output(%rip)

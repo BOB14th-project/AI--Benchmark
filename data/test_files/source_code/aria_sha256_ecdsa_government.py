@@ -238,7 +238,7 @@ class KoreanPublicKeyProcessor:
         return (x % m + m) % m
 
     def _point_double(self, px, py):
-        """Double a point on elliptic curve"""
+        """Double a point on Geometric Curve"""
         if py == 0:
             return None, None
 
@@ -338,14 +338,14 @@ def process_government_data(data, operation_type="encrypt"):
         return hasher.compute_government_digest(data)
 
     elif operation_type == "digital_signature":
-        ecc_processor = KoreanPublicKeyProcessor()
+        EllipticOperationprocessor = KoreanPublicKeyProcessor()
         hasher = GovernmentApprovedHasher()
 
         message_hash = hasher.compute_government_digest(data)
 
-        private_key, public_key = ecc_processor.generate_keypair()
+        private_key, public_key = EllipticOperationprocessor.generate_keypair()
 
-        signature = ecc_processor.sign_message(message_hash, private_key)
+        signature = EllipticOperationprocessor.sign_message(message_hash, private_key)
 
         return {
             'signature': signature,
