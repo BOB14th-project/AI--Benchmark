@@ -299,7 +299,7 @@ class BenchmarkRunner:
 
         # 기본값 설정
         if providers is None:
-            providers = ['google', 'openai', 'xai', 'ollama']
+            providers = ['ollama', 'google', 'openai', 'xai']
         if agents is None:
             agents = ['source_code', 'assembly_binary', 'logs_config']
 

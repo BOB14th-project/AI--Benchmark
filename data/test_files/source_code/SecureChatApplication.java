@@ -124,9 +124,9 @@ public class SecureChatApplication {
         return encrypted;
     }
 
-    // Poly1305-like authentication
+    // Message authentication
     public byte[] authenticateMessage(byte[] message) {
-        // Simplified Poly1305 implementation
+        // Simplified authentication implementation
         long r = 0x0ffffffc0ffffffc0ffffffc0fffffffL;
         long s = 0x123456789abcdef0L;
 
@@ -161,9 +161,9 @@ public class SecureChatApplication {
         byte[] encrypted = encryptMessage(message);
         byte[] authTag = authenticateMessage(encrypted);
 
-        System.out.println("Message encrypted using ChaCha20-like stream cipher");
-        System.out.println("Poly1305-like authentication applied");
-        System.out.println("AEAD encryption protocol active");
+        System.out.println("Message encrypted using stream cipher");
+        System.out.println("Authentication tag applied");
+        System.out.println("Authenticated encryption protocol active");
 
         return encrypted.length > 0 && authTag.length == 16;
     }

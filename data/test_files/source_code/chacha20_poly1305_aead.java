@@ -1,16 +1,16 @@
 import java.util.Arrays;
 
-public class ChaCha20Poly1305AEAD {
+public class StreamAuthenticatedCipher {
 
-    private static final int CHACHA_BLOCK_SIZE = 64;
-    private static final int CHACHA_KEY_SIZE = 32;
-    private static final int CHACHA_NONCE_SIZE = 12;
-    private static final int CHACHA_ROUNDS = 20;
+    private static final int STREAM_BLOCK_SIZE = 64;
+    private static final int STREAM_KEY_SIZE = 32;
+    private static final int STREAM_NONCE_SIZE = 12;
+    private static final int STREAM_ROUNDS = 20;
 
-    private static final int POLY1305_TAG_SIZE = 16;
-    private static final int POLY1305_KEY_SIZE = 32;
+    private static final int AUTH_TAG_SIZE = 16;
+    private static final int AUTH_KEY_SIZE = 32;
 
-    private static final int[] CHACHA_CONSTANTS = {
+    private static final int[] STREAM_CONSTANTS = {
         0x61707865, 0x3320646e, 0x79622d32, 0x6b206574
     };
 
@@ -34,10 +34,10 @@ public class ChaCha20Poly1305AEAD {
             state[b] = Integer.rotateLeft(state[b], 7);
         }
 
-        public static void chachaBlock(int[] output, int[] input) {
+        public static void processBlock(int[] output, int[] input) {
             System.arraycopy(input, 0, output, 0, 16);
 
-            for (int round = 0; round < CHACHA_ROUNDS; round += 2) {
+            for (int round = 0; round < STREAM_ROUNDS; round += 2) {
                 
                 quarterRound(output, 0, 4, 8, 12);
                 quarterRound(output, 1, 5, 9, 13);
@@ -56,8 +56,8 @@ public class ChaCha20Poly1305AEAD {
         }
 
         public static void initializeState(int[] state, byte[] key, byte[] nonce, int counter) {
-            
-            System.arraycopy(CHACHA_CONSTANTS, 0, state, 0, 4);
+
+            System.arraycopy(STREAM_CONSTANTS, 0, state, 0, 4);
 
             for (int i = 0; i < 8; i++) {
                 state[4 + i] = bytesToInt(key, i * 4);
@@ -85,12 +85,12 @@ public class ChaCha20Poly1305AEAD {
 
             int counter = 1; 
 
-            for (int i = 0; i < input.length; i += CHACHA_BLOCK_SIZE) {
+            for (int i = 0; i < input.length; i += STREAM_BLOCK_SIZE) {
                 initializeState(state, key, nonce, counter);
-                chachaBlock(keystream, state);
+                processBlock(keystream, state);
 
                 byte[] keystreamBytes = intsToBytes(keystream);
-                int blockSize = Math.min(CHACHA_BLOCK_SIZE, input.length - i);
+                int blockSize = Math.min(STREAM_BLOCK_SIZE, input.length - i);
 
                 for (int j = 0; j < blockSize; j++) {
                     output[i + j] = (byte)(input[i + j] ^ keystreamBytes[j]);
@@ -102,18 +102,18 @@ public class ChaCha20Poly1305AEAD {
             return output;
         }
 
-        public static byte[] generatePoly1305Key(byte[] key, byte[] nonce) {
+        public static byte[] generateAuthKey(byte[] key, byte[] nonce) {
             int[] state = new int[16];
             int[] keystream = new int[16];
 
-            initializeState(state, key, nonce, 0); 
-            chachaBlock(keystream, state);
+            initializeState(state, key, nonce, 0);
+            processBlock(keystream, state);
 
-            byte[] poly1305Key = new byte[POLY1305_KEY_SIZE];
+            byte[] authKey = new byte[AUTH_KEY_SIZE];
             byte[] keystreamBytes = intsToBytes(keystream);
-            System.arraycopy(keystreamBytes, 0, poly1305Key, 0, POLY1305_KEY_SIZE);
+            System.arraycopy(keystreamBytes, 0, authKey, 0, AUTH_KEY_SIZE);
 
-            return poly1305Key;
+            return authKey;
         }
     }
 
@@ -122,8 +122,8 @@ public class ChaCha20Poly1305AEAD {
         private static final long P = (1L << 130) - 5; 
 
         public static byte[] authenticate(byte[] message, byte[] key) {
-            if (key.length != POLY1305_KEY_SIZE) {
-                throw new IllegalArgumentException("AuthenticatorAlgo key must be 32 bytes");
+            if (key.length != AUTH_KEY_SIZE) {
+                throw new IllegalArgumentException("Authenticator key must be 32 bytes");
             }
 
             byte[] rBytes = Arrays.copyOfRange(key, 0, 16);
@@ -187,41 +187,41 @@ public class ChaCha20Poly1305AEAD {
 
     public static AEADResult encrypt(byte[] plaintext, byte[] additionalData,
                                     byte[] key, byte[] nonce) {
-        if (key.length != CHACHA_KEY_SIZE) {
+        if (key.length != STREAM_KEY_SIZE) {
             throw new IllegalArgumentException("Key must be 32 bytes");
         }
-        if (nonce.length != CHACHA_NONCE_SIZE) {
+        if (nonce.length != STREAM_NONCE_SIZE) {
             throw new IllegalArgumentException("Nonce must be 12 bytes");
         }
 
-        byte[] poly1305Key = StreamCipher20.generatePoly1305Key(key, nonce);
+        byte[] authKey = StreamCipher20.generateAuthKey(key, nonce);
 
         byte[] ciphertext = StreamCipher20.encrypt(plaintext, key, nonce);
 
         byte[] authData = constructAuthData(additionalData, ciphertext);
 
-        byte[] tag = AuthenticatorAlgo.authenticate(authData, poly1305Key);
+        byte[] tag = AuthenticatorAlgo.authenticate(authData, authKey);
 
         return new AEADResult(ciphertext, tag);
     }
 
     public static byte[] decrypt(byte[] ciphertext, byte[] tag, byte[] additionalData,
                                 byte[] key, byte[] nonce) {
-        if (key.length != CHACHA_KEY_SIZE) {
+        if (key.length != STREAM_KEY_SIZE) {
             throw new IllegalArgumentException("Key must be 32 bytes");
         }
-        if (nonce.length != CHACHA_NONCE_SIZE) {
+        if (nonce.length != STREAM_NONCE_SIZE) {
             throw new IllegalArgumentException("Nonce must be 12 bytes");
         }
-        if (tag.length != POLY1305_TAG_SIZE) {
+        if (tag.length != AUTH_TAG_SIZE) {
             throw new IllegalArgumentException("Tag must be 16 bytes");
         }
 
-        byte[] poly1305Key = StreamCipher20.generatePoly1305Key(key, nonce);
+        byte[] authKey = StreamCipher20.generateAuthKey(key, nonce);
 
         byte[] authData = constructAuthData(additionalData, ciphertext);
 
-        byte[] computedTag = AuthenticatorAlgo.authenticate(authData, poly1305Key);
+        byte[] computedTag = AuthenticatorAlgo.authenticate(authData, authKey);
 
         if (!Arrays.equals(tag, computedTag)) {
             throw new SecurityException("Authentication tag verification failed");
@@ -305,11 +305,11 @@ public class ChaCha20Poly1305AEAD {
 
     public static void main(String[] args) {
         try {
-            System.out.println("StreamCipher20-AuthenticatorAlgo AEAD Demo");
+            System.out.println("Authenticated Encryption Demo");
 
-            byte[] key = "SecretKey1234567890123456789012".getBytes(); 
-            byte[] nonce = "UniqueNonce1".getBytes(); 
-            String plaintext = "Hello, StreamCipher20-AuthenticatorAlgo AEAD!";
+            byte[] key = "SecretKey1234567890123456789012".getBytes();
+            byte[] nonce = "UniqueNonce1".getBytes();
+            String plaintext = "Hello, Authenticated Encryption!";
             String additionalData = "Associated data for authentication";
 
             System.out.println("Original: " + plaintext);

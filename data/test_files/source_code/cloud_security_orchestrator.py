@@ -592,7 +592,7 @@ class DigestEngine:
 
 
 class StreamGenerator:
-    """High-speed stream cipher implementation (ChaCha20-like)"""
+    """High-speed stream cipher implementation"""
 
     def __init__(self):
         self.state = [0] * 16

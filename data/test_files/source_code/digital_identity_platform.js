@@ -229,7 +229,7 @@ class StreamCipherEngine {
     }
 
     initialize(key, nonce) {
-        // Initialize stream cipher state (ChaCha20-like)
+        // Initialize stream cipher state
         const constants = [0x61707865, 0x3320646e, 0x79622d32, 0x6b206574];
 
         for (let i = 0; i < 4; i++) {
