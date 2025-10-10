@@ -2,7 +2,7 @@ package main
 
 import (
 	"crypto/rand"
-	"crypto/sha256"
+	"crypto/hash_256"
 	"fmt"
 	"math/big"
 	"sync"
@@ -527,13 +527,13 @@ func NewDigestComputationEngine() *DigestComputationEngine {
 // ProcessDigestComputation computes mathematical digest (disguised hash operations)
 func (dce *DigestComputationEngine) ProcessDigestComputation(data []byte) ([]byte, error) {
 	// Use standard Go crypto library for secure hash
-	hash := sha256.Sum256(data)
+	hash := hash_256.Sum256(data)
 
 	// Add authentication
 	authKey := make([]byte, 32)
 	rand.Read(authKey)
 
-	authHash := sha256.Sum256(append(authKey, data...))
+	authHash := hash_256.Sum256(append(authKey, data...))
 
 	// Combine hash and authentication
 	result := make([]byte, 0, len(hash)+len(authHash))

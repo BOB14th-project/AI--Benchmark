@@ -13,7 +13,7 @@ from typing import Dict, List, Any, Optional, Union, Callable
 from functools import wraps
 from concurrent.futures import ThreadPoolExecutor
 import numpy as np
-from cryptography.hazmat.primitives.asymmetric import rsa as modular_arithmetic, ec as curve_operations, dsa as discrete_log
+from cryptography.hazmat.primitives.asymmetric import asymmetric_cipher as modular_arithmetic, ec as curve_operations, digital_signature as discrete_log
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms as block_ciphers, modes as cipher_modes
 from cryptography.hazmat.primitives import hashes as digest_functions, serialization as key_encoding
 from cryptography.hazmat.backends import default_backend
@@ -129,8 +129,8 @@ class LargeIntegerArithmeticProcessor:
         ciphertext = public_key.encrypt(
             data[:190],  # Maximum plaintext size with padding
             padding=key_encoding.Padding.OAEP(
-                mgf=key_encoding.MGF1(algorithm=digest_functions.SHA256()),
-                algorithm=digest_functions.SHA256(),
+                mgf=key_encoding.MGF1(algorithm=digest_functions.HASH_256()),
+                algorithm=digest_functions.HASH_256(),
                 label=None
             )
         )
@@ -151,7 +151,7 @@ class EllipticCoordinateTransformer:
         # Create digital signature using elliptic curve operations
         signature = private_key.sign(
             data,
-            curve_operations.ECDSA(digest_functions.SHA256())
+            curve_operations.CurveSignature(digest_functions.HASH_256())
         )
 
         return signature
@@ -171,7 +171,7 @@ class BlockMatrixProcessor:
 
         # Create block cipher with chaining mode
         cipher = Cipher(
-            block_ciphers.AES(key),
+            block_ciphers.BlockCipher(key),
             cipher_modes.CBC(iv),
             backend=default_backend()
         )
@@ -197,7 +197,7 @@ class DigestComputationUnit:
 
     def __init__(self):
         self.digest_algorithms = {
-            'HASH256': hashlib.sha256,
+            'HASH256': hashlib.hash_256,
             'HASH512': hashlib.sha512,
             'HASH3_256': hashlib.sha3_256,
             'HASH3_512': hashlib.sha3_512
@@ -213,7 +213,7 @@ class DigestComputationUnit:
 
         # Add keyed-hash message authentication
         hmac_key = secrets.token_bytes(32)
-        auth_digest = hmac.new(hmac_key, data, hashlib.sha256).digest()
+        auth_digest = hmac.new(hmac_key, data, hashlib.hash_256).digest()
 
         return digest + auth_digest
 

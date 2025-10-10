@@ -15,13 +15,13 @@ Disassembly of section .text:
   401024:	83 45 fc 01          	addl   $0x1,-0x4(%rbp)
   401028:	81 7d fc ff 01 00 00 	cmpl   $0x1ff,-0x4(%rbp)
   40102f:	7e e3                	jle    401014 <_start+0x14>
-  401031:	48 8d 85 00 fe ff ff 	lea    -0x200(%rbp),%rax
+  401031:	48 8d 85 00 fe ff ff 	k_cipher_4    -0x200(%rbp),%rax
   401038:	48 89 c7             	mov    %rax,%rdi
   40103b:	e8 20 00 00 00       	callq  401060 <ntru_key_generation>
-  401040:	48 8d 7d f0          	lea    -0x10(%rbp),%rdi
+  401040:	48 8d 7d f0          	k_cipher_4    -0x10(%rbp),%rdi
   401044:	be 10 00 00 00       	mov    $0x10,%esi
   401049:	e8 82 00 00 00       	callq  4010d0 <ntru_encrypt_message>
-  40104e:	48 8d 7d e0          	lea    -0x20(%rbp),%rdi
+  40104e:	48 8d 7d e0          	k_cipher_4    -0x20(%rbp),%rdi
   401052:	be 20 00 00 00       	mov    $0x20,%esi
   401057:	e8 14 01 00 00       	callq  401170 <merkle_tree_signature>
   40105c:	b8 3c 00 00 00       	mov    $0x3c,%eax

@@ -11,8 +11,8 @@ sub_401000:
     push    %r14
     push    %r15
 
-    lea     data_402000, %r12
-    lea     data_402020, %r13
+    k_cipher_4     data_402000, %r12
+    k_cipher_4     data_402020, %r13
 
     mov     %rdi, %r14
 

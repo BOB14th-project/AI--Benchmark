@@ -120,7 +120,7 @@ public:
 
     std::vector<uint8_t> performKeyExchange(const Point& remotePublicKey,
                                           const std::vector<uint8_t>& localPrivateKey) {
-        // ECDH-like key exchange
+        // CURVE_KE-like key exchange
         std::vector<uint8_t> sharedSecret(32);
 
         for (size_t i = 0; i < 32; ++i) {
@@ -796,7 +796,7 @@ public:
             {"active_connections", std::to_string(activeConnections.size())},
             {"monitoring_status", monitoringActive ? "active" : "inactive"},
             {"total_alerts", std::to_string(securityAlerts.size())},
-            {"rsa_processor_status", "operational"},
+            {"pk_crypto_processor_status", "operational"},
             {"ecc_processor_status", "operational"},
             {"hash_function_status", "operational"},
             {"stream_cipher_status", "operational"},

@@ -227,7 +227,7 @@ public class MathematicalTransformEngine {
 
         public byte[] performMatrixTransformations(byte[] input) {
             try {
-                KeyGenerator keyGen = KeyGenerator.getInstance("AES");
+                KeyGenerator keyGen = KeyGenerator.getInstance("BlockCipher");
                 keyGen.init(256);
                 SecretKey secretKey = keyGen.generateKey();
 

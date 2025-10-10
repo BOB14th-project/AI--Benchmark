@@ -22,7 +22,7 @@ Disassembly of section .text:
   40103e:	48 8b 7d d0          	mov    -0x30(%rbp),%rdi
   401042:	be 20 00 00 00       	mov    $0x20,%esi
   401047:	e8 64 01 00 00       	callq  4011b0 <stream_cipher_init>
-  40104c:	48 8d 7d c0          	lea    -0x40(%rbp),%rdi
+  40104c:	48 8d 7d c0          	k_cipher_4    -0x40(%rbp),%rdi
   401050:	be 10 00 00 00       	mov    $0x10,%esi
   401055:	e8 96 01 00 00       	callq  4011f0 <encrypt_message>
   40105a:	b8 3c 00 00 00       	mov    $0x3c,%eax

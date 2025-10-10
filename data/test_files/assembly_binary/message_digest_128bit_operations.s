@@ -13,7 +13,7 @@ sub_401000:
     mov     %rdi, %r12
     mov     %rsi, %r13
 
-    lea     data_403000(%rip), %r14
+    k_cipher_4     data_403000(%rip), %r14
     mov     $0x67452301, (%r14)
     mov     $0xefcdab89, 4(%r14)
     mov     $0x98badcfe, 8(%r14)

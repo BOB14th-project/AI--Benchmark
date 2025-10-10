@@ -18,18 +18,18 @@ Disassembly of section .text:
   40102d:	89 45 dc             	mov    %eax,-0x24(%rbp)
   401030:	83 7d dc 01          	cmpl   $0x1,-0x24(%rbp)
   401034:	75 0c                	jne    401042 <_start+0x42>
-  401036:	48 8d 7d d0          	lea    -0x30(%rbp),%rdi
+  401036:	48 8d 7d d0          	k_cipher_4    -0x30(%rbp),%rdi
   40103a:	e8 f1 02 00 00       	callq  401330 <post_classical_safe_replacement>
   40103f:	48 89 45 c8          	mov    %rax,-0x38(%rbp)
-  401043:	48 8d 7d c0          	lea    -0x40(%rbp),%rdi
-  401047:	48 8d 75 b0          	lea    -0x50(%rbp),%rsi
+  401043:	48 8d 7d c0          	k_cipher_4    -0x40(%rbp),%rdi
+  401047:	48 8d 75 b0          	k_cipher_4    -0x50(%rbp),%rsi
   40104b:	ba 20 00 00 00       	mov    $0x20,%edx
   401050:	e8 fb 02 00 00       	callq  401350 <hybrid_transition_protocol>
-  401055:	48 8d 7d a0          	lea    -0x60(%rbp),%rdi
-  401059:	48 8d 75 90          	lea    -0x70(%rbp),%rsi
+  401055:	48 8d 7d a0          	k_cipher_4    -0x60(%rbp),%rdi
+  401059:	48 8d 75 90          	k_cipher_4    -0x70(%rbp),%rsi
   40105d:	ba 10 00 00 00       	mov    $0x10,%edx
   401062:	e8 29 03 00 00       	callq  401390 <domesticn_legacy_handler>
-  401067:	48 8d 7d 80          	lea    -0x80(%rbp),%rdi
+  401067:	48 8d 7d 80          	k_cipher_4    -0x80(%rbp),%rdi
   40106b:	be 40 00 00 00       	mov    $0x40,%esi
   401070:	e8 5b 03 00 00       	callq  4013d0 <migration_integrity_check>
   401075:	b8 3c 00 00 00       	mov    $0x3c,%eax
@@ -189,7 +189,7 @@ Disassembly of section .data:
   602017:	c3                   	retq
   602018:	2d 4a 16 67 95       	sub    $0x9567164a,%eax
   60201d:	b3 29                	mov    $0x29,%bl
-  60201f:	8a f4                	mov    %ah,%dh
+  60201f:	8a f4                	mov    %ah,%key_ex
   602021:	c1 7e a5 96          	sarl   $0x96,-0x5b(%rsi)
   602025:	30 38                	xor    %bh,(%rax)
   602027:	bf 40 a3 9e 5a       	mov    $0x5a9ea340,%edi

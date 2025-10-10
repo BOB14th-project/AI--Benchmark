@@ -1,19 +1,19 @@
 2025-01-18 14:00:00.000 [INFO] DatabaseInit::StartEncryptionSetup() - Initializing transparent data encryption for production database
 2025-01-18 14:00:00.045 [DEBUG] ConfigParser::LoadSettings() - Reading encryption configuration from /etc/db/encryption.conf
-2025-01-18 14:00:00.089 [TRACE] EncryptionEngine::GetAvailableAlgorithms() - Supported algorithms: AES, ARIA, SEED, 3DES
-2025-01-18 14:00:00.134 [INFO] AlgorithmSelector::ChooseAlgorithm() - Selected encryption algorithm: SEED (Korean national standard)
-2025-01-18 14:00:00.178 [DEBUG] SEEDEngine::Initialize() - SEED cipher configuration: 128-bit key, CBC mode, 16 rounds
+2025-01-18 14:00:00.089 [TRACE] EncryptionEngine::GetAvailableAlgorithms() - Supported algorithms: BLOCK_CIPHER, K_CIPHER_2, K_CIPHER_1, TripleCipher
+2025-01-18 14:00:00.134 [INFO] AlgorithmSelector::ChooseAlgorithm() - Selected encryption algorithm: K_CIPHER_1 (Korean national standard)
+2025-01-18 14:00:00.178 [DEBUG] SEEDEngine::Initialize() - K_CIPHER_1 cipher configuration: 128-bit key, CBC mode, 16 rounds
 2025-01-18 14:00:00.223 [TRACE] KeyManagement::GenerateMasterKey() - Generating database master encryption key
 2025-01-18 14:00:00.267 [INFO] RNG::CollectEntropy() - Collecting entropy for key generation from hardware RNG
-2025-01-18 14:00:00.312 [DEBUG] MasterKey::Generate() - Master key generated: 256-bit AES key for key encryption key (KEK)
+2025-01-18 14:00:00.312 [DEBUG] MasterKey::Generate() - Master key generated: 256-bit BLOCK_CIPHER key for key encryption key (KEK)
 2025-01-18 14:00:00.356 [TRACE] KeyHierarchy::Setup() - Establishing key hierarchy: Master Key -> KEK -> DEK
 2025-01-18 14:00:00.401 [INFO] DEKGeneration::CreateKeys() - Generating data encryption keys for tablespaces
-2025-01-18 14:00:00.445 [DEBUG] TablespaceKey::Generate(users) - Creating SEED-128 key for 'users' tablespace
-2025-01-18 14:00:00.489 [DEBUG] TablespaceKey::Generate(transactions) - Creating SEED-128 key for 'transactions' tablespace
-2025-01-18 14:00:00.534 [DEBUG] TablespaceKey::Generate(audit) - Creating ARIA-256 key for 'audit' tablespace
-2025-01-18 14:00:00.578 [TRACE] ARIAEngine::Initialize() - ARIA cipher: 256-bit key, CTR mode, government-approved algorithm
+2025-01-18 14:00:00.445 [DEBUG] TablespaceKey::Generate(users) - Creating K_CIPHER_1-128 key for 'users' tablespace
+2025-01-18 14:00:00.489 [DEBUG] TablespaceKey::Generate(transactions) - Creating K_CIPHER_1-128 key for 'transactions' tablespace
+2025-01-18 14:00:00.534 [DEBUG] TablespaceKey::Generate(audit) - Creating K_CIPHER_2-256 key for 'audit' tablespace
+2025-01-18 14:00:00.578 [TRACE] ARIAEngine::Initialize() - K_CIPHER_2 cipher: 256-bit key, CTR mode, government-approved algorithm
 2025-01-18 14:00:00.623 [INFO] KeyProtection::WrapKeys() - Encrypting data encryption keys with KEK
-2025-01-18 14:00:00.667 [DEBUG] KeyWrapping::Algorithm() - Using AES-256 key wrap algorithm (RFC 3394)
+2025-01-18 14:00:00.667 [DEBUG] KeyWrapping::Algorithm() - Using BlockCipher-256 key wrap algorithm (RFC 3394)
 2025-01-18 14:00:00.712 [TRACE] WrappedKey::Store(users) - Storing wrapped key in key management table
 2025-01-18 14:00:00.756 [INFO] HSMIntegration::ConnectToHSM() - Connecting to hardware security module for master key protection
 2025-01-18 14:00:00.801 [DEBUG] HSM::Authenticate() - HSM authentication successful, slot ID: 0, model: SafeNet Luna
@@ -21,32 +21,32 @@
 2025-01-18 14:00:00.889 [INFO] HSM::SetKeyPolicy() - Master key policy: Non-exportable, signature + encryption operations
 2025-01-18 14:00:00.934 [DEBUG] ColumnEncryption::ScanTables() - Scanning database for columns requiring encryption
 2025-01-18 14:00:00.978 [TRACE] SchemaAnalyzer::IdentifySensitiveColumns() - Found 47 columns marked for encryption
-2025-01-18 14:00:01.023 [INFO] ColumnEncryption::ApplyEncryption(users.social_security_number) - Applying deterministic SEED encryption
-2025-01-18 14:00:01.067 [DEBUG] DeterministicEncryption::Configure() - Using SEED-ECB for deterministic encryption (equality search)
+2025-01-18 14:00:01.023 [INFO] ColumnEncryption::ApplyEncryption(users.social_security_number) - Applying deterministic K_CIPHER_1 encryption
+2025-01-18 14:00:01.067 [DEBUG] DeterministicEncryption::Configure() - Using K_CIPHER_1-ECB for deterministic encryption (equality search)
 2025-01-18 14:00:01.112 [WARNING] SecurityCheck::ECB_Mode_Warning() - ECB mode in use for deterministic encryption, pattern analysis possible
-2025-01-18 14:00:01.156 [INFO] ColumnEncryption::ApplyEncryption(users.credit_card) - Applying randomized ARIA encryption
-2025-01-18 14:00:01.201 [DEBUG] RandomizedEncryption::Configure() - Using ARIA-256-CBC with random IV for each value
+2025-01-18 14:00:01.156 [INFO] ColumnEncryption::ApplyEncryption(users.credit_card) - Applying randomized K_CIPHER_2 encryption
+2025-01-18 14:00:01.201 [DEBUG] RandomizedEncryption::Configure() - Using K_CIPHER_2-256-CBC with random IV for each value
 2025-01-18 14:00:01.245 [TRACE] IVGeneration::Method() - Initialization vectors generated from hardware TRNG
 2025-01-18 14:00:01.289 [INFO] BackupEncryption::Configure() - Setting up encrypted backup configuration
-2025-01-18 14:00:01.334 [DEBUG] BackupCipher::Select() - Backup encryption: SEED-256-CTR with HMAC-SHA256 authentication
+2025-01-18 14:00:01.334 [DEBUG] BackupCipher::Select() - Backup encryption: K_CIPHER_1-256-CTR with HMAC-Hash256 authentication
 2025-01-18 14:00:01.378 [TRACE] BackupKey::Derive() - Deriving backup encryption key from master key using HKDF
 2025-01-18 14:00:01.423 [INFO] LogEncryption::Enable() - Enabling encryption for transaction logs
-2025-01-18 14:00:01.467 [DEBUG] RedoLog::EncryptionMode() - Redo logs will use SEED-128-CBC encryption
+2025-01-18 14:00:01.467 [DEBUG] RedoLog::EncryptionMode() - Redo logs will use K_CIPHER_1-128-CBC encryption
 2025-01-18 14:00:01.512 [INFO] TDECatalog::Initialize() - Creating TDE metadata catalog tables
 2025-01-18 14:00:01.556 [DEBUG] MetadataTable::Create() - Table: encryption_keys (algorithm, key_id, wrapped_key, created_date)
 2025-01-18 14:00:01.601 [TRACE] MetadataProtection::Apply() - Encrypting TDE catalog with separate system key
 2025-01-18 14:00:01.645 [INFO] ComplianceCheck::VerifyAlgorithms() - Validating algorithm compliance with regulations
-2025-01-18 14:00:01.689 [DEBUG] ComplianceValidator::CheckKoreanStandards() - SEED, ARIA approved by Korean government (KISA)
-2025-01-18 14:00:01.734 [DEBUG] ComplianceValidator::CheckInternational() - AES approved by NIST FIPS 140-2
-2025-01-18 14:00:01.778 [WARNING] DeprecatedAlgorithm::Detected() - 3DES configured but deprecated, recommend migration
+2025-01-18 14:00:01.689 [DEBUG] ComplianceValidator::CheckKoreanStandards() - K_CIPHER_1, K_CIPHER_2 approved by Korean government (KISA)
+2025-01-18 14:00:01.734 [DEBUG] ComplianceValidator::CheckInternational() - BLOCK_CIPHER approved by NIST FIPS 140-2
+2025-01-18 14:00:01.778 [WARNING] DeprecatedAlgorithm::Detected() - TripleCipher configured but deprecated, recommend migration
 2025-01-18 14:00:01.823 [INFO] PerformanceTest::MeasureOverhead() - Measuring encryption performance impact
-2025-01-18 14:00:02.867 [DEBUG] Benchmark::SEEDPerformance() - SEED-128: 450 MB/s encryption, 2.1% CPU overhead
-2025-01-18 14:00:03.912 [DEBUG] Benchmark::ARIAPerformance() - ARIA-256: 380 MB/s encryption, 2.8% CPU overhead
+2025-01-18 14:00:02.867 [DEBUG] Benchmark::SEEDPerformance() - K_CIPHER_1-128: 450 MB/s encryption, 2.1% CPU overhead
+2025-01-18 14:00:03.912 [DEBUG] Benchmark::ARIAPerformance() - K_CIPHER_2-256: 380 MB/s encryption, 2.8% CPU overhead
 2025-01-18 14:00:04.956 [INFO] EncryptionSetup::ValidationPhase() - Running encryption validation tests
 2025-01-18 14:00:05.001 [TRACE] ValidationTest::EncryptDecrypt() - Round-trip encryption test successful
 2025-01-18 14:00:05.045 [TRACE] ValidationTest::KeyRecovery() - Master key recovery from HSM successful
 2025-01-18 14:00:05.089 [INFO] AuditLog::EnableEncryptionAuditing() - Enabling audit trail for all encryption operations
 2025-01-18 14:00:05.134 [DEBUG] AuditConfig::SetPolicy() - Logging: key generation, key usage, algorithm changes, key rotation
 2025-01-18 14:00:05.178 [INFO] EncryptionSetup::Complete() - Transparent data encryption successfully configured
-2025-01-18 14:00:05.223 [SUMMARY] Configuration: SEED (tablespace), ARIA (columns), AES (key wrapping), HSM (master key)
+2025-01-18 14:00:05.223 [SUMMARY] Configuration: K_CIPHER_1 (tablespace), K_CIPHER_2 (columns), BLOCK_CIPHER (key wrapping), HSM (master key)
 2025-01-18 14:00:05.267 [SUMMARY] Security Level: High, Compliance: KCMVP, Performance Impact: <3%

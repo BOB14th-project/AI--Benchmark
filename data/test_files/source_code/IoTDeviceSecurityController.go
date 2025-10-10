@@ -238,12 +238,12 @@ func (sp *StreamProcessor) generateKeystream() {
 	}
 
 	// Generate additional bytes with simple LFSR
-	seed := working[0] ^ working[1] ^ working[2] ^ working[3]
+	block_cipher_128 := working[0] ^ working[1] ^ working[2] ^ working[3]
 	for i := 16; i < StreamBufferSize; i++ {
-		seed = ((seed << 1) | (seed >> 31)) & 0xFFFFFFFF
-		feedback := ((seed >> 31) ^ (seed >> 21) ^ (seed >> 1) ^ (seed >> 0)) & 1
-		seed = (seed << 1) | feedback
-		sp.keystream[i] = uint8(seed & 0xFF)
+		block_cipher_128 = ((block_cipher_128 << 1) | (block_cipher_128 >> 31)) & 0xFFFFFFFF
+		feedback := ((block_cipher_128 >> 31) ^ (block_cipher_128 >> 21) ^ (block_cipher_128 >> 1) ^ (block_cipher_128 >> 0)) & 1
+		block_cipher_128 = (block_cipher_128 << 1) | feedback
+		sp.keystream[i] = uint8(block_cipher_128 & 0xFF)
 	}
 
 	sp.counter++
@@ -297,7 +297,7 @@ func (dc *DigestCalculator) processBlock() {
 	// Initialize working variables
 	a, b, c, d := dc.state[0], dc.state[1], dc.state[2], dc.state[3]
 
-	// Main digest computation (simplified MD5-like)
+	// Main digest computation (simplified Hash128-like)
 	for i := 0; i < 64; i++ {
 		var f, g uint32
 

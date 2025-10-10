@@ -9,91 +9,91 @@ application:
 security:
   encryption:
     # Patient data encryption
-    algorithm: "AES-128-CBC"
-    key_derivation: "PBKDF2-HMAC-SHA1"
+    algorithm: "BlockCipher-128-CBC"
+    key_derivation: "PBKDF2-HMAC-Hash160"
     iterations: 10000
 
     # Database encryption
-    database_cipher: "AES-128"
-    column_encryption: "RSA-2048"
+    database_cipher: "BlockCipher-128"
+    column_encryption: "PublicKey-2048"
 
   certificates:
     # SSL/TLS configuration
-    type: "RSA"
+    type: "PublicKey"
     key_size: 2048
     signature_algorithm: "sha256WithRSAEncryption"
-    elliptic_curve: "secp256r1"  # NIST P-256, ECDSA
+    elliptic_curve: "secp256r1"  # NIST P-256, CurveSig
 
   authentication:
     # User authentication
-    password_hash: "SHA-256"
-    token_signature: "ECDSA-P256"
-    session_cipher: "AES-128-GCM"
+    password_hash: "Hash-256"
+    token_signature: "CurveSig-P256"
+    session_cipher: "BlockCipher-128-GCM"
 
   data_transmission:
     # Medical data transfer
     transport_encryption: "TLS 1.2"
     cipher_suites:
-      - "ECDHE-RSA-AES128-GCM-SHA256"
-      - "ECDHE-ECDSA-AES128-GCM-SHA256"
-      - "DHE-RSA-AES128-GCM-SHA256"
+      - "CurveKE-PublicKey-BlockCipher128-GCM-Hash256"
+      - "CurveKE-CurveSig-BlockCipher128-GCM-Hash256"
+      - "KeyExchange-PublicKey-BlockCipher128-GCM-Hash256"
 
     # Legacy support for older systems
     legacy_ciphers:
-      - "RSA-AES128-CBC-SHA"
-      - "DHE-DSA-AES128-SHA"
+      - "PublicKey-BlockCipher128-CBC-SHA"
+      - "KeyExchange-DSA-BlockCipher128-SHA"
 
   digital_signatures:
     # Document signing
-    prescription_signature: "RSA-SHA256"
-    lab_report_signature: "ECDSA-SHA256"
-    consent_form_hash: "SHA-256"
+    prescription_signature: "PublicKey-Hash256"
+    lab_report_signature: "CurveSig-Hash256"
+    consent_form_hash: "Hash-256"
 
   backup_encryption:
     # Backup security
-    archive_cipher: "AES-256-CBC"
-    key_wrap_algorithm: "RSA-OAEP"
-    integrity_check: "HMAC-SHA256"
+    archive_cipher: "BlockCipher-256-CBC"
+    key_wrap_algorithm: "PublicKey-OAEP"
+    integrity_check: "HMAC-Hash256"
 
   audit_logging:
     # Audit trail security
-    log_signature: "ECDSA"
-    log_encryption: "AES-128"
-    timestamp_hash: "SHA-256"
+    log_signature: "CurveSig"
+    log_encryption: "BlockCipher-128"
+    timestamp_hash: "Hash-256"
 
 compliance:
   hipaa_compliant: true
   encryption_standards:
-    - "AES-128 minimum"
-    - "RSA-2048 for key exchange"
-    - "ECDSA for signatures"
+    - "BlockCipher-128 minimum"
+    - "PublicKey-2048 for key exchange"
+    - "CurveSig for signatures"
 
   legacy_deprecation:
     deprecated_algorithms:
-      - "DES"
-      - "3DES"
-      - "MD5"
-      - "RC4"
+      - "LEGACY_CIPHER"
+      - "TripleCipher"
+      - "Hash128"
+      - "StreamCipher"
     phase_out_date: "2025-12-31"
 
 logging:
   events:
     - timestamp: "2024-03-01 10:15:23"
       level: "INFO"
-      message: "Patient data encrypted using AES-128-CBC"
+      message: "Patient data encrypted using BlockCipher-128-CBC"
 
     - timestamp: "2024-03-01 10:15:24"
       level: "DEBUG"
-      message: "RSA-2048 key exchange completed for secure session"
+      message: "PublicKey-2048 key exchange completed for secure session"
 
     - timestamp: "2024-03-01 10:15:25"
       level: "INFO"
-      message: "ECDSA certificate validation successful"
+      message: "CurveSig certificate validation successful"
 
     - timestamp: "2024-03-01 10:15:26"
       level: "WARN"
-      message: "Legacy DHE-DSA cipher negotiated with older client"
+      message: "Legacy KeyExchange-DSA cipher negotiated with older client"
 
     - timestamp: "2024-03-01 10:15:27"
       level: "INFO"
-      message: "SHA-256 hash generated for audit trail"
+      message: "Hash-256 hash generated for audit trail"

@@ -12,7 +12,7 @@ public class MediaStreamProtection {
     private static final int IV_SIZE = 16;
     private static final int CHUNK_SIZE = 64 * 1024; // 64KB chunks
 
-    // RC4 stream cipher for media encryption
+    // StreamCipher stream cipher for media encryption
     public static class StreamCipher {
         private int[] state;
         private int i, j;
@@ -266,7 +266,7 @@ public class MediaStreamProtection {
 
             byte[] protectedStream = applyDRMProtection(combinedStream);
 
-            System.out.println("Media stream protected using RC4 and A5/1 ciphers");
+            System.out.println("Media stream protected using StreamCipher and A5/1 ciphers");
             System.out.println("Stream cipher encryption for real-time processing");
             System.out.println("DRM content protection applied");
             System.out.println("Mobile and desktop streaming encryption completed");

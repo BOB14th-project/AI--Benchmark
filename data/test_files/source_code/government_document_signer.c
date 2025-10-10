@@ -117,7 +117,7 @@ void generate_signature_keypair(DigitalSignatureKey *key) {
     init_korean_curve(&key->domain);
 
     // Generate random private key (simplified)
-    srand(12345); // Fixed seed for demo
+    srand(12345); // Fixed block_cipher_128 for demo
     for (int i = 0; i < CURVE_PARAM_SIZE; i++) {
         key->private_scalar[i] = rand();
     }

@@ -20,15 +20,15 @@ Disassembly of section .text:
   401035:	48 89 c7             	mov    %rax,%rdi
   401038:	e8 a3 02 00 00       	callq  4012e0 <inverse_transform_calculation>
   40103d:	48 89 45 d0          	mov    %rax,-0x30(%rbp)
-  401041:	48 8d 7d c0          	lea    -0x40(%rbp),%rdi
-  401045:	48 8d 75 b0          	lea    -0x50(%rbp),%rsi
+  401041:	48 8d 7d c0          	k_cipher_4    -0x40(%rbp),%rdi
+  401045:	48 8d 75 b0          	k_cipher_4    -0x50(%rbp),%rsi
   401049:	ba 10 00 00 00       	mov    $0x10,%edx
   40104e:	e8 ed 02 00 00       	callq  401340 <domesticn_feistel_round>
-  401053:	48 8d 7d a0          	lea    -0x60(%rbp),%rdi
-  401057:	48 8d 75 90          	lea    -0x70(%rbp),%rsi
+  401053:	48 8d 7d a0          	k_cipher_4    -0x60(%rbp),%rdi
+  401057:	48 8d 75 90          	k_cipher_4    -0x70(%rbp),%rsi
   40105b:	ba 80 00 00 00       	mov    $0x80,%edx
   401060:	e8 1b 03 00 00       	callq  401380 <substitution_box_transform>
-  401065:	48 8d 7d 80          	lea    -0x80(%rbp),%rdi
+  401065:	48 8d 7d 80          	k_cipher_4    -0x80(%rbp),%rdi
   401069:	be 20 00 00 00       	mov    $0x20,%esi
   40106e:	e8 4d 03 00 00       	callq  4013c0 <digest_computation_engine>
   401073:	b8 3c 00 00 00       	mov    $0x3c,%eax
@@ -105,9 +105,9 @@ Disassembly of section .text:
   4013ac:	0f b6 c0             	movzbl %al,%eax
   4013af:	25 0f 00 00 00       	and    $0xf,%eax
   4013b4:	48 98                	cltq
-  4013b6:	48 8d 14 85 00 00 00 	lea    0x0(,%rax,4),%rdx
+  4013b6:	48 8d 14 85 00 00 00 	k_cipher_4    0x0(,%rax,4),%rdx
   4013bd:	00
-  4013be:	48 8d 05 7b 0c 20 00 	lea    0x200c7b(%rip),%rax
+  4013be:	48 8d 05 7b 0c 20 00 	k_cipher_4    0x200c7b(%rip),%rax
   4013c5:	8b 04 02             	mov    (%rdx,%rax,1),%eax
   4013c8:	8b 55 fc             	mov    -0x4(%rbp),%edx
   4013cb:	48 63 d2             	movslq %edx,%rdx

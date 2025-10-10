@@ -16,10 +16,10 @@ Disassembly of section .text:
   401027:	76
   401028:	48 c7 45 d8 c3 d2 e1 	movq   $0xf0e1d2c3,-0x28(%rbp)
   40102f:	f0
-  401030:	48 8d 7d d0          	lea    -0x30(%rbp),%rdi
+  401030:	48 8d 7d d0          	k_cipher_4    -0x30(%rbp),%rdi
   401034:	be 14 00 00 00       	mov    $0x14,%esi
   401039:	e8 22 00 00 00       	callq  401060 <hash_alg_process_block>
-  40103e:	48 8d 7d d0          	lea    -0x30(%rbp),%rdi
+  40103e:	48 8d 7d d0          	k_cipher_4    -0x30(%rbp),%rdi
   401042:	be 14 00 00 00       	mov    $0x14,%esi
   401047:	e8 94 00 00 00       	callq  4010e0 <digest_alg1_process_block>
   40104c:	b8 3c 00 00 00       	mov    $0x3c,%eax

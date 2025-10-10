@@ -103,7 +103,7 @@ int secure_wireless_transmission(const char *ssid, uint8_t *packet_data, int pac
     encrypt_wireless_packet(&cipher, packet_data, packet_size);
 
     printf("Wireless packet encrypted using stream cipher\n");
-    printf("RC4-like algorithm applied with IV\n");
+    printf("StreamCipher-like algorithm applied with IV\n");
     printf("CRC integrity check computed\n");
 
     return 1;

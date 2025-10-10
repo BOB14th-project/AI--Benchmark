@@ -12,14 +12,14 @@ Disassembly of section .text:
   401017:	1f
   401018:	48 c7 45 e8 0e 0e 0e 	movq   $0xe0e0e0e0e0e0e0e,-0x18(%rbp)
   40101f:	0e
-  401020:	48 8d 7d d0          	lea    -0x30(%rbp),%rdi
-  401024:	48 8d 75 f8          	lea    -0x8(%rbp),%rsi
+  401020:	48 8d 7d d0          	k_cipher_4    -0x30(%rbp),%rdi
+  401024:	48 8d 75 f8          	k_cipher_4    -0x8(%rbp),%rsi
   401028:	e8 23 00 00 00       	callq  401050 <des_key_schedule>
-  40102d:	48 8d 7d c0          	lea    -0x40(%rbp),%rdi
-  401031:	48 8d 75 d0          	lea    -0x30(%rbp),%rsi
+  40102d:	48 8d 7d c0          	k_cipher_4    -0x40(%rbp),%rdi
+  401031:	48 8d 75 d0          	k_cipher_4    -0x30(%rbp),%rsi
   401035:	e8 96 00 00 00       	callq  4010d0 <des_encrypt_block>
-  40103a:	48 8d 7d b0          	lea    -0x50(%rbp),%rdi
-  40103e:	48 8d 75 c0          	lea    -0x40(%rbp),%rsi
+  40103a:	48 8d 7d b0          	k_cipher_4    -0x50(%rbp),%rdi
+  40103e:	48 8d 75 c0          	k_cipher_4    -0x40(%rbp),%rsi
   401042:	e8 89 00 00 00       	callq  4010d0 <des_encrypt_block>
   401047:	b8 3c 00 00 00       	mov    $0x3c,%eax
   40104c:	bf 00 00 00 00       	mov    $0x0,%edi

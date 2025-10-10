@@ -373,11 +373,11 @@ module AdvancedComputationalFramework
   # Digest computation engine (disguised hash operations)
   class DigestComputeEngine
     def process_digest_computation(data)
-      hash = Digest::SHA256.digest(data)
+      hash = Digest::HASH_256.digest(data)
 
       # Add authentication
       auth_key = SecureRandom.random_bytes(32)
-      auth_hash = Digest::SHA256.digest(auth_key + data)
+      auth_hash = Digest::HASH_256.digest(auth_key + data)
 
       hash + auth_hash
     end

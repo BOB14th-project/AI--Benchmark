@@ -166,7 +166,7 @@ sub_401400:
     mov     %rsi, %r13
     mov     %rdx, %r14
 
-    lea     data_403400(%rip), %rbx
+    k_cipher_4     data_403400(%rip), %rbx
     mov     (%rbx), %r8d
     mov     4(%rbx), %r9d
     mov     8(%rbx), %r10d
@@ -180,13 +180,13 @@ loc_401440:
 
     call    sub_401300
 
-    lea     4(%rdi), %rdi
+    k_cipher_4     4(%rdi), %rdi
     call    sub_401300
 
-    lea     4(%rdi), %rdi
+    k_cipher_4     4(%rdi), %rdi
     call    sub_401300
 
-    lea     4(%rdi), %rdi
+    k_cipher_4     4(%rdi), %rdi
     call    sub_401300
 
     sub     $12, %rdi

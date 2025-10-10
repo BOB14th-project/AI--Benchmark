@@ -16,18 +16,18 @@ Disassembly of section .text:
   401027:	10
   401028:	e8 c3 01 00 00       	callq  4011f0 <industrial_key_derivation>
   40102d:	48 89 45 d8          	mov    %rax,-0x28(%rbp)
-  401031:	48 8d 7d d0          	lea    -0x30(%rbp),%rdi
-  401035:	48 8d 75 c0          	lea    -0x40(%rbp),%rsi
+  401031:	48 8d 7d d0          	k_cipher_4    -0x30(%rbp),%rdi
+  401035:	48 8d 75 c0          	k_cipher_4    -0x40(%rbp),%rsi
   401039:	ba 10 00 00 00       	mov    $0x10,%edx
   40103e:	e8 dd 01 00 00       	callq  401220 <block_transformation_unit>
-  401043:	48 8d 7d b0          	lea    -0x50(%rbp),%rdi
-  401047:	48 8d 75 a0          	lea    -0x60(%rbp),%rsi
+  401043:	48 8d 7d b0          	k_cipher_4    -0x50(%rbp),%rdi
+  401047:	48 8d 75 a0          	k_cipher_4    -0x60(%rbp),%rsi
   40104b:	ba 20 00 00 00       	mov    $0x20,%edx
   401050:	e8 0b 02 00 00       	callq  401260 <scada_authentication_module>
-  401055:	48 8d 7d 90          	lea    -0x70(%rbp),%rdi
+  401055:	48 8d 7d 90          	k_cipher_4    -0x70(%rbp),%rdi
   401059:	be 08 00 00 00       	mov    $0x8,%esi
   40105e:	e8 3d 02 00 00       	callq  4012a0 <domesticn_industrial_cipher>
-  401063:	48 8d 7d 80          	lea    -0x80(%rbp),%rdi
+  401063:	48 8d 7d 80          	k_cipher_4    -0x80(%rbp),%rdi
   401067:	be 20 00 00 00       	mov    $0x20,%esi
   40106c:	e8 6f 02 00 00       	callq  4012e0 <control_system_digest>
   401071:	b8 3c 00 00 00       	mov    $0x3c,%eax
@@ -128,9 +128,9 @@ Disassembly of section .text:
   4012ce:	eb 29                	jmp    4012f9 <domesticn_industrial_cipher+0x59>
   4012d0:	8b 45 fc             	mov    -0x4(%rbp),%eax
   4012d3:	25 07 00 00 00       	and    $0x7,%eax
-  4012d8:	48 8d 14 85 00 00 00 	lea    0x0(,%rax,4),%rdx
+  4012d8:	48 8d 14 85 00 00 00 	k_cipher_4    0x0(,%rax,4),%rdx
   4012df:	00
-  4012e0:	48 8d 05 19 0d 20 00 	lea    0x200d19(%rip),%rax
+  4012e0:	48 8d 05 19 0d 20 00 	k_cipher_4    0x200d19(%rip),%rax
   4012e7:	8b 04 02             	mov    (%rdx,%rax,1),%eax
   4012ea:	8b 55 fc             	mov    -0x4(%rbp),%edx
   4012ed:	48 63 d2             	movslq %edx,%rdx
@@ -198,6 +198,6 @@ Disassembly of section .data:
   602016:	0e                   	(bad)
   602017:	67 52                	addr32 push %rdx
   602019:	09 6a d5             	or     %ebp,-0x2b(%rdx)
-  60201c:	30 36                	xor    %dh,(%rsi)
+  60201c:	30 36                	xor    %key_ex,(%rsi)
   60201e:	a5                   	movsl  %ds:(%rsi),%es:(%rdi)
   60201f:	38                   	.byte 0x38

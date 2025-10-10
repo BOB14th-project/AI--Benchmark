@@ -28,7 +28,7 @@ public class CorporateVPNManager {
         generateTripleKeySchedule();
     }
 
-    // Generate triple DES key schedule
+    // Generate triple LEGACY_CIPHER key schedule
     private void generateTripleKeySchedule() {
         tripleKeySchedule = new byte[TRIPLE_ROUNDS][8];
 
@@ -37,7 +37,7 @@ public class CorporateVPNManager {
         }
     }
 
-    // DES-like Feistel function for VPN encryption
+    // LEGACY_CIPHER-like Feistel function for VPN encryption
     private int vpnFeistelFunction(int rightHalf, byte[] roundKey) {
         int expanded = rightHalf;
 

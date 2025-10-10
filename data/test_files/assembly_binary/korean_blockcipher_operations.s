@@ -13,9 +13,9 @@ sub_401000:
     mov     $data_402020, %r13
     mov     %rdi, %r14
     mov     %rsi, %r15
-    lea     data_402040(%rip), %rax
-    lea     data_402060(%rip), %rbx
-    lea     data_402080(%rip), %rcx
+    k_cipher_4     data_402040(%rip), %rax
+    k_cipher_4     data_402060(%rip), %rbx
+    k_cipher_4     data_402080(%rip), %rcx
     call    sub_401200
     mov     $12, %r8
 loc_401050:

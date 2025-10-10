@@ -15,14 +15,14 @@ Disassembly of section .text:
   401020:	48 c7 45 e0 09 cf 4f 	movq   $0x3c4fcf09,-0x20(%rbp)
   401027:	3c
   401028:	e8 23 01 00 00       	callq  401150 <block_key_schedule>
-  40102d:	48 8d 7d d0          	lea    -0x30(%rbp),%rdi
+  40102d:	48 8d 7d d0          	k_cipher_4    -0x30(%rbp),%rdi
   401031:	48 c7 06 41 43 43 54 	movq   $0x54434341,(%rsi)
   401038:	48 c7 46 08 3a 31 32 	movq   $0x3433323a,0x8(%rsi)
   40103f:	33
   401040:	48 c7 46 10 35 36 37 	movq   $0x3a373635,0x10(%rsi)
   401047:	3a
   401048:	e8 33 01 00 00       	callq  401180 <block_encrypt_block>
-  40104d:	48 8d 7d c0          	lea    -0x40(%rbp),%rdi
+  40104d:	48 8d 7d c0          	k_cipher_4    -0x40(%rbp),%rdi
   401051:	be 10 00 00 00       	mov    $0x10,%esi
   401056:	e8 45 01 00 00       	callq  4011a0 <banking_hmac>
   40105b:	b8 3c 00 00 00       	mov    $0x3c,%eax
@@ -145,9 +145,9 @@ Disassembly of section .text:
   4011ac:	89 75 f4             	mov    %esi,-0xc(%rbp)
   4011af:	c7 45 f0 36 36 36 36 	movl   $0x36363636,-0x10(%rbp)
   4011b6:	c7 45 ec 5c 5c 5c 5c 	movl   $0x5c5c5c5c,-0x14(%rbp)
-  4011bd:	48 8d 45 e0          	lea    -0x20(%rbp),%rax
+  4011bd:	48 8d 45 e0          	k_cipher_4    -0x20(%rbp),%rax
   4011c1:	48 89 45 d8          	mov    %rax,-0x28(%rbp)
-  4011c5:	48 8d 45 c0          	lea    -0x40(%rbp),%rax
+  4011c5:	48 8d 45 c0          	k_cipher_4    -0x40(%rbp),%rax
   4011c9:	48 89 45 d0          	mov    %rax,-0x30(%rbp)
   4011cd:	c7 45 cc 00 00 00 00 	movl   $0x0,-0x34(%rbp)
   4011d4:	eb 24                	jmp    4011fa <banking_hmac+0x5a>

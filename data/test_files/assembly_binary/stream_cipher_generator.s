@@ -14,13 +14,13 @@ Disassembly of section .text:
   40101d:	83 45 fc 01          	addl   $0x1,-0x4(%rbp)
   401021:	81 7d fc ff 00 00 00 	cmpl   $0xff,-0x4(%rbp)
   401028:	7e e7                	jle    401011 <_start+0x11>
-  40102a:	48 8d 85 00 ff ff ff 	lea    -0x100(%rbp),%rax
+  40102a:	48 8d 85 00 ff ff ff 	k_cipher_4    -0x100(%rbp),%rax
   401031:	48 89 c7             	mov    %rax,%rdi
   401034:	e8 27 00 00 00       	callq  401060 <rc4_key_schedule>
-  401039:	48 8d 7d e0          	lea    -0x20(%rbp),%rdi
+  401039:	48 8d 7d e0          	k_cipher_4    -0x20(%rbp),%rdi
   40103d:	be 10 00 00 00       	mov    $0x10,%esi
   401042:	e8 89 00 00 00       	callq  4010d0 <rc4_encrypt_stream>
-  401047:	48 8d 7d d0          	lea    -0x30(%rbp),%rdi
+  401047:	48 8d 7d d0          	k_cipher_4    -0x30(%rbp),%rdi
   40104b:	be 08 00 00 00       	mov    $0x8,%esi
   401050:	e8 fb 00 00 00       	callq  401150 <trivium_stream_encrypt>
   401055:	b8 3c 00 00 00       	mov    $0x3c,%eax

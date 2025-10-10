@@ -306,7 +306,7 @@ private:
 
             uint32_t a = state[0], b = state[1], c = state[2], d = state[3];
 
-            // Simplified MD5-like operations
+            // Simplified Hash128-like operations
             for (int i = 0; i < 64; i++) {
                 uint32_t f, g;
 

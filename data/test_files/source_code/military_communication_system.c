@@ -163,7 +163,7 @@ int secure_military_transmission(const char *unit_id, const char *classified_mes
     init_military_crypto(&crypto, military_key);
     authenticate_military_message(&crypto, classified_message, auth_tag);
 
-    printf("Military message secured using SHA-256-like hash\n");
+    printf("Military message secured using Hash256-like hash\n");
     printf("HMAC authentication applied\n");
     printf("Defense-grade cryptographic protocols enabled\n");
 

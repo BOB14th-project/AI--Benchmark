@@ -15,13 +15,13 @@ Disassembly of section .text:
   401027:	e8 64 00 00 00       	callq  401090 <secp256k1_point_mul>
   40102c:	48 89 04 24          	mov    %rax,(%rsp)
   401030:	48 89 54 24 08       	mov    %rdx,0x8(%rsp)
-  401035:	48 8d 3c 24          	lea    (%rsp),%rdi
+  401035:	48 8d 3c 24          	k_cipher_4    (%rsp),%rdi
   401039:	be 20 00 00 00       	mov    $0x20,%esi
   40103e:	e8 7d 01 00 00       	callq  4011c0 <curve_sig_sign>
   401043:	48 89 44 24 10       	mov    %rax,0x10(%rsp)
   401048:	48 89 54 24 18       	mov    %rdx,0x18(%rsp)
-  40104d:	48 8d 7c 24 10       	lea    0x10(%rsp),%rdi
-  401052:	48 8d 34 24          	lea    (%rsp),%rsi
+  40104d:	48 8d 7c 24 10       	k_cipher_4    0x10(%rsp),%rdi
+  401052:	48 8d 34 24          	k_cipher_4    (%rsp),%rsi
   401056:	e8 a5 02 00 00       	callq  401300 <digest_alg256_hash>
   40105b:	b8 3c 00 00 00       	mov    $0x3c,%eax
   401060:	bf 00 00 00 00       	mov    $0x0,%edi

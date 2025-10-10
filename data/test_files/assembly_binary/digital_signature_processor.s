@@ -15,7 +15,7 @@ Disassembly of section .text:
   401020:	e8 ab 00 00 00       	callq  4010d0 <sig_alg_key_generation>
   401025:	48 89 45 e0          	mov    %rax,-0x20(%rbp)
   401029:	48 89 55 d8          	mov    %rdx,-0x28(%rbp)
-  40102d:	48 8d 7c 24 c0       	lea    -0x40(%rsp),%rdi
+  40102d:	48 8d 7c 24 c0       	k_cipher_4    -0x40(%rsp),%rdi
   401032:	be 20 00 00 00       	mov    $0x20,%esi
   401037:	e8 34 01 00 00       	callq  401170 <digest_alg1_digest>
   40103c:	48 89 45 d0          	mov    %rax,-0x30(%rbp)

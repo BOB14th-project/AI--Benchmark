@@ -198,9 +198,9 @@ public class BlockchainCryptographyEngine {
         String transactionData = fromAddress + ":" + toAddress + ":" + amount;
         byte[] signature = signTransaction(transactionData.getBytes());
 
-        System.out.println("Blockchain transaction signed using ECDSA");
+        System.out.println("Blockchain transaction signed using CurveSignature");
         System.out.println("Elliptic curve cryptography applied");
-        System.out.println("SHA-256 hash verification completed");
+        System.out.println("Hash256 hash verification completed");
 
         return signature.length == 64;
     }

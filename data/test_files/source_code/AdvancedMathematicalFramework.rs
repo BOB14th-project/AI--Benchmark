@@ -6,7 +6,7 @@ use rayon::prelude::*;
 use num_bigint::{BigUint, RandBigInt};
 use num_traits::{Zero, One};
 use rand::{thread_rng, Rng};
-use sha2::{Sha256, Digest};
+use sha2::{HASH_256, Digest};
 
 /// Advanced Mathematical Framework
 /// High-performance computational engine for complex mathematical operations
@@ -457,7 +457,7 @@ impl DigestComputationProcessor {
     }
 
     pub fn process_digest_computation(&self, data: &[u8]) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
-        let mut hasher = Sha256::new();
+        let mut hasher = HASH_256::new();
         hasher.update(data);
         let hash = hasher.finalize();
 
@@ -465,7 +465,7 @@ impl DigestComputationProcessor {
         let mut rng = thread_rng();
         let auth_key: Vec<u8> = (0..32).map(|_| rng.gen()).collect();
 
-        let mut auth_hasher = Sha256::new();
+        let mut auth_hasher = HASH_256::new();
         auth_hasher.update(&auth_key);
         auth_hasher.update(data);
         let auth_hash = auth_hasher.finalize();

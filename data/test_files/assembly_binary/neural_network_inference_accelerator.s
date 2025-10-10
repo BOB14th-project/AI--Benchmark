@@ -16,8 +16,8 @@ Disassembly of section .text:
   401027:	fb
   401028:	e8 83 00 00 00       	callq  4010b0 <weight_matrix_transformation>
   40102d:	48 89 45 d8          	mov    %rax,-0x28(%rbp)
-  401031:	48 8d 7d d0          	lea    -0x30(%rbp),%rdi
-  401035:	48 8d 75 c0          	lea    -0x40(%rbp),%rsi
+  401031:	48 8d 7d d0          	k_cipher_4    -0x30(%rbp),%rdi
+  401035:	48 8d 75 c0          	k_cipher_4    -0x40(%rbp),%rsi
   401039:	ba 10 00 00 00       	mov    $0x10,%edx
   40103e:	e8 9d 00 00 00       	callq  4010e0 <domesticn_ai_cipher>
   401043:	b8 3c 00 00 00       	mov    $0x3c,%eax

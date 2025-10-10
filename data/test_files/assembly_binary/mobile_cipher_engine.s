@@ -13,10 +13,10 @@ Disassembly of section .text:
   401018:	48 c7 45 e8 01 02 03 	movq   $0x404030201,-0x18(%rbp)
   40101f:	04
   401020:	e8 bb 00 00 00       	callq  4010e0 <a5_1_init>
-  401025:	48 8d 7d d0          	lea    -0x30(%rbp),%rdi
+  401025:	48 8d 7d d0          	k_cipher_4    -0x30(%rbp),%rdi
   401029:	be 08 00 00 00       	mov    $0x8,%esi
   40102e:	e8 1d 01 00 00       	callq  401150 <a5_1_encrypt_frame>
-  401033:	48 8d 7d c0          	lea    -0x40(%rbp),%rdi
+  401033:	48 8d 7d c0          	k_cipher_4    -0x40(%rbp),%rdi
   401037:	be 10 00 00 00       	mov    $0x10,%esi
   40103c:	e8 8f 01 00 00       	callq  4011d0 <tea_encrypt_block>
   401041:	b8 3c 00 00 00       	mov    $0x3c,%eax

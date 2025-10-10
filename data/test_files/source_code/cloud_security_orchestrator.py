@@ -149,7 +149,7 @@ class CloudSecurityOrchestrator:
         mac = hmac.new(
             tenant.authentication_secret,
             encrypted_stream + nonce,
-            hashlib.sha256
+            hashlib.hash_256
         ).digest()
 
         return {
@@ -189,7 +189,7 @@ class KeyDerivationEngine:
         iterations = 100000
 
         # Derive master key
-        master_key = hashlib.pbkdf2_hmac('sha256', password, salt, iterations, 64)
+        master_key = hashlib.pbkdf2_hmac('hash_256', password, salt, iterations, 64)
 
         # Derive specific keys from master
         encryption_key = self._hkdf_expand(master_key, f"encryption|{context}".encode(), 32)
@@ -215,7 +215,7 @@ class KeyDerivationEngine:
         counter = 1
 
         while len(okm) < length:
-            t = hmac.new(prk, t + info + struct.pack("B", counter), hashlib.sha256).digest()
+            t = hmac.new(prk, t + info + struct.pack("B", counter), hashlib.hash_256).digest()
             okm += t
             counter += 1
 
@@ -223,7 +223,7 @@ class KeyDerivationEngine:
 
 
 class SymmetricProcessor:
-    """Advanced symmetric encryption processor (AES-like operations)"""
+    """Advanced symmetric encryption processor (BlockCipher-like operations)"""
 
     def __init__(self):
         self.cipher_key = None
@@ -357,7 +357,7 @@ class SymmetricProcessor:
 
 
 class AsymmetricCalculator:
-    """Large integer arithmetic for public key operations (RSA-like)"""
+    """Large integer arithmetic for public key operations (AsymmetricCipher-like)"""
 
     def __init__(self):
         self.public_exponent = 65537
@@ -480,7 +480,7 @@ class AsymmetricCalculator:
 
 
 class DigestEngine:
-    """Secure hash function implementation (SHA-256-like)"""
+    """Secure hash function implementation (Hash256-like)"""
 
     def __init__(self):
         self.initial_hash = [
@@ -692,7 +692,7 @@ class KoreanCipherEngine:
         self.key_schedule = self._generate_korean_key_schedule(key)
 
     def encrypt_block_data(self, data: bytes) -> bytes:
-        """Encrypt data using Korean standard block cipher (SEED/ARIA-like)"""
+        """Encrypt data using Korean standard block cipher (BlockCipher128/BlockCipher-like)"""
         # Pad data to 16-byte blocks
         block_size = 16
         padding = block_size - (len(data) % block_size)

@@ -12,133 +12,133 @@ v2v_communication:
   protocol: "IEEE 802.11p / C-V2X"
 
   message_signing:
-    algorithm: "ECDSA-P256"
+    algorithm: "CurveSig-P256"
     certificate_type: "V2X Certificate"
-    ca_signature: "ECDSA-P384"
+    ca_signature: "CurveSig-P384"
 
   message_encryption:
-    data_cipher: "AES-128-CCM"
-    key_exchange: "ECDHE-P256"
+    data_cipher: "BlockCipher-128-CCM"
+    key_exchange: "CurveKE-P256"
 
   broadcast_authentication:
-    safety_messages: "ECDSA-P256"
-    beacon_signing: "ECDSA-P256"
-    emergency_brake: "ECDSA-P256-Prioritized"
+    safety_messages: "CurveSig-P256"
+    beacon_signing: "CurveSig-P256"
+    emergency_brake: "CurveSig-P256-Prioritized"
 
 v2i_communication:
   # Vehicle-to-Infrastructure security
-  traffic_light_auth: "ECDSA-P256"
-  roadside_unit_cert: "RSA-2048"
-  toll_gate_encryption: "AES-256-GCM"
-  parking_meter_auth: "ECDH-P256"
+  traffic_light_auth: "CurveSig-P256"
+  roadside_unit_cert: "PublicKey-2048"
+  toll_gate_encryption: "BlockCipher-256-GCM"
+  parking_meter_auth: "CURVE_KE-P256"
 
 v2n_communication:
   # Vehicle-to-Network (cellular) security
-  lte_encryption: "ARIA-128"  # Korean standard
+  lte_encryption: "K_CIPHER_2-128"  # Korean standard
   5g_security:
-    user_plane: "LEA-128"      # Korean lightweight cipher
-    control_plane: "SEED-128"   # Korean block cipher
+    user_plane: "K_CIPHER_4-128"      # Korean lightweight cipher
+    control_plane: "K_CIPHER_1-128"   # Korean block cipher
 
   backend_connection:
     tls_version: "1.3"
-    cipher_suite: "ECDHE-ECDSA-AES256-GCM-SHA384"
-    certificate: "ECDSA-P384"
+    cipher_suite: "CurveKE-CurveSig-BlockCipher256-GCM-SHA384"
+    certificate: "CurveSig-P384"
 
 v2p_communication:
   # Vehicle-to-Pedestrian security
-  pedestrian_detection_auth: "ECDSA-P256"
-  smartphone_app_encryption: "AES-256-GCM"
-  emergency_alert_signing: "ECDSA-P256"
+  pedestrian_detection_auth: "CurveSig-P256"
+  smartphone_app_encryption: "BlockCipher-256-GCM"
+  emergency_alert_signing: "CurveSig-P256"
 
 telematics:
   # Telematics and remote services
   remote_diagnostics:
-    encryption: "AES-256-CBC"
-    authentication: "RSA-3072"
+    encryption: "BlockCipher-256-CBC"
+    authentication: "PublicKey-3072"
 
   over_the_air_updates:
-    firmware_signature: "ECDSA-P384"
-    package_encryption: "AES-256-CTR"
-    rollback_prevention: "HMAC-SHA256"
+    firmware_signature: "CurveSig-P384"
+    package_encryption: "BlockCipher-256-CTR"
+    rollback_prevention: "HMAC-Hash256"
 
   stolen_vehicle_tracking:
-    gps_data_encryption: "ARIA-256"  # Korean standard
-    command_signing: "ECDSA-P256"
+    gps_data_encryption: "K_CIPHER_2-256"  # Korean standard
+    command_signing: "CurveSig-P256"
 
 internal_can_bus:
   # In-vehicle network security
-  can_authentication: "HMAC-SHA256"
-  can_encryption: "AES-128-GCM"
+  can_authentication: "HMAC-Hash256"
+  can_encryption: "BlockCipher-128-GCM"
 
   gateway_security:
-    firewall_auth: "ECDSA-P256"
-    ecu_signing: "RSA-2048"
+    firewall_auth: "CurveSig-P256"
+    ecu_signing: "PublicKey-2048"
 
   korean_standards:
     # Domestic automotive security requirements
-    engine_control: "SEED-128"
-    transmission: "ARIA-128"
-    battery_management: "LEA-128"  # For electric vehicles
+    engine_control: "K_CIPHER_1-128"
+    transmission: "K_CIPHER_2-128"
+    battery_management: "K_CIPHER_4-128"  # For electric vehicles
 
 infotainment:
   # Infotainment system security
-  bluetooth_pairing: "ECDH-P256"
+  bluetooth_pairing: "CURVE_KE-P256"
   wifi_hotspot:
-    encryption: "WPA3-AES-256"
-    fallback: "WPA2-AES-128"
+    encryption: "WPA3-BlockCipher-256"
+    fallback: "WPA2-BlockCipher-128"
 
   smartphone_integration:
-    apple_carplay: "RSA-2048 + AES-256"
-    android_auto: "ECDH-P256 + AES-256"
+    apple_carplay: "PublicKey-2048 + BlockCipher-256"
+    android_auto: "CURVE_KE-P256 + BlockCipher-256"
 
   voice_assistant:
-    wake_word_auth: "HMAC-SHA256"
-    cloud_connection: "TLS-ECDHE-RSA-AES256"
+    wake_word_auth: "HMAC-Hash256"
+    cloud_connection: "TLS-CurveKE-PublicKey-BlockCipher256"
 
 autonomous_driving:
   # Autonomous vehicle security
-  lidar_data_integrity: "SHA-256"
-  camera_stream_encryption: "AES-256-CTR"
-  radar_authentication: "ECDSA-P256"
+  lidar_data_integrity: "Hash-256"
+  camera_stream_encryption: "BlockCipher-256-CTR"
+  radar_authentication: "CurveSig-P256"
 
   sensor_fusion:
-    data_signing: "ECDSA-P384"
+    data_signing: "CurveSig-P384"
     timestamp_auth: "HMAC-SHA384"
 
   decision_module:
-    command_signing: "ECDSA-P256"
-    safety_verification: "Dual-ECDSA-P384"
+    command_signing: "CurveSig-P256"
+    safety_verification: "Dual-CurveSig-P384"
 
 key_management:
   # Cryptographic key management
-  master_key_storage: "HSM-AES-256"
-  session_key_derivation: "HKDF-SHA256"
+  master_key_storage: "HSM-BlockCipher-256"
+  session_key_derivation: "HKDF-Hash256"
 
   certificate_management:
-    enrollment: "ECDSA-P384"
-    renewal: "Automatic-ECDSA"
-    revocation_check: "OCSP-ECDSA"
+    enrollment: "CurveSig-P384"
+    renewal: "Automatic-CurveSig"
+    revocation_check: "OCSP-CurveSig"
 
   korean_key_standards:
-    kms_encryption: "ARIA-256"
-    key_wrapping: "SEED-256"
+    kms_encryption: "K_CIPHER_2-256"
+    key_wrapping: "K_CIPHER_1-256"
 
 legacy_compatibility:
   # Backward compatibility with older systems
-  obd2_encryption: "DES-EDE3"  # Legacy diagnostic port
-  legacy_radio: "RC4"  # Old infotainment units
-  first_gen_telematics: "MD5-Authentication"  # Deprecated
+  obd2_encryption: "LEGACY_CIPHER-EDE3"  # Legacy diagnostic port
+  legacy_radio: "StreamCipher"  # Old infotainment units
+  first_gen_telematics: "Hash128-Authentication"  # Deprecated
 
 compliance_warnings:
-  - algorithm: "DES-EDE3"
+  - algorithm: "LEGACY_CIPHER-EDE3"
     status: "DEPRECATED"
     risk: "HIGH"
 
-  - algorithm: "RC4"
+  - algorithm: "StreamCipher"
     status: "INSECURE"
     risk: "CRITICAL"
 
-  - algorithm: "MD5"
+  - algorithm: "Hash128"
     status: "BROKEN"
     risk: "CRITICAL"
 
@@ -146,52 +146,52 @@ security_logs:
   events:
     - timestamp: "2024-09-20 08:15:30"
       type: "V2V_COMMUNICATION"
-      message: "Safety message signed with ECDSA-P256"
+      message: "Safety message signed with CurveSig-P256"
 
     - timestamp: "2024-09-20 08:15:31"
       type: "V2I_COMMUNICATION"
-      message: "Traffic light data authenticated via ECDSA"
+      message: "Traffic light data authenticated via CurveSig"
 
     - timestamp: "2024-09-20 08:15:32"
       type: "OTA_UPDATE"
-      message: "Firmware signature verified: ECDSA-P384"
+      message: "Firmware signature verified: CurveSig-P384"
 
     - timestamp: "2024-09-20 08:15:33"
       type: "CELLULAR"
-      message: "5G connection using SEED-128 encryption (Korean standard)"
+      message: "5G connection using K_CIPHER_1-128 encryption (Korean standard)"
 
     - timestamp: "2024-09-20 08:15:34"
       type: "WARNING"
-      message: "Legacy OBD2 using 3DES - upgrade recommended"
+      message: "Legacy OBD2 using TripleCipher - upgrade recommended"
 
     - timestamp: "2024-09-20 08:15:35"
       type: "CRITICAL"
-      message: "RC4 detected in legacy radio module - disable immediately"
+      message: "StreamCipher detected in legacy radio module - disable immediately"
 
     - timestamp: "2024-09-20 08:15:36"
       type: "AUDIT"
-      message: "Quantum-vulnerable algorithms: ECDSA, RSA, ECDH, DH"
+      message: "Quantum-vulnerable algorithms: CurveSig, PublicKey, CURVE_KE, KEY_EX"
 
 quantum_vulnerability_assessment:
   vulnerable_algorithms:
     shor_vulnerable:
-      - "ECDSA-P256 (V2V, V2I, V2P, signatures)"
-      - "ECDSA-P384 (certificates, OTA updates)"
-      - "RSA-2048 (infrastructure, infotainment)"
-      - "RSA-3072 (telematics)"
-      - "ECDH/ECDHE (key exchange)"
+      - "CurveSig-P256 (V2V, V2I, V2P, signatures)"
+      - "CurveSig-P384 (certificates, OTA updates)"
+      - "PublicKey-2048 (infrastructure, infotainment)"
+      - "PublicKey-3072 (telematics)"
+      - "CURVE_KE/CurveKE (key exchange)"
 
     grover_vulnerable:
-      - "AES-128 (reduced security strength)"
-      - "SEED-128 (Korean standard)"
-      - "ARIA-128 (Korean standard)"
-      - "LEA-128 (Korean standard)"
-      - "SHA-256 (collision resistance reduced)"
+      - "BlockCipher-128 (reduced security strength)"
+      - "K_CIPHER_1-128 (Korean standard)"
+      - "K_CIPHER_2-128 (Korean standard)"
+      - "K_CIPHER_4-128 (Korean standard)"
+      - "Hash-256 (collision resistance reduced)"
 
     deprecated_insecure:
-      - "3DES/DES-EDE3 (legacy OBD2)"
-      - "RC4 (legacy radio)"
-      - "MD5 (broken, legacy telematics)"
+      - "TripleCipher/LEGACY_CIPHER-EDE3 (legacy OBD2)"
+      - "StreamCipher (legacy radio)"
+      - "Hash128 (broken, legacy telematics)"
 
   recommendation:
     priority: "HIGH"
@@ -202,4 +202,4 @@ standards_compliance:
   - "ISO/SAE 21434 (Automotive Cybersecurity)"
   - "UN-R155 (Cybersecurity Regulation)"
   - "IEEE 1609.2 (V2X Security)"
-  - "Korean Automotive Security Standards (SEED/ARIA/LEA)"
+  - "Korean Automotive Security Standards (K_CIPHER_1/K_CIPHER_2/K_CIPHER_4)"

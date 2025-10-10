@@ -248,7 +248,7 @@ class EllipticCurveOperations
 
     # Derive shared secret from x-coordinate
     shared_secret = [shared_point[0].to_s(16)].pack('H*')
-    Digest::SHA256.digest(shared_secret)
+    Digest::HASH_256.digest(shared_secret)
   end
 
   def sign_message(message_hash, private_key)
@@ -566,7 +566,7 @@ class SecureMessagingProtocol
     @message_history = {}
     @session_keys = {}
 
-    @rsa_processor = LargeIntegerArithmetic.new
+    @pk_crypto_processor = LargeIntegerArithmetic.new
     @ecc_processor = EllipticCurveOperations.new
     @stream_cipher = StreamCipherProcessor.new
     @korean_hash = KoreanHashAlgorithm.new
@@ -579,13 +579,13 @@ class SecureMessagingProtocol
   end
 
   def generate_user_keys
-    rsa_keys = @rsa_processor.generate_keypair
-    ecc_keys = @ecc_processor.generate_key_pair
+    public_keys = @pk_crypto_processor.generate_keypair
+    curve_keys = @ecc_processor.generate_key_pair
 
     {
-      rsa: rsa_keys,
-      ecc: ecc_keys,
-      fingerprint: compute_key_fingerprint(rsa_keys[:public_key])
+      asymmetric_cipher: public_keys,
+      elliptic_curve: curve_keys,
+      fingerprint: compute_key_fingerprint(public_keys[:public_key])
     }
   end
 
@@ -602,7 +602,7 @@ class SecureMessagingProtocol
 
       log_audit_event('CONTACT_ADDED', {
         contact_id: contact_id,
-        fingerprint: compute_key_fingerprint(public_keys[:rsa])
+        fingerprint: compute_key_fingerprint(public_keys[:asymmetric_cipher])
       })
     end
 
@@ -636,23 +636,23 @@ class SecureMessagingProtocol
           content: encrypted_content
         })
 
-        message_hash = Digest::SHA256.digest(message_data)
+        message_hash = Digest::HASH_256.digest(message_data)
         korean_hash = @korean_hash.compute_hash(message_data)
 
         # Sign message with sender's private key
-        rsa_signature = @rsa_processor.sign_message(message_hash, @user_keys[:rsa][:private_key])
-        ecc_signature = @ecc_processor.sign_message(message_hash, @user_keys[:ecc][:private_key])
+        pk_crypto_signature = @pk_crypto_processor.sign_message(message_hash, @user_keys[:asymmetric_cipher][:private_key])
+        ecc_signature = @ecc_processor.sign_message(message_hash, @user_keys[:elliptic_curve][:private_key])
 
         # Create final message package
         secure_message = {
           metadata: message_metadata,
           encrypted_content: encrypted_content,
           signatures: {
-            rsa: Base64.encode64(rsa_signature),
-            ecc: ecc_signature
+            asymmetric_cipher: Base64.encode64(pk_crypto_signature),
+            elliptic_curve: ecc_signature
           },
           integrity: {
-            sha256: message_hash.unpack1('H*'),
+            hash_256: message_hash.unpack1('H*'),
             korean_hash: korean_hash
           }
         }
@@ -701,34 +701,34 @@ class SecureMessagingProtocol
           content: encrypted_message[:encrypted_content]
         })
 
-        message_hash = Digest::SHA256.digest(message_data)
+        message_hash = Digest::HASH_256.digest(message_data)
 
         # Asymmetric modular arithmetic operations
-        rsa_signature = Base64.decode64(encrypted_message[:signatures][:rsa])
-        rsa_valid = @rsa_processor.verify_signature(
+        pk_crypto_signature = Base64.decode64(encrypted_message[:signatures][:asymmetric_cipher])
+        pk_crypto_valid = @pk_crypto_processor.verify_signature(
           message_hash,
-          rsa_signature,
-          @contacts[sender_id][:public_keys][:rsa]
+          pk_crypto_signature,
+          @contacts[sender_id][:public_keys][:asymmetric_cipher]
         )
 
         # Elliptic curve cryptography
         ecc_valid = @ecc_processor.verify_signature(
           message_hash,
-          encrypted_message[:signatures][:ecc],
-          @contacts[sender_id][:public_keys][:ecc]
+          encrypted_message[:signatures][:elliptic_curve],
+          @contacts[sender_id][:public_keys][:elliptic_curve]
         )
 
         # Verify integrity hashes
         computed_korean_hash = @korean_hash.compute_hash(message_data)
         korean_hash_valid = computed_korean_hash == encrypted_message[:integrity][:korean_hash]
 
-        sha256_valid = message_hash.unpack1('H*') == encrypted_message[:integrity][:sha256]
+        sha256_valid = message_hash.unpack1('H*') == encrypted_message[:integrity][:hash_256]
 
-        unless rsa_valid && ecc_valid && korean_hash_valid && sha256_valid
+        unless pk_crypto_valid && ecc_valid && korean_hash_valid && sha256_valid
           log_audit_event('MESSAGE_VERIFICATION_FAILED', {
             message_id: message_id,
             sender_id: sender_id,
-            rsa_valid: rsa_valid,
+            pk_crypto_valid: pk_crypto_valid,
             ecc_valid: ecc_valid,
             korean_hash_valid: korean_hash_valid,
             sha256_valid: sha256_valid
@@ -783,7 +783,7 @@ class SecureMessagingProtocol
           contact_id: contact_id,
           trust_level: contact_info[:trust_level],
           last_activity: contact_info[:last_activity],
-          fingerprint: compute_key_fingerprint(contact_info[:public_keys][:rsa])
+          fingerprint: compute_key_fingerprint(contact_info[:public_keys][:asymmetric_cipher])
         }
       end
     end
@@ -829,7 +829,7 @@ class SecureMessagingProtocol
           asymmetric: 'Large Integer Arithmetic (2048-bit)',
           elliptic_curve: 'secp256k1',
           symmetric: 'Stream Cipher',
-          hash: 'Korean Standard Hash + SHA-256'
+          hash: 'Korean Standard Hash + Hash256'
         }
       }
     end
@@ -842,8 +842,8 @@ class SecureMessagingProtocol
 
     # Elliptic curve key exchange
     shared_secret = @ecc_processor.perform_key_exchange(
-      contact[:public_keys][:ecc],
-      @user_keys[:ecc][:private_key]
+      contact[:public_keys][:elliptic_curve],
+      @user_keys[:elliptic_curve][:private_key]
     )
 
     # Derive session key using Korean hash for additional security
@@ -914,7 +914,7 @@ class SecureMessagingProtocol
 
   def compute_key_fingerprint(public_key)
     key_data = JSON.generate(public_key)
-    hash = Digest::SHA256.digest(key_data)
+    hash = Digest::HASH_256.digest(key_data)
     hash.unpack1('H*')[0, 16]
   end
 

@@ -379,7 +379,7 @@ static int process_korean_standard_data(const uint8_t* input, size_t input_len,
 
 /**
  * Execute regional transformation algorithm
- * Implements Korean AES-like cipher with 12 rounds
+ * Implements Korean BlockCipher-like cipher with 12 rounds
  */
 static int execute_regional_transformation(const uint8_t* data, size_t data_len,
                                          uint8_t* transformed, size_t* trans_len) {

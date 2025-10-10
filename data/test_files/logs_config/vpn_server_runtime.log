@@ -8,27 +8,27 @@
 2025-01-15 08:15:23.712 [DEBUG] DHParams::Validate() - Group 14: 2048-bit MODP group, generator: 2
 2025-01-15 08:15:23.756 [INFO] TLSNegotiator::SelectCipherSuite() - Client proposed 15 cipher suites
 2025-01-15 08:15:23.789 [DEBUG] CipherSelector::EvaluateSuites() - Selected: TLS_DHE_RSA_WITH_AES_256_CBC_SHA256
-2025-01-15 08:15:23.823 [TRACE] KeyExchangeHandler::GenerateEphemeralKey() - Generating ephemeral DH private exponent
+2025-01-15 08:15:23.823 [TRACE] KeyExchangeHandler::GenerateEphemeralKey() - Generating ephemeral KEY_EX private exponent
 2025-01-15 08:15:23.867 [DEBUG] ModularExponentiation::Compute() - Computing g^x mod p for public key
-2025-01-15 08:15:23.912 [INFO] HandshakeManager::SendServerKeyExchange() - Sending DH public parameters to client
-2025-01-15 08:15:23.945 [TRACE] SignatureGenerator::SignParameters() - Signing DH parameters with server private key
-2025-01-15 08:15:23.989 [DEBUG] HashFunction::ComputeDigest() - Using SHA-256 for parameter hashing
-2025-01-15 08:15:24.023 [INFO] ClientKeyExchange::Received() - Client DH public key received
+2025-01-15 08:15:23.912 [INFO] HandshakeManager::SendServerKeyExchange() - Sending KEY_EX public parameters to client
+2025-01-15 08:15:23.945 [TRACE] SignatureGenerator::SignParameters() - Signing KEY_EX parameters with server private key
+2025-01-15 08:15:23.989 [DEBUG] HashFunction::ComputeDigest() - Using Hash-256 for parameter hashing
+2025-01-15 08:15:24.023 [INFO] ClientKeyExchange::Received() - Client KEY_EX public key received
 2025-01-15 08:15:24.067 [DEBUG] SharedSecretComputation::Calculate() - Computing (client_public)^(server_private) mod p
 2025-01-15 08:15:24.112 [TRACE] KeyDerivationFunction::DeriveKeys() - Deriving session keys from shared secret
 2025-01-15 08:15:24.156 [INFO] SessionKeyManager::InstallKeys() - Installing symmetric keys for tunnel encryption
-2025-01-15 08:15:24.189 [DEBUG] BlockCipher::Initialize() - AES-256-CBC initialized with 256-bit key
+2025-01-15 08:15:24.189 [DEBUG] BlockCipher::Initialize() - BlockCipher-256-CBC initialized with 256-bit key
 2025-01-15 08:15:24.223 [INFO] HandshakeComplete::Verify() - TLS handshake completed successfully
 2025-01-15 08:15:24.267 [DEBUG] TunnelEstablished::Configure() - IPsec tunnel established, mode: ESP
-2025-01-15 08:15:24.301 [TRACE] EncryptionEngine::Ready() - Data encryption ready, algorithm: AES-256, mode: CBC
+2025-01-15 08:15:24.301 [TRACE] EncryptionEngine::Ready() - Data encryption ready, algorithm: BlockCipher-256, mode: CBC
 2025-01-15 08:15:24.334 [INFO] ClientConnected::Log() - Client 192.168.1.105 connected successfully
 2025-01-15 08:15:24.378 [DEBUG] RoutingTable::Update() - Adding route for client subnet 10.8.0.0/24
 2025-01-15 08:15:26.456 [TRACE] DataPlane::EncryptPacket() - Encrypting outbound packet, size: 1420 bytes
-2025-01-15 08:15:26.489 [DEBUG] HMAC::ComputeMAC() - Computing HMAC-SHA256 for packet integrity
+2025-01-15 08:15:26.489 [DEBUG] HMAC::ComputeMAC() - Computing HMAC-Hash256 for packet integrity
 2025-01-15 08:15:28.567 [INFO] KeepAlive::Received() - Client keepalive received, session active
 2025-01-15 08:15:35.678 [DEBUG] RekeyScheduler::CheckInterval() - Rekey interval: 3600 seconds remaining
 2025-01-15 08:15:45.789 [TRACE] PerfMonitor::LogStatistics() - Throughput: 125 Mbps, Latency: 12ms
 2025-01-15 08:16:23.456 [INFO] SessionManager::RekeyInitiated() - Initiating session rekey
-2025-01-15 08:16:23.489 [DEBUG] DHKeyExchange::GenerateNewEphemeral() - Generating new DH ephemeral key pair
+2025-01-15 08:16:23.489 [DEBUG] DHKeyExchange::GenerateNewEphemeral() - Generating new KEY_EX ephemeral key pair
 2025-01-15 08:16:23.523 [TRACE] ModularArithmetic::RandomExponent() - Generated new random exponent for rekey
 2025-01-15 08:16:23.567 [INFO] Rekey::Complete() - Session rekeyed successfully, new keys installed

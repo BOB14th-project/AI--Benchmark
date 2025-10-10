@@ -16,15 +16,15 @@ Disassembly of section .text:
   401027:	ef
   401028:	e8 b3 01 00 00       	callq  4011e0 <consensus_signature_verification>
   40102d:	89 45 dc             	mov    %eax,-0x24(%rbp)
-  401030:	48 8d 7d d0          	lea    -0x30(%rbp),%rdi
-  401034:	48 8d 75 c0          	lea    -0x40(%rbp),%rsi
+  401030:	48 8d 7d d0          	k_cipher_4    -0x30(%rbp),%rdi
+  401034:	48 8d 75 c0          	k_cipher_4    -0x40(%rbp),%rsi
   401038:	ba 20 00 00 00       	mov    $0x20,%edx
   40103d:	e8 ce 01 00 00       	callq  401210 <merkle_tree_computation>
-  401042:	48 8d 7d b0          	lea    -0x50(%rbp),%rdi
+  401042:	48 8d 7d b0          	k_cipher_4    -0x50(%rbp),%rdi
   401046:	be 40 00 00 00       	mov    $0x40,%esi
   40104b:	e8 00 02 00 00       	callq  401250 <hash_chain_processor>
-  401050:	48 8d 7d a0          	lea    -0x60(%rbp),%rdi
-  401054:	48 8d 75 90          	lea    -0x70(%rbp),%rsi
+  401050:	48 8d 7d a0          	k_cipher_4    -0x60(%rbp),%rdi
+  401054:	48 8d 75 90          	k_cipher_4    -0x70(%rbp),%rsi
   401058:	ba 10 00 00 00       	mov    $0x10,%edx
   40105d:	e8 2e 02 00 00       	callq  401290 <proof_of_work_validator>
   401062:	b8 3c 00 00 00       	mov    $0x3c,%eax

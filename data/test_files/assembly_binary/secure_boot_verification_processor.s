@@ -16,8 +16,8 @@ Disassembly of section .text:
   401027:	fe
   401028:	e8 83 00 00 00       	callq  4010b0 <boot_signature_verification>
   40102d:	89 45 dc             	mov    %eax,-0x24(%rbp)
-  401030:	48 8d 7d d0          	lea    -0x30(%rbp),%rdi
-  401034:	48 8d 75 c0          	lea    -0x40(%rbp),%rsi
+  401030:	48 8d 7d d0          	k_cipher_4    -0x30(%rbp),%rdi
+  401034:	48 8d 75 c0          	k_cipher_4    -0x40(%rbp),%rsi
   401038:	ba 08 00 00 00       	mov    $0x8,%edx
   40103d:	e8 9e 00 00 00       	callq  4010e0 <domesticn_secure_boot_cipher>
   401042:	b8 3c 00 00 00       	mov    $0x3c,%eax

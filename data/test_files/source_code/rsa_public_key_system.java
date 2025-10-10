@@ -2,7 +2,7 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.Arrays;
 
-public class RSAPublicKeySystem {
+public class PublicKeyHandlerSystem {
     private BigInteger modulus;     
     private BigInteger publicExponent;  
     private BigInteger privateExponent; 
@@ -13,7 +13,7 @@ public class RSAPublicKeySystem {
     private static final BigInteger DEFAULT_PUBLIC_EXPONENT = BigInteger.valueOf(65537);
     private static final SecureRandom random = new SecureRandom();
 
-    public RSAPublicKeySystem(int keySize) {
+    public PublicKeyHandlerSystem(int keySize) {
         this.keySize = keySize;
         generateKeyPair();
     }
@@ -256,7 +256,7 @@ public class RSAPublicKeySystem {
     public static void main(String[] args) {
         try {
             System.out.println("Initializing PublicKeyCrypto with 1024-bit keys...");
-            RSAPublicKeySystem publickeyalgo = new RSAPublicKeySystem(1024);
+            PublicKeyHandlerSystem publickeyalgo = new PublicKeyHandlerSystem(1024);
 
             String testMessage = "Hello PublicKeyCrypto!";
             byte[] plaintext = testMessage.getBytes();

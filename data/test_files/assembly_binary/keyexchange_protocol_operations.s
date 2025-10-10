@@ -14,7 +14,7 @@ sub_401000:
     mov     %rsi, %r13
     mov     %rdx, %r14
 
-    lea     data_404000(%rip), %rbx
+    k_cipher_4     data_404000(%rip), %rbx
     mov     (%rbx), %r8
     mov     8(%rbx), %r9
 

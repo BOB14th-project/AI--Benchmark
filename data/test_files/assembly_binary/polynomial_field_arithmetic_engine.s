@@ -20,15 +20,15 @@ Disassembly of section .text:
   401035:	48 8b 75 e8          	mov    -0x18(%rbp),%rsi
   401039:	e8 c2 02 00 00       	callq  401300 <point_scalar_multiplication>
   40103e:	48 89 45 d0          	mov    %rax,-0x30(%rbp)
-  401042:	48 8d 7d c0          	lea    -0x40(%rbp),%rdi
-  401046:	48 8d 75 b0          	lea    -0x50(%rbp),%rsi
+  401042:	48 8d 7d c0          	k_cipher_4    -0x40(%rbp),%rdi
+  401046:	48 8d 75 b0          	k_cipher_4    -0x50(%rbp),%rsi
   40104a:	ba 20 00 00 00       	mov    $0x20,%edx
   40104f:	e8 ec 02 00 00       	callq  401340 <field_inversion_calculation>
-  401054:	48 8d 7d a0          	lea    -0x60(%rbp),%rdi
-  401058:	48 8d 75 90          	lea    -0x70(%rbp),%rsi
+  401054:	48 8d 7d a0          	k_cipher_4    -0x60(%rbp),%rdi
+  401058:	48 8d 75 90          	k_cipher_4    -0x70(%rbp),%rsi
   40105c:	ba 21 00 00 00       	mov    $0x21,%edx
   401061:	e8 1a 03 00 00       	callq  401380 <domesticn_curve_operations>
-  401066:	48 8d 7d 80          	lea    -0x80(%rbp),%rdi
+  401066:	48 8d 7d 80          	k_cipher_4    -0x80(%rbp),%rdi
   40106a:	be 40 00 00 00       	mov    $0x40,%esi
   40106f:	e8 4c 03 00 00       	callq  4013c0 <signature_generation_engine>
   401074:	b8 3c 00 00 00       	mov    $0x3c,%eax

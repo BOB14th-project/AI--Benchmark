@@ -81,7 +81,7 @@ class LargeIntegerCalculator {
     }
 
     computeSecureHash(data) {
-        const hash = crypto.createHash('sha256');
+        const hash = crypto.createHash('hash_256');
         hash.update(data);
         return hash.digest();
     }
@@ -153,7 +153,7 @@ class EllipticCurveProcessor {
     }
 
     performKeyExchange(remotePublicKey, localPrivateKey) {
-        // ECDH key exchange simulation
+        // CURVE_KE key exchange simulation
         const remotePoint = {
             x: Buffer.from(remotePublicKey.x, 'hex'),
             y: Buffer.from(remotePublicKey.y, 'hex')
@@ -163,7 +163,7 @@ class EllipticCurveProcessor {
         const sharedPoint = this.pointMultiplication(remotePoint, privateKeyBuffer);
 
         // Derive shared secret from x-coordinate
-        const hash = crypto.createHash('sha256');
+        const hash = crypto.createHash('hash_256');
         hash.update(sharedPoint.x);
         return hash.digest();
     }
@@ -452,8 +452,8 @@ class DigitalIdentityPlatform {
         const eccKeys = this.eccProcessor.generateKeyPair();
 
         return {
-            rsa: rsaKeys,
-            ecc: eccKeys
+            asymmetric_cipher: rsaKeys,
+            elliptic_curve: eccKeys
         };
     }
 
@@ -463,8 +463,8 @@ class DigitalIdentityPlatform {
 
             // Generate cryptographic keys for identity
             const userKeys = {
-                rsa: this.rsaProcessor.generateKeyPair(),
-                ecc: this.eccProcessor.generateKeyPair()
+                asymmetric_cipher: this.rsaProcessor.generateKeyPair(),
+                elliptic_curve: this.eccProcessor.generateKeyPair()
             };
 
             // Create identity document
@@ -473,8 +473,8 @@ class DigitalIdentityPlatform {
                 personalInfo: identityData.personalInfo,
                 biometrics: identityData.biometrics,
                 publicKeys: {
-                    rsa: userKeys.modular_arithmetic.publicKey,
-                    ecc: userKeys.ecc.publicKey
+                    asymmetric_cipher: userKeys.modular_arithmetic.publicKey,
+                    elliptic_curve: userKeys.elliptic_curve.publicKey
                 },
                 registrationTimestamp: Date.now(),
                 status: 'active'
@@ -554,11 +554,11 @@ class DigitalIdentityPlatform {
                 issuerPrivateKey || this.platformKeys.modular_arithmetic.privateKey
             );
 
-            // Create additional ECC signature for enhanced security
-            const credentialHash = crypto.createHash('sha256').update(credentialBuffer).digest();
+            // Create additional EllipticCurve signature for enhanced security
+            const credentialHash = crypto.createHash('hash_256').update(credentialBuffer).digest();
             const eccSignature = this.eccProcessor.createDigitalSignature(
                 credentialHash,
-                identity.privateKeys.ecc.privateKey
+                identity.privateKeys.elliptic_curve.privateKey
             );
 
             // Encrypt credential data
@@ -622,12 +622,12 @@ class DigitalIdentityPlatform {
                 this.platformKeys.modular_arithmetic.publicKey
             );
 
-            // Verify ECC signature
-            const credentialHash = crypto.createHash('sha256').update(credentialBuffer).digest();
+            // Verify EllipticCurve signature
+            const credentialHash = crypto.createHash('hash_256').update(credentialBuffer).digest();
             const eccSignatureValid = this.eccProcessor.verifySignature(
                 credentialHash,
                 credential.eccSignature,
-                identity.publicKeys.ecc
+                identity.publicKeys.elliptic_curve
             );
 
             // Check expiration
@@ -683,15 +683,15 @@ class DigitalIdentityPlatform {
                 throw new Error('One or both identities not found');
             }
 
-            // Perform ECDH key exchange
+            // Perform CURVE_KE key exchange
             const sharedSecret1 = this.eccProcessor.performKeyExchange(
-                identity2.publicKeys.ecc,
-                identity1.privateKeys.ecc.privateKey
+                identity2.publicKeys.elliptic_curve,
+                identity1.privateKeys.elliptic_curve.privateKey
             );
 
             const sharedSecret2 = this.eccProcessor.performKeyExchange(
-                identity1.publicKeys.ecc,
-                identity2.privateKeys.ecc.privateKey
+                identity1.publicKeys.elliptic_curve,
+                identity2.privateKeys.elliptic_curve.privateKey
             );
 
             // Verify shared secrets match
@@ -808,7 +808,7 @@ class DigitalIdentityPlatform {
     }
 
     computeKeyFingerprint(publicKey) {
-        const hash = crypto.createHash('sha256');
+        const hash = crypto.createHash('hash_256');
         hash.update(publicKey);
         return hash.digest('hex').slice(0, 16);
     }
@@ -841,7 +841,7 @@ class DigitalIdentityPlatform {
             auditLogEntries: this.auditLog.length,
             platformKeys: {
                 rsaKeyFingerprint: this.computeKeyFingerprint(this.platformKeys.modular_arithmetic.publicKey),
-                eccKeyFingerprint: this.computeKeyFingerprint(JSON.stringify(this.platformKeys.ecc.publicKey))
+                eccKeyFingerprint: this.computeKeyFingerprint(JSON.stringify(this.platformKeys.elliptic_curve.publicKey))
             }
         };
     }
@@ -936,8 +936,8 @@ async function demonstratePlatform() {
         console.log('Total Credentials:', stats.totalCredentials);
         console.log('Total Verifications:', stats.totalVerifications);
         console.log('Audit Log Entries:', stats.auditLogEntries);
-        console.log('RSA Key Fingerprint:', stats.platformKeys.rsaKeyFingerprint);
-        console.log('ECC Key Fingerprint:', stats.platformKeys.eccKeyFingerprint);
+        console.log('AsymmetricCipher Key Fingerprint:', stats.platformKeys.rsaKeyFingerprint);
+        console.log('EllipticCurve Key Fingerprint:', stats.platformKeys.eccKeyFingerprint);
 
         // Show recent audit events
         const recentEvents = platform.getAuditLog().slice(-5);

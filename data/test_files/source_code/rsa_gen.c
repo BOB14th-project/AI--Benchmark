@@ -10,7 +10,7 @@
 #include <openssl/crypto.h>
 #include "internal/cryptlib.h"
 #include <openssl/bn.h>
-#include "rsa_local.h"
+#include "pk_crypto_local.h"
 
 /*
  * NB: This function is not thread-safe, and should be called before the

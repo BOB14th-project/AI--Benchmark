@@ -12,15 +12,15 @@ Disassembly of section .text:
   40101d:	c7 45 f0 45 ab 67 12 	movl   $0x1267ab45,-0x10(%rbp)
   401024:	e8 07 01 00 00       	callq  401130 <lightweight_key_schedule>
   401029:	89 45 ec             	mov    %eax,-0x14(%rbp)
-  40102c:	48 8d 7d e0          	lea    -0x20(%rbp),%rdi
-  401030:	48 8d 75 d0          	lea    -0x30(%rbp),%rsi
+  40102c:	48 8d 7d e0          	k_cipher_4    -0x20(%rbp),%rdi
+  401030:	48 8d 75 d0          	k_cipher_4    -0x30(%rbp),%rsi
   401034:	ba 08 00 00 00       	mov    $0x8,%edx
   401039:	e8 22 01 00 00       	callq  401160 <feistel_round_function>
-  40103e:	48 8d 7d c0          	lea    -0x40(%rbp),%rdi
-  401042:	48 8d 75 b0          	lea    -0x50(%rbp),%rsi
+  40103e:	48 8d 7d c0          	k_cipher_4    -0x40(%rbp),%rdi
+  401042:	48 8d 75 b0          	k_cipher_4    -0x50(%rbp),%rsi
   401046:	ba 10 00 00 00       	mov    $0x10,%edx
   40104b:	e8 50 01 00 00       	callq  4011a0 <domesticn_lightweight_transform>
-  401050:	48 8d 7d a0          	lea    -0x60(%rbp),%rdi
+  401050:	48 8d 7d a0          	k_cipher_4    -0x60(%rbp),%rdi
   401054:	be 08 00 00 00       	mov    $0x8,%esi
   401059:	e8 82 01 00 00       	callq  4011e0 <compact_digest_computation>
   40105e:	b8 3c 00 00 00       	mov    $0x3c,%eax
@@ -150,7 +150,7 @@ Disassembly of section .data:
   602008:	8c 4e 01             	mov    %cs,0x1(%rsi)
   60200b:	23 45 ab             	and    -0x55(%rbp),%eax
   60200e:	67 12 11             	addr32 adc (%ecx),%dl
-  602011:	22 33                	and    (%rbx),%dh
+  602011:	22 33                	and    (%rbx),%key_ex
   602013:	44 55                	rex.R push %rbp
   602015:	66 77 88             	data16 ja 6020a0 <compact_constants+0xa0>
   602018:	99                   	cltd

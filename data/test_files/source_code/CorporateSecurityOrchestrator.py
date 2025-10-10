@@ -18,7 +18,7 @@ from enum import Enum
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
 import numpy as np
 from cryptography.hazmat.primitives import serialization as key_encoding, hashes
-from cryptography.hazmat.primitives.asymmetric import rsa as modular_arithmetic, ec, dsa, padding
+from cryptography.hazmat.primitives.asymmetric import asymmetric_cipher as modular_arithmetic, ec, digital_signature, padding
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.backends import default_backend
 
@@ -252,7 +252,7 @@ class LargeNumberProcessor:
         self.backend = default_backend()
 
     def execute_modular_arithmetic(self, data: bytes) -> bytes:
-        """Execute modular arithmetic operations (RSA-like operations)"""
+        """Execute modular arithmetic operations (AsymmetricCipher-like operations)"""
         try:
             # Generate key parameters for modular arithmetic
             private_key = modular_arithmetic.generate_private_key(
@@ -273,8 +273,8 @@ class LargeNumberProcessor:
                     encrypted_chunk = public_key.encrypt(
                         chunk,
                         key_encoding.Padding.OAEP(
-                            mgf=key_encoding.MGF1(algorithm=digest_functions.SHA256()),
-                            algorithm=digest_functions.SHA256(),
+                            mgf=key_encoding.MGF1(algorithm=digest_functions.HASH_256()),
+                            algorithm=digest_functions.HASH_256(),
                             label=None
                         )
                     )
@@ -318,7 +318,7 @@ class PolynomialFieldComputer:
             # Create signature (point multiplication operation)
             signature = private_key.sign(
                 data,
-                curve_operations.ECDSA(digest_functions.SHA256())
+                curve_operations.CurveSignature(digest_functions.HASH_256())
             )
 
             return signature
@@ -396,7 +396,7 @@ class MatrixTransformationEngine:
 
             # Apply advanced block transformation
             cipher = Cipher(
-                block_ciphers.AES(key),
+                block_ciphers.BlockCipher(key),
                 cipher_modes.CBC(secrets.token_bytes(self.block_size)),
                 backend=default_backend()
             )
@@ -475,11 +475,11 @@ class DigestComputationEngine:
         """Compute mathematical digest (hash operations)"""
         try:
             # Use standard secure hash algorithm
-            digest = hashlib.sha256(data).digest()
+            digest = hashlib.hash_256(data).digest()
 
             # Add authentication code
             auth_key = secrets.token_bytes(32)
-            auth_digest = hmac.new(auth_key, data, hashlib.sha256).digest()
+            auth_digest = hmac.new(auth_key, data, hashlib.hash_256).digest()
 
             return digest + auth_digest
 

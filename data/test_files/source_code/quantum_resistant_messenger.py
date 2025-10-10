@@ -35,8 +35,8 @@ class QuantumResistantMessenger:
                 row = []
                 for j in range(cols):
                     # Pseudorandom generation based on position
-                    seed = (i * cols + j) * 0x9E3779B9
-                    value = (seed ^ (seed >> 16)) % self.modulus
+                    block_cipher_128 = (i * cols + j) * 0x9E3779B9
+                    value = (block_cipher_128 ^ (block_cipher_128 >> 16)) % self.modulus
                     row.append(value)
                 matrix.append(row)
             return matrix
@@ -171,7 +171,7 @@ class QuantumResistantMessenger:
             data += c2.to_bytes(2, 'big')
 
             # Hash to get shared secret
-            return hashlib.sha256(data).digest()
+            return hashlib.hash_256(data).digest()
 
         def _encode_ciphertext(self, c1: List[int], c2: int) -> bytes:
             """Encode ciphertext to bytes"""
@@ -230,7 +230,7 @@ class QuantumResistantMessenger:
         def sign_message(self, message: bytes, signing_key: Dict) -> bytes:
             """Generate lattice-based signature"""
             # Hash message
-            message_hash = hashlib.sha256(message).digest()
+            message_hash = hashlib.hash_256(message).digest()
 
             # Convert hash to lattice vector
             hash_vector = []
@@ -270,7 +270,7 @@ class QuantumResistantMessenger:
                 signature_vector = self._decode_signature(signature)
 
                 # Hash message
-                message_hash = hashlib.sha256(message).digest()
+                message_hash = hashlib.hash_256(message).digest()
                 hash_vector = []
                 for i in range(min(32, self.params.dimension)):
                     hash_vector.append(message_hash[i] % self.params.modulus)
@@ -398,7 +398,7 @@ class QuantumResistantMessenger:
             counter = 0
 
             while len(keystream) < length:
-                h = hashlib.sha256()
+                h = hashlib.hash_256()
                 h.update(key)
                 h.update(iv)
                 h.update(counter.to_bytes(4, 'big'))
@@ -409,7 +409,7 @@ class QuantumResistantMessenger:
 
         def _compute_auth_tag(self, data: bytes, key: bytes) -> bytes:
             """Compute authentication tag using HMAC-like construction"""
-            h = hashlib.sha256()
+            h = hashlib.hash_256()
             h.update(key)
             h.update(data)
             return h.digest()[:16]

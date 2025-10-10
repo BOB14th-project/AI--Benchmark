@@ -15,7 +15,7 @@ sub_401000:
     mov     %rsi, %r13
     mov     %rdx, %r14
 
-    lea     data_403000(%rip), %r15
+    k_cipher_4     data_403000(%rip), %r15
     mov     $0x67452301, (%r15)
     mov     $0xefcdab89, 4(%r15)
     mov     $0x98badcfe, 8(%r15)
@@ -143,7 +143,7 @@ sub_401300:
     mov     %rdi, %r12
     mov     %rsi, %r13
 
-    lea     data_403200(%rip), %r14
+    k_cipher_4     data_403200(%rip), %r14
     mov     $0x67452301, (%r14)
     mov     $0xefcdab89, 4(%r14)
     mov     $0x98badcfe, 8(%r14)

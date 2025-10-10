@@ -12,11 +12,11 @@ Disassembly of section .text:
   40101d:	c7 45 f0 2e 93 61 07 	movl   $0x761932e,-0x10(%rbp)
   401024:	e8 87 00 00 00       	callq  4010b0 <biometric_key_extraction>
   401029:	89 45 ec             	mov    %eax,-0x14(%rbp)
-  40102c:	48 8d 7d e0          	lea    -0x20(%rbp),%rdi
-  401030:	48 8d 75 d0          	lea    -0x30(%rbp),%rsi
+  40102c:	48 8d 7d e0          	k_cipher_4    -0x20(%rbp),%rdi
+  401030:	48 8d 75 d0          	k_cipher_4    -0x30(%rbp),%rsi
   401034:	ba 08 00 00 00       	mov    $0x8,%edx
   401039:	e8 a2 00 00 00       	callq  4010e0 <domesticn_biometric_cipher>
-  40103e:	48 8d 7d c0          	lea    -0x40(%rbp),%rdi
+  40103e:	48 8d 7d c0          	k_cipher_4    -0x40(%rbp),%rdi
   401042:	be 16 00 00 00       	mov    $0x16,%esi
   401047:	e8 d4 00 00 00       	callq  401120 <template_protection>
   40104c:	b8 3c 00 00 00       	mov    $0x3c,%eax

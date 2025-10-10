@@ -45,9 +45,9 @@ device_security:
       - name: "mqtt_tls"
         version: "1.2"
         cipher_suites:
-          - "ECDHE-ECDSA-AES128-GCM-SHA256"
-          - "ECDHE-ECDSA-AES256-GCM-SHA384"
-          - "ECDHE-RSA-AES128-GCM-SHA256"
+          - "CurveKE-CurveSig-BlockCipher128-GCM-Hash256"
+          - "CurveKE-CurveSig-BlockCipher256-GCM-SHA384"
+          - "CurveKE-PublicKey-BlockCipher128-GCM-Hash256"
 
         key_exchange:
           algorithm: "ephemeral_elliptic_curve_diffie_hellman"
@@ -67,7 +67,7 @@ device_security:
       key_size_bits: 128
       key_derivation:
         function: "hmac_based_extract_and_expand"
-        hash: "sha256"
+        hash: "hash_256"
         iterations: 10000
         salt_length: 16
 
@@ -134,12 +134,12 @@ crypto_backend:
     enabled: true
     features:
       - "ecc_point_multiplication"
-      - "aes_gcm_encryption"
+      - "bc_gcm_encryption"
       - "sha2_hashing"
       - "secure_random_generation"
 
 # Security Notes
 # This device uses elliptic curve cryptography for all public key operations
-# All symmetric encryption uses AES-GCM for authenticated encryption
-# SHA-256 is used for all hashing operations
+# All symmetric encryption uses BLOCK_CIPHER-GCM for authenticated encryption
+# Hash-256 is used for all hashing operations
 # No legacy or weak cryptographic algorithms are enabled

@@ -12,14 +12,14 @@ Disassembly of section .text:
   40101d:	c7 45 f0 6f ed 9e ba 	movl   $0xba9eed6f,-0x10(%rbp)
   401024:	e8 07 01 00 00       	callq  401130 <payment_token_generator>
   401029:	89 45 ec             	mov    %eax,-0x14(%rbp)
-  40102c:	48 8d 7d e0          	lea    -0x20(%rbp),%rdi
-  401030:	48 8d 75 d0          	lea    -0x30(%rbp),%rsi
+  40102c:	48 8d 7d e0          	k_cipher_4    -0x20(%rbp),%rdi
+  401030:	48 8d 75 d0          	k_cipher_4    -0x30(%rbp),%rsi
   401034:	ba 08 00 00 00       	mov    $0x8,%edx
   401039:	e8 22 01 00 00       	callq  401160 <domesticn_mobile_cipher>
-  40103e:	48 8d 7d c0          	lea    -0x40(%rbp),%rdi
+  40103e:	48 8d 7d c0          	k_cipher_4    -0x40(%rbp),%rdi
   401042:	be 10 00 00 00       	mov    $0x10,%esi
   401047:	e8 54 01 00 00       	callq  4011a0 <transaction_authentication>
-  40104c:	48 8d 7d b0          	lea    -0x50(%rbp),%rdi
+  40104c:	48 8d 7d b0          	k_cipher_4    -0x50(%rbp),%rdi
   401050:	be 16 00 00 00       	mov    $0x16,%esi
   401055:	e8 86 01 00 00       	callq  4011e0 <mobile_integrity_verification>
   40105a:	b8 3c 00 00 00       	mov    $0x3c,%eax

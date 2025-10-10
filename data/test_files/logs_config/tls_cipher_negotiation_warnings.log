@@ -1,29 +1,29 @@
 2024-09-19 10:00:01 [INFO] Crypto Engine Initialization Started
-2024-09-19 10:00:02 [INFO] Loading RSA-1024 server certificate from /etc/ssl/server.crt
-2024-09-19 10:00:03 [WARN] RSA key size 1024 bits - consider upgrading to 2048+ bits
-2024-09-19 10:00:04 [INFO] Initializing cipher suite: RSA-AES256-SHA
-2024-09-19 10:00:05 [INFO] Initializing cipher suite: RSA-3DES-EDE-CBC-SHA
-2024-09-19 10:00:06 [WARN] 3DES cipher suite enabled - known to be vulnerable
-2024-09-19 10:00:07 [INFO] Initializing cipher suite: RC4-SHA
-2024-09-19 10:00:08 [ERROR] RC4 stream cipher detected - cryptographically broken
-2024-09-19 10:00:09 [INFO] MD5 digest algorithm loaded for legacy compatibility
-2024-09-19 10:00:10 [WARN] MD5 hash function is collision-vulnerable
-2024-09-19 10:00:11 [INFO] SHA-1 digest algorithm loaded
-2024-09-19 10:00:12 [WARN] SHA-1 is deprecated due to collision vulnerabilities
-2024-09-19 10:00:13 [INFO] ECDSA P-256 signature verification enabled
-2024-09-19 10:00:14 [INFO] ECDH key exchange using secp256r1 curve
-2024-09-19 10:00:15 [INFO] DH key exchange using 1024-bit parameters
-2024-09-19 10:00:16 [WARN] DH-1024 parameters insufficient for long-term security
+2024-09-19 10:00:02 [INFO] Loading PublicKey-1024 server certificate from /etc/ssl/server.crt
+2024-09-19 10:00:03 [WARN] PublicKey key size 1024 bits - consider upgrading to 2048+ bits
+2024-09-19 10:00:04 [INFO] Initializing cipher suite: PublicKey-BlockCipher256-SHA
+2024-09-19 10:00:05 [INFO] Initializing cipher suite: PublicKey-TripleCipher-EDE-CBC-SHA
+2024-09-19 10:00:06 [WARN] TripleCipher cipher suite enabled - known to be vulnerable
+2024-09-19 10:00:07 [INFO] Initializing cipher suite: StreamCipher-SHA
+2024-09-19 10:00:08 [ERROR] StreamCipher stream cipher detected - cryptographically broken
+2024-09-19 10:00:09 [INFO] Hash128 digest algorithm loaded for legacy compatibility
+2024-09-19 10:00:10 [WARN] Hash128 hash function is collision-vulnerable
+2024-09-19 10:00:11 [INFO] Hash-160 digest algorithm loaded
+2024-09-19 10:00:12 [WARN] Hash-160 is deprecated due to collision vulnerabilities
+2024-09-19 10:00:13 [INFO] CurveSig P-256 signature verification enabled
+2024-09-19 10:00:14 [INFO] CURVE_KE key exchange using secp256r1 curve
+2024-09-19 10:00:15 [INFO] KEY_EX key exchange using 1024-bit parameters
+2024-09-19 10:00:16 [WARN] KEY_EX-1024 parameters insufficient for long-term security
 
 2024-09-19 10:01:00 [INFO] Client connection established from 192.168.1.100
-2024-09-19 10:01:01 [INFO] TLS handshake: client requested RSA-AES256-SHA
-2024-09-19 10:01:02 [INFO] Using RSA-2048 certificate for authentication
-2024-09-19 10:01:03 [INFO] Session key derived using SHA-1 PRF
-2024-09-19 10:01:04 [WARN] Legacy PRF in use - consider upgrading to SHA-256
+2024-09-19 10:01:01 [INFO] TLS handshake: client requested PublicKey-BlockCipher256-SHA
+2024-09-19 10:01:02 [INFO] Using PublicKey-2048 certificate for authentication
+2024-09-19 10:01:03 [INFO] Session key derived using Hash-160 PRF
+2024-09-19 10:01:04 [WARN] Legacy PRF in use - consider upgrading to Hash-256
 
-2024-09-19 10:02:00 [INFO] Certificate verification using RSA-SHA1 signature
-2024-09-19 10:02:01 [WARN] SHA-1 certificate signatures are deprecated
-2024-09-19 10:02:02 [INFO] ECDSA signature verification using P-256 curve
-2024-09-19 10:02:03 [INFO] Korean ARIA-128 cipher negotiated for domestic compliance
-2024-09-19 10:02:04 [INFO] SEED-CBC-SHA cipher suite selected
+2024-09-19 10:02:00 [INFO] Certificate verification using PublicKey-Hash160 signature
+2024-09-19 10:02:01 [WARN] Hash-160 certificate signatures are deprecated
+2024-09-19 10:02:02 [INFO] CurveSig signature verification using P-256 curve
+2024-09-19 10:02:03 [INFO] Korean K_CIPHER_2-128 cipher negotiated for domestic compliance
+2024-09-19 10:02:04 [INFO] K_CIPHER_1-CBC-SHA cipher suite selected
 2024-09-19 10:02:05 [WARN] Korean domestic ciphers may have quantum vulnerabilities

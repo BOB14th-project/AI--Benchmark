@@ -156,7 +156,7 @@ class LargeNumberProcessor:
 
     def _compute_financial_hash(self, data: bytes) -> bytes:
         """Compute secure hash for financial data"""
-        return hashlib.sha256(data).digest()
+        return hashlib.hash_256(data).digest()
 
     def _apply_financial_padding(self, hash_value: bytes, key_size: int) -> bytes:
         """Apply financial-grade padding to hash"""
@@ -252,16 +252,16 @@ class EllipticCurveFinancialProcessor:
 
     def perform_financial_key_exchange(self, remote_public_key: Tuple[int, int],
                                      local_private_key: bytes) -> bytes:
-        """Perform ECDH key exchange for financial communications"""
+        """Perform CURVE_KE key exchange for financial communications"""
         private_key_int = int.from_bytes(local_private_key, 'big')
         shared_point = self._point_multiply(remote_public_key, private_key_int)
 
         # Derive shared secret from x-coordinate
         shared_secret = shared_point[0].to_bytes(32, 'big')
-        return hashlib.sha256(shared_secret).digest()
+        return hashlib.hash_256(shared_secret).digest()
 
     def sign_financial_document(self, document_hash: bytes, private_key: bytes) -> Tuple[int, int]:
-        """Create ECDSA signature for financial document"""
+        """Create curve-based signature for financial document"""
         private_key_int = int.from_bytes(private_key, 'big')
         message_hash_int = int.from_bytes(document_hash, 'big')
 
@@ -287,7 +287,7 @@ class EllipticCurveFinancialProcessor:
 
     def verify_financial_signature(self, document_hash: bytes, signature: Tuple[int, int],
                                  public_key: Tuple[int, int]) -> bool:
-        """Verify ECDSA signature for financial document"""
+        """Verify curve-based signature for financial document"""
         try:
             r, s = signature
             message_hash_int = int.from_bytes(document_hash, 'big')
@@ -443,7 +443,7 @@ class AdvancedHashProcessor:
         return derived_key[:key_length]
 
     def _process_chunk(self, chunk: bytes, hash_values: List[int]):
-        """Process single 512-bit chunk for SHA-256"""
+        """Process single 512-bit chunk for Hash256"""
         w = list(struct.unpack('>16I', chunk))
 
         # Extend to 64 words
@@ -789,7 +789,7 @@ class FinancialRiskAnalyzer:
     """Advanced financial risk analysis with cryptographic security"""
 
     def __init__(self):
-        self.rsa_processor = LargeNumberProcessor()
+        self.pk_crypto_processor = LargeNumberProcessor()
         self.ecc_processor = EllipticCurveFinancialProcessor()
         self.hash_processor = AdvancedHashProcessor()
         self.korean_crypto = KoreanFinancialCrypto()
@@ -812,12 +812,12 @@ class FinancialRiskAnalyzer:
 
     def _initialize_platform_keys(self) -> Dict[str, Union[bytes, Tuple[int, int]]]:
         """Initialize cryptographic keys for platform"""
-        rsa_public, rsa_private = self.rsa_processor.generate_financial_keypair()
+        pk_crypto_public, pk_crypto_private = self.pk_crypto_processor.generate_financial_keypair()
         ecc_private, ecc_public = self.ecc_processor.generate_financial_key_pair()
 
         return {
-            'rsa_public': rsa_public,
-            'rsa_private': rsa_private,
+            'pk_crypto_public': pk_crypto_public,
+            'pk_crypto_private': pk_crypto_private,
             'ecc_public': ecc_public,
             'ecc_private': ecc_private
         }
@@ -833,8 +833,8 @@ class FinancialRiskAnalyzer:
                 integrity_hash = self.hash_processor.compute_financial_integrity_hash(transaction_data)
 
                 # Sign transaction with platform private key
-                transaction_signature = self.rsa_processor.sign_financial_transaction(
-                    transaction_data, self.platform_keys['rsa_private']
+                transaction_signature = self.pk_crypto_processor.sign_financial_transaction(
+                    transaction_data, self.platform_keys['pk_crypto_private']
                 )
 
                 # Analyze risk factors
@@ -1138,8 +1138,8 @@ class FinancialRiskAnalyzer:
 
         # Sign audit entry
         audit_data = json.dumps(audit_entry, sort_keys=True).encode('utf-8')
-        signature = self.rsa_processor.sign_financial_transaction(
-            audit_data, self.platform_keys['rsa_private']
+        signature = self.pk_crypto_processor.sign_financial_transaction(
+            audit_data, self.platform_keys['pk_crypto_private']
         )
 
         audit_entry['platform_signature'] = signature.hex()
@@ -1156,7 +1156,7 @@ class FinancialRiskAnalyzer:
             'cached_transactions': len(self.transaction_cache),
             'audit_trail_entries': len(self.audit_trail),
             'platform_rsa_fingerprint': self.hash_processor.compute_financial_integrity_hash(
-                self.platform_keys['rsa_public']
+                self.platform_keys['pk_crypto_public']
             ).hex()[:16],
             'platform_ecc_fingerprint': self.hash_processor.compute_financial_integrity_hash(
                 str(self.platform_keys['ecc_public']).encode()

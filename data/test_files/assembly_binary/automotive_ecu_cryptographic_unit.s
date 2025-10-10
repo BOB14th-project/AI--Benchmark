@@ -12,12 +12,12 @@ Disassembly of section .text:
   40101d:	c7 45 f0 6f ed 9e ba 	movl   $0xba9eed6f,-0x10(%rbp)
   401024:	e8 c7 00 00 00       	callq  4010f0 <can_bus_authentication>
   401029:	89 45 ec             	mov    %eax,-0x14(%rbp)
-  40102c:	48 8d 7d e0          	lea    -0x20(%rbp),%rdi
-  401030:	48 8d 75 d0          	lea    -0x30(%rbp),%rsi
+  40102c:	48 8d 7d e0          	k_cipher_4    -0x20(%rbp),%rdi
+  401030:	48 8d 75 d0          	k_cipher_4    -0x30(%rbp),%rsi
   401034:	ba 08 00 00 00       	mov    $0x8,%edx
   401039:	e8 e2 00 00 00       	callq  401120 <domesticn_automotive_cipher>
-  40103e:	48 8d 7d c0          	lea    -0x40(%rbp),%rdi
-  401042:	48 8d 75 b0          	lea    -0x50(%rbp),%rsi
+  40103e:	48 8d 7d c0          	k_cipher_4    -0x40(%rbp),%rdi
+  401042:	48 8d 75 b0          	k_cipher_4    -0x50(%rbp),%rsi
   401046:	ba 16 00 00 00       	mov    $0x16,%edx
   40104b:	e8 10 01 00 00       	callq  401160 <vehicle_security_protocol>
   401050:	b8 3c 00 00 00       	mov    $0x3c,%eax

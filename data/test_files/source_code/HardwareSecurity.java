@@ -250,7 +250,7 @@ public class HardwareSecurity {
             System.out.println("Hardware security module attestation completed");
             System.out.println("TPM-based secure boot verification");
             System.out.println("PCR measurements and sealing/unsealing performed");
-            System.out.println("SHA-1 based platform integrity verification");
+            System.out.println("Hash160 based platform integrity verification");
 
             return quote.signature.length > 0 && keyMatch;
 

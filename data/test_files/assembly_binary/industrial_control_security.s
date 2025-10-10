@@ -14,13 +14,13 @@ Disassembly of section .text:
   40101f:	98
   401020:	48 c7 45 e0 76 54 32 	movq   $0x1032547698765432,-0x20(%rbp)
   401027:	10
-  401028:	48 8d 7d d0          	lea    -0x30(%rbp),%rdi
-  40102c:	48 8d 75 f8          	lea    -0x8(%rbp),%rsi
+  401028:	48 8d 7d d0          	k_cipher_4    -0x30(%rbp),%rdi
+  40102c:	48 8d 75 f8          	k_cipher_4    -0x8(%rbp),%rsi
   401030:	e8 2b 00 00 00       	callq  401060 <fast_cipher_key_schedule>
-  401035:	48 8d 7d c0          	lea    -0x40(%rbp),%rdi
-  401039:	48 8d 75 d0          	lea    -0x30(%rbp),%rsi
+  401035:	48 8d 7d c0          	k_cipher_4    -0x40(%rbp),%rdi
+  401039:	48 8d 75 d0          	k_cipher_4    -0x30(%rbp),%rsi
   40103d:	e8 9e 00 00 00       	callq  4010e0 <fast_cipher_encrypt_block>
-  401042:	48 8d 7d c0          	lea    -0x40(%rbp),%rdi
+  401042:	48 8d 7d c0          	k_cipher_4    -0x40(%rbp),%rdi
   401046:	be 10 00 00 00       	mov    $0x10,%esi
   40104b:	e8 20 01 00 00       	callq  401170 <scada_protocol_auth>
   401050:	b8 3c 00 00 00       	mov    $0x3c,%eax

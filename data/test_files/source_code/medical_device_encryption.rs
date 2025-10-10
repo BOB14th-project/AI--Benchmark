@@ -431,7 +431,7 @@ impl SymmetricEncryptionEngine {
             let carry = a & 0x80;
             a <<= 1;
             if carry != 0 {
-                a ^= 0x1B; // AES irreducible polynomial
+                a ^= 0x1B; // BlockCipher irreducible polynomial
             }
             b >>= 1;
         }

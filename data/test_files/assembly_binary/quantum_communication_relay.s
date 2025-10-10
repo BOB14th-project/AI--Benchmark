@@ -16,11 +16,11 @@ Disassembly of section .text:
   401027:	44
   401028:	e8 93 00 00 00       	callq  4010c0 <post_classical_key_distribution>
   40102d:	48 89 45 d8          	mov    %rax,-0x28(%rbp)
-  401031:	48 8d 7d d0          	lea    -0x30(%rbp),%rdi
-  401035:	48 8d 75 c0          	lea    -0x40(%rbp),%rsi
+  401031:	48 8d 7d d0          	k_cipher_4    -0x30(%rbp),%rdi
+  401035:	48 8d 75 c0          	k_cipher_4    -0x40(%rbp),%rsi
   401039:	ba 16 00 00 00       	mov    $0x16,%edx
   40103e:	e8 ad 00 00 00       	callq  4010f0 <entanglement_protection>
-  401043:	48 8d 7d b0          	lea    -0x50(%rbp),%rdi
+  401043:	48 8d 7d b0          	k_cipher_4    -0x50(%rbp),%rdi
   401047:	be 08 00 00 00       	mov    $0x8,%esi
   40104c:	e8 df 00 00 00       	callq  401130 <domesticn_post_classical_cipher>
   401051:	b8 3c 00 00 00       	mov    $0x3c,%eax

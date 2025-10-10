@@ -28,7 +28,7 @@ public class LegacyPKISystem {
             generateKeyPair();
         }
 
-        // Generate DSA domain parameters
+        // Generate DigitalSignature domain parameters
         private void generateDSAParameters() {
             // Simplified parameter generation (production would use proper prime generation)
 
@@ -60,7 +60,7 @@ public class LegacyPKISystem {
             }
         }
 
-        // Generate DSA key pair
+        // Generate DigitalSignature key pair
         private void generateKeyPair() {
             // Private key x: random number in range [1, q-1]
             do {
@@ -71,7 +71,7 @@ public class LegacyPKISystem {
             y = g.modPow(x, p);
         }
 
-        // Sign message using DSA
+        // Sign message using DigitalSignature
         public DSASignatureValue signMessage(byte[] message) {
             byte[] messageHash = sha1Hash(message);
             BigInteger hashInt = new BigInteger(1, messageHash);
@@ -99,7 +99,7 @@ public class LegacyPKISystem {
             return new DSASignatureValue(r, s);
         }
 
-        // Verify DSA signature
+        // Verify DigitalSignature signature
         public boolean verifySignature(byte[] message, DSASignatureValue signature) {
             try {
                 byte[] messageHash = sha1Hash(message);
@@ -243,8 +243,8 @@ public class LegacyPKISystem {
             // Get public key for verification
             DSAPublicKey publicKey = dsaSigner.getPublicKey();
 
-            System.out.println("Legacy document signed using DSA algorithm");
-            System.out.println("Digital Signature Algorithm with SHA-1 hash");
+            System.out.println("Legacy document signed using DigitalSignature algorithm");
+            System.out.println("Digital Signature Algorithm with 160-bit hash");
             System.out.println("1024-bit key size with 160-bit subgroup");
             System.out.println("PKI certificate chain validation completed");
 
@@ -272,7 +272,7 @@ public class LegacyPKISystem {
             // Verify escrow signature
             boolean escrowValid = dsaSigner.verifySignature(escrowPackage, escrowSignature);
 
-            System.out.println("Key escrow process completed using DSA signatures");
+            System.out.println("Key escrow process completed using DigitalSignature signatures");
             System.out.println("Discrete logarithm based security");
 
             return escrowValid;

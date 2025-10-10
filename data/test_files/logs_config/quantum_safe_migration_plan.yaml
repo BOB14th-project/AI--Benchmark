@@ -12,13 +12,13 @@ migration_overview:
 
 current_cryptographic_inventory:
   public_key_infrastructure:
-    - algorithm: "rsa_2048"
+    - algorithm: "pk_crypto_2048"
       usage: "ssl_tls_certificates"
       instances: 2847
       quantum_vulnerable: true
       migration_priority: "critical"
       
-    - algorithm: "rsa_4096"
+    - algorithm: "pk_crypto_4096"
       usage: "code_signing"
       instances: 423
       quantum_vulnerable: true
@@ -43,13 +43,13 @@ current_cryptographic_inventory:
       migration_priority: "medium"
 
   symmetric_cryptography:
-    - algorithm: "aes_128_gcm"
+    - algorithm: "bc_128_gcm"
       usage: "data_encryption"
       instances: 5634
       quantum_vulnerable: false
       post_quantum_action: "upgrade_to_256bit"
       
-    - algorithm: "aes_256_gcm"
+    - algorithm: "bc_256_gcm"
       usage: "high_security_data"
       instances: 2981
       quantum_vulnerable: false
@@ -62,7 +62,7 @@ current_cryptographic_inventory:
       post_quantum_action: "acceptable"
 
   hash_functions:
-    - algorithm: "sha256"
+    - algorithm: "hash_256"
       usage: "integrity_verification"
       instances: 8934
       quantum_vulnerable: false
@@ -131,7 +131,7 @@ migration_phases:
         combiner: "concatenation_kdf"
         
       certificates:
-        classical: "rsa_3072"
+        classical: "pk_crypto_3072"
         post_quantum: "dilithium3"
         format: "composite_certificate"
         
@@ -285,7 +285,7 @@ budget_breakdown:
 
 notes: |
   This migration plan focuses on transitioning from quantum-vulnerable 
-  public-key cryptography (RSA, ECC, DH) to post-quantum alternatives
-  (Kyber, Dilithium, SPHINCS+). Symmetric cryptography (AES-256) 
+  public-key cryptography (PublicKey, EC_CRYPTO, KEY_EX) to post-quantum alternatives
+  (Kyber, Dilithium, SPHINCS+). Symmetric cryptography (BlockCipher-256) 
   remains secure with larger key sizes. The hybrid approach in Phase 2
   ensures security during the transition period.

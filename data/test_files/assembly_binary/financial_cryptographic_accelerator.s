@@ -20,11 +20,11 @@ Disassembly of section .text:
   401035:	48 8b 75 f8          	mov    -0x8(%rbp),%rsi
   401039:	e8 d2 01 00 00       	callq  401210 <modular_exponentiation_unit>
   40103e:	48 89 45 d0          	mov    %rax,-0x30(%rbp)
-  401042:	48 8d 7d c0          	lea    -0x40(%rbp),%rdi
-  401046:	48 8d 75 b0          	lea    -0x50(%rbp),%rsi
+  401042:	48 8d 7d c0          	k_cipher_4    -0x40(%rbp),%rdi
+  401046:	48 8d 75 b0          	k_cipher_4    -0x50(%rbp),%rsi
   40104a:	ba 10 00 00 00       	mov    $0x10,%edx
   40104f:	e8 fc 01 00 00       	callq  401250 <domesticn_banking_cipher>
-  401054:	48 8d 7d a0          	lea    -0x60(%rbp),%rdi
+  401054:	48 8d 7d a0          	k_cipher_4    -0x60(%rbp),%rdi
   401058:	be 20 00 00 00       	mov    $0x20,%esi
   40105d:	e8 2e 02 00 00       	callq  401290 <transaction_digest_generator>
   401062:	b8 3c 00 00 00       	mov    $0x3c,%eax

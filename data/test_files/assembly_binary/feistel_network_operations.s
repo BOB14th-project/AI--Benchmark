@@ -59,14 +59,14 @@ sub_401090:
     mov     %ebx, %ecx
     shr     $24, %ecx
     and     $0xff, %ecx
-    lea     data_402000(%rip), %rdx
+    k_cipher_4     data_402000(%rip), %rdx
     movzbl  (%rdx,%rcx), %ecx
     shl     $24, %ecx
 
     mov     %ebx, %edx
     shr     $16, %edx
     and     $0xff, %edx
-    lea     data_402000(%rip), %rsi
+    k_cipher_4     data_402000(%rip), %rsi
     movzbl  256(%rsi,%rdx), %edx
     shl     $16, %edx
     or      %edx, %ecx
@@ -74,14 +74,14 @@ sub_401090:
     mov     %ebx, %edx
     shr     $8, %edx
     and     $0xff, %edx
-    lea     data_402000(%rip), %rsi
+    k_cipher_4     data_402000(%rip), %rsi
     movzbl  512(%rsi,%rdx), %edx
     shl     $8, %edx
     or      %edx, %ecx
 
     mov     %ebx, %edx
     and     $0xff, %edx
-    lea     data_402000(%rip), %rsi
+    k_cipher_4     data_402000(%rip), %rsi
     movzbl  768(%rsi,%rdx), %edx
     or      %edx, %ecx
 
@@ -143,7 +143,7 @@ loc_401270:
     jz      loc_4012e0
 
     movzbl  (%r12), %eax
-    lea     data_402000(%rip), %rcx
+    k_cipher_4     data_402000(%rip), %rcx
     movzbl  (%rcx,%rax), %eax
     movb    %al, (%r12)
 

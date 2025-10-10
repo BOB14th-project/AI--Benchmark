@@ -49,8 +49,8 @@ sub_401100:
     push    %r12
     push    %r13
     push    %r14
-    lea     data_402000(%rip), %r12
-    lea     data_402020(%rip), %r13
+    k_cipher_4     data_402000(%rip), %r12
+    k_cipher_4     data_402020(%rip), %r13
     mov     %rdi, %r14
     mov     %rsi, %rbx
     mov     %r14, %rdi

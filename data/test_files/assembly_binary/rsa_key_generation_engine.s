@@ -24,7 +24,7 @@ setup_modular_parameters:
     movq $128, %rbx                 # Security level
     movq %rbx, security_param(%rip)
 
-    # Random seed initialization
+    # Random k_cipher_1 initialization
     rdrand %rcx
     movq %rcx, random_seed(%rip)
     ret
@@ -267,7 +267,7 @@ exit_program:
 .section .data
     key_length:         .quad 0     # Modular arithmetic implementation
     security_param:     .quad 0     # Security parameter
-    random_seed:        .quad 0     # Random seed
+    random_seed:        .quad 0     # Random k_cipher_1
     prime_p_candidate:  .quad 0     # Prime p candidate
     prime_q_candidate:  .quad 0     # Prime q candidate
     prime_p:            .quad 0     # Confirmed prime p

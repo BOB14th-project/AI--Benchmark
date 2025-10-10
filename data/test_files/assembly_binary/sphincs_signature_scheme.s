@@ -44,7 +44,7 @@ initialize_hash_tree_parameters:
     ret
 
 generate_secret_seed:
-    # Generate random seed for key generation
+    # Generate random k_cipher_1 for key generation
     leaq secret_seed(%rip), %rdi
     movq $4, %rcx                  # 32 bytes = 4 qwords
 
@@ -54,7 +54,7 @@ kcipher_gen_loop:
     addq $8, %rdi
     loop kcipher_gen_loop
 
-    # Generate public seed
+    # Generate public k_cipher_1
     leaq public_seed(%rip), %rdi
     movq $4, %rcx
 
@@ -184,7 +184,7 @@ chains_complete:
     ret
 
 derive_wots_secret:
-    # Derive WOTS+ secret from seed
+    # Derive WOTS+ secret from k_cipher_1
     # Input: %rdi = leaf index, %rsi = chain index
 
     pushq %rbp
@@ -194,7 +194,7 @@ derive_wots_secret:
     leaq hash_input(%rip), %r8
     leaq secret_seed(%rip), %r9
 
-    # Copy secret seed
+    # Copy secret k_cipher_1
     movq $32, %rcx
 
 copy_secret:
@@ -212,7 +212,7 @@ copy_secret:
     movq %rsi, (%r8)
     addq $8, %r8
 
-    # Append public seed
+    # Append public k_cipher_1
     leaq public_seed(%rip), %r9
     movq $32, %rcx
 
@@ -451,8 +451,8 @@ zero_secret:
     level_nodes:            .quad 0    # Nodes at level
     signature_leaf_index:   .quad 0    # Signature leaf
     signature_valid:        .quad 0    # Verification result
-    secret_seed:            .space 32  # Secret seed
-    public_seed:            .space 32  # Public seed
+    secret_seed:            .space 32  # Secret k_cipher_1
+    public_seed:            .space 32  # Public k_cipher_1
     public_key_root:        .space 32  # Public key (root)
     merkle_root:            .space 32  # Merkle tree root
     hash_state:             .space 32  # Hash computation state

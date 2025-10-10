@@ -16,15 +16,15 @@ Disassembly of section .text:
   401027:	76
   401028:	e8 a3 01 00 00       	callq  4011d0 <cloud_key_derivation>
   40102d:	48 89 45 d8          	mov    %rax,-0x28(%rbp)
-  401031:	48 8d 7d d0          	lea    -0x30(%rbp),%rdi
-  401035:	48 8d 75 c0          	lea    -0x40(%rbp),%rsi
+  401031:	48 8d 7d d0          	k_cipher_4    -0x30(%rbp),%rdi
+  401035:	48 8d 75 c0          	k_cipher_4    -0x40(%rbp),%rsi
   401039:	ba 10 00 00 00       	mov    $0x10,%edx
   40103e:	e8 bd 01 00 00       	callq  401200 <data_transformation_layer>
-  401043:	48 8d 7d b0          	lea    -0x50(%rbp),%rdi
-  401047:	48 8d 75 a0          	lea    -0x60(%rbp),%rsi
+  401043:	48 8d 7d b0          	k_cipher_4    -0x50(%rbp),%rdi
+  401047:	48 8d 75 a0          	k_cipher_4    -0x60(%rbp),%rsi
   40104b:	ba 08 00 00 00       	mov    $0x8,%edx
   401050:	e8 eb 01 00 00       	callq  401240 <domesticn_cloud_cipher>
-  401055:	48 8d 7d 90          	lea    -0x70(%rbp),%rdi
+  401055:	48 8d 7d 90          	k_cipher_4    -0x70(%rbp),%rdi
   401059:	be 20 00 00 00       	mov    $0x20,%esi
   40105e:	e8 1d 02 00 00       	callq  401280 <storage_integrity_engine>
   401063:	b8 3c 00 00 00       	mov    $0x3c,%eax

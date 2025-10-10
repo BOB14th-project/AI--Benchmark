@@ -1,55 +1,55 @@
 2025-01-25 09:00:15.123 [INFO] CloudHSM::Initialize() - Connecting to AWS CloudHSM cluster-8f3a2b9c
 2025-01-25 09:00:15.234 [DEBUG] HSMClient::EstablishConnection() - TLS handshake initiated with HSM endpoint
-2025-01-25 09:00:15.345 [TRACE] TLS::NegotiateCipherSuite() - Selected cipher: ECDHE-RSA-AES256-GCM-SHA384
+2025-01-25 09:00:15.345 [TRACE] TLS::NegotiateCipherSuite() - Selected cipher: CurveKE-PublicKey-BlockCipher256-GCM-SHA384
 2025-01-25 09:00:15.456 [DEBUG] Authentication::LoginToHSM() - Authenticating as Crypto Officer
 2025-01-25 09:00:15.567 [INFO] Session::Established() - HSM session ID: 0x4a8b3c2d, cluster node: hsm-node-1
 2025-01-25 09:00:15.678 [INFO] KeyManagement::ListKeys() - Retrieving cryptographic key inventory
 2025-01-25 09:00:15.789 [DEBUG] KeyDatabase::QueryKeys() - Found 247 keys in HSM storage
-2025-01-25 09:00:15.900 [TRACE] KeyAttributes::Parse(key_id=0x1001) - Label: master-aes-key, Type: AES-256, Usage: Encrypt/Decrypt
-2025-01-25 09:00:16.011 [TRACE] KeyAttributes::Parse(key_id=0x1002) - Label: rsa-sign-key, Type: RSA-2048, Usage: Sign/Verify
-2025-01-25 09:00:16.122 [TRACE] KeyAttributes::Parse(key_id=0x1003) - Label: ecc-p256-key, Type: EC_P256, Usage: Sign/Verify/Derive
-2025-01-25 09:00:16.233 [INFO] OperationRequest::GenerateKeyPair() - Generating new RSA key pair for TLS certificate
-2025-01-25 09:00:16.344 [DEBUG] KeyGeneration::SetParameters() - Algorithm: RSA, Key size: 3072 bits, Public exponent: 65537
+2025-01-25 09:00:15.900 [TRACE] KeyAttributes::Parse(key_id=0x1001) - Label: master-block_cipher-key, Type: BlockCipher-256, Usage: Encrypt/Decrypt
+2025-01-25 09:00:16.011 [TRACE] KeyAttributes::Parse(key_id=0x1002) - Label: pk_crypto-sign-key, Type: PublicKey-2048, Usage: Sign/Verify
+2025-01-25 09:00:16.122 [TRACE] KeyAttributes::Parse(key_id=0x1003) - Label: ec_crypto-p256-key, Type: EC_P256, Usage: Sign/Verify/Derive
+2025-01-25 09:00:16.233 [INFO] OperationRequest::GenerateKeyPair() - Generating new PublicKey key pair for TLS certificate
+2025-01-25 09:00:16.344 [DEBUG] KeyGeneration::SetParameters() - Algorithm: PublicKey, Key size: 3072 bits, Public exponent: 65537
 2025-01-25 09:00:16.455 [TRACE] HSMProcessor::GenerateRSAKeyPair() - Generating primes p and q inside secure boundary
 2025-01-25 09:00:18.566 [DEBUG] PrimalityTest::MillerRabin() - Testing prime candidates with 64 rounds
-2025-01-25 09:00:20.677 [INFO] KeyGeneration::Complete() - RSA-3072 key pair generated successfully
+2025-01-25 09:00:20.677 [INFO] KeyGeneration::Complete() - PublicKey-3072 key pair generated successfully
 2025-01-25 09:00:20.788 [TRACE] KeyStorage::StorePrivateKey() - Private key stored in HSM, marked non-exportable
 2025-01-25 09:00:20.899 [DEBUG] KeyStorage::ExportPublicKey() - Public key exported: key_id=0x2001, modulus_size=3072
-2025-01-25 09:00:21.010 [INFO] DigitalSignature::SignData() - Signing certificate request with RSA-3072 key
+2025-01-25 09:00:21.010 [INFO] DigitalSignature::SignData() - Signing certificate request with PublicKey-3072 key
 2025-01-25 09:00:21.121 [DEBUG] PKCS1::ApplyPadding() - Applying PKCS#1 v1.5 padding to digest
-2025-01-25 09:00:21.232 [TRACE] SHA256::ComputeHash() - Hashing CSR data, output: 32 bytes
+2025-01-25 09:00:21.232 [TRACE] Hash256::ComputeHash() - Hashing CSR data, output: 32 bytes
 2025-01-25 09:00:21.343 [DEBUG] RSASign::ModularExponentiation() - Computing signature: s = hash^d mod n
-2025-01-25 09:00:22.454 [INFO] Signature::Generated() - RSA signature created, length: 384 bytes
+2025-01-25 09:00:22.454 [INFO] Signature::Generated() - PublicKey signature created, length: 384 bytes
 2025-01-25 09:00:22.565 [INFO] ECCOperations::GenerateKeyPair() - Creating EC key pair on P-384 curve
-2025-01-25 09:00:22.676 [DEBUG] ECC::SelectCurve() - Curve: secp384r1, Field size: 384 bits
-2025-01-25 09:00:22.787 [TRACE] ECC::GeneratePrivateKey() - Generating random scalar in range [1, n-1]
-2025-01-25 09:00:22.898 [DEBUG] ECC::ScalarMultiplication() - Computing public key: Q = d * G
-2025-01-25 09:00:23.009 [TRACE] ECC::PointArithmetic() - Using Jacobian coordinates for efficiency
+2025-01-25 09:00:22.676 [DEBUG] EC_CRYPTO::SelectCurve() - Curve: secp384r1, Field size: 384 bits
+2025-01-25 09:00:22.787 [TRACE] EC_CRYPTO::GeneratePrivateKey() - Generating random scalar in range [1, n-1]
+2025-01-25 09:00:22.898 [DEBUG] EC_CRYPTO::ScalarMultiplication() - Computing public key: Q = d * G
+2025-01-25 09:00:23.009 [TRACE] EC_CRYPTO::PointArithmetic() - Using Jacobian coordinates for efficiency
 2025-01-25 09:00:23.120 [INFO] ECCKeyGen::Complete() - EC_P384 key pair generated, key_id=0x3001
-2025-01-25 09:00:23.231 [INFO] ECDSA::SignMessage() - Signing transaction hash with P-384 key
-2025-01-25 09:00:23.342 [DEBUG] ECDSA::GenerateNonce() - Generating deterministic nonce (RFC 6979)
+2025-01-25 09:00:23.231 [INFO] CurveSig::SignMessage() - Signing transaction hash with P-384 key
+2025-01-25 09:00:23.342 [DEBUG] CurveSig::GenerateNonce() - Generating deterministic nonce (RFC 6979)
 2025-01-25 09:00:23.453 [TRACE] HMAC_DRBG::GenerateK() - Nonce generation using HMAC-SHA384
-2025-01-25 09:00:23.564 [DEBUG] ECDSA::ComputeR() - Computing r = (k * G)_x mod n
-2025-01-25 09:00:23.675 [DEBUG] ECDSA::ComputeS() - Computing s = k^(-1) * (hash + r * privateKey) mod n
-2025-01-25 09:00:23.786 [INFO] ECDSA::SignatureComplete() - Signature (r, s) generated, total: 96 bytes
-2025-01-25 09:00:23.897 [INFO] ECDH::DeriveSharedSecret() - Performing elliptic curve Diffie-Hellman
-2025-01-25 09:00:24.008 [DEBUG] ECDH::LoadPeerPublicKey() - Peer public key loaded, curve: P-384
-2025-01-25 09:00:24.119 [TRACE] ECDH::ValidatePoint() - Verifying peer public key is on curve
-2025-01-25 09:00:24.230 [DEBUG] ECDH::ScalarMult() - Computing shared secret: S = d_a * Q_b
-2025-01-25 09:00:24.341 [INFO] ECDH::SharedSecretReady() - Shared secret derived, length: 48 bytes
+2025-01-25 09:00:23.564 [DEBUG] CurveSig::ComputeR() - Computing r = (k * G)_x mod n
+2025-01-25 09:00:23.675 [DEBUG] CurveSig::ComputeS() - Computing s = k^(-1) * (hash + r * privateKey) mod n
+2025-01-25 09:00:23.786 [INFO] CurveSig::SignatureComplete() - Signature (r, s) generated, total: 96 bytes
+2025-01-25 09:00:23.897 [INFO] CURVE_KE::DeriveSharedSecret() - Performing elliptic curve Diffie-Hellman
+2025-01-25 09:00:24.008 [DEBUG] CURVE_KE::LoadPeerPublicKey() - Peer public key loaded, curve: P-384
+2025-01-25 09:00:24.119 [TRACE] CURVE_KE::ValidatePoint() - Verifying peer public key is on curve
+2025-01-25 09:00:24.230 [DEBUG] CURVE_KE::ScalarMult() - Computing shared secret: S = d_a * Q_b
+2025-01-25 09:00:24.341 [INFO] CURVE_KE::SharedSecretReady() - Shared secret derived, length: 48 bytes
 2025-01-25 09:00:24.452 [DEBUG] KDF::DeriveSessionKeys() - Deriving session keys using HKDF-SHA384
-2025-01-25 09:00:24.563 [INFO] SymmetricEncryption::EncryptData() - Encrypting sensitive data with AES-256-GCM
-2025-01-25 09:00:24.674 [DEBUG] AES::LoadKey() - Loading AES-256 key from HSM, key_id=0x1001
+2025-01-25 09:00:24.563 [INFO] SymmetricEncryption::EncryptData() - Encrypting sensitive data with BlockCipher-256-GCM
+2025-01-25 09:00:24.674 [DEBUG] BLOCK_CIPHER::LoadKey() - Loading BlockCipher-256 key from HSM, key_id=0x1001
 2025-01-25 09:00:24.785 [TRACE] GCM::GenerateIV() - Generating random 96-bit initialization vector
-2025-01-25 09:00:24.896 [DEBUG] AES_GCM::Encrypt() - Encrypting 4096 bytes with associated data
+2025-01-25 09:00:24.896 [DEBUG] bc_GCM::Encrypt() - Encrypting 4096 bytes with associated data
 2025-01-25 09:00:25.007 [TRACE] GHASH::ComputeTag() - Computing authentication tag over ciphertext
-2025-01-25 09:00:25.118 [INFO] AES_GCM::EncryptionComplete() - Data encrypted, tag: 16 bytes
+2025-01-25 09:00:25.118 [INFO] bc_GCM::EncryptionComplete() - Data encrypted, tag: 16 bytes
 2025-01-25 09:00:25.229 [INFO] KeyRotation::InitiateRotation() - Beginning automatic key rotation
 2025-01-25 09:00:25.340 [DEBUG] KeyLifecycle::CheckAge() - Key 0x1001 age: 89 days, threshold: 90 days
-2025-01-25 09:00:25.451 [INFO] KeyGeneration::CreateNewAESKey() - Generating replacement AES-256 key
+2025-01-25 09:00:25.451 [INFO] KeyGeneration::CreateNewAESKey() - Generating replacement BlockCipher-256 key
 2025-01-25 09:00:25.562 [TRACE] TRNG::CollectEntropy() - Collecting 256 bits of entropy from hardware RNG
 2025-01-25 09:00:25.673 [DEBUG] FIPS::PostGeneration Test() - Running FIPS 140-2 known answer tests
-2025-01-25 09:00:25.784 [INFO] NewKey::Stored() - New AES key generated, key_id=0x1004
+2025-01-25 09:00:25.784 [INFO] NewKey::Stored() - New BLOCK_CIPHER key generated, key_id=0x1004
 2025-01-25 09:00:25.895 [DEBUG] KeyMigration::ReEncryptData() - Re-encrypting data with new key
 2025-01-25 09:00:26.006 [INFO] KeyRotation::Complete() - Key rotation successful, old key archived
 2025-01-25 09:00:26.117 [INFO] AuditLog::RecordOperation() - Operation: KEY_ROTATION, User: crypto_officer, Status: SUCCESS
@@ -58,10 +58,10 @@
 2025-01-25 09:00:26.450 [WARNING] PQCrypto::CurrentStatus() - No post-quantum algorithms currently supported
 2025-01-25 09:00:26.561 [INFO] PQCrypto::RoadMap() - HSM vendor plans Kyber/Dilithium support in Q3 2026
 2025-01-25 09:00:26.672 [DEBUG] KoreanCrypto::CheckSupport() - Checking support for Korean standard algorithms
-2025-01-25 09:00:26.783 [INFO] SEED::Available() - SEED cipher supported, KCMVP certified
-2025-01-25 09:00:26.894 [INFO] ARIA::Available() - ARIA cipher supported, KISA approved
-2025-01-25 09:00:27.005 [DEBUG] LEA::Available() - LEA cipher supported via firmware update v3.2
-2025-01-25 09:00:27.116 [INFO] KCDSA::Available() - Korean DSA signature algorithm supported
+2025-01-25 09:00:26.783 [INFO] K_CIPHER_1::Available() - K_CIPHER_1 cipher supported, KCMVP certified
+2025-01-25 09:00:26.894 [INFO] K_CIPHER_2::Available() - K_CIPHER_2 cipher supported, KISA approved
+2025-01-25 09:00:27.005 [DEBUG] K_CIPHER_4::Available() - K_CIPHER_4 cipher supported via firmware update v3.2
+2025-01-25 09:00:27.116 [INFO] K_SIG::Available() - Korean DSA signature algorithm supported
 2025-01-25 09:00:27.227 [INFO] Session::Terminate() - Closing HSM session, zeroizing session keys
 2025-01-25 09:00:27.338 [DEBUG] Cleanup::ZeroizeMemory() - Securely clearing sensitive data from memory
 2025-01-25 09:00:27.449 [INFO] HSMClient::Disconnect() - Connection to CloudHSM cluster closed

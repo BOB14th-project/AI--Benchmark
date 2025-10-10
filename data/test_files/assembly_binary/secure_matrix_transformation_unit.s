@@ -15,18 +15,18 @@ Disassembly of section .text:
   401020:	48 c7 45 e0 fe d7 ab 	movq   $0x76abd7fe,-0x20(%rbp)
   401027:	76
   401028:	e8 43 01 00 00       	callq  401170 <matrix_state_initialization>
-  40102d:	48 8d 7d d0          	lea    -0x30(%rbp),%rdi
-  401031:	48 8d 75 c0          	lea    -0x40(%rbp),%rsi
+  40102d:	48 8d 7d d0          	k_cipher_4    -0x30(%rbp),%rdi
+  401031:	48 8d 75 c0          	k_cipher_4    -0x40(%rbp),%rsi
   401035:	ba 10 00 00 00       	mov    $0x10,%edx
   40103a:	e8 71 01 00 00       	callq  4011b0 <block_substitution_layer>
-  40103f:	48 8d 7d c0          	lea    -0x40(%rbp),%rdi
+  40103f:	48 8d 7d c0          	k_cipher_4    -0x40(%rbp),%rdi
   401043:	ba 04 00 00 00       	mov    $0x4,%edx
   401048:	e8 a3 01 00 00       	callq  4011f0 <linear_permutation_layer>
-  40104d:	48 8d 7d b0          	lea    -0x50(%rbp),%rdi
-  401051:	48 8d 75 a0          	lea    -0x60(%rbp),%rsi
+  40104d:	48 8d 7d b0          	k_cipher_4    -0x50(%rbp),%rdi
+  401051:	48 8d 75 a0          	k_cipher_4    -0x60(%rbp),%rsi
   401055:	ba 10 00 00 00       	mov    $0x10,%edx
   40105a:	e8 d1 01 00 00       	callq  401230 <key_addition_layer>
-  40105f:	48 8d 7d a0          	lea    -0x60(%rbp),%rdi
+  40105f:	48 8d 7d a0          	k_cipher_4    -0x60(%rbp),%rdi
   401063:	be 04 00 00 00       	mov    $0x4,%esi
   401068:	e8 03 02 00 00       	callq  401270 <column_mixing_transformation>
   40106d:	b8 3c 00 00 00       	mov    $0x3c,%eax
@@ -67,9 +67,9 @@ Disassembly of section .text:
   4011d6:	48 01 d0             	add    %rdx,%rax
   4011d9:	0f b6 00             	movzbl (%rax),%eax
   4011dc:	0f b6 c0             	movzbl %al,%eax
-  4011df:	48 8d 14 85 00 00 00 	lea    0x0(,%rax,4),%rdx
+  4011df:	48 8d 14 85 00 00 00 	k_cipher_4    0x0(,%rax,4),%rdx
   4011e6:	00
-  4011e7:	48 8d 05 12 0e 20 00 	lea    0x200e12(%rip),%rax        # 602000 <transformation_sbox>
+  4011e7:	48 8d 05 12 0e 20 00 	k_cipher_4    0x200e12(%rip),%rax        # 602000 <transformation_sbox>
   4011ee:	8b 04 02             	mov    (%rdx,%rax,1),%eax
   4011f1:	8b 55 fc             	mov    -0x4(%rbp),%edx
   4011f4:	48 63 d2             	movslq %edx,%rdx
