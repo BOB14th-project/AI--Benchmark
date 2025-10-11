@@ -29,7 +29,13 @@ class AlgorithmDetectionAnalyzer:
 
         try:
             with open(self.results_file, 'r', encoding='utf-8') as f:
-                self.results_data = json.load(f)
+                data = json.load(f)
+
+            # 새 형식 지원: detailed_results를 results로 변환
+            if 'detailed_results' in data and 'results' not in data:
+                data['results'] = data['detailed_results']
+
+            self.results_data = data
             print(f"✅ 결과 파일 로드: {self.results_file}\n")
             return True
         except Exception as e:
@@ -61,8 +67,22 @@ class AlgorithmDetectionAnalyzer:
         """Ground truth에서 예상 알고리즘 추출"""
         algorithms = []
 
-        # algorithms 필드에서 추출
-        if 'algorithms' in ground_truth:
+        # 새 형식: expected_findings.vulnerable_algorithms_detected
+        if 'expected_findings' in ground_truth:
+            findings = ground_truth['expected_findings']
+            if 'vulnerable_algorithms_detected' in findings:
+                algos = findings['vulnerable_algorithms_detected']
+                if isinstance(algos, list):
+                    algorithms.extend([a.upper() for a in algos if isinstance(a, str)])
+
+            # Korean algorithms도 추가
+            if 'korean_algorithms_detected' in findings:
+                algos = findings['korean_algorithms_detected']
+                if isinstance(algos, list):
+                    algorithms.extend([a.upper() for a in algos if isinstance(a, str)])
+
+        # 기존 형식: algorithms 필드
+        elif 'algorithms' in ground_truth:
             for algo in ground_truth['algorithms']:
                 if isinstance(algo, dict) and 'name' in algo:
                     algorithms.append(algo['name'].upper())
@@ -103,6 +123,14 @@ class AlgorithmDetectionAnalyzer:
                         detected.append(algo.upper())
                     elif isinstance(algo, dict) and 'algorithm' in algo:
                         detected.append(algo['algorithm'].upper())
+
+        # analysis_results 값에서 DETECTED 패턴 찾기
+        import re
+        for key, value in analysis.items():
+            if isinstance(value, str) and 'DETECTED:' in value.upper():
+                # "DETECTED: RSA (Evidence...)" 형식에서 알고리즘 추출
+                matches = re.findall(r'DETECTED:\s*([A-Z0-9\-/]+)', value.upper())
+                detected.extend(matches)
 
         return list(set(detected))  # 중복 제거
 
@@ -158,8 +186,11 @@ class AlgorithmDetectionAnalyzer:
         })
 
         for result in self.results_data.get('results', []):
-            model_name = result.get('model_name', 'unknown')
-            file_name = result.get('file_name', '')
+            # 필드명 매핑: model 또는 model_name
+            model_name = result.get('model', result.get('model_name', 'unknown'))
+            # 파일 경로에서 파일명 추출
+            file_path = result.get('file_path', result.get('file_name', ''))
+            file_name = os.path.basename(file_path) if file_path else ''
             agent_type = result.get('agent_type', '')
 
             # Ground truth 로드
@@ -202,7 +233,9 @@ class AlgorithmDetectionAnalyzer:
         }
 
         for result in self.results_data.get('results', []):
-            file_name = result.get('file_name', '')
+            # 파일 경로에서 파일명 추출
+            file_path = result.get('file_path', result.get('file_name', ''))
+            file_name = os.path.basename(file_path) if file_path else ''
             agent_type = result.get('agent_type', '')
 
             # Ground truth 로드
