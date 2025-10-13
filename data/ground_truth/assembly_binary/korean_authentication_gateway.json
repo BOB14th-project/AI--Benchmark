@@ -1,0 +1,8 @@
+{
+  "expected_findings": {
+    "vulnerable_algorithms_detected": ["HIGHT", "LSH"],
+    "algorithm_categories": ["grover_vulnerable", "korean_algorithms"],
+    "korean_algorithms_detected": ["HIGHT", "LSH"]
+  },
+  "expected_confidence_range": [0.5, 0.7]
+}

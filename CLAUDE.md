@@ -171,48 +171,71 @@ python test_single_file.py --file data/test_files/source_code/rsa_public_key_sys
 
 ## 📋 결과 분석
 
-### 1. 모델별 성능 비교
+### 통합 분석 및 시각화 도구
 
-```python
-# 결과 분석 스크립트 실행
-python analyze_results.py --compare-models
+벤치마크 실행 후, 통합 분석 도구를 사용하여 결과를 분석하고 시각화할 수 있습니다:
 
-# 출력 예시:
-# Model Performance Comparison - Quantum-Vulnerable Algorithm Detection
-# =====================================================================
-# 1. gemini-2.0-flash-exp    F1: 0.89  Time: 12.3s  Tokens: 1,850
-# 2. gpt-4.1                 F1: 0.87  Time: 8.7s   Tokens: 2,100
-# 3. llama3:8b               F1: 0.82  Time: 3.2s   Tokens: 1,200
+```bash
+# 전체 분석 및 시각화 (권장)
+python analyze_and_visualize.py benchmark_results.json
+
+# 출력 디렉토리 지정
+python analyze_and_visualize.py benchmark_results.json --output-dir my_analysis
+
+# 최소 테스트 수 설정 (통계적 신뢰도)
+python analyze_and_visualize.py benchmark_results.json --min-tests 20
+
+# 텍스트 리포트만 생성
+python analyze_and_visualize.py benchmark_results.json --text-only
+
+# 시각화만 생성
+python analyze_and_visualize.py benchmark_results.json --visualize-only
 ```
 
-### 2. 에이전트별 성능
+### 생성되는 분석 결과
 
-```python
-# 에이전트별 분석
-python analyze_results.py --compare-agents
+#### 📄 텍스트 리포트
+- **COMPREHENSIVE_REPORT.txt**: 전체 결과를 요약한 종합 보고서
+  - 실행 요약 (총 테스트 수, 성공률, 평균 응답시간)
+  - 모델별 성능 비교 (F1 Score, Precision, Recall 기준)
+  - 에이전트별 성능 분석
+  - 알고리즘 탐지율 분석
+  - 성능 분석 (응답시간, 상관관계)
 
-# 출력 예시:
-# Agent Performance Analysis - Quantum-Vulnerable Algorithm Detection
-# ===================================================================
-# Source Code:      양자 취약 알고리즘 탐지 용이, 높은 정확도
-# Assembly Binary:  중간 난이도, 모델별 성능 차이
-# Logs Config:      설정 기반 탐지, 높은 거짓양성율
+#### 📊 시각화 그래프
+1. **model_f1_comparison.png**: 모델별 F1 Score 비교 (가로 막대 그래프)
+2. **precision_recall_f1.png**: Precision, Recall, F1 Score 함께 비교 (그룹 막대 그래프)
+3. **agent_performance.png**: 에이전트별 성능 비교
+4. **model_response_time.png**: 모델별 평균 응답시간 (에러바 포함)
+5. **algorithm_detection_overall.png**: 알고리즘별 탐지율 (전체 모델 통합)
+6. **model_agent_heatmap.png**: 모델-에이전트 조합별 성능 히트맵
+
+### 개별 분석 도구 (레거시)
+
+기존 개별 분석 도구들도 계속 사용 가능합니다:
+
+```bash
+# 모델별 성능 비교 (구버전)
+python analyze_results.py benchmark_results.json --compare-models
+
+# 알고리즘 탐지 분석
+python analyze_algorithm_detection.py --file benchmark_results.json
+
+# Precision/Recall 상세 분석
+python analyze_precision_recall.py --file benchmark_results.json
+
+# 에이전트별 성능 시각화
+python visualize_agent_performance.py benchmark_results.json --all
+
+# 응답시간 시각화
+python visualize_response_time.py benchmark_results.json --all
+
+# F1 Score 시각화
+python visualize_f1_score.py --file benchmark_results.json
 ```
 
-### 3. 양자 취약 알고리즘 유형별 분석
-
-```python
-# 양자 취약 알고리즘 유형별 분석
-python analyze_results.py --quantum-vulnerable-analysis
-
-# 출력 예시:
-# Quantum-Vulnerable Algorithm Detection Rates
-# ============================================
-# RSA:              95% detection rate
-# ECC:              88% detection rate
-# Korean Algorithms: 76% detection rate
-# Hash Functions:    82% detection rate
-```
+**⚠️ 권장사항**: 새로운 `analyze_and_visualize.py` 도구를 사용하는 것을 권장합니다.
+모든 분석 기능이 통합되어 있으며, 일관된 결과 형식과 더 나은 사용성을 제공합니다.
 
 ## 📁 프로젝트 구조
 
@@ -246,7 +269,9 @@ AI--Benchmark/
 ├── results/                   # 테스트 결과들
 ├── test_*.py                 # 개별 테스트 스크립트들
 ├── run_benchmark.py          # 메인 벤치마크 실행기
-├── analyze_results.py        # 결과 분석 도구
+├── analyze_and_visualize.py  # 통합 분석 및 시각화 도구 (권장)
+├── analyze_*.py              # 개별 분석 도구들 (레거시)
+├── visualize_*.py            # 개별 시각화 도구들 (레거시)
 └── CLAUDE.md                 # 이 파일
 ```
 

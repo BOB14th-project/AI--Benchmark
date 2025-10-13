@@ -1,0 +1,222 @@
+{
+  "application": {
+    "name": "SecurePay Mobile",
+    "version": "5.2.1",
+    "platform": "Android/iOS",
+    "build": "20241220-prod"
+  },
+  "security_configuration": {
+    "encryption": {
+      "transaction_data": {
+        "algorithm": "add-rotate-xor-cipher",
+        "key_size": 128,
+        "mode": "GCM",
+        "rounds": 24,
+        "rotation_constants": [9, 5, 3],
+        "nonce_generation": "secure-random",
+        "tag_length": 128,
+        "key_derivation": {
+          "function": "HKDF",
+          "hash": "SHA-256",
+          "info": "transaction-encryption-v2",
+          "salt_length": 32
+        }
+      },
+      "local_storage": {
+        "algorithm": "128-bit-block-cipher",
+        "mode": "CBC",
+        "key_size": 128,
+        "iv_generation": "random",
+        "padding": "PKCS7",
+        "secure_enclave": true
+      },
+      "pin_protection": {
+        "algorithm": "involution-based-cipher",
+        "rounds": 12,
+        "block_size": 128,
+        "key_stretching": {
+          "function": "PBKDF2",
+          "iterations": 200000,
+          "hash": "SHA-256"
+        }
+      }
+    },
+    "hashing": {
+      "password": {
+        "algorithm": "lightweight-secure-hash-512",
+        "output_bits": 512,
+        "salt_length": 32,
+        "pepper": true
+      },
+      "integrity_check": {
+        "algorithm": "message-digest-160",
+        "encoding": "hex",
+        "verify_on_launch": true
+      },
+      "api_signature": {
+        "algorithm": "HMAC-SHA256",
+        "key_rotation": true,
+        "rotation_interval": 86400
+      }
+    },
+    "digital_signature": {
+      "transaction_signing": {
+        "algorithm": "korean-elliptic-curve-signature",
+        "curve": "secp256k1",
+        "hash_function": "SHA-256",
+        "deterministic_nonce": true,
+        "low_s_normalization": true
+      },
+      "certificate_validation": {
+        "trusted_roots": [
+          "korean-payment-root-ca",
+          "korean-financial-ca",
+          "mobile-payment-ca"
+        ],
+        "revocation_check": "OCSP",
+        "ocsp_stapling": true
+      }
+    },
+    "network_security": {
+      "tls": {
+        "minimum_version": "TLSv1.2",
+        "preferred_version": "TLSv1.3",
+        "cipher_suites": [
+          "TLS_ECDHE_ECDSA_WITH_ARX_128_GCM_SHA256",
+          "TLS_ECDHE_RSA_WITH_LIGHTWEIGHT_BLOCK_CIPHER_128_GCM_SHA256",
+          "TLS_ECDHE_ECDSA_WITH_SUBSTITUTION_NETWORK_256_GCM_SHA384",
+          "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
+        ],
+        "signature_algorithms": [
+          "ecdsa_secp256r1_sha256",
+          "rsa_pss_rsae_sha256",
+          "ec_digital_signature_sha256"
+        ],
+        "supported_groups": [
+          "secp256r1",
+          "secp384r1",
+          "x25519"
+        ],
+        "certificate_pinning": {
+          "enabled": true,
+          "backup_pins": 2,
+          "pin_update_url": "https://api.securepay.kr/cert-pins"
+        }
+      },
+      "api_endpoint": {
+        "base_url": "https://api.securepay.kr",
+        "require_mutual_tls": true,
+        "client_certificate": {
+          "storage": "secure-enclave",
+          "algorithm": "ECDSA",
+          "curve": "secp256r1"
+        }
+      }
+    },
+    "key_management": {
+      "master_key": {
+        "storage": "hardware-backed-keystore",
+        "algorithm": "AES",
+        "size": 256,
+        "attestation_required": true
+      },
+      "session_keys": {
+        "generation": "secure-random",
+        "lifetime": 3600,
+        "rotation_enabled": true
+      },
+      "backup_keys": {
+        "encrypted_with": "user-pin-derived-key",
+        "algorithm": "arx-256-gcm",
+        "cloud_backup": false
+      }
+    },
+    "biometric_authentication": {
+      "enabled": true,
+      "types": ["fingerprint", "face", "iris"],
+      "crypto_operation": "signature",
+      "key_protection": "strongbox",
+      "fallback": "pin"
+    }
+  },
+  "logging": {
+    "security_events": {
+      "enabled": true,
+      "level": "INFO",
+      "log_crypto_operations": true,
+      "log_tls_handshake": true,
+      "log_signature_verification": true,
+      "pii_redaction": true
+    },
+    "destinations": [
+      {
+        "type": "local",
+        "path": "/data/logs/security.log",
+        "max_size": "10MB",
+        "rotation": true,
+        "encryption": {
+          "enabled": true,
+          "algorithm": "lightweight-cipher-cbc",
+          "key_source": "device-master-key"
+        }
+      },
+      {
+        "type": "remote",
+        "endpoint": "https://logs.securepay.kr/ingest",
+        "protocol": "HTTPS",
+        "batch_size": 100,
+        "encryption": {
+          "tls_only": true,
+          "minimum_tls": "TLSv1.2"
+        }
+      }
+    ]
+  },
+  "compliance": {
+    "standards": [
+      "Korean Financial Security Standards",
+      "PCI DSS v4.0",
+      "Payment Services Directive 2 (PSD2)",
+      "Korean Personal Information Protection Act"
+    ],
+    "approved_algorithms": {
+      "block_ciphers": [
+        "128-bit-arx-cipher",
+        "128-bit-substitution-permutation-network",
+        "64-bit-lightweight-cipher"
+      ],
+      "hash_functions": [
+        "160-bit-message-digest",
+        "512-bit-lightweight-secure-hash",
+        "SHA-256"
+      ],
+      "signature_schemes": [
+        "korean-elliptic-curve-digital-signature",
+        "ecdsa-secp256k1",
+        "rsa-pss-2048"
+      ]
+    },
+    "audit": {
+      "enabled": true,
+      "crypto_inventory": true,
+      "weak_crypto_detection": true,
+      "report_interval": "monthly"
+    }
+  },
+  "runtime_security": {
+    "anti_tampering": {
+      "root_detection": true,
+      "debugger_detection": true,
+      "emulator_detection": true,
+      "integrity_check": {
+        "algorithm": "lightweight-secure-hash",
+        "frequency": "on-launch"
+      }
+    },
+    "secure_communication": {
+      "prevent_mitm": true,
+      "certificate_transparency": true,
+      "public_key_pinning": true
+    }
+  }
+}

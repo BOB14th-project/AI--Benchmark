@@ -1,0 +1,130 @@
+Disassembly of hybrid_cipher_engine.o:
+
+0000000000000000 <dual_layer_encryption>:
+   0:   f3 0f 1e fa             endbr64
+   4:   55                      push   %rbp
+   5:   48 89 e5                mov    %rsp,%rbp
+   8:   48 83 ec 60             sub    $0x60,%rsp
+   c:   48 89 7d a8             mov    %rdi,-0x58(%rbp)   # input buffer
+  10:   48 89 75 a0             mov    %rsi,-0x60(%rbp)   # output buffer
+  14:   48 89 55 98             mov    %rdx,-0x68(%rbp)   # key1 (first layer)
+  18:   48 89 4d 90             mov    %rcx,-0x70(%rbp)   # key2 (second layer)
+
+; First layer: Feistel-based 128-bit block cipher
+000000000000001c <first_layer_feistel>:
+  1c:   48 8b 45 a8             mov    -0x58(%rbp),%rax
+  20:   8b 00                   mov    (%rax),%eax
+  22:   89 45 f0                mov    %eax,-0x10(%rbp)   # L0
+  25:   48 8b 45 a8             mov    -0x58(%rbp),%rax
+  29:   8b 40 04                mov    0x4(%rax),%eax
+  2c:   89 45 ec                mov    %eax,-0x14(%rbp)   # R0
+  2f:   48 8b 45 a8             mov    -0x58(%rbp),%rax
+  33:   8b 40 08                mov    0x8(%rax),%eax
+  36:   89 45 e8                mov    %eax,-0x18(%rbp)   # L1
+  39:   48 8b 45 a8             mov    -0x58(%rbp),%rax
+  3d:   8b 40 0c                mov    0xc(%rax),%eax
+  40:   89 45 e4                mov    %eax,-0x1c(%rbp)   # R1
+
+  43:   c7 45 fc 00 00 00 00    movl   $0x0,-0x4(%rbp)    # round = 0
+
+000000000000004a <feistel_rounds_16>:
+  4a:   8b 45 fc                mov    -0x4(%rbp),%eax
+  4d:   48 8b 55 98             mov    -0x68(%rbp),%rdx
+  51:   48 98                   cltq
+  53:   48 c1 e0 02             shl    $0x2,%rax
+  57:   48 01 d0                add    %rdx,%rax
+  5a:   8b 00                   mov    (%rax),%eax        # round_key[i]
+  5c:   89 45 e0                mov    %eax,-0x20(%rbp)
+
+  5f:   8b 45 ec                mov    -0x14(%rbp),%eax
+  62:   c1 c0 08                rol    $0x8,%eax          # G-function rotation
+  65:   31 45 e0                xor    %eax,-0x20(%rbp)
+  68:   8b 45 e0                mov    -0x20(%rbp),%eax
+  6b:   31 45 f0                xor    %eax,-0x10(%rbp)   # L = L ^ F(R, K)
+
+  6e:   8b 45 f0                mov    -0x10(%rbp),%eax   # Swap L and R
+  71:   89 45 dc                mov    %eax,-0x24(%rbp)
+  74:   8b 45 ec                mov    -0x14(%rbp),%eax
+  77:   89 45 f0                mov    %eax,-0x10(%rbp)
+  7a:   8b 45 dc                mov    -0x24(%rbp),%eax
+  7d:   89 45 ec                mov    %eax,-0x14(%rbp)
+
+  80:   83 45 fc 01             addl   $0x1,-0x4(%rbp)
+  84:   83 7d fc 10             cmpl   $0x10,-0x4(%rbp)   # 16 rounds
+  88:   7c c0                   jl     4a <feistel_rounds_16>
+
+; Store first layer output to intermediate buffer
+000000000000008a <store_intermediate>:
+  8a:   8b 45 f0                mov    -0x10(%rbp),%eax
+  8d:   89 45 d8                mov    %eax,-0x28(%rbp)
+  90:   8b 45 ec                mov    -0x14(%rbp),%eax
+  93:   89 45 d4                mov    %eax,-0x2c(%rbp)
+  96:   8b 45 e8                mov    -0x18(%rbp),%eax
+  99:   89 45 d0                mov    %eax,-0x30(%rbp)
+  9c:   8b 45 e4                mov    -0x1c(%rbp),%eax
+  9f:   89 45 cc                mov    %eax,-0x34(%rbp)
+
+; Second layer: SPN-based 128-bit block cipher
+00000000000000a2 <second_layer_spn>:
+  a2:   8b 45 d8                mov    -0x28(%rbp),%eax
+  a5:   89 45 c8                mov    %eax,-0x38(%rbp)   # State[0]
+  a8:   8b 45 d4                mov    -0x2c(%rbp),%eax
+  ab:   89 45 c4                mov    %eax,-0x3c(%rbp)   # State[1]
+  ae:   8b 45 d0                mov    -0x30(%rbp),%eax
+  b1:   89 45 c0                mov    %eax,-0x40(%rbp)   # State[2]
+  b4:   8b 45 cc                mov    -0x34(%rbp),%eax
+  b7:   89 45 bc                mov    %eax,-0x44(%rbp)   # State[3]
+
+  ba:   c7 45 fc 00 00 00 00    movl   $0x0,-0x4(%rbp)    # round = 0
+
+00000000000000c1 <spn_rounds_12>:
+  c1:   8b 45 fc                mov    -0x4(%rbp),%eax
+  c4:   48 8b 55 90             mov    -0x70(%rbp),%rdx
+  c8:   48 98                   cltq
+  ca:   48 c1 e0 02             shl    $0x2,%rax
+  ce:   48 01 d0                add    %rdx,%rax
+  d1:   8b 00                   mov    (%rax),%eax
+  d3:   31 45 c8                xor    %eax,-0x38(%rbp)   # Key addition
+
+  d6:   8b 45 c8                mov    -0x38(%rbp),%eax
+  d9:   25 ff 00 00 00          and    $0xff,%eax         # S-box layer
+  de:   48 8d 15 00 00 00 00    lea    0x0(%rip),%rdx     # S-box table
+  e5:   48 98                   cltq
+  e7:   0f b6 04 02             movzbl (%rdx,%rax,1),%eax
+  eb:   89 45 b8                mov    %eax,-0x48(%rbp)
+
+  ee:   8b 45 c8                mov    -0x38(%rbp),%eax   # Involution layer
+  f1:   c1 e0 10                shl    $0x10,%eax
+  f4:   31 45 b8                xor    %eax,-0x48(%rbp)
+
+  f7:   8b 45 c4                mov    -0x3c(%rbp),%eax   # Diffusion layer
+  fa:   31 45 b8                xor    %eax,-0x48(%rbp)
+  fd:   8b 45 c0                mov    -0x40(%rbp),%eax
+ 100:   31 45 b8                xor    %eax,-0x48(%rbp)
+ 103:   8b 45 bc                mov    -0x44(%rbp),%eax
+ 106:   31 45 b8                xor    %eax,-0x48(%rbp)
+
+ 109:   8b 45 b8                mov    -0x48(%rbp),%eax
+ 10c:   89 45 c8                mov    %eax,-0x38(%rbp)
+
+ 10f:   83 45 fc 01             addl   $0x1,-0x4(%rbp)
+ 113:   83 7d fc 0c             cmpl   $0xc,-0x4(%rbp)    # 12 rounds
+ 117:   7c a8                   jl     c1 <spn_rounds_12>
+
+; Final output
+0000000000000119 <finalize_dual_layer>:
+ 119:   48 8b 45 a0             mov    -0x60(%rbp),%rax
+ 11d:   8b 55 c8                mov    -0x38(%rbp),%edx
+ 120:   89 10                   mov    %edx,(%rax)
+ 122:   48 8b 45 a0             mov    -0x60(%rbp),%rax
+ 126:   8b 55 c4                mov    -0x3c(%rbp),%edx
+ 129:   89 50 04                mov    %edx,0x4(%rax)
+ 12c:   48 8b 45 a0             mov    -0x60(%rbp),%rax
+ 130:   8b 55 c0                mov    -0x40(%rbp),%edx
+ 133:   89 50 08                mov    %edx,0x8(%rax)
+ 136:   48 8b 45 a0             mov    -0x60(%rbp),%rax
+ 13a:   8b 55 bc                mov    -0x44(%rbp),%edx
+ 13d:   89 50 0c                mov    %edx,0xc(%rax)
+
+ 140:   c9                      leaveq
+ 141:   c3                      retq

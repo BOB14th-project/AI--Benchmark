@@ -1,0 +1,79 @@
+Binary Dump of elliptic_curve_signature.bin:
+
+00000000: 4563 6375 7276 6520 5369 676e 6174 7572  Elliptic Signatur
+00000010: 6500 0000 0000 0000 5548 89e5 4883 ec40  e.......UH..H..@
+00000020: 4889 7df8 4889 75f0 4889 55e8 488b 45f8  H.}.H.u.H.U.H.E.
+
+; EC point structure and field operations
+00000030: 488b 00 4889 45e0 488b 45f8 488b 4008  H...H.E.H.E.H.@.
+00000040: 4889 45d8 488b 45f0 488b 00 4889 45d0  H.E.H.E.H...H.E.
+
+; Elliptic curve point addition
+00000050: 488b 45e0 488b 55d8 4829 d048 89c1 4889  H.E.H.U.H).H..H.
+00000060: 4dc0 488b 45e0 480f af45 d0 4899 48f7  M.H.E.H..E.H..H.
+00000070: f948 89d0 4889 45b8 488b 45d8 488b 55d0  .H..H.E.H.E.H.U.
+
+; Lambda calculation: λ = (y2 - y1) / (x2 - x1) mod p
+00000080: 4829 d048 89c1 4889 4db0 488b 45b8 480f  H).H..H.M.H.E.H.
+00000090: af45 b048 9948 f7f9 4889 d048 8945 a8 48  .E.H..H..H..H.E.H
+
+; Point doubling: λ = (3x^2 + a) / (2y) mod p  
+000000a0: 8b45 a848 89c2 480f afc0 4889 c148 89c8  .E.H..H...H..H..
+000000b0: 480f afc8 4801 c848 83c0 0348 8b4d d848  H...H..H...H.M.H
+000000c0: 01c9 4889 ca48 99 48f7 f948 89d0 4889 45  ..H..H..H..H..H.E
+
+; x3 = λ^2 - x1 - x2 mod p
+000000d0: a048 8b45 a848 0faf c048 2b45 e048 2b45  .H.E.H...H+E.H+E
+000000e0: d048 89c2 488b 4de8 4889 d048 99 48f7 f9  .H..H.M.H..H..H..
+000000f0: 4889 d048 8945 9848 8b45 e048 2b45 9848  H..H.E.H.E.H+E.H
+
+; y3 = λ(x1 - x3) - y1 mod p
+00000100: 89c2 480f af45 a848 2b45 d848 89c2 488b  ..H..E.H+E.H..H.
+00000110: 4de8 4889 d048 99 48f7 f948 89d0 4889 45  M.H..H..H..H..H.E
+00000120: 9048 8b45 9848 8b55 9089 1048 8b45 98c9  .H.E.H.U...H.E..
+
+; Scalar multiplication: Q = k * P
+00000130: c355 4889 e548 83ec 6048 897d f848 8975  .UH..H..`H.}.H.u
+00000140: f048 8955 e848 c745 fc00 0000 0048 8b45  .H.U.H.E.....H.E
+00000150: e848 8b00 4889 45c0 488b 45e8 488b 4008  .H...H.E.H.E.H.@.
+
+; Double-and-add algorithm for scalar multiplication
+00000160: 4889 45b8 488b 45f0 f600 0174 2948 8b7d  H.E.H.E....t)H.}
+00000170: c048 8b75 b848 8b55 e8e8 0000 0000 4889  .H.u.H.U......H.
+00000180: 45c0 488b 45e8 488b 55b8 4889 5008 488b  E.H.E.H.U.H.P.H.
+
+; Point doubling in loop
+00000190: 7dc0 488b 75c0 488b 55e8 e800 0000 0048  }.H.u.H.U......H
+000001a0: 8945 c048 8b45 e848 8b55 c048 8950 0848  .E.H.E.H.U.H.P.H
+000001b0: 8b45 f048 d1e8 4889 45f0 4883 7df0 0075  .E.H..H.E.H.}..u
+
+; Signature generation with EC operations
+000001c0: b755 4889 e548 83ec 8048 897d f848 8975  .UH..H...H.}.H.u
+000001d0: f048 8955 e8e8 0000 0000 4889 45e0 488b  .H.U......H.E.H.
+000001e0: 45e0 488b 7de0 488b 75f8 488b 55e8 e800  E.H.}.H.u.H.U...
+
+; Compute r = (k*G).x mod n
+000001f0: 0000 0048 8b00 488b 4de8 4899 48f7 f948  ...H...H.M.H..H.
+00000200: 89d0 4889 45d8 488b 45f8 488b 0048 8b4d  ..H.E.H.E.H...H.M
+00000210: e048 0faf c148 0345 d848 8b4d e848 99 48  .H...H.E.H.M.H..H
+
+; Compute s = k^-1 * (h + r*d) mod n  
+00000220: f7f9 4889 d048 8945 d048 8b45 d848 8b55  ..H..H.E.H.E.H.U
+00000230: d089 1048 8b45 d0c9 c355 4889 e548 83ec  ...H.E...UH..H..
+00000240: 8048 897d f848 8975 f048 8955 e848 8b45  .H.}.H.u.H.U.H.E
+
+; Signature verification
+00000250: f048 8b00 4889 45e0 488b 45f0 488b 4008  .H...H.E.H.E.H.@.
+00000260: 4889 45d8 488b 45e0 488b 55d8 4829 d048  H.E.H.E.H.U.H).H
+00000270: 8b4d f848 99 48f7 f948 89d0 4889 45d0  .M.H..H..H..H.E.
+
+; Compute u1 = h * s^-1 mod n and u2 = r * s^-1 mod n
+00000280: 488b 45f8 488b 0048 0faf 45d0 488b 4de8  H.E.H...H.E.H.M.
+00000290: 4899 48f7 f948 89d0 4889 45c8 488b 45e0  H..H..H..H.E.H.E
+000002a0: 480f af45 d048 8b4d e848 9948 f7f9 4889  H..E.H.M.H..H..H.
+
+; Verify: (u1*G + u2*Y).x mod n == r
+000002b0: d048 8945 c048 8b7d c848 8b75 c0e8 0000  .H.E.H.}.H.u....
+000002c0: 0000 488b 0048 8b4d e848 9948 f7f9 488b  ..H...H.M.H..H..H.
+000002d0: 45e0 4839 c274 0548 31c0 eb05 48c7 c001  E.H9.t.H1...H...
+000002e0: 0000 00c9 c300 0000 0000 0000 0000 0000  ................

@@ -150,18 +150,33 @@ python benchmark_runner.py --parallel --limit 3
 python benchmark_runner.py
 ```
 
-### 결과 분석
+### 결과 분석 (통합 도구)
 
 ```bash
-# 모든 분석 실행
-python analyze_results.py results/benchmark_results_*.json --all
+# 전체 분석 및 시각화 (권장)
+python analyze_and_visualize.py benchmark_results.json
 
-# 모델별 성능 비교
-python analyze_results.py results/benchmark_results_*.json --compare-models
+# 출력 디렉토리 지정
+python analyze_and_visualize.py benchmark_results.json --output-dir my_results
 
-# 시각화 생성
-python analyze_results.py results/benchmark_results_*.json --visualize
+# 최소 테스트 수 설정 (통계적 신뢰도)
+python analyze_and_visualize.py benchmark_results.json --min-tests 20
+
+# 텍스트 리포트만
+python analyze_and_visualize.py benchmark_results.json --text-only
+
+# 시각화만
+python analyze_and_visualize.py benchmark_results.json --visualize-only
 ```
+
+**생성되는 결과물:**
+- 📄 `COMPREHENSIVE_REPORT.txt` - 종합 텍스트 보고서
+- 📊 `model_f1_comparison.png` - 모델별 F1 Score 비교
+- 📊 `precision_recall_f1.png` - Precision/Recall/F1 비교
+- 📊 `agent_performance.png` - 에이전트별 성능
+- 📊 `model_response_time.png` - 모델별 응답시간
+- 📊 `algorithm_detection_overall.png` - 알고리즘 탐지율
+- 📊 `model_agent_heatmap.png` - 모델-에이전트 히트맵
 
 ### 단일 파일 테스트
 
@@ -200,7 +215,9 @@ AI--Benchmark/
 ├── 📋 README.md                      # 이 파일
 ├── 📄 CLAUDE.md                      # 프로젝트 상세 문서
 ├── ⚙️ benchmark_runner.py            # 메인 벤치마크 실행기
-├── 📊 analyze_results.py             # 결과 분석 도구
+├── 📊 analyze_and_visualize.py       # 통합 분석/시각화 도구 (권장)
+├── 📊 analyze_*.py                   # 개별 분석 도구들 (레거시)
+├── 📊 visualize_*.py                 # 개별 시각화 도구들 (레거시)
 ├── 🧪 test_benchmark_system.py       # 시스템 테스트
 ├── 📄 requirements.txt               # 의존성 목록
 │

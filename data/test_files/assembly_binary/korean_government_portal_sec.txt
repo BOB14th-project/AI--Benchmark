@@ -1,0 +1,109 @@
+Disassembly of government_security_module.o:
+
+0000000000000000 <substitution_permutation_cipher>:
+   0:   55                      push   %rbp
+   1:   48 89 e5                mov    %rsp,%rbp
+   4:   48 83 ec 40             sub    $0x40,%rsp
+   8:   48 89 7d f8             mov    %rdi,-0x8(%rbp)    # input block
+   c:   48 89 75 f0             mov    %rsi,-0x10(%rbp)   # output block
+  10:   48 89 55 e8             mov    %rdx,-0x18(%rbp)   # key schedule
+  14:   c7 45 fc 00 00 00 00    movl   $0x0,-0x4(%rbp)    # round counter
+
+0000000000000018 <substitution_layer>:
+  18:   8b 45 fc                mov    -0x4(%rbp),%eax
+  1b:   48 63 d0                movslq %eax,%rdx
+  1e:   48 8b 45 f8             mov    -0x8(%rbp),%rax
+  22:   48 01 d0                add    %rdx,%rax
+  25:   0f b6 00                movzbl (%rax),%eax
+  28:   48 8d 15 00 00 00 00    lea    0x0(%rip),%rdx     # S-box table reference
+  2f:   48 98                   cltq
+  31:   0f b6 04 02             movzbl (%rdx,%rax,1),%eax
+  35:   89 45 dc                mov    %eax,-0x24(%rbp)
+
+0000000000000038 <involution_property>:
+  38:   8b 45 dc                mov    -0x24(%rbp),%eax
+  3b:   c1 e0 10                shl    $0x10,%eax          # Involution transformation
+  3e:   8b 55 dc                mov    -0x24(%rbp),%edx
+  41:   31 d0                   xor    %edx,%eax
+  43:   89 45 dc                mov    %eax,-0x24(%rbp)
+
+0000000000000046 <diffusion_layer>:
+  46:   48 8b 45 f8             mov    -0x8(%rbp),%rax
+  4a:   8b 10                   mov    (%rax),%edx
+  4c:   48 8b 45 f8             mov    -0x8(%rbp),%rax
+  50:   8b 40 04                mov    0x4(%rax),%eax
+  53:   31 c2                   xor    %eax,%edx
+  55:   48 8b 45 f8             mov    -0x8(%rbp),%rax
+  59:   8b 40 08                mov    0x8(%rax),%eax
+  5c:   31 c2                   xor    %eax,%edx
+  5e:   48 8b 45 f8             mov    -0x8(%rbp),%rax
+  62:   8b 40 0c                mov    0xc(%rax),%eax
+  65:   31 c2                   xor    %eax,%edx           # MDS-like diffusion
+  67:   89 55 d8                mov    %edx,-0x28(%rbp)
+
+000000000000006a <key_addition>:
+  6a:   8b 45 fc                mov    -0x4(%rbp),%eax
+  6d:   48 8b 55 e8             mov    -0x18(%rbp),%rdx
+  71:   48 98                   cltq
+  73:   48 c1 e0 04             shl    $0x4,%rax
+  77:   48 01 d0                add    %rdx,%rax
+  7a:   8b 00                   mov    (%rax),%eax
+  7c:   31 45 d8                xor    %eax,-0x28(%rbp)    # Round key XOR
+
+000000000000007f <rotation_substitution>:
+  7f:   8b 45 d8                mov    -0x28(%rbp),%eax
+  82:   c1 c0 08                rol    $0x8,%eax           # 8-bit rotation
+  85:   89 45 d4                mov    %eax,-0x2c(%rbp)
+  88:   8b 45 d4                mov    -0x2c(%rbp),%eax
+  8b:   c1 c8 10                ror    $0x10,%eax          # 16-bit rotation
+  8e:   31 45 d4                xor    %eax,-0x2c(%rbp)
+
+0000000000000091 <store_intermediate>:
+  91:   8b 45 fc                mov    -0x4(%rbp),%eax
+  94:   48 63 d0                movslq %eax,%rdx
+  97:   48 8b 45 f0             mov    -0x10(%rbp),%rax
+  9b:   48 01 d0                add    %rdx,%rax
+  9e:   8b 55 d4                mov    -0x2c(%rbp),%edx
+  a1:   88 10                   mov    %dl,(%rax)
+
+00000000000000a3 <round_increment>:
+  a3:   83 45 fc 01             addl   $0x1,-0x4(%rbp)
+  a7:   83 7d fc 0c             cmpl   $0xc,-0x4(%rbp)     # 12 rounds for 128-bit
+  ab:   0f 8c 67 ff ff ff       jl     18 <substitution_layer>
+
+00000000000000b1 <finalize_output>:
+  b1:   48 8b 45 f0             mov    -0x10(%rbp),%rax
+  b5:   8b 10                   mov    (%rax),%edx
+  b7:   48 8b 45 e8             mov    -0x18(%rbp),%rax
+  bb:   8b 80 c0 00 00 00       mov    0xc0(%rax),%eax     # Final round key
+  c1:   31 c2                   xor    %eax,%edx
+  c3:   48 8b 45 f0             mov    -0x10(%rbp),%rax
+  c7:   89 10                   mov    %edx,(%rax)
+  c9:   c9                      leaveq
+  ca:   c3                      retq
+
+00000000000000cb <key_schedule_generator>:
+  cb:   55                      push   %rbp
+  cc:   48 89 e5                mov    %rsp,%rbp
+  cf:   48 89 7d f8             mov    %rdi,-0x8(%rbp)
+  d3:   48 89 75 f0             mov    %rsi,-0x10(%rbp)
+  d7:   c7 45 fc 00 00 00 00    movl   $0x0,-0x4(%rbp)
+
+00000000000000de <key_expansion_loop>:
+  de:   8b 45 fc                mov    -0x4(%rbp),%eax
+  e1:   48 8b 55 f8             mov    -0x8(%rbp),%rdx
+  e5:   48 98                   cltq
+  e7:   48 8b 04 c2             mov    (%rdx,%rax,8),%rax
+  eb:   48 ba 37 f3 6e 3c 99    movabs $0xe4e6dd789e3779b9,%rdx  # Constants
+  f2:   79 37 9e
+  f5:   48 31 d0                xor    %rdx,%rax
+  f8:   48 c1 c0 11             rol    $0x11,%rax          # Key rotation
+  fc:   8b 55 fc                mov    -0x4(%rbp),%edx
+  ff:   48 8b 4d f0             mov    -0x10(%rbp),%rcx
+ 103:   48 63 d2                movslq %edx,%rdx
+ 106:   48 89 04 d1             mov    %rax,(%rcx,%rdx,8)
+ 10a:   83 45 fc 01             addl   $0x1,-0x4(%rbp)
+ 10e:   83 7d fc 0c             cmpl   $0xc,-0x4(%rbp)
+ 112:   7e ca                   jle    de <key_expansion_loop>
+ 114:   5d                      pop    %rbp
+ 115:   c3                      retq

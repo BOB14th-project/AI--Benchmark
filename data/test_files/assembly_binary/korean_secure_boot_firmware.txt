@@ -1,0 +1,61 @@
+Disassembly of secure_boot_verifier.o:
+
+0000000000000000 <cipher_transform>:
+   0:   e92d4ff0        push    {r4, r5, r6, r7, r8, r9, r10, r11, lr}
+   4:   e24dd014        sub     sp, sp, #20
+   8:   e1a04000        mov     r4, r0          @ input block
+   c:   e1a05001        mov     r5, r1          @ output block  
+  10:   e1a06002        mov     r6, r2          @ key schedule
+  14:   e3a07000        mov     r7, #0          @ round counter
+
+0000000000000018 <substitution_layer>:
+  18:   e7d40007        ldrb    r0, [r4, r7]
+  1c:   e59f1200        ldr     r1, [pc, #512]  @ sbox_table
+  20:   e7d10000        ldrb    r0, [r1, r0]
+  24:   e7c50007        strb    r0, [r5, r7]
+  28:   e2877001        add     r7, r7, #1
+  2c:   e3570010        cmp     r7, #16
+  30:   3afffff8        bcc     18 <substitution_layer>
+
+0000000000000034 <diffusion_layer>:
+  34:   e1a08005        mov     r8, r5          @ state pointer
+  38:   e5980000        ldr     r0, [r8]
+  3c:   e5981004        ldr     r1, [r8, #4]
+  40:   e5982008        ldr     r2, [r8, #8]
+  44:   e598300c        ldr     r3, [r8, #12]
+  48:   e0209001        eor     r9, r0, r1      @ diffusion matrix
+  4c:   e029a002        eor     r10, r9, r2
+  50:   e02ab003        eor     r11, r10, r3
+  54:   e588b000        str     r11, [r8]
+  58:   e5889004        str     r9, [r8, #4]
+  5c:   e588a008        str     r10, [r8, #8]
+  60:   e588000c        str     r0, [r8, #12]
+
+0000000000000064 <involution_transform>:
+  64:   e5950000        ldr     r0, [r5]
+  68:   e59f1198        ldr     r1, [pc, #408]  @ inv_matrix
+  6c:   e0010190        mul     r1, r0, r1
+  70:   e1a01801        lsl     r1, r1, #16
+  74:   e1a01821        lsr     r1, r1, #16
+  78:   e5851000        str     r1, [r5]
+  7c:   e2977001        adds    r7, r7, #1
+  80:   e357000c        cmp     r7, #12         @ 12 rounds
+  84:   3affffd3        bcc     18 <substitution_layer>
+
+0000000000000088 <final_round>:
+  88:   e5950000        ldr     r0, [r5]
+  8c:   e1a00420        lsr     r0, r0, #8
+  90:   e1a00800        lsl     r0, r0, #16
+  94:   e1a00820        lsr     r0, r0, #16
+  98:   e5850000        str     r0, [r5]
+  9c:   e28dd014        add     sp, sp, #20
+  a0:   e8bd8ff0        pop     {r4, r5, r6, r7, r8, r9, r10, r11, pc}
+
+00000000000000a4 <key_mixing>:
+  a4:   e5960000        ldr     r0, [r6]        @ round key
+  a8:   e5950000        ldr     r1, [r5]        @ state
+  ac:   e0210000        eor     r1, r1, r0
+  b0:   e5851000        str     r1, [r5]
+  b4:   e2866010        add     r6, r6, #16     @ next round key
+  b8:   e12fff1e        bx      lr
+

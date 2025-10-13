@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Enterprise SSO Authentication Server Configuration -->
+<!-- Version: 3.1.5 -->
+<!-- Classification: Confidential -->
+
+<AuthenticationServerConfiguration>
+    <ServerInfo>
+        <Name>Enterprise SSO Server</Name>
+        <Version>3.1.5</Version>
+        <Environment>Production</Environment>
+        <Location>kr-central-datacenter-1</Location>
+    </ServerInfo>
+
+    <CryptographySettings>
+        <!-- Session Token Encryption -->
+        <SessionTokens>
+            <Enabled>true</Enabled>
+            <Algorithm>lightweight-block-cipher-64bit</Algorithm>
+            <KeySize>128</KeySize>
+            <BlockSize>64</BlockSize>
+            <Mode>CBC</Mode>
+            <Rounds>32</Rounds>
+            <Padding>PKCS7</Padding>
+            <IVGeneration>SecureRandom</IVGeneration>
+            <TokenLifetime>3600</TokenLifetime>
+            <RefreshEnabled>true</RefreshEnabled>
+        </SessionTokens>
+
+        <!-- User Credential Encryption -->
+        <CredentialStorage>
+            <Enabled>true</Enabled>
+            <Algorithm>arx-cipher-128bit</Algorithm>
+            <Mode>GCM</Mode>
+            <KeySize>128</KeySize>
+            <Rounds>24</Rounds>
+            <AuthenticationTagLength>128</AuthenticationTagLength>
+            <KeyDerivation>
+                <Function>PBKDF2</Function>
+                <Iterations>200000</Iterations>
+                <HashAlgorithm>SHA-256</HashAlgorithm>
+                <SaltLength>32</SaltLength>
+            </KeyDerivation>
+        </CredentialStorage>
+
+        <!-- Password Hashing -->
+        <PasswordHashing>
+            <Algorithm>lightweight-secure-hash-512</Algorithm>
+            <OutputSize>512</OutputSize>
+            <SaltLength>32</SaltLength>
+            <Pepper>true</Pepper>
+            <PepperRotation>true</PepperRotation>
+            <PepperRotationDays>90</PepperRotationDays>
+        </PasswordHashing>
+
+        <!-- API Token Signing -->
+        <APITokens>
+            <SigningEnabled>true</SigningEnabled>
+            <SigningAlgorithm>korean-digital-signature-standard</SigningAlgorithm>
+            <HashFunction>SHA-256</HashFunction>
+            <KeyType>discrete-logarithm</KeyType>
+            <KeySize>2048</KeySize>
+            <TokenFormat>JWT</TokenFormat>
+            <TokenLifetime>7200</TokenLifetime>
+        </APITokens>
+
+        <!-- Multi-Factor Authentication -->
+        <MFA>
+            <Enabled>true</Enabled>
+            <TOTPEnabled>true</TOTPEnabled>
+            <TOTPHashAlgorithm>SHA-256</TOTPHashAlgorithm>
+            <TOTPDigits>6</TOTPDigits>
+            <TOTPTimeStep>30</TOTPTimeStep>
+
+            <SMSEnabled>true</SMSEnabled>
+            <SMSCodeEncryption>lightweight-cipher-cbc</SMSCodeEncryption>
+
+            <PushEnabled>true</PushEnabled>
+            <PushEncryption>arx-128-gcm</PushEncryption>
+        </MFA>
+    </CryptographySettings>
+
+    <TLSConfiguration>
+        <MinimumVersion>TLSv1.2</MinimumVersion>
+        <MaximumVersion>TLSv1.3</MaximumVersion>
+
+        <CipherSuites>
+            <CipherSuite priority="1">TLS_ECDHE_ECDSA_WITH_LIGHTWEIGHT_CIPHER_64_CBC_SHA256</CipherSuite>
+            <CipherSuite priority="2">TLS_ECDHE_RSA_WITH_LIGHTWEIGHT_CIPHER_64_CBC_SHA256</CipherSuite>
+            <CipherSuite priority="3">TLS_ECDHE_ECDSA_WITH_ARX_128_GCM_SHA256</CipherSuite>
+            <CipherSuite priority="4">TLS_ECDHE_RSA_WITH_ARX_128_GCM_SHA256</CipherSuite>
+            <CipherSuite priority="5">TLS_ECDHE_ECDSA_WITH_FEISTEL_128_GCM_SHA256</CipherSuite>
+            <CipherSuite priority="6">TLS_DHE_RSA_WITH_SUBSTITUTION_NETWORK_128_SHA256</CipherSuite>
+        </CipherSuites>
+
+        <SignatureAlgorithms>
+            <Algorithm>ecdsa_secp256r1_sha256</Algorithm>
+            <Algorithm>rsa_pss_rsae_sha256</Algorithm>
+            <Algorithm>korean_discrete_log_signature_sha256</Algorithm>
+            <Algorithm>korean_ec_signature_sha256</Algorithm>
+        </SignatureAlgorithms>
+
+        <SupportedGroups>
+            <Group>secp256r1</Group>
+            <Group>secp384r1</Group>
+            <Group>secp521r1</Group>
+            <Group>x25519</Group>
+        </SupportedGroups>
+
+        <Certificates>
+            <ServerCertificate>/etc/sso/certs/server.crt</ServerCertificate>
+            <ServerKey>/etc/sso/private/server.key</ServerKey>
+            <CABundle>/etc/sso/certs/ca-bundle.pem</CABundle>
+            <ClientAuthRequired>false</ClientAuthRequired>
+            <CertificateTransparency>true</CertificateTransparency>
+        </Certificates>
+
+        <OCSP>
+            <Enabled>true</Enabled>
+            <StaplingEnabled>true</StaplingEnabled>
+            <ResponderURL>http://ocsp.enterprise.kr</ResponderURL>
+            <ResponderTimeout>5000</ResponderTimeout>
+        </OCSP>
+    </TLSConfiguration>
+
+    <SAML>
+        <Enabled>true</Enabled>
+        <Version>2.0</Version>
+
+        <Signing>
+            <SignAssertions>true</SignAssertions>
+            <SignResponses>true</SignResponses>
+            <SignatureAlgorithm>korean-elliptic-curve-signature</SignatureAlgorithm>
+            <SignatureCurve>secp256r1</SignatureCurve>
+            <DigestAlgorithm>SHA-256</DigestAlgorithm>
+        </Signing>
+
+        <Encryption>
+            <EncryptAssertions>true</EncryptAssertions>
+            <EncryptionAlgorithm>arx-cipher-128-gcm</EncryptionAlgorithm>
+            <KeyTransportAlgorithm>RSA-OAEP</KeyTransportAlgorithm>
+        </Encryption>
+
+        <Certificates>
+            <SigningCertificate>/etc/sso/saml/signing.crt</SigningCertificate>
+            <SigningKey>/etc/sso/saml/signing.key</SigningKey>
+            <EncryptionCertificate>/etc/sso/saml/encryption.crt</EncryptionCertificate>
+            <EncryptionKey>/etc/sso/saml/encryption.key</EncryptionKey>
+        </Certificates>
+    </SAML>
+
+    <OAuth2>
+        <Enabled>true</Enabled>
+
+        <TokenEncryption>
+            <AccessToken>
+                <Encrypted>true</Encrypted>
+                <Algorithm>lightweight-block-cipher-64-ctr</Algorithm>
+                <Lifetime>3600</Lifetime>
+            </AccessToken>
+
+            <RefreshToken>
+                <Encrypted>true</Encrypted>
+                <Algorithm>arx-128-gcm</Algorithm>
+                <Lifetime>2592000</Lifetime>
+            </RefreshToken>
+        </TokenEncryption>
+
+        <ClientAuthentication>
+            <Method>client_secret_jwt</Method>
+            <SigningAlgorithm>korean-digital-signature</SigningAlgorithm>
+            <HashAlgorithm>SHA-256</HashAlgorithm>
+        </ClientAuthentication>
+    </OAuth2>
+
+    <KeyManagement>
+        <MasterKey>
+            <Storage>HSM</Storage>
+            <Algorithm>substitution-permutation-network-256</Algorithm>
+            <Size>256</Size>
+            <RotationEnabled>true</RotationEnabled>
+            <RotationPeriodDays>180</RotationPeriodDays>
+        </MasterKey>
+
+        <SessionKeys>
+            <DerivationFunction>HKDF-SHA256</DerivationFunction>
+            <Lifetime>3600</Lifetime>
+            <RotationEnabled>true</RotationEnabled>
+        </SessionKeys>
+
+        <KeyBackup>
+            <Enabled>true</Enabled>
+            <BackupEncryption>involution-cipher-256-gcm</BackupEncryption>
+            <BackupLocation>/secure/key-backup</BackupLocation>
+        </KeyBackup>
+    </KeyManagement>
+
+    <DatabaseSecurity>
+        <ConnectionEncryption>true</ConnectionEncryption>
+        <ConnectionCipher>lightweight-cipher-cbc-sha256</ConnectionCipher>
+        <SSLMode>require</SSLMode>
+
+        <DataEncryption>
+            <Enabled>true</Enabled>
+            <Algorithm>feistel-cipher-128</Algorithm>
+            <Mode>XTS</Mode>
+            <SectorSize>512</SectorSize>
+        </DataEncryption>
+
+        <ColumnEncryption>
+            <Enabled>true</Enabled>
+            <SensitiveColumns>
+                <Column name="password_hash" algorithm="arx-128-gcm"/>
+                <Column name="mfa_secret" algorithm="lightweight-cipher-64-cbc"/>
+                <Column name="recovery_codes" algorithm="substitution-network-128-gcm"/>
+            </SensitiveColumns>
+        </ColumnEncryption>
+    </DatabaseSecurity>
+
+    <Logging>
+        <SecurityEvents>
+            <Enabled>true</Enabled>
+            <LogLevel>INFO</LogLevel>
+            <LogCryptoOperations>true</LogCryptoOperations>
+            <LogAuthenticationAttempts>true</LogAuthenticationAttempts>
+            <LogTokenGeneration>true</LogTokenGeneration>
+        </SecurityEvents>
+
+        <AuditTrail>
+            <Enabled>true</Enabled>
+            <SignLogs>true</SignLogs>
+            <SignatureAlgorithm>korean-ec-signature</SignatureAlgorithm>
+            <HashChain>true</HashChain>
+            <ChainHashAlgorithm>lightweight-secure-hash-256</ChainHashAlgorithm>
+        </AuditTrail>
+
+        <LogEncryption>
+            <Enabled>true</Enabled>
+            <Algorithm>feistel-cipher-cbc</Algorithm>
+            <KeyRotation>daily</KeyRotation>
+        </LogEncryption>
+
+        <Retention>
+            <AuditLogs>2555</AuditLogs>
+            <SecurityLogs>365</SecurityLogs>
+            <AccessLogs>90</AccessLogs>
+        </Retention>
+    </Logging>
+
+    <Compliance>
+        <Standards>
+            <Standard>Korean Authentication Standards</Standard>
+            <Standard>Personal Information Protection Act</Standard>
+            <Standard>ISO 27001</Standard>
+            <Standard>SOC 2 Type II</Standard>
+        </Standards>
+
+        <ApprovedAlgorithms>
+            <BlockCiphers>
+                <Cipher name="lightweight-block-cipher-64" keySize="128"/>
+                <Cipher name="arx-cipher-128" keySize="128,256"/>
+                <Cipher name="feistel-cipher-128" keySize="128"/>
+                <Cipher name="substitution-permutation-network" keySize="128,256"/>
+                <Cipher name="involution-cipher" keySize="256"/>
+            </BlockCiphers>
+
+            <HashFunctions>
+                <Hash name="lightweight-secure-hash" outputSize="256,512"/>
+                <Hash name="message-digest-160" outputSize="160"/>
+                <Hash name="SHA-256" outputSize="256"/>
+            </HashFunctions>
+
+            <SignatureSchemes>
+                <Signature name="korean-discrete-log-signature" keySize="2048,3072"/>
+                <Signature name="korean-elliptic-curve-signature" curves="secp256r1,secp384r1"/>
+            </SignatureSchemes>
+        </ApprovedAlgorithms>
+
+        <CryptoInventory>
+            <AutomatedScanning>true</AutomatedScanning>
+            <ScanFrequency>weekly</ScanFrequency>
+            <ReportWeakAlgorithms>true</ReportWeakAlgorithms>
+        </CryptoInventory>
+    </Compliance>
+</AuthenticationServerConfiguration>

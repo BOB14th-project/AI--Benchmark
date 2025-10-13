@@ -1,0 +1,204 @@
+# Government Portal Security Configuration
+# Ministry of Digital Infrastructure
+# Classification: Internal Use Only
+
+application:
+  name: "National Government Services Portal"
+  version: "3.2.1"
+  environment: "production"
+
+security:
+  encryption:
+    # Data-at-rest encryption configuration
+    storage:
+      algorithm: "128-bit-block-cipher-cbc"
+      key_size: 128
+      mode: "CBC"
+      padding: "PKCS7"
+      iv_generation: "secure-random"
+      key_derivation:
+        function: "PBKDF2"
+        iterations: 100000
+        hash: "SHA-256"
+        salt_length: 32
+
+    # Session encryption
+    session:
+      cipher: "128-bit-substitution-permutation-network"
+      key_rotation: true
+      rotation_interval: 3600  # seconds
+      rounds: 12
+
+    # File encryption for document management
+    documents:
+      algorithm: "involution-based-block-cipher"
+      block_size: 128
+      key_length: 256
+      operational_mode: "GCM"
+      authentication_tag_length: 128
+
+  hashing:
+    # Password hashing
+    passwords:
+      algorithm: "lightweight-secure-hash-512"
+      output_size: 512
+      salt_rounds: 15
+      memory_cost: 65536
+      parallelism: 4
+
+    # Document integrity verification
+    file_integrity:
+      algorithm: "message-digest-160"
+      chunk_size: 65536
+      encoding: "base64"
+
+    # API request signing
+    request_signing:
+      hash_function: "secure-hash-256"
+      hmac_enabled: true
+      signature_version: "v2"
+
+  certificates:
+    # TLS/SSL Certificate Configuration
+    server:
+      cert_path: "/etc/pki/tls/certs/gov-portal.crt"
+      key_path: "/etc/pki/tls/private/gov-portal.key"
+      key_algorithm: "RSA"
+      key_size: 2048
+      chain_path: "/etc/pki/tls/certs/gov-ca-chain.pem"
+
+    # Client Certificate Authentication
+    client_auth:
+      enabled: true
+      required: true
+      ca_bundle: "/etc/pki/tls/certs/gov-client-ca.pem"
+      verification_depth: 3
+      revocation_check: "OCSP"
+
+  tls:
+    # TLS Protocol Configuration
+    min_version: "TLSv1.2"
+    max_version: "TLSv1.3"
+
+    # Cipher Suites - Priority Order
+    cipher_suites:
+      - "TLS_ECDHE_ECDSA_WITH_NATIONAL_BLOCK_CIPHER_128_GCM_SHA256"
+      - "TLS_ECDHE_RSA_WITH_NATIONAL_BLOCK_CIPHER_128_GCM_SHA256"
+      - "TLS_ECDHE_ECDSA_WITH_NATIONAL_BLOCK_CIPHER_256_GCM_SHA384"
+      - "TLS_ECDHE_RSA_WITH_NATIONAL_BLOCK_CIPHER_256_GCM_SHA384"
+      - "TLS_DHE_RSA_WITH_SUBSTITUTION_NETWORK_128_SHA256"
+      - "TLS_DHE_RSA_WITH_SUBSTITUTION_NETWORK_256_SHA384"
+
+    # Supported Signature Algorithms
+    signature_algorithms:
+      - "ecdsa_secp256r1_sha256"
+      - "rsa_pss_rsae_sha256"
+      - "discrete_log_signature_sha256"
+      - "elliptic_curve_signature_sha256"
+
+    # Elliptic Curve Configuration
+    supported_curves:
+      - "secp256r1"
+      - "secp384r1"
+      - "secp521r1"
+      - "brainpoolP256r1"
+
+    # DH Parameters
+    dh_param_size: 2048
+    dh_param_file: "/etc/ssl/dhparam.pem"
+
+  digital_signatures:
+    # Document signing configuration
+    signing:
+      algorithm: "korean-digital-signature-standard"
+      hash_function: "SHA-256"
+      key_type: "discrete-logarithm"
+      key_size: 2048
+      signature_format: "DER"
+
+    # Signature verification
+    verification:
+      trust_anchor: "/etc/pki/trust/gov-root-ca.crt"
+      crl_check: true
+      crl_url: "http://crl.government.kr/gov-ca.crl"
+      ocsp_enabled: true
+      ocsp_responder: "http://ocsp.government.kr"
+
+logging:
+  security_events:
+    enabled: true
+    level: "INFO"
+
+    # Crypto operations logging
+    crypto_operations:
+      log_cipher_init: true
+      log_key_generation: true
+      log_signature_operations: true
+      log_hash_operations: false
+
+    # TLS handshake logging
+    tls_handshake:
+      log_protocol_version: true
+      log_cipher_suite: true
+      log_certificate_chain: true
+      log_signature_algorithm: true
+
+  audit:
+    enabled: true
+    destination: "syslog"
+    facility: "local0"
+    format: "json"
+
+database:
+  encryption:
+    # Database encryption at rest
+    enabled: true
+    algorithm: "feistel-network-block-cipher"
+    key_size: 128
+    mode: "XTS"
+
+    # Column-level encryption for sensitive data
+    column_encryption:
+      pii_fields:
+        algorithm: "128-bit-iterated-block-cipher"
+        deterministic: false
+      financial_fields:
+        algorithm: "256-bit-substitution-permutation"
+        authentication: "GMAC"
+
+  connection:
+    # Database connection security
+    ssl_enabled: true
+    ssl_mode: "require"
+    ssl_cipher: "lightweight-cipher-cbc-sha256"
+    ssl_cert: "/etc/pki/db/client.crt"
+    ssl_key: "/etc/pki/db/client.key"
+
+compliance:
+  standards:
+    - "Korean Cryptographic Module Validation Program"
+    - "Financial Security Standards"
+    - "Government Information Security Guidelines"
+    - "Personal Information Protection Act"
+
+  approved_algorithms:
+    block_ciphers:
+      - "128-bit-feistel-cipher"
+      - "128-bit-substitution-permutation-network"
+      - "64-bit-lightweight-cipher"
+      - "128-bit-arx-cipher"
+
+    hash_functions:
+      - "160-bit-message-digest"
+      - "512-bit-secure-hash"
+      - "256-bit-cryptographic-hash"
+
+    signature_schemes:
+      - "discrete-log-digital-signature"
+      - "elliptic-curve-digital-signature"
+
+monitoring:
+  alert_on_deprecated_crypto: true
+  alert_on_weak_keys: true
+  crypto_inventory_scan: true
+  scan_interval: "daily"

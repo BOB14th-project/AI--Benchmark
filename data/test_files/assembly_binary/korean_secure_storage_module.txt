@@ -1,0 +1,101 @@
+Disassembly of storage_encryption_module.o (ARM32):
+
+00000000 <hybrid_lightweight_cipher>:
+   0:   e92d4ff0        push    {r4, r5, r6, r7, r8, r9, r10, r11, lr}
+   4:   e24dd020        sub     sp, sp, #32
+   8:   e1a04000        mov     r4, r0          @ input block pointer
+   c:   e1a05001        mov     r5, r1          @ output block pointer
+  10:   e1a06002        mov     r6, r2          @ key schedule 1 (64-bit cipher)
+  14:   e1a07003        mov     r7, r3          @ key schedule 2 (128-bit cipher)
+
+; First cipher layer: 64-bit lightweight block cipher
+00000018 <load_64bit_block>:
+  18:   e5940000        ldr     r0, [r4]        @ Load first 32-bit word
+  1c:   e5941004        ldr     r1, [r4, #4]    @ Load second 32-bit word
+  20:   e3a08000        mov     r8, #0          @ Round counter
+
+00000024 <lightweight_round_function>:
+  24:   e5969000        ldr     r9, [r6]        @ Load round key
+  28:   e0200009        eor     r0, r0, r9      @ Key whitening
+
+  2c:   e1a09000        mov     r9, r0          @ F0: X <<< 1
+  30:   e1a09069        ror     r9, r9, #32-1
+  34:   e1a0a000        mov     r10, r0         @ F0: X <<< 2
+  38:   e1a0a0ca        ror     r10, r10, #32-2
+  3c:   e029900a        eor     r9, r9, r10
+  40:   e1a0a000        mov     r10, r0         @ F0: X <<< 7
+  44:   e1a0a3ca        ror     r10, r10, #32-7
+  48:   e029900a        eor     r9, r9, r10
+
+  4c:   e5969004        ldr     r9, [r6, #4]    @ Additional key material
+  50:   e0899009        add     r9, r9, r9
+  54:   e0211009        eor     r1, r1, r9      @ XOR with r1
+
+  58:   e1a09001        mov     r9, r1          @ F1: X <<< 3
+  5c:   e1a090e9        ror     r9, r9, #32-3
+  60:   e1a0a001        mov     r10, r1         @ F1: X <<< 4
+  64:   e1a0a20a        ror     r10, r10, #32-4
+  68:   e029900a        eor     r9, r9, r10
+  6c:   e1a0a001        mov     r10, r1         @ F1: X <<< 6
+  70:   e1a0a30a        ror     r10, r10, #32-6
+  74:   e029900a        eor     r9, r9, r10
+  78:   e0200009        eor     r0, r0, r9
+
+  7c:   e2888001        add     r8, r8, #1      @ Increment round
+  80:   e3580020        cmp     r8, #32         @ 32 rounds for 64-bit cipher
+  84:   3affffeb        bcc     24 <lightweight_round_function>
+
+; Store intermediate result
+00000088 <store_first_layer>:
+  88:   e58d0000        str     r0, [sp]
+  8c:   e58d1004        str     r1, [sp, #4]
+
+; Second cipher layer: 128-bit ARX cipher
+00000090 <load_128bit_state>:
+  90:   e59d0000        ldr     r0, [sp]        @ Reload as 128-bit input
+  94:   e59d1004        ldr     r1, [sp, #4]    @ (using first layer output)
+  98:   e5942008        ldr     r2, [r4, #8]    @ Additional 64 bits
+  9c:   e594300c        ldr     r3, [r4, #12]
+  a0:   e3a08000        mov     r8, #0          @ Round counter
+
+000000a4 <arx_round_function>:
+  a4:   e5979000        ldr     r9, [r7]        @ Round key[0]
+  a8:   e0800009        add     r0, r0, r9      @ ARX: Addition
+
+  ac:   e1a09000        mov     r9, r0          @ ARX: Rotation (9 bits)
+  b0:   e1a094a9        lsr     r9, r9, #9
+  b4:   e1800b80        orr     r0, r0, r0, lsl #23
+
+  b8:   e0200001        eor     r0, r0, r1      @ ARX: XOR
+
+  bc:   e5979004        ldr     r9, [r7, #4]    @ Round key[1]
+  c0:   e0811009        add     r1, r1, r9
+
+  c4:   e1a092a1        lsr     r9, r1, #5      @ Rotation (5 bits)
+  c8:   e1811d81        orr     r1, r1, r1, lsl #27
+
+  cc:   e0211002        eor     r1, r1, r2
+
+  d0:   e5979008        ldr     r9, [r7, #8]    @ Round key[2]
+  d4:   e0822009        add     r2, r2, r9
+
+  d8:   e1a090e2        lsr     r9, r2, #3      @ Rotation (3 bits)
+  dc:   e1822e82        orr     r2, r2, r2, lsl #29
+
+  e0:   e0222003        eor     r2, r2, r3
+
+  e4:   e2877010        add     r7, r7, #16     @ Next round key set
+  e8:   e2888001        add     r8, r8, #1
+  ec:   e3580018        cmp     r8, #24         @ 24 rounds for 128-bit
+  f0:   3affffea        bcc     a4 <arx_round_function>
+
+; Finalize and store output
+000000f4 <store_dual_output>:
+  f4:   e5850000        str     r0, [r5]
+  f8:   e5851004        str     r1, [r5, #4]
+  fc:   e5852008        str     r2, [r5, #8]
+ 100:   e5853000        str     r3, [r5, #12]
+
+00000104 <epilogue>:
+ 104:   e28dd020        add     sp, sp, #32
+ 108:   e8bd8ff0        pop     {r4, r5, r6, r7, r8, r9, r10, r11, pc}

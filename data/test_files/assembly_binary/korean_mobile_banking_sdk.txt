@@ -1,0 +1,97 @@
+Disassembly of mobile_secure_channel.o (ARM64):
+
+0000000000000000 <arx_cipher_core>:
+   0:   a9bf7bfd        stp     x29, x30, [sp, #-16]!
+   4:   910003fd        mov     x29, sp
+   8:   a90153f3        stp     x19, x20, [sp, #16]
+   c:   a9025bf5        stp     x21, x22, [sp, #32]
+  10:   a90363f7        stp     x23, x24, [sp, #48]
+
+  14:   aa0003f3        mov     x19, x0         // plaintext pointer
+  18:   aa0103f4        mov     x20, x1         // ciphertext pointer
+  1c:   aa0203f5        mov     x21, x2         // key schedule pointer
+
+0000000000000020 <load_128bit_state>:
+  20:   b9400260        ldr     w0, [x19]       // State[0]
+  24:   b9400661        ldr     w1, [x19, #4]   // State[1]
+  28:   b9400a62        ldr     w2, [x19, #8]   // State[2]
+  2c:   b9400e63        ldr     w3, [x19, #12]  // State[3]
+
+0000000000000030 <round_key_addition>:
+  30:   b94002a4        ldr     w4, [x21]       // Round key[0]
+  34:   0b040000        add     w0, w0, w4      // ARX: Addition
+  38:   b94006a4        ldr     w4, [x21, #4]
+  3c:   0b040021        add     w1, w1, w4
+  40:   b9400aa4        ldr     w4, [x21, #8]
+  44:   0b040042        add     w2, w2, w4
+  48:   b9400ea4        ldr     w4, [x21, #12]
+  4c:   0b040063        add     w3, w3, w4
+
+0000000000000050 <rotation_layer>:
+  50:   13097c04        ror     w4, w0, #9      // ARX: Rotation (9 bits)
+  54:   2a0403e0        orr     w0, wzr, w4
+  58:   13057c24        ror     w4, w1, #5      // Rotation (5 bits)
+  5c:   2a0403e1        orr     w1, wzr, w4
+  60:   13037c44        ror     w4, w2, #3      // Rotation (3 bits)
+  64:   2a0403e2        orr     w2, wzr, w4
+  68:   53187c64        lsr     w4, w3, #24     // Shift right 24
+  6c:   2a030063        orr     w3, w3, w3, lsl #8
+
+0000000000000070 <xor_diffusion>:
+  70:   4a010000        eor     w0, w0, w1      // ARX: XOR
+  74:   4a020021        eor     w1, w1, w2
+  78:   4a030042        eor     w2, w2, w3
+  7c:   4a000063        eor     w3, w3, w0
+
+0000000000000080 <modular_addition>:
+  80:   8b010000        add     x0, x0, x1      // 64-bit addition for mixing
+  84:   d360fc04        lsr     x4, x0, #32
+  88:   2a0403e1        mov     w1, w4
+  8c:   8b020042        add     x2, x2, x2
+  90:   d360fc44        lsr     x4, x2, #32
+  94:   2a0403e3        mov     w3, w4
+
+0000000000000098 <round_counter_check>:
+  98:   910062b5        add     x21, x21, #24   // Next round key (24 rounds)
+  9c:   d1000694        sub     x20, x20, #1
+  a0:   b5fffc14        cbnz    x20, 30 <round_key_addition>
+
+00000000000000a4 <finalization>:
+  a4:   b9000280        str     w0, [x20]
+  a8:   b9000681        str     w1, [x20, #4]
+  ac:   b9000a82        str     w2, [x20, #8]
+  b0:   b9000e83        str     w3, [x20, #12]
+
+00000000000000b4 <epilogue>:
+  b4:   a94363f7        ldp     x23, x24, [sp, #48]
+  b8:   a9425bf5        ldp     x21, x22, [sp, #32]
+  bc:   a94153f3        ldp     x19, x20, [sp, #16]
+  c0:   a8c17bfd        ldp     x29, x30, [sp], #16
+  c4:   d65f03c0        ret
+
+00000000000000c8 <key_schedule_expansion>:
+  c8:   d10103ff        sub     sp, sp, #64
+  cc:   a9007bfd        stp     x29, x30, [sp]
+  d0:   910003fd        mov     x29, sp
+
+  d4:   b9400400        ldr     w0, [x0]        // Master key load
+  d8:   b9400801        ldr     w1, [x0, #4]
+  dc:   b9400c02        ldr     w2, [x0, #8]
+  e0:   b9401003        ldr     w3, [x0, #12]
+
+  e4:   d2800004        mov     x4, #0          // Round counter
+  e8:   d2800305        mov     x5, #24         // Total rounds
+
+00000000000000ec <key_derivation_loop>:
+  ec:   8b040000        add     x0, x0, x4      // Key mixing
+  f0:   ca040021        eor     x1, x1, x4
+  f4:   53097c00        lsr     w0, w0, #9      // Rotation for key
+  f8:   2a000400        orr     w0, w0, w0, lsl #23
+  fc:   91000484        add     x4, x4, #1
+ 100:   eb0500bf        cmp     x5, x4
+ 104:   54ffff41        b.ne    ec <key_derivation_loop>
+
+0000000000000108 <key_finalize>:
+ 108:   a9407bfd        ldp     x29, x30, [sp]
+ 10c:   910103ff        add     sp, sp, #64
+ 110:   d65f03c0        ret

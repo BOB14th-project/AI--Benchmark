@@ -1,0 +1,51 @@
+Disassembly of mobile_crypto_sdk.o:
+
+0000000000000000 <arx_cipher_encrypt>:
+   0:   a9bf7bfd        stp     x29, x30, [sp, #-16]!
+   4:   910003fd        mov     x29, sp
+   8:   aa0003e8        mov     x8, x0          // input pointer
+   c:   aa0103e9        mov     x9, x1          // output pointer
+  10:   aa0203ea        mov     x10, x2         // key schedule
+  14:   d2800000        mov     x0, #0          // round counter
+  18:   d280030b        mov     x11, #24        // rounds (128-bit key)
+  
+001c <load_block>:
+  1c:   b9400108        ldr     w8, [x8]        // word 0
+  20:   b9400509        ldr     w9, [x8, #4]    // word 1
+  24:   b940090a        ldr     w10, [x8, #8]   // word 2
+  28:   b9400d0b        ldr     w11, [x8, #12]  // word 3
+  
+002c <round_transform>:
+  2c:   b940014c        ldr     w12, [x10]      // round key
+  30:   0b0c010c        add     w12, w8, w12    // ADD operation
+  34:   53097d8d        lsr     w13, w12, #9    // Rotate right 9
+  38:   2a0d018c        orr     w12, w12, w13, lsl #23
+  3c:   4a09010c        eor     w12, w8, w9     // XOR operation
+  40:   aa0c03e8        mov     x8, x12
+  
+  44:   b9400550        ldr     w16, [x10, #4]
+  48:   0b100130        add     w16, w9, w16
+  4c:   53057e11        lsr     w17, w16, #5    // Rotate right 5
+  50:   2a110210        orr     w16, w16, w17, lsl #27
+  54:   4a0a0130        eor     w16, w9, w10
+  58:   aa1003e9        mov     x9, x16
+  
+  5c:   b9400950        ldr     w16, [x10, #8]
+  60:   0b100150        add     w16, w10, w16
+  64:   53037e11        lsr     w17, w16, #3    // Rotate right 3
+  68:   2a110210        orr     w16, w16, w17, lsl #29
+  6c:   4a0b0150        eor     w16, w10, w11
+  70:   aa1003ea        mov     x10, x16
+  
+  74:   91004140        add     x0, x10, #16    // next round key
+  78:   91000421        add     x1, x1, #1      // increment round
+  7c:   eb0b003f        cmp     x1, x11         // compare with round count
+  80:   54fffdd3        b.lo    2c <round_transform>
+  
+0084 <store_result>:
+  84:   b9000128        str     w8, [x9]
+  88:   b9000529        str     w9, [x9, #4]
+  8c:   b900092a        str     w10, [x9, #8]
+  90:   b9000d2b        str     w11, [x9, #12]
+  94:   a8c17bfd        ldp     x29, x30, [sp], #16
+  98:   d65f03c0        ret
