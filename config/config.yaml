@@ -36,6 +36,12 @@ llm_providers:
     model_env: "LOCAL_AI_MODEL"
     base_url_env: "LOCAL_AI_BASE_URL"
 
+  pqc_inspector:
+    api_key: "not_required"
+    # 에이전트 타입을 모델로 지정 (source_code, assembly_binary, logs_config)
+    model: ["source_code", "assembly_binary", "logs_config"]
+    base_url: "http://localhost:8000"
+
 # Analysis Agents Configuration for Quantum-Vulnerable Algorithm Detection
 agents:
   source_code:

@@ -6,6 +6,7 @@ from .anthropic_client import AnthropicClient
 from .xai_client import XAIClient
 from .ollama_client import OllamaClient
 from .local_ai_client import LocalAIClient
+from .pqc_inspector_client import PQCInspectorClient
 
 class ClientFactory:
     _clients = {
@@ -14,7 +15,8 @@ class ClientFactory:
         'anthropic': AnthropicClient,
         'xai': XAIClient,
         'ollama': OllamaClient,
-        'local_ai': LocalAIClient
+        'local_ai': LocalAIClient,
+        'pqc_inspector': PQCInspectorClient
     }
 
     @classmethod
