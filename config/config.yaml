@@ -31,6 +31,11 @@ llm_providers:
     # model: ["llama3:8b", "qwen3:8b", "codellama:7b"]
     # base_url: "http://localhost:11434"
 
+  local_ai:
+    api_key_env: "LOCAL_AI_API_KEY"
+    model_env: "LOCAL_AI_MODEL"
+    base_url_env: "LOCAL_AI_BASE_URL"
+
 # Analysis Agents Configuration for Quantum-Vulnerable Algorithm Detection
 agents:
   source_code:

@@ -5,6 +5,7 @@ from .google_client import GoogleClient
 from .anthropic_client import AnthropicClient
 from .xai_client import XAIClient
 from .ollama_client import OllamaClient
+from .local_ai_client import LocalAIClient
 
 class ClientFactory:
     _clients = {
@@ -12,7 +13,8 @@ class ClientFactory:
         'google': GoogleClient,
         'anthropic': AnthropicClient,
         'xai': XAIClient,
-        'ollama': OllamaClient
+        'ollama': OllamaClient,
+        'local_ai': LocalAIClient
     }
 
     @classmethod
