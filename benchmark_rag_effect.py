@@ -207,14 +207,18 @@ class RAGEffectBenchmark:
                     rag_result = self.test_with_rag(model, agent_type, test_case)
                     if rag_result:
                         self.results.append(rag_result)
-                        print(f"✅ {model} + RAG: F1={rag_result.get('f1_score', 0):.3f}, "
+                        print(f"✅ {model} + RAG: TP={rag_result.get('true_positives', 0)}, "
+                              f"FP={rag_result.get('false_positives', 0)}, "
+                              f"FN={rag_result.get('false_negatives', 0)}, "
                               f"시간={rag_result.get('response_time', 0):.2f}초")
 
                     # 2. 기본 모델 (RAG 없음) 테스트
                     base_result = self.test_without_rag(model, agent_type, test_case)
                     if base_result:
                         self.results.append(base_result)
-                        print(f"✅ {model} (순수): F1={base_result.get('f1_score', 0):.3f}, "
+                        print(f"✅ {model} (순수): TP={base_result.get('true_positives', 0)}, "
+                              f"FP={base_result.get('false_positives', 0)}, "
+                              f"FN={base_result.get('false_negatives', 0)}, "
                               f"시간={base_result.get('response_time', 0):.2f}초")
 
         print("\n" + "=" * 80)
@@ -234,15 +238,45 @@ class RAGEffectBenchmark:
             file_path = test_case.get('file_path', '')
             if not Path(file_path).exists():
                 print(f"⚠️  파일 없음: {file_path}")
-                return None
+                # 파일 없음도 에러로 처리
+                return {
+                    'base_model': model,
+                    'with_rag': True,
+                    'agent_type': agent_type,
+                    'test_id': test_case.get('test_id'),
+                    'file_name': test_case.get('file_name') or Path(test_case.get('file_path', 'unknown')).name,
+                    'response_time': 0,
+                    'json_valid': False,
+                    'true_positives': 0,
+                    'false_positives': 0,
+                    'false_negatives': 0,
+                    'error': 'file not found',
+                    'raw_response': {}
+                }
 
             # 분석 실행
             prompt = f"FILE_PATH:{file_path}"
             result = client.benchmark_request(prompt)
 
             if not result.get('success'):
-                print(f"❌ RAG 테스트 실패: {result.get('error')}")
-                return None
+                error_msg = result.get('error', 'unknown error')
+                print(f"❌ RAG 테스트 실패: {error_msg}")
+
+                # 에러 케이스는 결과에 포함하되, F1 계산에서 제외하기 위해 플래그 추가
+                return {
+                    'base_model': model,
+                    'with_rag': True,
+                    'agent_type': agent_type,
+                    'test_id': test_case.get('test_id'),
+                    'file_name': test_case.get('file_name') or Path(test_case.get('file_path', 'unknown')).name,
+                    'response_time': 0,
+                    'json_valid': False,
+                    'true_positives': 0,
+                    'false_positives': 0,
+                    'false_negatives': 0,
+                    'error': error_msg,  # 에러 플래그
+                    'raw_response': {}
+                }
 
             # 응답 파싱
             response_content = result.get('content', '{}')
@@ -312,46 +346,42 @@ class RAGEffectBenchmark:
                     detected_algs_raw = set([alg.lower() for alg in analysis_result['detected_algorithms']])
 
                 # 예상 알고리즘과 매칭 (변형 고려)
-                detected_algs = set()
+                matched_expected = set()  # 매칭된 expected 알고리즘
                 for detected in detected_algs_raw:
                     for expected in expected_algs:
                         # 알고리즘 변형 매칭
                         if expected == detected:
-                            detected_algs.add(expected)
+                            matched_expected.add(expected)
+                            break
                         elif expected == 'ecc' and detected in ['ecdsa', 'ecdh', 'ecc']:
-                            detected_algs.add(expected)
+                            matched_expected.add(expected)
+                            break
                         elif expected == 'rsa' and 'rsa' in detected:
-                            detected_algs.add(expected)
+                            matched_expected.add(expected)
+                            break
                         elif expected == 'dsa' and detected in ['dsa', 'ecdsa']:
-                            detected_algs.add(expected)
+                            matched_expected.add(expected)
+                            break
                         elif expected == 'aes' and 'aes' in detected:
-                            detected_algs.add(expected)
+                            matched_expected.add(expected)
+                            break
                         elif expected == 'md5' and 'md5' in detected:
-                            detected_algs.add(expected)
+                            matched_expected.add(expected)
+                            break
 
                 # TP, FP, FN 계산
-                true_positives = len(expected_algs & detected_algs)
-                false_positives = len(detected_algs - expected_algs)
-                false_negatives = len(expected_algs - detected_algs)
+                true_positives = len(matched_expected)
+                false_positives = len(detected_algs_raw) - true_positives
+                false_negatives = len(expected_algs) - true_positives
 
-                # Precision, Recall, F1 계산
-                precision = true_positives / (true_positives + false_positives) if (true_positives + false_positives) > 0 else 0.0
-                recall = true_positives / (true_positives + false_negatives) if (true_positives + false_negatives) > 0 else 0.0
-                f1_score = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0.0
-
+                # 개별 메트릭은 저장하지 않음 (전체 합산 후 계산)
                 metrics = {
-                    'precision': precision,
-                    'recall': recall,
-                    'f1_score': f1_score,
                     'true_positives': true_positives,
                     'false_positives': false_positives,
                     'false_negatives': false_negatives
                 }
             else:
                 metrics = {
-                    'precision': 0.0,
-                    'recall': 0.0,
-                    'f1_score': 0.0,
                     'true_positives': 0,
                     'false_positives': 0,
                     'false_negatives': 0
@@ -410,8 +440,24 @@ class RAGEffectBenchmark:
             result = client.benchmark_request(prompt)
 
             if not result.get('success'):
-                print(f"❌ 기본 모델 테스트 실패: {result.get('error')}")
-                return None
+                error_msg = result.get('error', 'unknown error')
+                print(f"❌ 기본 모델 테스트 실패 (safety issue): {error_msg}")
+
+                # 에러 케이스는 결과에 포함하되, F1 계산에서 제외하기 위해 플래그 추가
+                return {
+                    'base_model': model,
+                    'with_rag': False,
+                    'agent_type': agent_type,
+                    'test_id': test_case.get('test_id'),
+                    'file_name': test_case.get('file_name') or Path(test_case.get('file_path', 'unknown')).name,
+                    'response_time': 0,
+                    'json_valid': False,
+                    'true_positives': 0,
+                    'false_positives': 0,
+                    'false_negatives': 0,
+                    'error': error_msg,  # 에러 플래그
+                    'raw_response': {}
+                }
 
             # 응답 파싱
             response_content = result.get('content', '')
@@ -443,7 +489,8 @@ class RAGEffectBenchmark:
                 expected_algs = set([alg.lower() for alg in vulnerable_algs])
 
                 # 탐지된 알고리즘 추출 (analysis_results에서)
-                detected_algs = set()
+                matched_expected = set()
+                total_detected_count = 0
                 if 'analysis_results' in analysis_result:
                     # analysis_results에서 "DETECTED:" 포함된 항목만 확인
                     analysis_results = analysis_result['analysis_results']
@@ -452,6 +499,7 @@ class RAGEffectBenchmark:
                             value_str = str(value).lower()
                             # "NOT DETECTED" 제외, "DETECTED:" 포함만
                             if 'detected:' in value_str and 'not detected' not in value_str:
+                                total_detected_count += 1
                                 # 예상 알고리즘과 매칭
                                 for alg in expected_algs:
                                     # 알고리즘 변형도 고려 (ECC = ECDSA, ECDH 등)
@@ -460,33 +508,30 @@ class RAGEffectBenchmark:
                                         alg_variants.extend(['ecdsa', 'ecdh', 'elliptic'])
                                     elif alg == 'rsa':
                                         alg_variants.extend(['rsa'])
+                                    elif alg == 'dsa':
+                                        alg_variants.extend(['dsa'])
+                                    elif alg == 'aes':
+                                        alg_variants.extend(['aes'])
+                                    elif alg == 'md5':
+                                        alg_variants.extend(['md5'])
 
                                     if any(variant in value_str or variant in key.lower() for variant in alg_variants):
-                                        detected_algs.add(alg)
+                                        matched_expected.add(alg)
+                                        break
 
                 # TP, FP, FN 계산
-                true_positives = len(expected_algs & detected_algs)
-                false_positives = len(detected_algs - expected_algs)
-                false_negatives = len(expected_algs - detected_algs)
+                true_positives = len(matched_expected)
+                false_positives = total_detected_count - true_positives
+                false_negatives = len(expected_algs) - true_positives
 
-                # Precision, Recall, F1 계산
-                precision = true_positives / (true_positives + false_positives) if (true_positives + false_positives) > 0 else 0.0
-                recall = true_positives / (true_positives + false_negatives) if (true_positives + false_negatives) > 0 else 0.0
-                f1_score = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0.0
-
+                # 개별 메트릭은 저장하지 않음 (전체 합산 후 계산)
                 metrics = {
-                    'precision': precision,
-                    'recall': recall,
-                    'f1_score': f1_score,
                     'true_positives': true_positives,
                     'false_positives': false_positives,
                     'false_negatives': false_negatives
                 }
             else:
                 metrics = {
-                    'precision': 0.0,
-                    'recall': 0.0,
-                    'f1_score': 0.0,
                     'true_positives': 0,
                     'false_positives': 0,
                     'false_negatives': 0
@@ -535,7 +580,7 @@ class RAGEffectBenchmark:
         return output_path
 
     def print_summary(self):
-        """결과 요약 출력 - RAG 효과 중심"""
+        """결과 요약 출력 - RAG 효과 중심 (전체 TP/FP/FN 합산 방식)"""
         if not self.results:
             print("\n⚠️  결과 없음")
             return
@@ -548,6 +593,30 @@ class RAGEffectBenchmark:
             vals = [r.get(key, 0) for r in results if r.get(key) is not None]
             return sum(vals) / len(vals) if vals else 0
 
+        def calc_metrics_from_sum(results):
+            """전체 TP, FP, FN 합산 후 메트릭 계산 (에러 케이스 제외)"""
+            # 'error' 플래그가 없는 케이스만 필터링
+            valid_results = [r for r in results if 'error' not in r]
+
+            total_tp = sum(r.get('true_positives', 0) for r in valid_results)
+            total_fp = sum(r.get('false_positives', 0) for r in valid_results)
+            total_fn = sum(r.get('false_negatives', 0) for r in valid_results)
+
+            precision = total_tp / (total_tp + total_fp) if (total_tp + total_fp) > 0 else 0.0
+            recall = total_tp / (total_tp + total_fn) if (total_tp + total_fn) > 0 else 0.0
+            f1_score = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0.0
+
+            return {
+                'precision': precision,
+                'recall': recall,
+                'f1_score': f1_score,
+                'tp': total_tp,
+                'fp': total_fp,
+                'fn': total_fn,
+                'valid_count': len(valid_results),
+                'error_count': len(results) - len(valid_results)
+            }
+
         # 모델별로 집계
         for model in self.test_models:
             print(f"\n🔬 모델: {model}")
@@ -556,16 +625,21 @@ class RAGEffectBenchmark:
             rag_results = [r for r in self.results if r['base_model'] == model and r['with_rag']]
             no_rag_results = [r for r in self.results if r['base_model'] == model and not r['with_rag']]
 
-            # 전체 평균
-            rag_f1 = calc_avg(rag_results, 'f1_score')
-            no_rag_f1 = calc_avg(no_rag_results, 'f1_score')
-            improvement = ((rag_f1 - no_rag_f1) / no_rag_f1 * 100) if no_rag_f1 > 0 else 0
+            # 전체 TP/FP/FN 합산 후 메트릭 계산
+            rag_metrics = calc_metrics_from_sum(rag_results)
+            no_rag_metrics = calc_metrics_from_sum(no_rag_results)
 
-            print(f"\n📈 전체 평균:")
-            print(f"   RAG 포함:  F1={rag_f1:.3f}, Precision={calc_avg(rag_results, 'precision'):.3f}, "
-                  f"Recall={calc_avg(rag_results, 'recall'):.3f}, 시간={calc_avg(rag_results, 'response_time'):.2f}초")
-            print(f"   RAG 없음:  F1={no_rag_f1:.3f}, Precision={calc_avg(no_rag_results, 'precision'):.3f}, "
-                  f"Recall={calc_avg(no_rag_results, 'recall'):.3f}, 시간={calc_avg(no_rag_results, 'response_time'):.2f}초")
+            improvement = ((rag_metrics['f1_score'] - no_rag_metrics['f1_score']) / no_rag_metrics['f1_score'] * 100) if no_rag_metrics['f1_score'] > 0 else 0
+
+            print(f"\n📈 전체 결과 (TP/FP/FN 합산 방식, 에러 케이스 제외):")
+            print(f"   RAG 포함:  F1={rag_metrics['f1_score']:.3f}, Precision={rag_metrics['precision']:.3f}, "
+                  f"Recall={rag_metrics['recall']:.3f}, TP={rag_metrics['tp']}, FP={rag_metrics['fp']}, FN={rag_metrics['fn']}, "
+                  f"시간={calc_avg(rag_results, 'response_time'):.2f}초 "
+                  f"(성공: {rag_metrics['valid_count']}, 에러: {rag_metrics['error_count']})")
+            print(f"   RAG 없음:  F1={no_rag_metrics['f1_score']:.3f}, Precision={no_rag_metrics['precision']:.3f}, "
+                  f"Recall={no_rag_metrics['recall']:.3f}, TP={no_rag_metrics['tp']}, FP={no_rag_metrics['fp']}, FN={no_rag_metrics['fn']}, "
+                  f"시간={calc_avg(no_rag_results, 'response_time'):.2f}초 "
+                  f"(성공: {no_rag_metrics['valid_count']}, 에러: {no_rag_metrics['error_count']})")
             print(f"   🎯 RAG 효과: F1 Score {improvement:+.1f}% 향상")
 
             # 에이전트별 집계
@@ -575,11 +649,14 @@ class RAGEffectBenchmark:
                 rag_agent = [r for r in rag_results if r['agent_type'] == agent_type]
                 no_rag_agent = [r for r in no_rag_results if r['agent_type'] == agent_type]
 
-                rag_agent_f1 = calc_avg(rag_agent, 'f1_score')
-                no_rag_agent_f1 = calc_avg(no_rag_agent, 'f1_score')
-                agent_improvement = ((rag_agent_f1 - no_rag_agent_f1) / no_rag_agent_f1 * 100) if no_rag_agent_f1 > 0 else 0
+                rag_agent_metrics = calc_metrics_from_sum(rag_agent)
+                no_rag_agent_metrics = calc_metrics_from_sum(no_rag_agent)
+                agent_improvement = ((rag_agent_metrics['f1_score'] - no_rag_agent_metrics['f1_score']) / no_rag_agent_metrics['f1_score'] * 100) if no_rag_agent_metrics['f1_score'] > 0 else 0
 
-                print(f"   {agent_type:20s}: RAG={rag_agent_f1:.3f}, 순수={no_rag_agent_f1:.3f}, "
+                print(f"   {agent_type:20s}: RAG F1={rag_agent_metrics['f1_score']:.3f} "
+                      f"(TP={rag_agent_metrics['tp']}, FP={rag_agent_metrics['fp']}, FN={rag_agent_metrics['fn']}, 에러={rag_agent_metrics['error_count']}), "
+                      f"순수 F1={no_rag_agent_metrics['f1_score']:.3f} "
+                      f"(TP={no_rag_agent_metrics['tp']}, FP={no_rag_agent_metrics['fp']}, FN={no_rag_agent_metrics['fn']}, 에러={no_rag_agent_metrics['error_count']}), "
                       f"효과={agent_improvement:+.1f}%")
 
         print("\n" + "=" * 80)

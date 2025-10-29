@@ -68,13 +68,13 @@ python benchmark_rag_effect.py --limit 2
 ### llama3:8b만 테스트
 
 ```bash
-python benchmark_rag_effect.py --models llama3:8b --limit 3
+python benchmark_rag_effect.py --models llama3:8b --limit 1
 ```
 
 ### gemini-2.0-flash-exp만 테스트
 
 ```bash
-python benchmark_rag_effect.py --models gemini-2.0-flash-exp --limit 1
+python benchmark_rag_effect.py --models gemini-2.0-flash --limit 1
 ```
 
 ### 특정 에이전트만 테스트
