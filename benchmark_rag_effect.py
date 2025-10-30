@@ -18,6 +18,7 @@ from datetime import datetime
 from clients.pqc_inspector_client import PQCInspectorClient
 from clients.ollama_client import OllamaClient
 from clients.google_client import GoogleClient
+from clients.openai_client import OpenAIClient
 from agents.agent_factory import AgentFactory
 from utils.test_case_manager import TestCaseManager
 from config.config_loader import ConfigLoader
@@ -420,6 +421,13 @@ class RAGEffectBenchmark:
                     api_key=config['api_key'],
                     model=model,
                     base_url=config.get('base_url', '')
+                )
+            elif model.startswith("gpt-"):
+                config = self.config_loader.get_llm_config('openai')
+                client = OpenAIClient(
+                    api_key=config['api_key'],
+                    model=model,
+                    base_url=config.get('base_url', 'https://api.openai.com/v1')
                 )
             else:
                 print(f"⚠️  지원하지 않는 모델: {model}")
