@@ -1,0 +1,34 @@
+Binary Analysis: IoT Lightweight Cipher
+File: iot_crypto.elf
+Size: 8KB, optimized for embedded systems
+
+=== Function: iot_encrypt_64bit @ 0x100 ===
+
+0x100:   mov    r10d, 0x20                  ; 32 rounds
+0x106:   mov    r11b, 0x8                   ; 8-byte block
+
+; Whitening keys
+0x10c:   mov    al, BYTE PTR [rsi+rcx]     ; key[i]
+0x10f:   xor    al, BYTE PTR [rsi+rcx+8]   ; key[i+8]
+
+; Lightweight round function
+0x114:   xor    BYTE PTR [rdi], al          ; XOR subkey
+0x116:   rol    BYTE PTR [rdi+1], 1         ; Rotate 1 bit
+0x11a:   rol    BYTE PTR [rdi+3], 3         ; Rotate 3 bits
+0x11e:   rol    BYTE PTR [rdi+5], 4         ; Rotate 4 bits
+
+; Generalized Feistel rotation
+0x122:   mov    al, BYTE PTR [rdi]
+0x124:   mov    bl, BYTE PTR [rdi+7]
+0x127:   mov    BYTE PTR [rdi+7], al
+0x12a:   mov    BYTE PTR [rdi], bl
+
+0x12d:   dec    r10d
+0x130:   jnz    0x10c                       ; Loop 32 times
+
+=== Signatures ===
+- 32 rounds
+- 64-bit blocks
+- 8-bit operations only
+- Generalized Feistel
+- Minimal resources

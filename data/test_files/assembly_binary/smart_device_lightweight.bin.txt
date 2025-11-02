@@ -1,0 +1,43 @@
+Binary Analysis: Smart Device Lightweight Crypto
+File: smart_dev.elf (stripped)
+Size: 4KB
+
+=== Function: encrypt_sensor @ 0x100 ===
+
+0x100:   mov    r9b, 0x20                   ; 32 rounds
+0x103:   mov    r10b, 0x8                   ; 8 bytes
+
+; Ultra-lightweight operations
+0x106:   mov    al, BYTE PTR [rdi]
+0x108:   xor    al, BYTE PTR [rsi]          ; XOR subkey
+0x10a:   mov    BYTE PTR [rdi], al
+
+0x10c:   mov    al, BYTE PTR [rdi+1]
+0x10e:   rol    al, 0x1                     ; 1-bit rotation
+0x110:   add    al, BYTE PTR [rdi]          ; Mix with previous
+0x112:   mov    BYTE PTR [rdi+1], al
+
+0x114:   mov    al, BYTE PTR [rdi+3]
+0x116:   rol    al, 0x3                     ; 3-bit rotation
+0x118:   xor    al, BYTE PTR [rdi+2]
+0x11a:   mov    BYTE PTR [rdi+3], al
+
+0x11c:   mov    al, BYTE PTR [rdi+5]
+0x11e:   rol    al, 0x4                     ; 4-bit rotation
+0x120:   add    al, BYTE PTR [rdi+4]
+0x122:   mov    BYTE PTR [rdi+5], al
+
+; Rotate state
+0x124:   mov    al, BYTE PTR [rdi]
+0x126:   mov    bl, BYTE PTR [rdi+7]
+0x128:   mov    BYTE PTR [rdi+7], al
+0x12a:   mov    BYTE PTR [rdi], bl
+
+0x12c:   dec    r9b
+0x12e:   jnz    0x106
+
+=== Signatures ===
+- 32 rounds
+- 8-bit operations
+- Minimal code size
+- IoT optimized

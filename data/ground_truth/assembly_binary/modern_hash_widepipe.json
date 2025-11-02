@@ -1,0 +1,8 @@
+{
+  "expected_findings": {
+    "vulnerable_algorithms_detected": [],
+    "algorithm_categories": [],
+    "korean_algorithms_detected": ["LSH"]
+  },
+  "expected_confidence_range": [0.65, 0.8]
+}

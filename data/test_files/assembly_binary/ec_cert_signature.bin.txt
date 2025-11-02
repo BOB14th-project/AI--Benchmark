@@ -1,0 +1,51 @@
+Binary Analysis: EC Certificate Signature
+File: libec_cert.so
+
+=== Function: ec_cert_sign @ 0x6000 ===
+
+0x6000:  call   0x7000                      ; hash_cert_160bit
+
+; EC signature computation
+0x6005:  rdrand r10                         ; Random k
+0x6009:  mov    QWORD PTR [rbp-0x8], r10
+
+; Compute k*G (scalar multiplication)
+0x600d:  lea    rdi, [rip+0x3000]           ; Base point G
+0x6014:  mov    rsi, r10                    ; k
+0x6017:  call   0x8000                      ; ec_scalar_mult
+
+; r = x1 mod n
+0x601c:  mov    rbx, rax                    ; Point result
+0x601f:  mov    rdi, QWORD PTR [rbx]        ; x-coordinate
+0x6022:  mov    rsi, QWORD PTR [rip+0x3020] ; Curve order n
+0x6029:  xor    rdx, rdx
+0x602c:  div    rsi                          ; x1 mod n
+0x602f:  mov    QWORD PTR [rbp-0x10], rdx   ; Store r
+
+; s = k^-1(H(m) + dr) mod n
+0x6033:  mov    rdi, r10                    ; k
+0x6036:  mov    rsi, QWORD PTR [rip+0x3020] ; n
+0x603d:  call   0x9000                      ; mod_inverse
+
+0x6042:  mov    r11, rax                    ; k^-1
+0x6045:  mov    r12, QWORD PTR [rbp-0x18]   ; H(m)
+0x6049:  mov    r13, QWORD PTR [rbp-0x20]   ; private_key d
+0x604d:  mov    r14, QWORD PTR [rbp-0x10]   ; r
+0x6051:  imul   r13, r14                    ; dr
+0x6055:  add    r12, r13                    ; H(m) + dr
+0x6058:  imul   r12, r11                    ; k^-1(H(m) + dr)
+
+=== Data ===
+0xb000:  EC curve parameters:
+         Prime p: ff ff ff ff 00 00 00 01 ...
+         a: ff ff ff ff 00 00 00 01 ...
+         b: 5a c6 35 d8 aa 3a 93 e7 ...
+         Base point G.x: 6b 17 d1 f2 e1 2c 42 47 ...
+         Base point G.y: 4f e3 42 e2 fe 1a 7f 9b ...
+         Order n: ff ff ff ff 00 00 00 00 ...
+
+=== Signatures ===
+- Elliptic curve variant
+- 160-bit hash
+- Certificate-based
+- EC point operations

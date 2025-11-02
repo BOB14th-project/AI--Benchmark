@@ -1,0 +1,50 @@
+Binary Analysis: PKI Hash Function
+File: libpki_hash.a
+
+=== Function: hash_160bit @ 0x3000 ===
+
+0x3000:  mov    eax, 0x67452301             ; H0
+0x3005:  mov    ebx, 0xefcdab89             ; H1
+0x300a:  mov    ecx, 0x98badcfe             ; H2
+0x300f:  mov    edx, 0x10325476             ; H3
+0x3014:  mov    r8d, 0xc3d2e1f0             ; H4
+
+; 80-step compression
+0x301a:  mov    r9d, 0x50                   ; 80 rounds
+
+0x3020:  cmp    r9d, 0x14                   ; Round < 20?
+0x3024:  jl     0x3030
+0x3026:  cmp    r9d, 0x28                   ; Round < 40?
+0x302a:  jl     0x3040
+
+; Different K constants per round group
+0x3030:  mov    r10d, 0x5a827999            ; K[0-19]
+0x3035:  jmp    0x3050
+0x3040:  mov    r10d, 0x6ed9eba1            ; K[20-39]
+0x3045:  jmp    0x3050
+
+; F function and rotation
+0x3050:  rol    eax, 0x5                    ; Rotate a by 5
+0x3053:  add    eax, r8d                    ; Add e
+0x3056:  add    eax, r10d                   ; Add K
+0x3059:  mov    r8d, edx                    ; e = d
+0x305c:  mov    edx, ecx                    ; d = c
+0x305f:  rol    ebx, 0x1e                   ; c = rotl(b, 30)
+0x3062:  mov    ecx, ebx
+0x3064:  mov    ebx, eax                    ; b = a
+
+0x3067:  dec    r9d
+0x306a:  jnz    0x3020
+
+=== Data ===
+0x7000:  Hash IVs (20 bytes):
+         01 23 45 67  89 ab cd ef  fe dc ba 98  76 54 32 10  f0 e1 d2 c3
+
+0x7014:  K constants (16 bytes):
+         99 79 82 5a  a1 eb d9 6e  dc 1b 8f 8f  d6 c1 62 ca
+
+=== Signatures ===
+- 160-bit output (5 x 32-bit)
+- 80 rounds/steps
+- 5 chaining variables
+- Message expansion to 80 words

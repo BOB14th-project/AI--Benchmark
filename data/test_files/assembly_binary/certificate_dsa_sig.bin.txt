@@ -1,0 +1,46 @@
+Binary Analysis: Certificate DSA Signature
+File: libcert_sign.so
+
+=== Function: cert_dsa_sign @ 0x5000 ===
+
+0x5000:  call   0x6000                      ; hash_cert_160bit
+
+; DSA signature computation
+0x5005:  rdrand rax                         ; Generate random k
+0x5009:  mov    QWORD PTR [rbp-0x8], rax    ; Store k
+
+; Compute r = (g^k mod p) mod q
+0x500d:  mov    rdi, QWORD PTR [rip+0x2000] ; g (generator)
+0x5014:  mov    rsi, rax                     ; k
+0x5017:  mov    rdx, QWORD PTR [rip+0x2010] ; p (modulus)
+0x501e:  call   0x7000                       ; modular_exp
+
+0x5023:  mov    rdi, rax
+0x5026:  mov    rsi, QWORD PTR [rip+0x2020] ; q (subgroup)
+0x502d:  xor    rdx, rdx
+0x5030:  div    rsi                          ; r = result mod q
+0x5033:  mov    QWORD PTR [rbp-0x10], rdx   ; Store r
+
+; Compute s = k^-1(H(m) + xr) mod q
+0x5037:  mov    rdi, QWORD PTR [rbp-0x8]    ; k
+0x503b:  mov    rsi, QWORD PTR [rip+0x2020] ; q
+0x5042:  call   0x7100                       ; mod_inverse
+
+0x5047:  mov    r8, rax                      ; k^-1
+0x504a:  mov    rdi, QWORD PTR [rbp-0x18]   ; H(m)
+0x504e:  mov    rsi, QWORD PTR [rbp-0x20]   ; private_key x
+0x5052:  imul   rsi, rdx                     ; xr
+0x5056:  add    rdi, rsi                     ; H(m) + xr
+0x5059:  imul   rdi, r8                      ; k^-1(H(m) + xr)
+
+=== Data ===
+0xa000:  Domain parameters:
+         Prime p (256 bytes)
+         Prime q (20 bytes): 4b 42 ab 11 e5 50 95 e9 ...
+         Generator g: 02 00 00 00
+
+=== Signatures ===
+- DSA-like structure
+- 160-bit hash function
+- Certificate-based
+- Modular arithmetic

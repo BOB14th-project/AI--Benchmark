@@ -1,0 +1,46 @@
+Binary Analysis: Mobile Wallet ARX
+File: libwallet.so
+
+=== Function: wallet_encrypt @ 0xa000 ===
+
+0xa000:  mov    r15d, 0x18                  ; 24 rounds
+
+; Pure ARX - no S-boxes
+0xa006:  mov    eax, DWORD PTR [rdi]
+0xa009:  add    eax, DWORD PTR [rsi]        ; ADD
+0xa00c:  rol    eax, 0x9                    ; ROTATE 9
+0xa00f:  xor    eax, DWORD PTR [rsi+4]      ; XOR
+0xa013:  mov    DWORD PTR [rdi], eax
+
+0xa016:  mov    ebx, DWORD PTR [rdi+4]
+0xa019:  add    ebx, eax
+0xa01b:  rol    ebx, 0x5                    ; ROTATE 5
+0xa01e:  xor    ebx, DWORD PTR [rsi+8]
+0xa022:  mov    DWORD PTR [rdi+4], ebx
+
+0xa025:  mov    ecx, DWORD PTR [rdi+8]
+0xa028:  rol    ecx, 0x3                    ; ROTATE 3
+0xa02b:  xor    ecx, ebx
+0xa02d:  mov    DWORD PTR [rdi+8], ecx
+
+0xa030:  mov    edx, DWORD PTR [rdi+12]
+0xa033:  ror    edx, 0x9                    ; ROTATE right
+0xa036:  add    edx, ecx
+0xa038:  mov    DWORD PTR [rdi+12], edx
+
+0xa03b:  dec    r15d
+0xa03e:  jnz    0xa006
+
+=== Data ===
+0xc000:  Delta constants:
+         db e9 ef c3  02 6b 62 44  8a 7c e2 79  ec 30 df 78
+         9e a4 5e 71  0a da 85 c7
+
+0xc018:  Rotation constants:
+         09 05 03 09  (alpha, beta, gamma, alpha)
+
+=== Signatures ===
+- 24 rounds
+- ARX only (no S-boxes)
+- Very fast
+- Mobile optimized

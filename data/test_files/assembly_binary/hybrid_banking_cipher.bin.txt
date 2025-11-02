@@ -1,0 +1,49 @@
+Binary Analysis: Hybrid Banking Cipher
+File: libhybrid_bank.so
+
+=== Function: hybrid_encrypt @ 0x7000 ===
+
+; Layer 1: Domestic 16-round Feistel
+0x7000:  call   0x8000                      ; domestic_feistel_16
+
+; Layer 2: International standard
+0x7005:  call   0x9000                      ; international_spn_10
+
+=== Function: domestic_feistel_16 @ 0x8000 ===
+
+0x8000:  mov    ecx, 0x10                   ; 16 rounds
+
+0x8005:  mov    eax, DWORD PTR [rdi+8]     ; right half
+0x8008:  mov    esi, DWORD PTR [rbp-0x40+rcx*4] ; round_key
+0x800c:  xor    eax, esi
+
+; S-box lookups
+0x800e:  movzx  ebx, al
+0x8011:  lea    r10, [rip+0x4000]          ; domestic_sbox
+0x8018:  mov    ebx, DWORD PTR [r10+rbx*4]
+
+0x801c:  xor    DWORD PTR [rdi], ebx       ; left XOR f_output
+0x801f:  mov    ebx, DWORD PTR [rdi]
+0x8022:  xchg   ebx, DWORD PTR [rdi+8]
+0x8026:  mov    DWORD PTR [rdi], ebx
+
+0x8029:  dec    ecx
+0x802b:  jnz    0x8005
+
+=== Function: international_spn_10 @ 0x9000 ===
+
+0x9000:  mov    ecx, 0xa                    ; 10 rounds
+
+0x9005:  call   0x9100                      ; sub_bytes
+0x900a:  call   0x9200                      ; shift_rows
+0x900f:  mov    rax, QWORD PTR [rsi+rcx*16]
+0x9014:  xor    QWORD PTR [rdi], rax       ; add_round_key
+
+0x9018:  dec    ecx
+0x901a:  jnz    0x9005
+
+=== Signatures ===
+- Dual-layer encryption
+- Layer 1: 16-round Feistel
+- Layer 2: 10-round SPN
+- Hybrid domestic+international

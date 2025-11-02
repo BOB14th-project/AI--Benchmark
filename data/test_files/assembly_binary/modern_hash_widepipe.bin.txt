@@ -1,0 +1,46 @@
+Binary Analysis: Modern Wide-Pipe Hash
+File: libmodern_hash.so
+
+=== Function: widepipe_hash_256 @ 0x4000 ===
+
+0x4000:  mov    r12d, 0x10                  ; 16-word state (512-bit internal)
+0x4006:  mov    r13d, 0x30                  ; 48 steps
+
+; Wide internal state initialization
+0x400c:  mov    eax, 0x6a09e667
+0x4011:  mov    ebx, 0xbb67ae85
+0x4016:  add    ebx, eax
+0x4018:  mov    DWORD PTR [rbp-0x40+rcx*4], ebx
+
+; Novel mixing function
+0x401f:  xor    eax, ebx
+0x4021:  add    eax, ecx
+0x4023:  shr    eax, 0x10
+0x4026:  imul   eax, 0x85ebca6b
+0x402c:  shr    eax, 0xd
+0x402f:  imul   eax, 0xc2b2ae35
+
+; Step function loop
+0x4035:  mov    ecx, 0x30                   ; 48 steps
+0x403a:  call   0x4100                      ; step_function
+0x403f:  dec    ecx
+0x4041:  jnz    0x403a
+
+; Truncate to 256-bit output
+0x4046:  xor    ecx, ecx
+0x4048:  cmp    ecx, 0x8                    ; 8 words = 256 bits
+0x404b:  jge    0x4060
+0x404d:  mov    eax, DWORD PTR [rbp-0x40+rcx*4]
+0x4051:  mov    DWORD PTR [rdi+rcx*4], eax
+0x4054:  inc    ecx
+0x4056:  jmp    0x4048
+
+=== Data ===
+0x8000:  Step constants:
+         98 2f 8a 42  91 44 37 71  cf fb c0 b5  a5 db b5 e9
+
+=== Signatures ===
+- Wide-pipe design (512-bit internal, 256-bit output)
+- Novel compression function
+- 48 steps
+- Different from SHA-2/SHA-3

@@ -1,0 +1,79 @@
+Binary Analysis: Korean Banking Cipher Implementation
+File: libbanking_crypto.so
+Architecture: x86-64
+Compiler: GCC 11.2
+
+=== Function: banking_encrypt @ 0x1000 ===
+
+Disassembly:
+0x1000:  push   rbp
+0x1001:  mov    rbp, rsp
+0x1004:  sub    rsp, 0x50
+0x1008:  mov    QWORD PTR [rbp-0x8], rdi    ; plaintext
+0x100c:  mov    QWORD PTR [rbp-0x10], rsi   ; key
+
+; Load S-box constants
+0x1010:  lea    r12, [rip+0x2f90]           ; banking_ss0
+0x1017:  lea    r13, [rip+0x2fa0]           ; banking_ss1
+
+; Initialize round counter
+0x101e:  xor    ecx, ecx                    ; round = 0
+0x1020:  mov    DWORD PTR [rbp-0x14], ecx
+
+; Feistel structure - 16 rounds
+0x1023:  cmp    DWORD PTR [rbp-0x14], 0x10  ; Compare round with 16
+0x1027:  jge    0x1090                      ; Exit if >= 16
+
+; F-function with S-box lookups
+0x1029:  mov    eax, DWORD PTR [rbp-0x20]   ; right_half
+0x102c:  mov    esi, DWORD PTR [rbp-0x30]   ; round_key
+0x102f:  xor    eax, esi                    ; temp = right ^ round_key
+
+; S-box substitution layer
+0x1031:  movzx  ebx, al                     ; Extract byte 0
+0x1034:  and    ebx, 0x7
+0x1037:  mov    ebx, DWORD PTR [r12+rbx*4]  ; ss0[b0]
+
+0x103b:  movzx  ecx, ah                     ; Extract byte 1
+0x103e:  and    ecx, 0x7
+0x1041:  mov    ecx, DWORD PTR [r13+rcx*4]  ; ss1[b1]
+
+0x1045:  xor    ebx, ecx                    ; Combine S-box outputs
+
+; Feistel XOR and swap
+0x1047:  mov    edx, DWORD PTR [rbp-0x1c]   ; left_half
+0x104a:  xor    edx, ebx                    ; left XOR f_output
+0x104c:  mov    DWORD PTR [rbp-0x1c], edx
+
+; Increment round counter
+0x104f:  inc    DWORD PTR [rbp-0x14]
+0x1052:  jmp    0x1023                      ; Next round
+
+=== Data Section ===
+
+0x4000:  S-box banking_ss0 (32 bytes):
+         89 a1 89 29  84 81 85 05  d4 d2 c6 16  d0 d3 c3 13
+         54 50 44 14  dc cd cc 1b  c8 cf cf 0f  c0 cd cd 11
+
+0x4020:  S-box banking_ss1 (32 bytes):
+         81 81 aa 29  a8 a8 05 05  c6 c6 d4 16  c3 c3 d0 13
+         45 45 50 14  cc cc dc 1b  cf cf c8 0f  cd cd c0 11
+
+0x4040:  Key constants (32 bytes):
+         b9 79 37 9e  73 f3 6e 3c  e6 de 78 78  cc cd bb f1
+         99 9b 77 e3  33 37 ef c6  67 6e de 8d  cf dc bc 1b
+
+=== String References ===
+0x5000: "banking_encrypt_block"
+0x5016: "16-round Feistel network"
+0x502b: "Korean financial standard"
+
+=== Call Graph ===
+banking_encrypt -> generate_round_keys
+banking_encrypt -> f_function (called 16 times)
+
+=== Crypto Signature Detection ===
+- Round count: 16 (constant)
+- S-box count: 4 (ss0, ss1, ss2, ss3)
+- Block structure: Feistel network
+- Key schedule constant: 0x9e3779b9 (identified)

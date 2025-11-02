@@ -1,0 +1,8 @@
+{
+  "expected_findings": {
+    "vulnerable_algorithms_detected": [],
+    "algorithm_categories": [],
+    "korean_algorithms_detected": ["EC-KCDSA"]
+  },
+  "expected_confidence_range": [0.8, 0.95]
+}
