@@ -1,0 +1,245 @@
+{
+  "problem_id": "custom_cipher_analysis",
+  "analysis_date": "2025-11-05",
+  "analyst": "Claude (Sonnet 4.5)",
+  "pqc_vulnerability_assessment": {
+    "is_pqc_vulnerable": true,
+    "vulnerability_details": "This code implements a custom symmetric block cipher with AES-like components (S-box, MDS matrix multiplication in GF(2^8) with the Rijndael irreducible polynomial 0x1B). While symmetric ciphers themselves are not directly vulnerable to Shor's algorithm, they are vulnerable to Grover's algorithm, which provides quadratic speedup for brute-force attacks. The 256-bit key provides only 128-bit effective security against quantum adversaries. Additionally, custom cryptographic implementations without peer review and cryptanalysis are generally considered insecure regardless of quantum threats.",
+    "detected_algorithms": [
+      "Custom Block Cipher",
+      "AES"
+    ],
+    "algorithm_details": {
+      "primary_algorithm": {
+        "name": "Custom Block Cipher (Nes Cipher)",
+        "type": "Symmetric Block Cipher",
+        "structure": "SPN (Substitution-Permutation Network)",
+        "block_size": "256 bits (32 bytes)",
+        "key_size": "256 bits (32 bytes)",
+        "rounds": 13,
+        "components": [
+          "S-box (256-entry substitution table)",
+          "Inverse S-box",
+          "MDS Matrix P1 (4x4 for odd rounds)",
+          "MDS Matrix P2 (8x8 for even rounds)",
+          "Transposition layer",
+          "Key schedule with substitution and permutation"
+        ]
+      },
+      "related_algorithms": {
+        "name": "AES (Rijndael)",
+        "relationship": "Uses identical GF(2^8) finite field arithmetic",
+        "evidence": "Irreducible polynomial 0x1B (x^8 + x^4 + x^3 + x + 1)",
+        "shared_components": [
+          "Galois Field multiplication",
+          "MDS matrix-based diffusion",
+          "S-box substitution"
+        ]
+      }
+    },
+    "quantum_threat_analysis": {
+      "shor_vulnerable": false,
+      "shor_explanation": "Symmetric key algorithms are not vulnerable to Shor's algorithm, which targets factorization and discrete logarithm problems in public-key cryptography.",
+      "grover_vulnerable": true,
+      "grover_explanation": "Grover's algorithm provides O(sqrt(N)) speedup for brute-force search. A 256-bit key has 2^256 keyspace classically, but only 2^128 effective security against quantum adversaries.",
+      "effective_security_bits": 128,
+      "quantum_security_rating": "Moderate - meets minimum NIST post-quantum security level (equivalent to AES-128)"
+    },
+    "recommendations": [
+      {
+        "priority": "Critical",
+        "category": "Algorithm Selection",
+        "recommendation": "Replace custom cipher with standardized, peer-reviewed algorithms",
+        "rationale": "Custom cryptographic implementations lack extensive cryptanalysis and are prone to vulnerabilities that may not be quantum-related. Use NIST-approved algorithms.",
+        "suggested_alternatives": [
+          "AES-256 (provides 128-bit quantum security)",
+          "ChaCha20 (if AES hardware acceleration unavailable)",
+          "For higher quantum security: consider 512-bit key symmetric ciphers when available"
+        ]
+      },
+      {
+        "priority": "High",
+        "category": "Quantum Resistance",
+        "recommendation": "Increase effective key size for quantum threats",
+        "rationale": "Current 256-bit key provides only 128-bit quantum security due to Grover's algorithm. For 256-bit quantum security, need 512-bit keys.",
+        "implementation": "Use key sizes double the desired quantum security level"
+      },
+      {
+        "priority": "High",
+        "category": "Cryptographic Standards",
+        "recommendation": "Adopt NIST post-quantum cryptography standards",
+        "rationale": "NIST has standardized PQC algorithms for various use cases. Ensure compatibility with emerging standards.",
+        "standards": [
+          "FIPS 203 (ML-KEM / CRYSTALS-Kyber) for key encapsulation",
+          "FIPS 204 (ML-DSA / CRYSTALS-Dilithium) for digital signatures",
+          "FIPS 205 (SLH-DSA / SPHINCS+) for stateless hash-based signatures"
+        ]
+      },
+      {
+        "priority": "Medium",
+        "category": "Implementation Security",
+        "recommendation": "Use vetted cryptographic libraries",
+        "rationale": "Even with correct algorithms, implementation vulnerabilities (timing attacks, side channels) are common in custom code.",
+        "suggested_libraries": [
+          "libsodium (high-level, secure by default)",
+          "OpenSSL 3.x (with PQC support via providers)",
+          "Bouncy Castle (comprehensive PQC support)",
+          "liboqs (Open Quantum Safe project)"
+        ]
+      },
+      {
+        "priority": "Medium",
+        "category": "Transition Strategy",
+        "recommendation": "Implement hybrid classical/post-quantum approach",
+        "rationale": "During transition period, combining classical and PQC algorithms provides defense-in-depth.",
+        "approach": "Use both AES-256 and a PQC KEM (like ML-KEM-768) in combination for key establishment"
+      }
+    ],
+    "evidence": [
+      {
+        "location": "Lines 8-48",
+        "type": "S-box and Inverse S-box",
+        "description": "256-entry substitution tables indicating byte-level confusion layer typical of block ciphers",
+        "significance": "Core component of substitution-permutation network"
+      },
+      {
+        "location": "Lines 51-95",
+        "type": "MDS Matrices",
+        "description": "P1, P2, invP1, invP2 matrices for diffusion layer",
+        "significance": "Provides mixing property for cryptographic strength"
+      },
+      {
+        "location": "Lines 98-113",
+        "type": "GF(2^8) Multiplication",
+        "description": "mult2() and mult() functions implementing Galois Field arithmetic with irreducible polynomial 0x1B",
+        "significance": "Identical to AES field arithmetic, indicating AES-inspired design"
+      },
+      {
+        "location": "Lines 115-125",
+        "type": "Matrix Multiplication",
+        "description": "multMatrix() applies MDS transformation in GF(2^8)",
+        "significance": "Implements diffusion layer combining bytes within state"
+      },
+      {
+        "location": "Lines 127-166",
+        "type": "Round Function",
+        "description": "NesRound() implements substitution, transposition, permutation (MDS), and key addition",
+        "significance": "Complete SPN round structure"
+      },
+      {
+        "location": "Lines 168-196",
+        "type": "Encryption Process",
+        "description": "NesProcess() orchestrates 13 rounds alternating between two round types (FO/FE)",
+        "significance": "Main encryption/decryption logic with round differentiation"
+      },
+      {
+        "location": "Lines 198-213",
+        "type": "Encrypt/Decrypt Functions",
+        "description": "NesEncrypt() and NesDecrypt() with forward and inverse transformations",
+        "significance": "API entry points for cipher operations"
+      },
+      {
+        "location": "Lines 215-265",
+        "type": "Key Schedule",
+        "description": "NesKeySchedule() expands 256-bit key to 416 bytes (13 round keys × 32 bytes)",
+        "significance": "Complex key expansion providing round key material"
+      },
+      {
+        "location": "Lines 267-287",
+        "type": "Decrypt Key Schedule",
+        "description": "NesDeKeySchedule() derives decryption keys from encryption keys",
+        "significance": "Enables efficient decryption"
+      },
+      {
+        "location": "Lines 289-312",
+        "type": "Test Vector",
+        "description": "main() demonstrates encryption/decryption with test vectors",
+        "significance": "Confirms algorithm implementation with known values"
+      }
+    ],
+    "confidence_score": 0.92,
+    "confidence_explanation": "Very high confidence due to clear cipher structure with all components identifiable: S-boxes, MDS matrices, GF(2^8) arithmetic matching AES exactly (0x1B polynomial), complete key schedule, and full encrypt/decrypt implementation. The only uncertainty is whether there are undiscovered vulnerabilities in the custom design.",
+    "orchestrator_summary": null
+  },
+  "technical_analysis": {
+    "cipher_structure": {
+      "type": "SPN (Substitution-Permutation Network)",
+      "similarity": "AES-inspired but with larger state (256-bit vs 128-bit)",
+      "distinguishing_features": [
+        "Dual MDS matrices (P1 for odd rounds, P2 for even rounds)",
+        "256-bit block size (4x larger than AES)",
+        "Transposition layer between substitution and permutation",
+        "Complex key schedule using inverse operations"
+      ]
+    },
+    "security_properties": {
+      "classical_security": "Unknown - requires extensive cryptanalysis",
+      "quantum_security": "128-bit (due to Grover's algorithm)",
+      "concerns": [
+        "No published cryptanalysis or security proofs",
+        "Custom design increases risk of structural weaknesses",
+        "Key schedule complexity may introduce vulnerabilities",
+        "Alternating MDS matrices (P1/P2) is non-standard"
+      ]
+    },
+    "implementation_quality": {
+      "correctness": "Appears functionally correct (has test vectors)",
+      "side_channel_resistance": "Not evaluated - likely vulnerable to timing attacks",
+      "constant_time": "No - contains data-dependent operations (mult2 conditional)",
+      "concerns": [
+        "No constant-time implementation",
+        "Potential cache-timing vulnerabilities in S-box lookups",
+        "No mention of resistance to power analysis or fault injection"
+      ]
+    }
+  },
+  "comparison_with_standards": {
+    "aes": {
+      "similarities": [
+        "S-box based substitution",
+        "MDS matrix for diffusion",
+        "Same GF(2^8) field and irreducible polynomial",
+        "Round-based structure"
+      ],
+      "differences": [
+        "Block size: 256-bit vs 128-bit",
+        "Key size: 256-bit fixed vs 128/192/256-bit",
+        "Rounds: 13 vs 14 (for AES-256)",
+        "State layout: 4×8 vs 4×4",
+        "Dual MDS matrices vs single MixColumns"
+      ],
+      "status": "Custom variant, not AES-compatible"
+    },
+    "pqc_standards": {
+      "nist_approved": false,
+      "reason": "Not a post-quantum algorithm, just a symmetric cipher",
+      "recommendation": "Use in combination with NIST-approved PQC KEMs"
+    }
+  },
+  "risk_assessment": {
+    "overall_risk": "High",
+    "risk_factors": [
+      {
+        "factor": "Custom Cryptography",
+        "severity": "Critical",
+        "description": "Unvetted custom cipher without peer review or published cryptanalysis"
+      },
+      {
+        "factor": "Quantum Threat",
+        "severity": "Medium",
+        "description": "Provides only 128-bit quantum security, which is acceptable but not ideal for long-term secrets"
+      },
+      {
+        "factor": "Implementation Vulnerabilities",
+        "severity": "High",
+        "description": "No constant-time implementation, susceptible to side-channel attacks"
+      },
+      {
+        "factor": "Lack of Standards Compliance",
+        "severity": "Medium",
+        "description": "Not NIST or ISO approved, may create compliance issues"
+      }
+    ],
+    "mitigation_priority": "Immediate replacement recommended"
+  }
+}
