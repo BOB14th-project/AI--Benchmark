@@ -1,0 +1,430 @@
+Algorithm,Mean_Accuracy,Std_Accuracy,Total_Tests
+1024-bit PublicKey (likely RSA),100.0,,1
+MD5-like hash,100.0,,1
+IDEA,100.0,0.0,2
+KCDSA-like,100.0,,1
+KEY_EX-Group-14,100.0,,1
+KeyExchange-2048,100.0,0.0,2
+Korean ECDSA variant,100.0,,1
+LEA (유사 패턴),100.0,,1
+Legacy Block Cipher (구체적인 알고리즘은 불명),100.0,,1
+MD5 (또는 유사한 전통 해시),100.0,,1
+PBKDF1,100.0,0.0,2
+DSA (KeyExchange-DSA),100.0,,1
+PBKDF2-HMAC-Hash160,100.0,,1
+PKCS#1 v1.5,100.0,,1
+PKCS#1 v1.5 (추정),100.0,,1
+Poly1305,100.0,0.0,2
+"RSA (RS256, RS512)",100.0,,1
+"RSA (sha256WithRSAEncryption, PublicKey-2048)",100.0,,1
+RSA (가능성),100.0,,1
+RSA-1024,100.0,0.0,2
+Hash-160,100.0,,1
+Hash functions,100.0,,1
+HAS160,100.0,,1
+Feistel,100.0,,1
+DSA (암시적),100.0,,1
+DSA (추정),100.0,,1
+DSA/DH (가능성),100.0,,1
+Diffie-Hellman (추정),100.0,,1
+Diffie-Hellman Group 14 (MODP 2048),100.0,,1
+Digest (Hash Function),100.0,,1
+EC-K_SIG,100.0,,1
+ECC,100.0,,1
+ECC (potential),100.0,,1
+ECDH (potential),100.0,,1
+ECDH (추정),100.0,0.0,6
+"ECDSA (CurveSig-P256, secp256r1)",100.0,,1
+"ECDSA (ES384, CurveSig-P384)",100.0,,1
+ECDSA (secp256r1),100.0,,1
+EC_CRYPTO P-256,100.0,0.0,3
+EC_P256,100.0,0.0,2
+ElGamal,100.0,,1
+RSA_1024,100.0,,1
+SHA (추정),100.0,,1
+SHA1,100.0,0.0,5
+curve_ke-sha2-nistp256,100.0,,1
+curve_ke-sha2-nistp521,100.0,,1
+diffie-hellman-group-exchange,100.0,,1
+diffie-hellman-group-exchange-hash_256,100.0,,1
+ed25519,100.0,,1
+elliptic_curve_digital_signature,100.0,,1
+ephemeral_elliptic_curve_diffie_hellman,100.0,,1
+factorization_auth_aes256,100.0,,1
+integer_factorization_dh_2048,100.0,,1
+nistp256,100.0,,1
+nistp384,100.0,,1
+nistp521,100.0,,1
+sha1WithRSA,100.0,0.0,2
+sha256WithECDSA,100.0,0.0,2
+경량 블록 암호 (Lightweight Block Cipher),100.0,,1
+블록 암호 (구체적인 알고리즘 불명),100.0,,2
+해시 알고리즘 (구체적인 알고리즘은 추가 분석 필요),100.0,,1
+"확인 필요 (AES, SHA 등)",100.0,,1
+curve_ke-sha2-nistp384,100.0,,1
+curve25519,100.0,0.0,2
+SHA256withRSAEncryption,100.0,,1
+X25519,100.0,0.0,3
+SKIPJACK,100.0,,1
+Serpent,100.0,,1
+SipHash,100.0,,1
+Spritz,100.0,,1
+Stream Cipher,100.0,,1
+Symmetric ciphers,100.0,,1
+TEA,100.0,0.0,2
+TLS 1.2,100.0,,1
+TLS_DHE_RSA,100.0,,1
+TLS_DHE_RSA_WITH_AES_256_CBC_SHA256,100.0,0.0,2
+TLS_RSA_WITH_AES_128_CBC_SHA,100.0,0.0,5
+TLS_StreamCipher-SHA,100.0,,1
+TLSv1.0,100.0,,1
+TLSv1.1,100.0,,1
+Trivium,100.0,0.0,2
+Twofish,100.0,,1
+Whirlpool,100.0,,1
+DSA (가능성),100.0,,1
+Legacy Hash Algorithm (SHA-1 like),100.0,,1
+확인 필요 (커스텀 암호 알고리즘),100.0,,1
+BlockCipher-128/256,100.0,,1
+BlockCipher,100.0,,1
+BLS12_381,100.0,,1
+Camellia,100.0,,1
+Custom Hash (transaction_digest_generator),100.0,,1
+Curve25519,100.0,0.0,2
+CurveKE,100.0,,1
+A5/1,100.0,0.0,2
+Custom Cipher (domesticn_banking_cipher),100.0,,1
+BLAKE2b,100.0,0.0,2
+Block Cipher (AES 등 추정),100.0,,1
+AES-128 CTR,100.0,,1
+3DES (TripleCipher),100.0,,1
+ARIA256,100.0,,1
+CurveKE-PublicKey-BlockCipher256-GCM-SHA384,100.0,0.0,3
+CBC Mode,100.0,,1
+ARIA128,100.0,,1
+Blowfish,100.0,0.0,2
+AES-like Block Cipher,100.0,,1
+RC4,93.33,11.55,9
+prime256v1,83.33,23.57,4
+Hash128,83.33,23.57,5
+ChaCha20,83.33,28.87,4
+MD5,82.22,16.78,9
+ECDHE,78.57,30.3,9
+ECDH,75.66,11.7,26
+Salsa20,75.0,35.36,3
+AES,72.22,25.46,13
+DES,72.22,25.46,6
+ARIA,70.0,42.43,6
+ECDSA,69.81,8.68,111
+Elliptic Curve Cryptography,66.67,47.14,4
+TLS_RSA_WITH_3DES_EDE_CBC_SHA,66.67,57.74,3
+DH,66.67,57.74,3
+StreamCipher,66.67,47.14,4
+RSA (추정),65.0,21.21,12
+RSA,55.83,9.78,203
+HIGHT,54.17,40.18,13
+ECDSA (추정),52.78,3.93,13
+AES-GCM,50.0,70.71,2
+SHA-512,50.0,,2
+StreamCipher-SHA,50.0,70.71,3
+CURVE_KE-P384,50.0,70.71,2
+BlockCipher-256,50.0,70.71,2
+TripleCipher,50.0,70.71,2
+LEA,50.0,35.36,8
+TLS_RSA,50.0,,2
+PublicKey-4096-OAEP,50.0,70.71,2
+PublicKey-4096,50.0,0.0,4
+PublicKey-3072,50.0,0.0,4
+ED25519,50.0,,2
+SHA-1 (추정),50.0,,2
+secp384r1,50.0,0.0,6
+블록 암호 (구체적인 알고리즘은 추가 분석 필요),50.0,,2
+KCDSA,47.78,13.47,10
+DSA,47.72,20.09,43
+secp256r1,46.67,18.86,8
+SHA-1,41.11,8.39,14
+Diffie-Hellman,38.52,33.43,15
+SHA-256,36.11,12.73,9
+secp256k1,33.33,57.74,5
+Feistel Cipher,33.33,57.74,4
+CurveKE-P256,33.33,28.87,5
+CurveSig-P256,33.33,28.87,5
+CBC,25.0,35.36,3
+3DES,22.22,38.49,5
+ECDHE-RSA,16.67,28.87,9
+SEED,15.56,6.29,14
+PublicKey-2048,11.11,19.25,6
+pk_crypto_pkcs1_sha256,0.0,,1
+TEA-like cipher,0.0,,1
+TLS_ECDHE_RSA,0.0,,2
+TLS_ECDHE_ECDSA_WITH_LIGHTWEIGHT_CIPHER_128_GCM_SHA256,0.0,,1
+secp521r1,0.0,,1
+TLS_ECDHE_ECDSA_WITH_LIGHTWEIGHT_64BIT_CIPHER_CBC_SHA256,0.0,0.0,3
+TLS_ECDHE_ECDSA_WITH_INVOLUTION_CIPHER_256_GCM_SHA384,0.0,,1
+Substitution box transform,0.0,,1
+Symmetric Block Cipher (Unspecified),0.0,,1
+TLS_ECDHE_ECDSA_WITH_FEISTEL_CIPHER_128_GCM_SHA256,0.0,0.0,2
+rsa_pss_rsae_sha256,0.0,,1
+TLS_ECDHE_ECDSA_WITH_FEISTEL_128_GCM_SHA256,0.0,0.0,2
+pk_crypto_pss_sha256,0.0,,1
+"TEA-like cipher (symmetric, 128-bit key)",0.0,,1
+Block Cipher,0.0,,1
+TLS_ECDHE_ECDSA_WITH_ARX_128_GCM_SHA256,0.0,0.0,6
+TLS_AES_256_GCM_SHA384,0.0,,1
+rsa-sha256,0.0,,1
+TLS_DHE_RSA_WITH_LIGHTWEIGHT_CIPHER_128_SHA256,0.0,,1
+BLS12-381,0.0,,1
+TLS_DHE_RSA_WITH_FEISTEL_128_CBC_SHA256,0.0,0.0,2
+pk_crypto_pkcs1_sha1_legacy,0.0,,1
+involution-based-block-cipher,0.0,0.0,3
+substitution-permutation-network-256,0.0,,1
+secure-hash-256,0.0,0.0,2
+SUBSTITUTION_NETWORK,0.0,,1
+SHA-256 (추정),0.0,,1
+SHA-384,0.0,0.0,2
+128-bit-substitution-permutation-network,0.0,0.0,2
+BlockCipher-256-CTR,0.0,0.0,2
+SHA1 (Hash160),0.0,,1
+SHA256 (추정),0.0,,1
+BlockCipher-256-CBC,0.0,0.0,3
+BlockCipher-256 (RFC 3394),0.0,,1
+SPHINCS+,0.0,0.0,3
+"해시 함수 (MD5 유사, 구체적인 알고리즘은 확인 불가)",0.0,,1
+SPN (AES-like),0.0,,1
+SPN (Substitution-Permutation Network),0.0,,1
+SPN structure,0.0,,1
+블록 암호 (일반),0.0,,1
+"A5/1 (likely, based on LFSR usage)",0.0,,1
+Salsa20 (Stream Cipher),0.0,,1
+블록 암호 (구체적인 알고리즘은 확인 불가),0.0,,2
+Salsa20-like,0.0,,1
+블록 암호 (구체적인 알고리즘은 불명),0.0,,1
+Shor's algorithm,0.0,,1
+대칭키 암호,0.0,,1
+SipHash-2-4,0.0,,1
+BlockCipher-128-CCM,0.0,0.0,2
+BlockCipher-128,0.0,,1
+경량 암호화 알고리즘 (구체적인 알고리즘은 불명),0.0,,1
+Stream cipher (RC4-like),0.0,,1
+TLS_ECDHE_RSA_WITH_FEISTEL_128_GCM_SHA256,0.0,0.0,2
+ssh-ed25519,0.0,,1
+TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,0.0,,1
+TLS_ECDHE_RSA_WITH_SUBSTITUTION_NETWORK_256_GCM_SHA384,0.0,0.0,2
+TLS_ECDHE_RSA_WITH_FEISTEL_CIPHER_128_GCM_SHA256,0.0,0.0,3
+ARIA-128,0.0,,1
+lightweight-cipher-64bit,0.0,0.0,2
+lightweight-cipher-64,0.0,,1
+lightweight-block-cipher,0.0,,1
+discrete-log-signat,0.0,,1
+discrete-log-signature,0.0,,1
+lightweight-64bit-cipher,0.0,,1
+discrete_log_legacy,0.0,,1
+discrete_log_p256,0.0,,1
+domestic_cipher_aria,0.0,,1
+domestic_cipher_seed,0.0,,1
+domestic_lightweight_hight,0.0,,1
+dsa_2048,0.0,0.0,2
+ecdh_curve25519,0.0,0.0,2
+ecdsa_p256,0.0,0.0,2
+ecdsa_p256_sha256,0.0,,1
+ecdsa_p384_sha384,0.0,,1
+AES-CTR,0.0,,1
+elliptic curve cryptography,0.0,,1
+elliptic_curve_diffie_hellman,0.0,,1
+AES-CBC,0.0,,1
+AES-256-GCM,0.0,,1
+factorization_1024,0.0,,1
+factorization_2048,0.0,,1
+AES-256-CBC,0.0,,1
+korean-ec-signature,0.0,0.0,2
+feistel-cipher-128,0.0,0.0,2
+feistel-network-128,0.0,0.0,2
+finite field arithmetic,0.0,,1
+AES-128-CTR,0.0,,2
+ARIA (K_CIPHER_2),0.0,,1
+ARIA-128-GCM,0.0,0.0,2
+TLS_ECDHE_RSA_WITH_INVOLUTION_CIPHER_256_GCM_SHA384,0.0,0.0,2
+compute_secure_hash,0.0,,1
+korean-discrete-log-signature,0.0,0.0,2
+TLS_PSK_WITH_LIGHTWEIGHT_64BIT_CIPHER_SHA256,0.0,0.0,3
+pk_crypto_4096,0.0,0.0,2
+BLOCK_CIPHER,0.0,,1
+pk_crypto_2048,0.0,0.0,2
+pbkdf2,0.0,,1
+ARX cipher (LEA 유사),0.0,,1
+ARX block cipher (LEA-like),0.0,,1
+Tiger Hash,0.0,,1
+Triple DES,0.0,0.0,2
+Triple DES (3DES),0.0,,1
+Triple DES (CBC3),0.0,,1
+AES (추정),0.0,,1
+TripleCipher-EDE-CBC (3DES),0.0,,1
+ARX,0.0,,1
+AES-128-CBC,0.0,,1
+Unknown (Custom Block Cipher),0.0,,1
+Unknown (likely symmetric block cipher based on `FastBlockCipherveq`),0.0,,1
+Unknown Lightweight Cipher,0.0,,1
+WOTS+,0.0,,1
+Weight Matrix Transformation (Potential Custom Cipher),0.0,,1
+message-digest-160,0.0,0.0,2
+lightweight_cipher_64bit,0.0,,1
+ARIA-256,0.0,0.0,4
+arx-cipher-128,0.0,0.0,4
+lightweight-secure-hash-512,0.0,0.0,2
+bcrypt,0.0,,1
+block_cipher,0.0,,1
+brainpoolP256r1,0.0,0.0,2
+add-rotate-xor-128,0.0,,1
+DHE-RSA-FEISTEL-128-SHA256,0.0,,1
+BlockCipher-256-GCM,0.0,0.0,4
+FAST_BLOCK,0.0,,1
+Feistel Network,0.0,,1
+Feistel Cipher (Custom),0.0,,1
+Feistel (SEED-like),0.0,,1
+Custom Block Cipher (likely non-PQC),0.0,,1
+FastBlockCipher (잠재적),0.0,,1
+FEISTEL_CIPHER,0.0,,1
+FAST_BLOCK (LEA 계열),0.0,,1
+ElGamal-style,0.0,,1
+SHA,0.0,0.0,3
+Custom Block Cipher (추정),0.0,0.0,2
+EdDSA (Ed25519),0.0,,1
+ES384,0.0,,1
+Custom Cipher (domesticn_ai_cipher),0.0,,1
+ECDSA_P256,0.0,,1
+ECDSA-P256,0.0,0.0,2
+ECDSA p256,0.0,,1
+Feistel Network (Custom Implementation),0.0,,1
+Feistel Network (잠재적으로 취약한 라운드 함수 사용),0.0,,1
+Feistel cipher,0.0,,1
+GCM,0.0,,1
+HMAC-SHA256,0.0,,1
+HMAC-SHA1,0.0,,1
+HMAC-Hash256,0.0,,1
+HMAC (Likely SHA-256 or similar),0.0,,1
+HKDF-SHA256,0.0,,1
+HIGHT-like cipher,0.0,,1
+HIGHT-like Lightweight Block Cipher,0.0,,1
+HIGHT-64,0.0,0.0,2
+HIGHT-128,0.0,,1
+Custom Block Cipher,0.0,,1
+HAS-160 (유사),0.0,,1
+HAS-160 (SHA-1 유사 해시 함수),0.0,,1
+HAS-160,0.0,0.0,7
+Grover's algorithm,0.0,,1
+Government involution cipher (SPN structure),0.0,,1
+ECDSA (잠재적),0.0,,1
+ECDSA (가능성),0.0,,1
+"Custom Cipher (fast_cipher_key_schedule, fast_cipher_encrypt_block)",0.0,,1
+Custom Stream Cipher,0.0,,1
+Dual-KCDSA,0.0,,1
+Dual substitution layers,0.0,,1
+DomesticBankingCipher,0.0,,1
+Discrete Logarithm-based Signature,0.0,,1
+Diffie-Hellman group 14,0.0,,1
+DES (Legacy Block Cipher),0.0,,1
+Diffie-Hellman (DH),0.0,,1
+DSA/ECDSA (가능성),0.0,,1
+"DSA/ECDSA (가능성 낮음, 추가 분석 필요)",0.0,,1
+DH-1024,0.0,,1
+DSA-like (Discrete Logarithm based Signature),0.0,,1
+DHE,0.0,,1
+DHE-2048,0.0,0.0,2
+DHE-DSA-AES128-SHA,0.0,,1
+DHE-RSA,0.0,0.0,6
+EC-KCDSA,0.0,0.0,5
+EC-K_SIG-384,0.0,0.0,2
+ECDSA (secp256k1),0.0,0.0,3
+EC-K_SIG-521,0.0,,1
+ECDSA (P-256),0.0,,1
+ECDSA (Elliptic Curve Digital Signature Algorithm),0.0,,1
+Custom Encryption Algorithm,0.0,,1
+Custom Feistel Cipher,0.0,,1
+ECDHE_RSA,0.0,,1
+ECDHE_ECDSA,0.0,,1
+ECDHE-RSA-FEISTEL-128-GCM-SHA256,0.0,,1
+ECDHE-RSA-AES256-GCM-SHA384,0.0,,1
+ECDHE-KCDSA,0.0,,1
+ECDHE-ECDSA-FEISTEL-128-GCM-SHA256,0.0,,1
+ECDHE-ECDSA-AES128-GCM-SHA256,0.0,,1
+ECDHE-ECDSA,0.0,,3
+Custom Hash Algorithm,0.0,,1
+Custom Lightweight Block Cipher,0.0,,1
+Custom Lightweight Cipher,0.0,,1
+HMAC-SHA512,0.0,,1
+CurveSig-P521,0.0,,1
+CurveSig-P384,0.0,0.0,4
+RS256,0.0,,1
+RIPEMD-160,0.0,0.0,2
+RC4-like Stream Cipher,0.0,,1
+RC4-like,0.0,,1
+PublicKey-4096-PSS,0.0,,1
+Potential legacy symmetric cipher,0.0,,1
+ChaCha-like block cipher,0.0,,1
+ChaCha20-like,0.0,,1
+PBKDF2,0.0,,1
+Chacha20-Poly1305,0.0,,1
+OrdersSignature=PublicKey-4096-PSS,0.0,,1
+NTRU (Lattice-based PQC),0.0,,1
+NTRU,0.0,0.0,5
+Modular Exponentiation,0.0,,1
+Merkle tree (XMSS),0.0,,1
+Merkle Tree Signature,0.0,0.0,2
+RIPEMD160,0.0,,1
+RS512,0.0,,1
+Lightweight Block Cipher (유사 HIGHT),0.0,,1
+RSA (1024/2048-bit),0.0,,1
+SEED-like,0.0,,1
+SEED-SHA384,0.0,,1
+SEED-SHA256,0.0,,1
+SEED-256,0.0,0.0,4
+SEED-128,0.0,0.0,2
+SEED (block cipher),0.0,,1
+SEED (K_CIPHER_1),0.0,,1
+SEED (Feistel block cipher),0.0,,1
+Ring-LWE,0.0,,1
+RSA/DSA (추정),0.0,,1
+RSA-PSS,0.0,0.0,3
+RSA-4096,0.0,,1
+RSA-3072,0.0,0.0,2
+RSA-2048,0.0,0.0,5
+RSA (가능성 높음),0.0,,1
+Merkle Tree (XMSS),0.0,,1
+Lightweight Block Cipher (HIGHT/LEA-like),0.0,,1
+Hash160,0.0,,1
+KeyExchange-PublicKey,0.0,,1
+CurveKE-P384,0.0,0.0,2
+K_CIPHER_4-128,0.0,,1
+K_CIPHER_2-GCM-128,0.0,,1
+K_CIPHER_2-256-GCM,0.0,,2
+K_CIPHER_2-256,0.0,,1
+K_CIPHER_2-128,0.0,0.0,2
+K_CIPHER_2,0.0,,1
+K_CIPHER_1-256-CTR,0.0,,1
+K_CIPHER_1-128,0.0,0.0,2
+K_CIPHER_1,0.0,0.0,2
+KEY_EX-Group-20,0.0,,1
+CurveKE-PublicKey-BlockCipher128-GCM-Hash256,0.0,,1
+KCDSA-2048,0.0,0.0,2
+KCDSA (DSA-like),0.0,,1
+InternationalStandardCipher,0.0,,1
+KeyExchange-3072,0.0,0.0,2
+KoreanBlockCipher (잠재적),0.0,,1
+Lightweight Block Cipher (HIGHT/LEA 유사),0.0,,1
+CurveKE-CurveSig-BlockCipher256-GCM-SHA384,0.0,0.0,2
+"LegacyBlockCipher (블록 암호, AES/DES 계열 추정)",0.0,,1
+LegacyBlockCipher,0.0,0.0,2
+Legacy Signature Verification (추정),0.0,,1
+128-bit-block-cipher-cbc,0.0,0.0,2
+CurveKE-CurveSig-BlockCipher128-GCM-Hash256,0.0,0.0,2
+LWE,0.0,,1
+LSH-like hash,0.0,,1
+LSH-512,0.0,,1
+LSH-256,0.0,,2
+LSH,0.0,0.0,3
+LIGHTWEIGHT_CIPHER,0.0,,1
+LIGHTWEIGHT_BLOCK,0.0,,1
+LEA-like ARX cipher,0.0,,1
+LEA-128,0.0,0.0,4
+LEA (추정),0.0,,1
+Blowfish-256,0.0,0.0,2
