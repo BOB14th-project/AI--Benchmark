@@ -17,7 +17,7 @@ OLLAMA_BASE_URL = "http://localhost:11434"
 CACHE_DIR = "./models/pqcllama"
 
 # Test configuration
-TEST_LIMIT = 50  # Number of tests to run (set None for all)
+TEST_LIMIT = None  # Number of tests to run (set None for all)
 WITH_RAG = False  # Set to True if you want to test with RAG
 
 class PQCLlamaWrapper:

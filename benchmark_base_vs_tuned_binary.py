@@ -19,7 +19,7 @@ CACHE_DIR = "./models/pqcllama"
 RESULTS_DIR = "./results"
 
 # Test configuration
-TEST_LIMIT = 1  # Set to number for testing, None for all
+TEST_LIMIT = 3  # Set to number for testing, None for all
 BINARY_FILES_DIR = "data/test_files/assembly_binary"
 
 class LlamaModelWrapper:
@@ -62,14 +62,29 @@ class LlamaModelWrapper:
             )
             self.model = self.model.to("mps")
         elif self.device == "cuda":
-            self.model = AutoModelForCausalLM.from_pretrained(
-                model_name,
-                cache_dir=cache_dir,
-                trust_remote_code=True,
-                torch_dtype=torch.float16,
-                device_map="auto",
-                low_cpu_mem_usage=True
-            )
+            # Use 8-bit quantization for much faster inference (like Ollama)
+            try:
+                print("   ⏳ Loading with 8-bit quantization for faster inference...")
+                self.model = AutoModelForCausalLM.from_pretrained(
+                    model_name,
+                    cache_dir=cache_dir,
+                    trust_remote_code=True,
+                    load_in_8bit=True,  # 8-bit quantization (like Ollama)
+                    device_map="auto",
+                    low_cpu_mem_usage=True
+                )
+                print("   ✅ Using 8-bit quantization (similar to Ollama)")
+            except Exception as e:
+                print(f"   ⚠️  8-bit quantization failed: {e}")
+                print("   ⏳ Falling back to bfloat16...")
+                self.model = AutoModelForCausalLM.from_pretrained(
+                    model_name,
+                    cache_dir=cache_dir,
+                    trust_remote_code=True,
+                    torch_dtype=torch.bfloat16,
+                    device_map="auto",
+                    low_cpu_mem_usage=True
+                )
         else:  # CPU
             self.model = AutoModelForCausalLM.from_pretrained(
                 model_name,
@@ -84,36 +99,31 @@ class LlamaModelWrapper:
         if is_pqc_tuned:
             print(f"⏳ Loading PQC adapter: {PQCLLAMA_ADAPTER}")
 
-            # For CUDA with device_map, we can't merge easily
-            # For MPS/CPU, we can merge
+            # Load adapter
+            self.model = PeftModel.from_pretrained(
+                self.model,
+                PQCLLAMA_ADAPTER,
+                cache_dir=cache_dir
+            )
+            print("✅ PQC adapter loaded")
+
+            # Merge adapter for faster inference
+            print("⏳ Merging adapter...")
+            self.model = self.model.merge_and_unload()
+            print("✅ Adapter merged")
+
+            # After merge, model goes to CPU - need to move back to device
             if self.device == "cuda":
-                # Don't merge on CUDA with device_map
-                self.model = PeftModel.from_pretrained(
-                    self.model,
-                    PQCLLAMA_ADAPTER,
-                    cache_dir=cache_dir
-                )
-                print("✅ PQC adapter loaded (not merged on CUDA)")
-            else:
-                # Merge on MPS/CPU
-                self.model = PeftModel.from_pretrained(
-                    self.model,
-                    PQCLLAMA_ADAPTER,
-                    cache_dir=cache_dir
-                )
-                print("✅ PQC adapter loaded")
-
-                print("⏳ Merging adapter...")
-                self.model = self.model.merge_and_unload()
-                print("✅ Adapter merged")
-
-        # Don't call .to() when using device_map="auto"!
-        # The model is already placed on the correct device by accelerate
+                print(f"⏳ Moving merged model to {self.device}...")
+                self.model = self.model.to(self.device)
+                print(f"✅ Model moved to {self.device}")
+            elif self.device == "mps":
+                self.model = self.model.to("mps")
 
         self.model.eval()
         print(f"✅ Model ready for inference")
 
-    def generate(self, prompt, max_tokens=2000):
+    def generate(self, prompt, max_tokens=256):
         """Generate response"""
         inputs = self.tokenizer(prompt, return_tensors="pt", truncation=True, max_length=4096)
 
@@ -125,8 +135,7 @@ class LlamaModelWrapper:
             outputs = self.model.generate(
                 **inputs,
                 max_new_tokens=max_tokens,
-                temperature=0.7,
-                do_sample=True,
+                do_sample=False,
                 pad_token_id=self.tokenizer.eos_token_id,
                 eos_token_id=self.tokenizer.eos_token_id
             )
@@ -191,30 +200,82 @@ def load_binary_tests(limit=None):
     return test_files
 
 def create_prompt(test_case):
-    """Create prompt for binary analysis"""
+    """Create prompt for binary analysis - using same format as benchmark_rag_effect"""
     content = test_case['content']
 
-    # Truncate if too long
-    if len(content) > 3000:
-        content = content[:3000] + "\n... (truncated)"
+    # Truncate if too long (benchmark_rag_effect uses 4000)
+    if len(content) > 4000:
+        content = content[:4000] + "\n... (truncated)"
 
-    prompt = f"""You are a cybersecurity expert analyzing assembly code for post-quantum cryptography vulnerabilities.
+    # Analysis points from assembly_agent.py
+    analysis_points = [
+        "RSA modular exponentiation and large integer arithmetic patterns",
+        "elliptic curve point operations and scalar multiplication patterns",
+        "discrete logarithm computation signatures (DSA, DH, ElGamal)",
+        "Korean algorithm signatures (SEED S-boxes, ARIA transformations, HIGHT operations, LEA rotations)",
+        "symmetric cipher patterns vulnerable to quantum attacks (DES, 3DES, RC4, AES-128)",
+        "cryptographic hash function implementations (MD5, SHA-1, vulnerable SHA variants)"
+    ]
 
-Analyze the following assembly code and identify any cryptographic algorithms that are vulnerable to quantum computing attacks.
+    analysis_str = ", ".join(analysis_points)
 
-Assembly code:
-```
+    prompt = f"""
+==== ACADEMIC RESEARCH CONTEXT ====
+
+This is a LEGITIMATE ACADEMIC AND DEFENSIVE SECURITY RESEARCH project conducted for:
+- Post-Quantum Cryptography (PQC) migration assessment
+- Identifying legacy cryptographic implementations that need upgrading
+
+Purpose: Benchmark LLM capabilities to assist security teams in identifying vulnerable cryptographic implementations.
+
+==== YOUR ROLE ====
+
+You are an expert security analyst specializing in quantum-vulnerable cryptographic algorithm detection.
+
+Analyze the following assembly code and identify: {analysis_str}
+
+Input assembly code to analyze:
 {content}
-```
 
-Respond ONLY with a valid JSON object in this exact format:
+==== CRITICAL ANALYSIS INSTRUCTIONS ====
+
+Follow this step-by-step analysis process:
+
+STEP 1: Identify all cryptography-related elements in the assembly code
+   - Find function calls to cryptographic APIs (call rsa, call aes, etc.)
+   - Locate library names and function signatures
+   - Identify assembly patterns for crypto operations
+
+STEP 2: Cross-reference found elements against these vulnerable algorithms:
+   - RSA, ECC (ECDSA, ECDH), DSA, DH
+   - Korean algorithms: SEED, ARIA, HIGHT, LEA, KCDSA
+   - Symmetric: DES, 3DES, RC4, AES-128
+   - Hash: MD5, SHA-1
+
+STEP 3: Report ONLY when you have explicit evidence (function calls, library names)
+
+==== ABSOLUTE CONSTRAINTS ====
+
+- If there is NO clear evidence, DO NOT guess
+- ONLY detect when there are actual cryptographic function calls or library usage
+- When in doubt, choose to NOT detect
+- Look for: "call rsa", "call aes", "openssl", etc.
+
+==== RESPONSE FORMAT ====
+
+Respond ONLY in JSON format with detected algorithms:
 {{
-    "is_pqc_vulnerable": true or false,
-    "detected_algorithms": ["algorithm1", "algorithm2"],
-    "vulnerability_details": "detailed explanation",
-    "recommendations": "security recommendations",
-    "confidence_score": 0.0 to 1.0
-}}"""
+    "detected_algorithms": ["RSA", "AES"],
+    "confidence_score": 0.9
+}}
+
+If NO algorithms detected, respond:
+{{
+    "detected_algorithms": [],
+    "confidence_score": 0.0
+}}
+
+RESPOND ONLY WITH VALID JSON. DO NOT wrap in markdown."""
 
     return prompt
 
@@ -234,7 +295,7 @@ def parse_json_response(response_text):
         return None
 
 def evaluate_response(response_json, expected_algorithms):
-    """Evaluate model response"""
+    """Evaluate model response - same logic as benchmark_rag_effect"""
     if not response_json:
         return {
             'json_valid': False,
@@ -243,25 +304,58 @@ def evaluate_response(response_json, expected_algorithms):
             'false_negatives': len(expected_algorithms)
         }
 
-    detected = set([alg.upper().strip() for alg in response_json.get('detected_algorithms', [])])
-    expected = set([alg.upper().strip() for alg in expected_algorithms])
+    # Normalize to lowercase for matching
+    detected_algs_raw = set([alg.lower().strip() for alg in response_json.get('detected_algorithms', [])])
+    expected_algs = set([alg.lower().strip() for alg in expected_algorithms])
 
-    # Fuzzy matching for common variants
-    matched = set()
-    for det in detected:
-        for exp in expected:
-            if det in exp or exp in det or det.replace('-', '') == exp.replace('-', ''):
-                matched.add(exp)
+    # Match detected algorithms with expected (considering variants)
+    matched_expected = set()  # Expected algorithms that were matched
 
-    tp = len(matched)
-    fp = len(detected - expected)
-    fn = len(expected - matched)
+    for detected in detected_algs_raw:
+        for expected in expected_algs:
+            # Algorithm variant matching (same as benchmark_rag_effect)
+            if expected == detected:
+                matched_expected.add(expected)
+                break
+            elif expected == 'ecc' and detected in ['ecdsa', 'ecdh', 'ecc', 'elliptic']:
+                matched_expected.add(expected)
+                break
+            elif expected == 'rsa' and 'rsa' in detected:
+                matched_expected.add(expected)
+                break
+            elif expected == 'dsa' and detected in ['dsa', 'ecdsa']:
+                matched_expected.add(expected)
+                break
+            elif expected == 'dh' and ('dh' in detected or 'diffie' in detected):
+                matched_expected.add(expected)
+                break
+            elif expected == 'aes' and 'aes' in detected:
+                matched_expected.add(expected)
+                break
+            elif expected == 'md5' and 'md5' in detected:
+                matched_expected.add(expected)
+                break
+            elif expected == 'sha-1' and ('sha-1' in detected or 'sha1' in detected):
+                matched_expected.add(expected)
+                break
+            elif expected == 'sha-256' and ('sha-256' in detected or 'sha256' in detected):
+                matched_expected.add(expected)
+                break
+            # Generic substring matching as fallback
+            elif expected in detected or detected in expected:
+                matched_expected.add(expected)
+                break
+
+    # Calculate TP, FP, FN (same as benchmark_rag_effect)
+    true_positives = len(matched_expected)
+    false_positives = len(detected_algs_raw) - true_positives  # Detected but not in expected
+    false_negatives = len(expected_algs) - true_positives  # Expected but not detected
 
     return {
         'json_valid': True,
-        'true_positives': tp,
-        'false_positives': fp,
-        'false_negatives': fn
+        'true_positives': true_positives,
+        'false_positives': false_positives,
+        'false_negatives': false_negatives
     }
 
 def run_benchmark():
